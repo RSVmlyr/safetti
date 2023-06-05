@@ -1,11 +1,11 @@
 
-const nodeList = (array, node) => {
+const nodeListPrice = (array, node) => {
   array.forEach(newNode => {
     const nodeP = document.createElement("p");
     nodeP.classList.add('quotation--text')
-    nodeP.textContent = newNode;
+    nodeP.textContent = '$ ' + newNode;
     node.insertAdjacentElement('afterbegin', nodeP);
   });
 }
 
-export default nodeList
+export default nodeListPrice

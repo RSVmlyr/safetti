@@ -5,7 +5,7 @@ const getQuotation = async () => {
     const reqQuery = await fetch(urlQuery)
     console.log('Status Service', reqQuery);
     const resQuery = await reqQuery.json()
-    console.log('Response Service', resQuery);
+    console.log('Array Service', resQuery);
     
     if (reqQuery.status == 403) {
       console.log('Error 403');

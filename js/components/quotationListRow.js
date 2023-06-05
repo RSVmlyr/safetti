@@ -43,7 +43,9 @@ const quotationListRow = (cot) => {
         <span class="quotation--info">Asesor: ${cot.advisorName ? cot.advisorName : ''}</span>
       </div>
       <div class="region region__three">
-        <div class="quotation--create--scenary quotation--arrow__right">-></div>
+        <div class="quotation--create--scenary">
+          <img class="quotation--create__right" src='../../img/icon/icon-arrow.svg' loading="lazy" alt="Generar" title="Generar">
+        </div>
       </div>
     </div>
   </div>`

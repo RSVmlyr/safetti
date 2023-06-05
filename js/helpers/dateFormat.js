@@ -10,7 +10,7 @@ const dateFormat = (date) => {
       "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
     ];
     const nameMonth = nameMonths[month];
-    return `${nameMonth} ${day} ${year}`
+    return `${nameMonth}/${day}/${year}`
   } else {
     return `?`
   }

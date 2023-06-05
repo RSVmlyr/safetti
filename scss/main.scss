@@ -56,6 +56,10 @@
                         height: 25px;
                         width: 25px;
                       }
+                      &__data {
+                        display: flex;
+                        gap: 10px;
+                      }
                     }
                   }
                 }
@@ -87,9 +91,9 @@
                   &__one {
                     display: flex;
                     align-items: center;
+                    gap: 10px;
                     .quotation--origin {
                       &__shopify {
-                        padding-right: 10px;
                         height: 25px;
                         width: 25px;
                       }
@@ -126,6 +130,12 @@
                     display: flex;
                     justify-content: space-between;
                     margin: 35px 0 0;
+                  }
+                  &__actionsDelete {
+                    display: flex;
+                    align-items: center;
+                    flex-direction: row;
+                    gap: 10px;
                   }
                 }
               }

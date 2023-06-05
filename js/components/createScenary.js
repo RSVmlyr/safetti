@@ -1,11 +1,13 @@
 import deleteChilds from "../helpers/deleChilds.js"
-import nodeList from "../helpers/nodeList.js"
+import nodeListPrice from "../helpers/nodeListPrice.js"
 import statusQuotation from "../helpers/statusQuotation.js"
+import deleteScenary from "./deleteSecenary.js"
 
 const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
 
     const quotationCreatescenary = quotation.querySelector('#quotation--content--list .quotation--list--row')
     const scenaryContainerTop = quotation.querySelector('#scenary--container__top')
+    const scenaryCreatedBody = quotation.querySelector('#scenary--container__bottom')
 
     quotationCreatescenary.addEventListener('click', (e) => {
 
@@ -14,8 +16,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         quotationLoading.remove()
       }
 
-      const scenaryCreatedBody = quotation.querySelector('#scenary--container__bottom')
-
+      deleteChilds(scenaryContainerTop)
       deleteChilds(scenaryCreatedBody)
 
       let scenaryTop =
@@ -55,7 +56,10 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               </div>
               <div class="scenary--data__actions">
                 <button class="quotation--btn__new">Nuevo escenario</button>
-                <span class="quotation--btn__delete">Eliminar cotización</span>
+                <div id="quotation--btn__delete" class="scenary--data__actionsDelete">
+                  <span class="quotation--info">Eliminar cotización</span>
+                  <img src='../../img/icon/icon-delete.svg' loading="lazy" alt="Eliminar" title="Eliminar">
+                </div>
               </div>
             </div>
           </section>
@@ -63,15 +67,6 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
       </div>
       `
       scenaryContainerTop.insertAdjacentHTML('afterbegin', `${scenaryTop}`)
-
-      const scenaryHeader = quotation.querySelectorAll('.scenary--created')
-      const nodossH = Array.from(scenaryHeader);
-
-      nodossH.forEach((sH, indice) => {
-        if (indice > 0) {
-          sH.remove();
-        }
-      });
 
       // Origin quotation spotify
       const quotationOriginScenary = quotation.querySelector('.scenary--created .quotation--origin__shopify')
@@ -86,6 +81,13 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         const quotationStatusScenary = quotation.querySelector('.scenary--created .quotation--status')
         statusQuotation(cotStatus.statusId, quotationStatusScenary)
       // Status quotation
+
+      // Delete Scenary Top
+      const quotationBtnDelete = quotation.querySelector('#quotation--btn__delete')
+      const scenaryCreated = quotation.querySelector('.scenary--created')
+
+      deleteScenary(quotationBtnDelete, scenaryCreated)
+      // Delete Scenary Top
 
       const getScenary = () => {
 
@@ -108,7 +110,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             totalProducts += product.unitPrice ? product.unitPrice : '';
           });
           // console.log('Total', totalProducts.toFixed(2));
-          let totalPro = totalProducts.toFixed(2)
+          let totalPro = totalProducts
           // Total products unit price
 
           // Scenary selected 
@@ -123,11 +125,11 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               </div>
               <div class="scenary--row">
                 <span class="quotation--title">Productos</span>
-                <p class="quotation--text">${totalPro}</p>
+                <p class="quotation--text">$ ${totalPro >= 0 ? totalPro : ''}</p>
               </div>
               <div class="scenary--row">
                 <span class="quotation--title">Total</span>
-                <p class="quotation--text">${scen.total ? scen.total : ''}</p>
+                <p class="quotation--text">$ ${scen.total >= 0 ? scen.total : ''}</p>
               </div>
               <div class="scenary--row">
                 <div class="scenary--cta">
@@ -149,7 +151,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
           let unitPrice = []
 
           scen.products.forEach(product => {
-            productName.push(product.productName) 
+            productName.push(product.productName)
             linePrice.push(product.linePrice)
             unitPrice.push(product.unitPrice)
           });
@@ -167,18 +169,16 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                     <div class="scenary--row">
                       <span class="quotation--title">Producto</span>
                       <div id="products"></div>
+                      <span class="quotation--title">Total</span>
                     </div>
                     <div class="scenary--row">
-                      <span class="quotation--title">linePrice</span>
-                      <div id="prices"></div>
-                    </div>
-                    <div class="scenary--row">
-                      <span class="quotation--title">unitPrice</span>
+                      <span class="quotation--title">Precio Base</span>
                       <div id="unitPrices"></div>
                     </div>
                     <div class="scenary--row">
                       <span class="quotation--title">Precio Total</span>
-                      <p class="quotation--text">587.6815</p>
+                      <div id="prices"></div>
+                      <p class="quotation--text">$ ${scen.total >= 0 ? scen.total : ''}</p>
                     </div>
                   </div>  
                 </div>
@@ -192,9 +192,14 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
           const idPrices = quotation.querySelector('#prices');
           const idUnitPrices = quotation.querySelector('#unitPrices');
 
-          nodeList(productName, idProducts)
-          nodeList(linePrice, idPrices)
-          nodeList(unitPrice, idUnitPrices)
+          nodeListPrice(productName, idProducts)
+          nodeListPrice(unitPrice, idUnitPrices)
+          nodeListPrice(linePrice, idPrices)
+
+          // Delete Scenary Bottom
+          const scenaryCreatedBody = quotation.querySelector('.scenary--created__body')
+          deleteScenary(quotationBtnDelete, scenaryCreatedBody)
+          // Delete Scenary Bottom
 
           // Scenary List
 
