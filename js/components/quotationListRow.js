@@ -5,7 +5,7 @@ import createScenary from "./createScenary.js"
 const quotationContentList = quotation.querySelector('#quotation--content--list')
 
 const quotationListRow = (cot) => {
-
+  
   // Status quotation
   const cotStatus = {
     statusId : cot.status.id ? cot.status.id : '',

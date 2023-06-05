@@ -192,9 +192,11 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
           const idPrices = quotation.querySelector('#prices');
           const idUnitPrices = quotation.querySelector('#unitPrices');
 
+          // Create data for scenary
           nodeListPrice(productName, idProducts)
           nodeListPrice(unitPrice, idUnitPrices)
           nodeListPrice(linePrice, idPrices)
+          // Create data for scenary
 
           // Delete Scenary Bottom
           const scenaryCreatedBody = quotation.querySelector('.scenary--created__body')
