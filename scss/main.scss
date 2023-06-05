@@ -46,6 +46,19 @@
               &--list--one {
                 display: flex;
                 justify-content: space-between;
+                .region {
+                  &__right {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    .quotation--origin {
+                      &__shopify {
+                        height: 25px;
+                        width: 25px;
+                      }
+                    }
+                  }
+                }
               }
               &--list--three {
                 display: flex;
@@ -66,6 +79,23 @@
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
+              }
+              &--one {
+                display: flex;
+                align-items: center;
+                .region {
+                  &__one {
+                    display: flex;
+                    align-items: center;
+                    .quotation--origin {
+                      &__shopify {
+                        padding-right: 10px;
+                        height: 25px;
+                        width: 25px;
+                      }
+                    }
+                  }
+                }
               }
               &--four {
                 gap: 20px;
@@ -138,4 +168,8 @@
       }
     }
   }
+}
+
+.quotation-hide {
+  display: none;
 }

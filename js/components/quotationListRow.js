@@ -23,8 +23,13 @@ const quotationListRow = (cot) => {
         <span class="quotation--data">Fecha de creación: ${datecreatedAt}</span>
       </div>
       <div class="region region__right">
+       <div class="quotation--origin">
+        <img class="quotation--origin__shopify quotation-hide" src='../../img/icon/icon-shopify.svg' loading="lazy" alt="Shopify" title="Shopify">
+       </div>
+       <div class="quotation--origin__data">
         <span class="quotation--info">Código ${cot.id ? cot.id : ''}</span>
         <span class="quotation--status quotation--info__bold">${cotStatus.statusName}</span>
+       </div>
       </div>
     </div>
     <div class="quotation--list--two">
@@ -44,6 +49,15 @@ const quotationListRow = (cot) => {
   </div>`
 
   quotationContentList.insertAdjacentHTML('afterbegin', `${quotationListRow}`)
+
+  // Origin quotation spotify
+  const quotationOrigin = quotation.querySelector('.quotation--origin__shopify')
+  if (cot.fromShopify === true) {
+    quotationOrigin.classList.remove('quotation-hide')
+  } else if (cot.fromShopify === null || cot.fromShopify === undefined || cot.fromShopify === '') {
+    return false
+  }
+  // Origin quotation spotify
 
   // Status quotation
   const quotationStatus = quotation.querySelector('.quotation--status')

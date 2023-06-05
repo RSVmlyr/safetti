@@ -1,9 +1,11 @@
-const getQuotation = async (id) => {
+const getQuotation = async () => {
   try {
-    const urlQuery = 'https://safetticustom.azurewebsites.net/api/Quotation/client/' + id
+    // const urlQuery = 'https://safetticustom.azurewebsites.net/api/Quotation/client/' + id
+    const urlQuery = 'https://safetticustom.azurewebsites.net/api/Quotation/4/1/0/%20'
     const reqQuery = await fetch(urlQuery)
-    console.log(reqQuery);
+    console.log('Status Service', reqQuery);
     const resQuery = await reqQuery.json()
+    console.log('Response Service', resQuery);
     
     if (reqQuery.status == 403) {
       console.log('Error 403');

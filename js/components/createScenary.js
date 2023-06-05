@@ -1,3 +1,4 @@
+import deleteChilds from "../helpers/deleChilds.js"
 import nodeList from "../helpers/nodeList.js"
 import statusQuotation from "../helpers/statusQuotation.js"
 
@@ -13,11 +14,16 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         quotationLoading.remove()
       }
 
+      const scenaryCreatedBody = quotation.querySelector('#scenary--container__bottom')
+
+      deleteChilds(scenaryCreatedBody)
+
       let scenaryTop =
       `<div class="scenary--created">
         <div class="scenary--created__header">
           <section class="scenary--one">
             <div class="region region__one">
+              <img class="quotation--origin__shopify quotation-hide" src='../../img/icon/icon-shopify.svg' loading="lazy" alt="Shopify" title="Shopify">
               <span class="quotation--info quotation--info__bold">Código ${cot.id ? cot.id : ''}</span>
               <span class="quotation--status">${cotStatus.statusName}</span>
             </div>
@@ -66,6 +72,15 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
           sH.remove();
         }
       });
+
+      // Origin quotation spotify
+      const quotationOriginScenary = quotation.querySelector('.scenary--created .quotation--origin__shopify')
+      if (cot.fromShopify === true) {
+        quotationOriginScenary.classList.remove('quotation-hide')
+      } else if (cot.fromShopify === null || cot.fromShopify === undefined || cot.fromShopify === '') {
+        return false
+      }
+      // Origin quotation spotify
 
       // Status quotation
         const quotationStatusScenary = quotation.querySelector('.scenary--created .quotation--status')
@@ -172,8 +187,6 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
           </div>`
 
           scenaryContainerBottom.insertAdjacentHTML('afterbegin', `${scenaryList}`)
-
-          // Preguntarle como es la lógica de estos campos
 
           const idProducts = quotation.querySelector('#products');
           const idPrices = quotation.querySelector('#prices');
