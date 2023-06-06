@@ -1,6 +1,6 @@
-import deleteChilds from "../helpers/deleChilds.js"
-import nodeListPrice from "../helpers/nodeListPrice.js"
-import statusQuotation from "../helpers/statusQuotation.js"
+import deleteChilds from "../../helpers/deleChilds.js"
+import nodeListPrice from "../../helpers/nodeListPrice.js"
+import statusQuotation from "../../helpers/statusQuotation.js"
 import deleteScenary from "./deleteSecenary.js"
 
 const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {

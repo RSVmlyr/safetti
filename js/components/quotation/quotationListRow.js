@@ -1,5 +1,5 @@
-import dateFormat from "../helpers/dateFormat.js"
-import statusQuotation from "../helpers/statusQuotation.js"
+import dateFormat from "../../helpers/dateFormat.js"
+import statusQuotation from "../../helpers/statusQuotation.js"
 import createScenary from "./createScenary.js"
 
 const quotationContentList = quotation.querySelector('#quotation--content--list')

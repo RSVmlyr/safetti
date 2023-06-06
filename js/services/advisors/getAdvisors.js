@@ -2,9 +2,9 @@ const getAdvisors = async () => {
   try {
     const urlQueryAdvisors = 'https://safetticustom.azurewebsites.net/api/User/advisors'
     const reqQueryAdvisors = await fetch(urlQueryAdvisors)
-    console.log('Status Service Advisors', reqQueryAdvisors);
+    // console.log('Status Service Advisors', reqQueryAdvisors);
     const resQueryAdvisors = await reqQueryAdvisors.json()
-    console.log('Array Service Advisors', resQueryAdvisors);
+    // console.log('Array Service Advisors', resQueryAdvisors);
     
     if (reqQueryAdvisors.status == 403) {
       console.log('Error 403');

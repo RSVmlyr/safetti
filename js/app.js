@@ -1,7 +1,7 @@
-import quotationListRow from "./components/quotationListRow.js"
-import selectAdvisors from "./components/selectAdvisors.js"
-import getAdvisors from "./services/getAdvisors.js"
-import getQuotation from "./services/getQuotation.js"
+import quotationListRow from "./components/quotation/quotationListRow.js"
+import selectAdvisors from "./components/quotation/selectAdvisors.js"
+import getAdvisors from "./services/advisors/getAdvisors.js"
+import getQuotation from "./services/quotation/getQuotation.js"
 
 const quotation = document.querySelector('#quotation')
 
