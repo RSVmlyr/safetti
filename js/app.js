@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const query = async () => {
 
       const quotationContentList = quotation.querySelector('#quotation--content--list')
-      quotationContentList.insertAdjacentHTML('afterbegin', '<div class="quotation--loading"><span>Cargando Cotizaciones...</span></div>')
+      quotationContentList.insertAdjacentHTML('afterbegin', '<div class="quotation--loading"><span class="quotation--title">Cargando Cotizaciones...</span></div>')
       const spinner = quotation.querySelector('#quotation--content--list .quotation--loading')
 
       const resQuery = await getQuotation()

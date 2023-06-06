@@ -1,0 +1,66 @@
+body {
+  color: $c1;
+  font-family: $FuturaLight;
+}
+
+.quotation--title,
+.quotation--subtitle {
+  font-family: $FuturaMedium;
+  line-height: 1;
+}
+
+.quotation--title {
+  font-size: 32px;
+}
+
+.quotation--title__quo {
+  font-family: $FuturaMedium;
+  font-size: 18px;
+  text-transform: capitalize;
+}
+
+.quotation--subtitle {
+  font-size: 16px;
+}
+
+.quotation--info {
+  color: $c2;
+  font-family: $FuturaMedium;
+  font-size: 14px;
+}
+
+.quotation--info__bold {
+  font-family: $FuturaBold;
+}
+
+.scenary--cta {
+  .quotation--btn__view {
+    display: block;
+    margin: 10px 0;
+  }
+}
+
+#quotation--btn__delete {
+  cursor: pointer;
+}
+
+.quotation-hide {
+  display: none;
+}
+
+.quotation--status {
+  border-radius: 15px;
+  font-family: $FuturaMedium;
+  font-size: 12px;
+  padding: 6px 12px;
+  &--requested {
+    background-color: $c8;
+    border: 1px solid $c7;
+    color: $c7;  
+  }
+  &--confirmed {
+    background-color: $c10;
+    border: 1px solid $c9;
+    color: $c9;
+  }
+}

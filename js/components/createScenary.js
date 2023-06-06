@@ -29,9 +29,14 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               <span class="quotation--status">${cotStatus.statusName}</span>
             </div>
             <div class="region region__two">
-              <span class="quotation--info">Enviar correo</span>
-              <span class="quotation--info">Generar PDF</span>
-              <span class="quotation--info quotation--download">Download</span>
+              <div class="quotation--email">
+                <span class="quotation--info">Enviar correo</span>
+                <img class="quotation--email__img" src='../../img/icon/icon-email.svg' loading="lazy" alt="Email" title="Email">
+              </div>
+              <div class="quotation--download">
+                <span class="quotation--info">Generar PDF</span>
+                <img class="quotation--download__img" src='../../img/icon/icon-download.svg' loading="lazy" alt="Descargar" title="Descargar">
+              </div>
             </div>
           </section>
           <section class="scenary--two">
@@ -49,10 +54,10 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
           <section class="scenary--five">
             <div class="scenary--data">
               <div class="scenary--data__header">
-                <h4 class="quotation--title">Escenario seleccionado</h4>
+                <h4 class="quotation--title__quo">Escenario seleccionado</h4>
               </div>
               <div class="scenary--data__body">
-                <div class="quotation--notification"><span>No existen escenarios.</span></div>
+                <div class="quotation--notification"><span class="quotation--title">No existen escenarios.</span></div>
               </div>
               <div class="scenary--data__actions">
                 <button class="quotation--btn__new">Nuevo escenario</button>
@@ -121,15 +126,15 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             let scenaryBody =
             `<div class="scenary--data__scenary">
               <div class="scenary--row">
-                <span class="quotation--title">${scen.name ? scen.name : ''}</span>
+                <span class="quotation--title__quo">${scen.name ? scen.name : ''}</span>
               </div>
               <div class="scenary--row">
-                <span class="quotation--title">Productos</span>
-                <p class="quotation--text">$ ${totalPro >= 0 ? totalPro : ''}</p>
+                <span class="quotation--title__quo">Productos</span>
+                <p class="quotation--info">$ ${totalPro >= 0 ? totalPro : ''}</p>
               </div>
               <div class="scenary--row">
-                <span class="quotation--title">Total</span>
-                <p class="quotation--text">$ ${scen.total >= 0 ? scen.total : ''}</p>
+                <span class="quotation--title__quo">Total</span>
+                <p class="quotation--info">$ ${scen.total >= 0 ? scen.total : ''}</p>
               </div>
               <div class="scenary--row">
                 <div class="scenary--cta">
@@ -161,24 +166,24 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             <div class="scenary--data__body">
               <div class="scenary--data__scenary">
                 <div class="scenary--row__header">
-                  <span class="quotation--title">${scen.name ? scen.name : ''}</span>
+                  <span class="quotation--title__quo">${scen.name ? scen.name : ''}</span>
                   <span class="quotation--btn__view">Ver detalle</span>
                 </div>
                 <div class="scenary--row__body">
                   <div class="scenary--row__table">
                     <div class="scenary--row">
-                      <span class="quotation--title">Producto</span>
+                      <span class="quotation--title__quo">Producto</span>
                       <div id="products"></div>
-                      <span class="quotation--title">Total</span>
+                      <span class="quotation--title__quo">Total con IVA</span>
                     </div>
                     <div class="scenary--row">
-                      <span class="quotation--title">Precio Base</span>
+                      <span class="quotation--title__quo">Precio Base</span>
                       <div id="unitPrices"></div>
                     </div>
                     <div class="scenary--row">
-                      <span class="quotation--title">Precio Total</span>
+                      <span class="quotation--title__quo">Precio Total</span>
                       <div id="prices"></div>
-                      <p class="quotation--text">$ ${scen.total >= 0 ? scen.total : ''}</p>
+                      <p class="quotation--title__quo">$ ${scen.total >= 0 ? scen.total : ''}</p>
                     </div>
                   </div>  
                 </div>
