@@ -23,9 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Get Advisors
       const getAdvisor = () => {
         if (resQueryAdvisors.length > 0) {
-          resQueryAdvisors.forEach(adv => {
-            selectAdvisors(adv)
-          });
+          selectAdvisors(resQueryAdvisors)
         }
       }
 

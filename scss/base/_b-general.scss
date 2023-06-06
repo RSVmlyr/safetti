@@ -63,4 +63,9 @@ body {
     border: 1px solid $c9;
     color: $c9;
   }
+  &--cancelled {
+    background-color: $c12;
+    border: 1px solid $c11;
+    color: $c11;
+  }
 }
