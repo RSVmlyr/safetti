@@ -1,0 +1,193 @@
+.quotationew {
+  height: 100vh;
+  min-height: 100vh;
+  &--header {
+    background-color: $c5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+    padding: 0 40px;
+    .region {
+      &--left {
+        display: flex;
+        gap: 35px;
+      }
+      &--right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+        .quotation {
+          &--email,
+          &--download {
+            display: flex;
+            gap: 10px;
+          }
+        }
+      }
+    }
+  }
+  &--body {
+    .region {
+      &__one,
+      &__two {
+        padding: 0 35px;
+      }
+      &__one {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 30px 0;
+        .quotationew--body {
+          &__actions {
+            color: $black;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            cursor: pointer;
+          }
+          &__info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            .quotation--origin {
+              &__shopify {
+                height: 25px;
+                width: 25px;
+              }
+              &__data {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+              }
+            }
+          }
+        }
+      }
+      &__two {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .quotationew {
+          &__title {
+            @media screen and (min-width: 992px) {
+              width: 25%;
+              max-width: 100%;
+            }
+          }
+          &__info {
+            display: flex;
+            justify-content: space-between;
+            @media screen and (min-width: 992px) {
+              gap: 30px;
+              width: 75%;
+              max-width: 100%;
+            }
+            input {
+              border: 1px solid $c4;
+              height: 40px;
+              margin: 10px 0 25px;
+              padding: 0 10px;
+            }
+          }
+          &__infoOne,
+          &__infoTwo {
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+          }
+          &__infoOne {
+            width: 100%;
+            max-width: 25%;
+          }
+          &__infoTwo {
+            width: 100%;
+            max-width: 75%;
+          }
+        }
+      }
+      &__three {
+        background-color: $c6;
+        display: flex;
+        padding:  50px 0 50px 35px;
+        @media screen and (min-width: 992px) {
+          flex-direction: row;
+          justify-content: space-between;
+          gap: 30px;
+        }
+        .region {
+          &--left {
+            width: 100%;
+            max-width: 30%;
+            .quotationew {
+              &__filter--input {
+                display: flex;
+                flex-direction: column;
+                margin-bottom: 50px;
+                width: 100%;
+                max-width: 100%;
+                position: relative;
+                &::after {
+                  content: "";
+                  position: absolute;
+                  display: block;
+                  background-color: $c4;
+                  height: 1px;
+                  width: 100%;
+                  bottom: -25px;
+                }
+                input {
+                  background-image: url('../img/icon/icon-search.svg');
+                  background-position: center left 15px;
+                  background-repeat: no-repeat;
+                  padding: 0 20px 0 50px;
+                }
+              }
+              &__filter--selects {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+              }
+            }
+          }
+          &--right {
+            width: 100%;
+            max-width: 70%;
+            .slider {
+              &--productos {
+                .slider {
+                  &--content {
+                    display: flex;
+                    justify-content: space-around;
+                    .card {
+                      background-color: $white;
+                      box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.09);
+                      height: 100%;
+                      padding: 7px;
+                      &--actions {
+                        display: flex;
+                        justify-content: space-between;
+                        button {
+                          background-color: transparent;
+                          border: 0;
+                          margin: 0;
+                          padding: 0;
+                        }
+                        a {
+                          color: $black;
+                          text-decoration: none;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

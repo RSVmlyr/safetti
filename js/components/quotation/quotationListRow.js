@@ -2,10 +2,12 @@ import dateFormat from "../../helpers/dateFormat.js"
 import statusQuotation from "../../helpers/statusQuotation.js"
 import createScenary from "./createScenary.js"
 
-const quotationContentList = quotation.querySelector('#quotation--content--list')
-
 const quotationListRow = (cot) => {
-  
+
+  const quotationContentList = quotation.querySelector('#quotation--content--list')
+
+  if (quotationContentList) {
+
   // Status quotation
   const cotStatus = {
     statusId : cot.status.id ? cot.status.id : '',
@@ -67,6 +69,8 @@ const quotationListRow = (cot) => {
   // Status quotation
   
   createScenary(cot, datecreatedAt, dateupdatedAt, cotStatus)
+
+  }
 
 }
 

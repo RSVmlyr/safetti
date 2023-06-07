@@ -27,6 +27,11 @@ body {
   color: $c2;
   font-family: $FuturaMedium;
   font-size: 14px;
+  &__white {
+    color: $cp13;
+    font-family: $FuturaMedium;
+    font-size: 14px;
+  }
 }
 
 .quotation--info__bold {
@@ -68,4 +73,24 @@ body {
     border: 1px solid $c11;
     color: $c11;
   }
+}
+
+select {
+  background-image: url('../img/icon/icon-arrow-select.svg');
+  background-position: center right 10px;
+  background-repeat: no-repeat;
+  border: 1px solid $c4;
+  box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.08);
+  height: 40px;
+  padding: 0 35px 0 10px;
+  -webkit-appearance: none; /* Para navegadores basados en WebKit (Chrome, Safari, etc.) */
+  -moz-appearance: none; /* Para navegadores basados en Gecko (Firefox) */
+  appearance: none; /* Estándar */
+}
+
+input {
+  border: 0;
+  box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.08);
+  height: 40px;
+  padding: 0 10px;
 }
