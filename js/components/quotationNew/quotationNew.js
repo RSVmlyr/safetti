@@ -28,7 +28,7 @@ const quotationNewPage = (resQueryUser, resQueryProducts) => {
     `<div class="slider--row">
       <div class="card">
         <div class="card--image">
-          <img src="./img/icon/image-product.jpeg" alt="image" title="image">
+          <img src="./img/icon/image-product.jpeg" loading="lazy" alt="image" title="image" >
         </div>
         <div class="card--body">
           <h3 class="card--title quotation--title__quo">

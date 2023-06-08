@@ -1,0 +1,23 @@
+.quotationew--calculation {
+  &__header {
+    background-color: $white;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 0 35px;
+    padding: 10px;
+    .region {
+      &--left,
+      &--right {
+        display: flex;
+        align-items: center;
+      }
+      &--left {
+        gap: 16px;
+      }
+    }
+  }
+  &__discount,
+  &__iva {
+    width: 244px;
+  }
+}
