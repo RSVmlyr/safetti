@@ -4,7 +4,7 @@ const getUser = async () => {
     const reqQueryUser = await fetch(urlQueryUser)
     // console.log('Status Service User', reqQueryUser);
     const resQueryUser = await reqQueryUser.json()
-    // console.log('Array Service User', resQueryUser);
+    // console.log('Object Service User', resQueryUser);
     
     if (reqQueryUser.status == 403) {
       console.log('Error 403');
