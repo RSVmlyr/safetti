@@ -62,8 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
           quotationNewPage(resQueryUser, resQueryProducts)
         }
         // Get Users and Products
-
-        console.log(sliderProducts);
+        
         getDataQuotationNew()
       }
 

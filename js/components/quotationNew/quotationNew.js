@@ -1,9 +1,20 @@
 import fillSelectProduct from "../../helpers/fillSelectProduct.js";
 
 const quotationNewPage = (resQueryUser, resQueryProducts) => {
+  
 
   console.log('Object User', resQueryUser);
   console.log('Object Products', resQueryProducts);
+
+  const idQnClient = document.querySelector('#qnclient')
+  idQnClient.innerHTML = 'Cliente: ' + resQueryUser.fullName
+  
+  const idQnAdvisor = document.querySelector('#qnadvisor')
+  idQnAdvisor.innerHTML = 'Asesor: ' + resQueryUser.advisorName
+
+  const idQnCurrency = document.querySelector('#qncurrency')
+  idQnCurrency.innerHTML = 'Modenda: ' + resQueryUser.currency
+
 
   // #qncuentos
   const idQnCuentos = document.querySelector('#qncuentos')
@@ -22,7 +33,13 @@ const quotationNewPage = (resQueryUser, resQueryProducts) => {
   fillSelectProduct(idQnFitPrenda, resQueryProducts.fitPrenda)
 
   resQueryProducts.products.forEach(pro => {
-    console.log();
+
+    // Short description
+    let description = pro.description ? pro.description.substring(0, 40) : '';
+    if (pro.description && pro.description.length > 40) {
+      description += '...';
+    }
+    // Short description
 
     let sliderRow = 
     `<div class="slider--row">
@@ -34,7 +51,7 @@ const quotationNewPage = (resQueryUser, resQueryProducts) => {
           <h3 class="card--title quotation--title__quo">
             ${pro.name ? pro.name : ''}
           </h3>
-          <p>${pro.description ? pro.description : ''}</p>
+          <p class="quotation--info">${description}</p>
         </div>
         <div class="card--actions">
           <button>Ver detalle</button>

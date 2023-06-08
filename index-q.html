@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nueva Coización</title>
+  <title>Nueva Cotización</title>
   <!-- CSS -->
   <link rel="stylesheet" href="./css/main.css">
   <link rel="stylesheet" href="./css/normalize.css">
@@ -15,10 +15,9 @@
   <section class="quotationew--header">
     <div class="region region--left">
       <span class="quotation--info__white">Creación 05/05/2023</span>
-      <span class="quotation--info__white">Última modificación 05/17/2023</span>
-      <span class="quotation--info__white">Ciente: Gustavo Hurtado</span>
-      <span class="quotation--info__white">Asesor: Valerie Wagner</span>
-      <span class="quotation--info__white">Moneda: COP</span>
+      <span id="qnclient" class="quotation--info__white">Cliente: </span>
+      <span id="qnadvisor" class="quotation--info__white">Asesor: </span>
+      <span id="qncurrency" class="quotation--info__white">Moneda: </span>
     </div>
     <div class="region region--right">
       <div class="quotation--email">
@@ -38,18 +37,18 @@
         <span>Atrás</span>
       </a>
       <div class="quotationew--body__info">
-        <div class="quotation--origin">
+        <!-- <div class="quotation--origin">
           <img class="quotation--origin__shopify" src="../../img/icon/icon-shopify.svg" loading="lazy" alt="Shopify" title="Shopify">
-         </div>
-         <div class="quotation--origin__data">
-          <span class="quotation--info quotation--info__bold">Código 11</span>
-          <span class="quotation--status quotation--status--requested">Solicitada</span>
-         </div>
+        </div>
+        <div class="quotation--origin__data">
+        <span class="quotation--info quotation--info__bold">Código 11</span>
+        <span class="quotation--status quotation--status--requested">Solicitada</span>
+        </div> -->
       </div>
     </div>
     <div class="region region__two">
       <div class="quotationew__title">
-        <h2 class="quotation--title">Nuevo escenario</h2>
+        <h2 class="quotation--title">Nueva Cotización</h2>
       </div>
       <div class="quotationew__info">
         <div class="quotationew__infoOne">
@@ -79,16 +78,14 @@
               <option value="">Clasificación</option>
             </select>
             <select name="" id="qnfitprenda">
-              <option value="">Kit</option>
+              <option value="">Fit</option>
             </select>
           </div> 
         </div>
       </div>
       <div class="region region--right">
         <div class="slider--productos">
-          <div class="slider--content">
-            
-          </div>
+          <div class="slider--content"></div>
         </div>
       </div>
     </div>
@@ -104,38 +101,30 @@
           </div>
           <div class="region region--right">
             <span class="quotation--btn__add">Valor total: $27.340.250</span>
-            <span class="quotation--btn__new">Finalizar cotización</span>
+            <span class="quotation--btn__new">Guardar cotización</span>
           </div>
         </div>
         <div class="quotationew--calculation__body">
           <div class="scenary--row__table">
             <div class="scenary--row">
               <span class="quotation--title__quo">Producto</span>
-              <div id="products"><p class="quotation--info">CAMISA ML FIRENZE</p></div>
+              <div id="qnproducts"></div>
             </div>
             <div class="scenary--row">
-              <span class="quotation--title__quo">Modelo</span>
-              <div id="unitPrices"><p class="quotation--info">$ 250000</p></div>
-            </div>
-            <div class="scenary--row">
-              <span class="quotation--title__quo">Adicioal</span>
-              <div id="prices"><p class="quotation--info">$ 2500000</p></div>
+              <span class="quotation--title__quo">Molde</span>
+              <div id="unitPrices"></div>
             </div>
             <div class="scenary--row">
               <span class="quotation--title__quo">Valor Unitario</span>
-              <div id="prices"><p class="quotation--info">$ 2500000</p></div>
-            </div>
-            <div class="scenary--row">
-              <span class="quotation--title__quo">Valo Adicional</span>
-              <div id="prices"><p class="quotation--info">$ 2500000</p></div>
+              <div id="prices"></div>
             </div>
             <div class="scenary--row">
               <span class="quotation--title__quo">Cantidad</span>
-              <div id="prices"><p class="quotation--info">$ 2500000</p></div>
+              <div id="prices"></div>
             </div>
             <div class="scenary--row">
               <span class="quotation--title__quo">Subtotal</span>
-              <div id="prices"><p class="quotation--info">$ 2500000</p></div>
+              <div id="prices"></div>
             </div>
           </div>
         </div>
