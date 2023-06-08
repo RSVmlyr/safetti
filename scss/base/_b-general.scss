@@ -112,3 +112,15 @@ input {
   height: 40px;
   padding: 0 10px;
 }
+
+/* Oculta las flechas del input de tipo "number" */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  /* Deshabilita la interacción con las flechas del teclado */
+  -moz-appearance: textfield;
+}

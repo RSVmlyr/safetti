@@ -1,0 +1,14 @@
+.card--amount {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  &__input {
+    input {
+      border: 0;
+      box-shadow: none;
+      height: auto;
+      text-align: center;
+      width: 30px;
+    }
+  }
+}

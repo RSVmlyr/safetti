@@ -1,6 +1,7 @@
 
 import fillSelectProduct from "../../helpers/fillSelectProduct.js";
 import countryValidate from "./countryValidate.js";
+import inputNumber from "./inputNumber.js";
 
 const quotationNewPage = (resQueryUser, resQueryProducts) => {
   
@@ -42,12 +43,17 @@ const quotationNewPage = (resQueryUser, resQueryProducts) => {
     }
     // Short description
 
+    // let mainImage = pro.mainImage;
+    // const originUrlPath = 'https://dev-co-safetti-b2b.pantheonsite.io/sites/default/files/';
+    // const modifiedStringImage = mainImage.replace('public://', originUrlPath);
+    // console.log(modifiedStringImage);
+
     let sliderRow = 
     `<div class="slider--row">
       <div class="card">
         <div class="card__front">
           <div class="card--image">
-            <img src="./img/icon/image-product.jpeg" loading="lazy" alt="image" title="image" >
+            <img src="../img/icon/image-product.jpeg" loading="lazy" alt="Producto" title="Producto" >
           </div>
           <div class="card--body">
             <h3 class="card--title quotation--title__quo">
@@ -65,7 +71,43 @@ const quotationNewPage = (resQueryUser, resQueryProducts) => {
           <option value="">País</option>
          </select>
          <div id="card__back--items" class="card__back--items">
-           
+
+          <div class="card--amount">
+            <span class="card--amount__title">Hombre</span>
+            <div class="card--amount__input">
+              <button class="qnManDecrease">-</button>
+              <input type="number" id="qnManInput" value="0" min="0" readonly>
+              <button class="qnManIncrease">+</button>
+            </div>
+          </div>
+
+          <div class="card--amount">
+            <span class="card--amount__title">Mujer</span>
+            <div class="card--amount__input">
+              <button class="qnWomanDecrease">-</button>
+              <input type="number" id="qnWomanInput" value="0" min="0" readonly>
+              <button class="qnWomanIncrease">+</button>
+            </div>
+          </div>
+
+          <div class="card--amount">
+            <span class="card--amount__title">Unisex</span>
+            <div class="card--amount__input">
+              <button class="qnUnisexDecrease">-</button>
+              <input type="number" id="qnUnisexInput" value="0" min="0" readonly>
+              <button class="qnUnisexIncrease">+</button>
+            </div>
+          </div>
+
+          <div class="card--amount">
+            <span class="card--amount__title">Junior</span>
+            <div class="card--amount__input">
+              <button class="qnJuniorDecrease">-</button>
+              <input type="number" id="qnJuniorInput" value="0" min="0" readonly>
+              <button class="qnJuniorIncrease">+</button>
+            </div>
+          </div>
+
          </div>
         </div>
       </div>
@@ -83,11 +125,19 @@ const quotationNewPage = (resQueryUser, resQueryProducts) => {
     countryValidate(idQnCountry, pro.canadaMan, pro.canadaWoman, 'USA - Canada')
     countryValidate(idQnCountry, pro.vR7Man, pro.vR7Woman, 'vR7')
 
-  });
-  
-  
+    const qnManInput = document.querySelector('#qnManInput')
+    inputNumber(qnManInput, '.qnManIncrease', '.qnManDecrease')
+    const qnWomanInput = document.querySelector('#qnWomanInput')
+    inputNumber(qnWomanInput, '.qnWomanIncrease', '.qnWomanDecrease')
+    const qnUnisex = document.querySelector('#qnUnisexInput')
+    inputNumber(qnUnisex, '.qnUnisexIncrease', '.qnUnisexDecrease')
+    const qnJunior = document.querySelector('#qnJuniorInput')
+    inputNumber(qnJunior, '.qnJuniorIncrease', '.qnJuniorDecrease')
 
-  
+  });
+
+ 
+
   
 
 }

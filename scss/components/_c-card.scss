@@ -6,6 +6,14 @@
   box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.09);
   height: 100%;
   padding: 7px;
+  &--image {
+    img {
+      height: 136px;
+      width: 188px;
+      object-fit: contain;
+      object-position: top;
+    }
+  }
   &--actions {
     display: flex;
     justify-content: space-between;
@@ -29,6 +37,9 @@
   .quotation--info,
   p {
     margin: 0 0 15px;
+  }
+  &__back {
+    background-color: $white;
   }
   &__back--country {
     width: 100%;
