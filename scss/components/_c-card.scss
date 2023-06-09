@@ -1,33 +1,38 @@
 .card {
+  background-color: $white;
+  box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.09);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: $white;
-  box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.09);
-  height: 100%;
-  padding: 7px;
+  height: 280px;
+  width: 194px;
+  padding: 8px 8px 12px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: all .6s linear;
+
   &--image {
     img {
       height: 136px;
-      width: 188px;
-      object-fit: contain;
+      width: 100%;
+      object-fit: cover;
       object-position: top;
     }
   }
   &--actions {
     display: flex;
     justify-content: space-between;
-    padding: 0 0 5px;
     button {
       background-color: transparent;
       border: 0;
       margin: 0;
       padding: 0;
+      cursor: pointer;
     }
     a {
       color: $black;
       text-decoration: none;
-      pointer-events: none;
+      cursor: pointer;
     }
   }
   &--title {
@@ -38,10 +43,31 @@
   p {
     margin: 0 0 15px;
   }
+  &__front {
+    background: #fff;
+    position: absolute;
+    backface-visibility: hidden;
+    height: 280px;
+    width: 194px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
   &__back {
+    position: absolute;
+    backface-visibility: hidden;
+    transform: rotateY(180deg);
+    background: #fff;
+    height: 280px;
+    color: #000;
     background-color: $white;
+    width: 194px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
   }
   &__back--country {
+    margin: 0 0 15px;
     width: 100%;
   }
 }

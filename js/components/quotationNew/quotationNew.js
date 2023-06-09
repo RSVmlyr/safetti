@@ -54,7 +54,7 @@ const quotationNewPage = (resQueryUser, resQueryProducts) => {
             </div>
             <div class="card--actions">
               <button>Ver detalle</button>
-              <a href="">Agregar +</a>
+              <button class="qnaddproducts">Agregar +</button>
             </div>
           </div>
           <div class="card__back">
@@ -112,14 +112,16 @@ const quotationNewPage = (resQueryUser, resQueryProducts) => {
       const sliderProducts = document.querySelector('.slider--productos .slider--content')
   
       sliderProducts.insertAdjacentHTML('afterbegin', `${sliderRow}`)
+
+      const cardAddProducts = document.querySelector('.card .qnaddproducts')
   
       const idQnCountry = document.querySelector('.qncountry')
       const countryName = ['Colombia', 'USA - Canada', 'vR7']
       fillSelectProduct(idQnCountry, countryName)
   
-      // countryValidate(idQnCountry, pro.colombiaMan, pro.colombiaWoman, pro.colombiaUnisex, pro.colombiaJunior, 'Colombia')
-      // countryValidate(idQnCountry, pro.canadaMan, pro.canadaWoman, '', '', 'USA - Canada')
-      // countryValidate(idQnCountry, pro.vR7Man, pro.vR7Woman, '', '', 'vR7')
+      // countryValidate
+      // countryValidate
+      // countryValidate
 
       if (pro.colombiaMan === null && pro.colombiaWoman === null && pro.colombiaUnisex === null && pro.colombiaJunior === null) {
         const optionToRemove = 'Colombia';

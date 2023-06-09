@@ -2,7 +2,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin: 0 0 10px;
   &__input {
+    button {
+      background: transparent;
+      background-color: transparent;
+      border: 0;
+      font-size: 18px;
+    }
     input {
       border: 0;
       box-shadow: none;
@@ -12,6 +19,9 @@
     }
   }
   &__actions {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     button {

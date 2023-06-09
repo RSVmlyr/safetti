@@ -161,10 +161,15 @@
                   &--content {
                     display: flex;
                     flex-wrap: wrap;
-                    gap: 20px;
                   }
                   &--row {
-                    width: 202px;
+                    position: relative;
+                    margin: 10px;
+                    &:hover {
+                      .card {
+                        transform: rotateY(180deg);
+                      }
+                    }
                   }
                 }
               }
