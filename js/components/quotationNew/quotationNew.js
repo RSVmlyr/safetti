@@ -1,6 +1,6 @@
 
 import fillSelectProduct from "../../helpers/fillSelectProduct.js";
-import countryValidate from "./countryValidate.js";
+// import countryValidate from "./countryValidate.js";
 import inputNumber from "./inputNumber.js";
 
 const quotationNewPage = (resQueryUser, resQueryProducts) => {
@@ -113,13 +113,29 @@ const quotationNewPage = (resQueryUser, resQueryProducts) => {
   
       sliderProducts.insertAdjacentHTML('afterbegin', `${sliderRow}`)
   
-      const countryName = ['Colombia', 'USA - Canada', 'vR7']
       const idQnCountry = document.querySelector('.qncountry')
+      const countryName = ['Colombia', 'USA - Canada', 'vR7']
       fillSelectProduct(idQnCountry, countryName)
   
-      countryValidate(idQnCountry, pro.colombiaMan, pro.colombiaWoman, pro.colombiaUnisex, pro.colombiaJunior, 'Colombia')
-      countryValidate(idQnCountry, pro.canadaMan, pro.canadaWoman, '', '', 'USA - Canada')
-      countryValidate(idQnCountry, pro.vR7Man, pro.vR7Woman, '', '', 'vR7')
+      // countryValidate(idQnCountry, pro.colombiaMan, pro.colombiaWoman, pro.colombiaUnisex, pro.colombiaJunior, 'Colombia')
+      // countryValidate(idQnCountry, pro.canadaMan, pro.canadaWoman, '', '', 'USA - Canada')
+      // countryValidate(idQnCountry, pro.vR7Man, pro.vR7Woman, '', '', 'vR7')
+
+      if (pro.colombiaMan === null && pro.colombiaWoman === null && pro.colombiaUnisex === null && pro.colombiaJunior === null) {
+        const optionToRemove = 'Colombia';
+        const option = idQnCountry.querySelector(`option[value="${optionToRemove}"]`);
+        option ? option.remove() : null
+      }
+      if (pro.canadaMan === null && pro.canadaWoman === null) {
+        const optionToRemove = 'USA - Canada';
+        const option = idQnCountry.querySelector(`option[value="${optionToRemove}"]`);
+        option ? option.remove() : null
+      }
+      if (pro.vR7Man === null && pro.vR7Woman === null) {
+        const optionToRemove = 'vR7';
+        const option = idQnCountry.querySelector(`option[value="${optionToRemove}"]`);
+        option ? option.remove() : null
+      }
   
       const qnManInput = document.querySelector('.qnManInput')
       inputNumber(qnManInput, '.qnManIncrease', '.qnManDecrease')
@@ -163,6 +179,16 @@ const quotationNewPage = (resQueryUser, resQueryProducts) => {
           pro.colombiaWoman === null ? idInputwoman.classList.add('quotation-hidden') : idInputwoman.classList.remove('quotation-hidden')
           pro.colombiaJunior === null ? idInputJunior.classList.add('quotation-hidden') : idInputJunior.classList.remove('quotation-hidden')
           pro.colombiaUnisex === null ? idInputUnisex.classList.add('quotation-hidden') : idInputUnisex.classList.remove('quotation-hidden')
+        } else if (e.target.value === 'USA - Canada') {
+          pro.canadaMan === null ? idInputMan.classList.add('quotation-hidden') : idInputMan.classList.remove('quotation-hidden')
+          pro.canadaWoman === null ? idInputwoman.classList.add('quotation-hidden') : idInputwoman.classList.remove('quotation-hidden')
+          idInputJunior.classList.add('quotation-hidden')
+          idInputUnisex.classList.add('quotation-hidden')         
+        } else if (e.target.value === 'vR7') {
+          pro.vR7Man === null ? idInputMan.classList.add('quotation-hidden') : idInputMan.classList.remove('quotation-hidden')
+          pro.vR7Woman === null ? idInputwoman.classList.add('quotation-hidden') : idInputwoman.classList.remove('quotation-hidden')
+          idInputJunior.classList.add('quotation-hidden')
+          idInputUnisex.classList.add('quotation-hidden')
         }
 
       })
