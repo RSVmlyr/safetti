@@ -67,7 +67,7 @@ const quotationNewPage = (resQueryUser, resQueryProducts) => {
           </div>
         </div>
         <div class="card__back">
-         <select id="qncountry" class="card__back--country">
+         <select class="qncountry card__back--country">
           <option value="">País</option>
          </select>
          <div id="card__back--items" class="card__back--items">
@@ -76,7 +76,7 @@ const quotationNewPage = (resQueryUser, resQueryProducts) => {
             <span class="card--amount__title">Hombre</span>
             <div class="card--amount__input">
               <button class="qnManDecrease">-</button>
-              <input type="number" id="qnManInput" value="0" min="0" readonly>
+              <input class="qnManInput" type="number" name="qnManInput" value="0" min="0" readonly>
               <button class="qnManIncrease">+</button>
             </div>
           </div>
@@ -85,7 +85,7 @@ const quotationNewPage = (resQueryUser, resQueryProducts) => {
             <span class="card--amount__title">Mujer</span>
             <div class="card--amount__input">
               <button class="qnWomanDecrease">-</button>
-              <input type="number" id="qnWomanInput" value="0" min="0" readonly>
+              <input class="qnWomanInput" type="number" name="qnWomanInput" value="0" min="0" readonly>
               <button class="qnWomanIncrease">+</button>
             </div>
           </div>
@@ -94,7 +94,7 @@ const quotationNewPage = (resQueryUser, resQueryProducts) => {
             <span class="card--amount__title">Unisex</span>
             <div class="card--amount__input">
               <button class="qnUnisexDecrease">-</button>
-              <input type="number" id="qnUnisexInput" value="0" min="0" readonly>
+              <input class="qnUnisexInput" type="number" name="qnUnisexInput" value="0" min="0" readonly>
               <button class="qnUnisexIncrease">+</button>
             </div>
           </div>
@@ -103,9 +103,14 @@ const quotationNewPage = (resQueryUser, resQueryProducts) => {
             <span class="card--amount__title">Junior</span>
             <div class="card--amount__input">
               <button class="qnJuniorDecrease">-</button>
-              <input type="number" id="qnJuniorInput" value="0" min="0" readonly>
+              <input class="qnJuniorInput" type="number" name="qnJuniorInput" value="0" min="0" readonly>
               <button class="qnJuniorIncrease">+</button>
             </div>
+          </div>
+
+          <div class="card--amount__actions">
+            <button class="qncancelproduct">Cancelar</button>
+            <button class="qnaceptproduct">Aceptar</button>
           </div>
 
          </div>
@@ -118,20 +123,20 @@ const quotationNewPage = (resQueryUser, resQueryProducts) => {
     sliderProducts.insertAdjacentHTML('afterbegin', `${sliderRow}`)
 
     const countryName = ['Colombia', 'USA - Canada', 'vR7']
-    const idQnCountry = document.querySelector('#qncountry')
+    const idQnCountry = document.querySelector('.qncountry ')
     fillSelectProduct(idQnCountry, countryName)
 
     countryValidate(idQnCountry, pro.colombiaMan, pro.colombiaWoman, 'Colombia')
     countryValidate(idQnCountry, pro.canadaMan, pro.canadaWoman, 'USA - Canada')
     countryValidate(idQnCountry, pro.vR7Man, pro.vR7Woman, 'vR7')
 
-    const qnManInput = document.querySelector('#qnManInput')
+    const qnManInput = document.querySelector('.qnManInput')
     inputNumber(qnManInput, '.qnManIncrease', '.qnManDecrease')
-    const qnWomanInput = document.querySelector('#qnWomanInput')
+    const qnWomanInput = document.querySelector('.qnWomanInput')
     inputNumber(qnWomanInput, '.qnWomanIncrease', '.qnWomanDecrease')
-    const qnUnisex = document.querySelector('#qnUnisexInput')
+    const qnUnisex = document.querySelector('.qnUnisexInput')
     inputNumber(qnUnisex, '.qnUnisexIncrease', '.qnUnisexDecrease')
-    const qnJunior = document.querySelector('#qnJuniorInput')
+    const qnJunior = document.querySelector('.qnJuniorInput')
     inputNumber(qnJunior, '.qnJuniorIncrease', '.qnJuniorDecrease')
 
   });
