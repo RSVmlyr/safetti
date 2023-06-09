@@ -71,6 +71,10 @@ body {
   display: none;
 }
 
+.quotation-hidden {
+  visibility: hidden;
+}
+
 .quotation--status {
   border-radius: 15px;
   font-family: $FuturaMedium;

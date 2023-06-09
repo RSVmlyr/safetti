@@ -62,7 +62,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               <div class="scenary--data__actions">
                 <a href="./index-q.html" class="quotation--btn__new">Nuevo escenario +</a>
                 <div id="quotation--btn__delete" class="scenary--data__actionsDelete">
-                  <span class="quotation--info">Eliminar cotización</span>
+                  <span class="quotation--info">Cancelar cotización</span>
                   <img src='../../img/icon/icon-delete.svg' loading="lazy" alt="Eliminar" title="Eliminar">
                 </div>
               </div>
