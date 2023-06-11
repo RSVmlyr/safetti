@@ -3,25 +3,25 @@ import fillSelectProduct from "../../helpers/fillSelectProduct.js";
 // import countryValidate from "./countryValidate.js";
 import inputNumber from "./inputNumber.js";
 
-const quotationNewPage = (resQueryUser, resQueryProducts) => {
+const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts) => {
   
   console.log('Object User', resQueryUser);
   console.log('Object Products', resQueryProducts.products);
 
-  const idQnClient = document.querySelector('#qnclient')
+  const idQnClient = quotationNew.querySelector('#qnclient')
   idQnClient.innerHTML = 'Cliente: ' + resQueryUser.fullName
-  const idQnAdvisor = document.querySelector('#qnadvisor')
+  const idQnAdvisor = quotationNew.querySelector('#qnadvisor')
   idQnAdvisor.innerHTML = 'Asesor: ' + resQueryUser.advisorName
-  const idQnCurrency = document.querySelector('#qncurrency')
+  const idQnCurrency = quotationNew.querySelector('#qncurrency')
   idQnCurrency.innerHTML = 'Modenda: ' + resQueryUser.currency
 
-  const idQnCuentos = document.querySelector('#qncuentos')
+  const idQnCuentos = quotationNew.querySelector('#qncuentos')
   fillSelectProduct(idQnCuentos, resQueryProducts.cuentos)
-  const idQnTiposPrenda = document.querySelector('#qntiposprenda')
+  const idQnTiposPrenda = quotationNew.querySelector('#qntiposprenda')
   fillSelectProduct(idQnTiposPrenda, resQueryProducts.tiposPrenda)
-  const idQnClasificaciones = document.querySelector('#qnclasificaciones')
+  const idQnClasificaciones = quotationNew.querySelector('#qnclasificaciones')
   fillSelectProduct(idQnClasificaciones, resQueryProducts.clasificaciones)
-  const idQnFitPrenda = document.querySelector('#qnfitprenda')
+  const idQnFitPrenda = quotationNew.querySelector('#qnfitprenda')
   fillSelectProduct(idQnFitPrenda, resQueryProducts.fitPrenda)
 
   if (resQueryProducts.products.length > 0) {
@@ -48,12 +48,12 @@ const quotationNewPage = (resQueryUser, resQueryProducts) => {
             </div>
             <div class="card--body">
               <h3 class="card--title quotation--title__quo">
-                 ${pro.id ? pro.id : ''} / ${pro.name ? pro.name : ''}
+                ${pro.id ? pro.id : ''} / ${pro.name ? pro.name : ''}
               </h3>
               <p class="quotation--info">${description}</p>
             </div>
             <div class="card--actions">
-              <button>Ver detalle</button>
+              <button class="qnviewdetailproducts">Ver detalle</button>
               <button class="qnaddproducts">Agregar +</button>
             </div>
           </div>
@@ -109,21 +109,24 @@ const quotationNewPage = (resQueryUser, resQueryProducts) => {
         </div>
       </div>
       `
-      const sliderProducts = document.querySelector('.slider--productos .slider--content')
+      const sliderProducts = quotationNew.querySelector('.slider--productos .slider--content')
   
       sliderProducts.insertAdjacentHTML('afterbegin', `${sliderRow}`)
 
-      const cardAddProducts = document.querySelector('.card .qnaddproducts')
-      const sliderProductsRow = document.querySelector('.slider--productos .slider--content .slider--row')
+      // Card button Agregar +
+      const cardAddProducts = quotationNew.querySelector('.card .qnaddproducts')
+      const sliderProductsRow = quotationNew.querySelector('.slider--productos .slider--content .slider--row')
       cardAddProducts.addEventListener('click', (e) => {
-        // const sliderProductsRows = document.querySelectorAll('.slider--productos .slider--content .slider--row')
+        // Delete other childs
+        // const sliderProductsRows = quotationNew.querySelectorAll('.slider--productos .slider--content .slider--row')
         // sliderProductsRows.forEach(otherRow => {
         //   otherRow.classList.remove('active') 
         // });
         e.target ? sliderProductsRow.classList.add('active') : false
       })
 
-      const cardCancelProducts = document.querySelector('.card .qncancelproduct')
+      // Card button Cancelar
+      const cardCancelProducts = quotationNew.querySelector('.card .qncancelproduct')
       cardCancelProducts.addEventListener('click', (e) => {
         if(e.target) {
           if (sliderProductsRow.classList.contains('active')) {
@@ -131,8 +134,43 @@ const quotationNewPage = (resQueryUser, resQueryProducts) => {
           }
         }
       })
+
+      const cardViewDetailProducts = quotationNew.querySelector('.card .qnviewdetailproducts')
+      cardViewDetailProducts.addEventListener('click', (e) => {
+        if(e.target) {
+          let modalCard =
+          `<div class="modal">
+            <div class="modal--container">
+              <div class="modal--header">
+                <h3 class="quotation--title__quo">${pro.id ? pro.id : ''} / ${pro.name ? pro.name : ''}</h3>
+              </div>
+              <div class="modal--body">
+                <div class="modal--body__content">
+                  <h4 class="modal--title"><span>Deporte:</span> ${pro.cuento ? pro.cuento : ''}</h4>
+                  <h4 class="modal--title"><span>Referencia:</span> ${pro.referencia ? pro.referencia : ''}</h4>
+                  <h4 class="modal--title"><span>Clasificación:</span> ${pro.classification ? pro.classification : ''}</h4>
+                  <h4 class="modal--title"><span>Descripción:</span></h4>
+                  ${pro.description ? pro.description : ''}
+                  <h4 class="modal--title"><span>Características:</span></h4>
+                  ${pro.features ? pro.features : ''}
+                </div>  
+                <div class="modal--close">x</div>
+              </div>
+            </div>
+          </div>
+          `
+          quotationNew.style.overflow = 'hidden'
+          quotationNew.insertAdjacentHTML('afterend', `${modalCard}`)
+          const modal = document.querySelector('.modal')
+          const modalClose = document.querySelector('.modal--close')
+          modalClose.addEventListener('click', () => {
+            quotationNew.style.overflow = 'auto'
+            modal.remove()  
+          })
+        }
+      })
   
-      const idQnCountry = document.querySelector('.qncountry')
+      const idQnCountry = quotationNew.querySelector('.qncountry')
       const countryName = ['Colombia', 'USA - Canada', 'vR7']
       fillSelectProduct(idQnCountry, countryName)
   
@@ -156,39 +194,39 @@ const quotationNewPage = (resQueryUser, resQueryProducts) => {
         option ? option.remove() : null
       }
   
-      const qnManInput = document.querySelector('.qnManInput')
+      const qnManInput = quotationNew.querySelector('.qnManInput')
       inputNumber(qnManInput, '.qnManIncrease', '.qnManDecrease')
-      const qnWomanInput = document.querySelector('.qnWomanInput')
+      const qnWomanInput = quotationNew.querySelector('.qnWomanInput')
       inputNumber(qnWomanInput, '.qnWomanIncrease', '.qnWomanDecrease')
-      const qnUnisex = document.querySelector('.qnUnisexInput')
+      const qnUnisex = quotationNew.querySelector('.qnUnisexInput')
       inputNumber(qnUnisex, '.qnUnisexIncrease', '.qnUnisexDecrease')
-      const qnJunior = document.querySelector('.qnJuniorInput')
+      const qnJunior = quotationNew.querySelector('.qnJuniorInput')
       inputNumber(qnJunior, '.qnJuniorIncrease', '.qnJuniorDecrease')
 
-      const inputMan = document.querySelector('.inputman')
+      const inputMan = quotationNew.querySelector('.inputman')
       inputMan.id = `inputman--${index + 1}`;
-      const inputwoman = document.querySelector('.inputwoman')
+      const inputwoman = quotationNew.querySelector('.inputwoman')
       inputwoman.id = `inputwoman--${index + 1}`;
-      const inputUnisex = document.querySelector('.inputunisex')
+      const inputUnisex = quotationNew.querySelector('.inputunisex')
       inputUnisex.id = `inputunisex--${index + 1}`;
-      const inputJunior = document.querySelector('.inputjunior')
+      const inputJunior = quotationNew.querySelector('.inputjunior')
       inputJunior.id = `inputjunior--${index + 1}`;
 
       idQnCountry.addEventListener('change', (e) => {
 
-        let idInputMan = document.querySelector(`#inputman--${index + 1}`);
+        let idInputMan = quotationNew.querySelector(`#inputman--${index + 1}`);
         if (idInputMan.classList.contains('quotation-hidden')) {
           idInputMan.classList.remove('quotation-hidden')
         }  
-        let idInputwoman = document.querySelector(`#inputwoman--${index + 1}`);
+        let idInputwoman = quotationNew.querySelector(`#inputwoman--${index + 1}`);
         if (idInputwoman.classList.contains('quotation-hidden')) {
           idInputwoman.classList.remove('quotation-hidden')
         }  
-        let idInputUnisex = document.querySelector(`#inputunisex--${index + 1}`);
+        let idInputUnisex = quotationNew.querySelector(`#inputunisex--${index + 1}`);
         if (idInputUnisex.classList.contains('quotation-hidden')) {
           idInputUnisex.classList.remove('quotation-hidden')
         }  
-        let idInputJunior = document.querySelector(`#inputjunior--${index + 1}`);
+        let idInputJunior = quotationNew.querySelector(`#inputjunior--${index + 1}`);
         if (idInputJunior.classList.contains('quotation-hidden')) {
           idInputJunior.classList.remove('quotation-hidden')
         }
@@ -215,7 +253,7 @@ const quotationNewPage = (resQueryUser, resQueryProducts) => {
     });
     
   } else { 
-    const sliderProducts = document.querySelector('.slider--productos .slider--content')
+    const sliderProducts = quotationNew.querySelector('.slider--productos .slider--content')
     sliderProducts.insertAdjacentHTML('afterbegin', '<div class="quotation--loading"><span class="quotation--title">No hay Productos...</span></div>')
   }
 

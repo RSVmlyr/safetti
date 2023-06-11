@@ -59,10 +59,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Get Users and Products
         const getDataQuotationNew = () => {
-          quotationNewPage(resQueryUser, resQueryProducts)
+          quotationNewPage(quotationNew, resQueryUser, resQueryProducts)
         }
         // Get Users and Products
-        
         getDataQuotationNew()
       }
 

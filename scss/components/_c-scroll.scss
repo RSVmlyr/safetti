@@ -1,0 +1,30 @@
+/* Estilos generales de la barra de scroll */
+::-webkit-scrollbar {
+  width: 10px; /* Ancho de la barra de scroll */
+}
+
+/* Estilos para el fondo de la barra de scroll */
+::-webkit-scrollbar-track {
+  background-color: transparent; /* Color de fondo */
+}
+
+/* Estilos para el thumb (agarre) de la barra de scroll */
+::-webkit-scrollbar-thumb {
+  background-color: #888; /* Color del thumb */
+  border-radius: 5px; /* Borde redondeado */
+}
+
+/* Estilos para el thumb cuando está en estado de hover */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Color del thumb en hover */
+}
+
+/* Estilos para los botones de la barra de scroll */
+::-webkit-scrollbar-button {
+  display: none; /* Ocultar los botones */
+}
+
+/* Estilos para la esquina de la barra de scroll */
+::-webkit-scrollbar-corner {
+  background-color: #f1f1f1; /* Color de fondo de la esquina */
+}
