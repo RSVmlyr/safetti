@@ -165,7 +165,7 @@
                   &--row {
                     position: relative;
                     margin: 10px;
-                    &:hover {
+                    &.active {
                       .card {
                         transform: rotateY(180deg);
                       }

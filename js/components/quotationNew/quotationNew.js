@@ -114,6 +114,23 @@ const quotationNewPage = (resQueryUser, resQueryProducts) => {
       sliderProducts.insertAdjacentHTML('afterbegin', `${sliderRow}`)
 
       const cardAddProducts = document.querySelector('.card .qnaddproducts')
+      const sliderProductsRow = document.querySelector('.slider--productos .slider--content .slider--row')
+      cardAddProducts.addEventListener('click', (e) => {
+        // const sliderProductsRows = document.querySelectorAll('.slider--productos .slider--content .slider--row')
+        // sliderProductsRows.forEach(otherRow => {
+        //   otherRow.classList.remove('active') 
+        // });
+        e.target ? sliderProductsRow.classList.add('active') : false
+      })
+
+      const cardCancelProducts = document.querySelector('.card .qncancelproduct')
+      cardCancelProducts.addEventListener('click', (e) => {
+        if(e.target) {
+          if (sliderProductsRow.classList.contains('active')) {
+            sliderProductsRow.classList.remove('active')
+          }
+        }
+      })
   
       const idQnCountry = document.querySelector('.qncountry')
       const countryName = ['Colombia', 'USA - Canada', 'vR7']
@@ -198,7 +215,7 @@ const quotationNewPage = (resQueryUser, resQueryProducts) => {
     });
     
   } else { 
-    const sliderProducts = quotationNew.querySelector('.slider--productos .slider--content')
+    const sliderProducts = document.querySelector('.slider--productos .slider--content')
     sliderProducts.insertAdjacentHTML('afterbegin', '<div class="quotation--loading"><span class="quotation--title">No hay Productos...</span></div>')
   }
 
