@@ -51,6 +51,10 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts) => {
             <div class="card--body">
               <h3 class="card--title quotation--title__quo">${pro.id ? pro.id : ''} - ${pro.name ? pro.name : ''}</h3>
               <span class="card--reference">${pro.referencia ? pro.referencia : ''}</span>
+              <span class="card--cuento quotation-hide">${pro.cuento ? pro.cuento : ''}</span>
+              <span class="card--garment quotation-hide">${pro.garment ? pro.garment : ''}</span>
+              <span class="card--classification quotation-hide">${pro.classification ? pro.classification : ''}</span>
+              <span class="card--garmentfit quotation-hide">${pro.garmentFit ? pro.garmentFit : ''}</span>
               <p class="quotation--info">${description}</p>
             </div>
             <div class="card--actions">
