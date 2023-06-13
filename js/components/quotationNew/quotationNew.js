@@ -2,6 +2,7 @@
 import fillSelectProduct from "../../helpers/fillSelectProduct.js";
 // import countryValidate from "./countryValidate.js";
 import inputNumber from "./inputNumber.js";
+import searchProduct from "./searchProduct.js";
 
 const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts) => {
   
@@ -25,6 +26,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts) => {
   fillSelectProduct(idQnFitPrenda, resQueryProducts.fitPrenda)
 
   if (resQueryProducts.products.length > 0) {
+
     resQueryProducts.products.forEach((pro, index) => {
 
       // Short description
@@ -47,9 +49,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts) => {
               <img src="../img/icon/image-product.jpeg" loading="lazy" alt="Producto" title="Producto" >
             </div>
             <div class="card--body">
-              <h3 class="card--title quotation--title__quo">
-                ${pro.id ? pro.id : ''} / ${pro.name ? pro.name : ''}
-              </h3>
+              <h3 class="card--title quotation--title__quo">${pro.id ? pro.id : ''} / ${pro.name ? pro.name : ''}</h3>
               <p class="quotation--info">${description}</p>
             </div>
             <div class="card--actions">
@@ -251,7 +251,11 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts) => {
       })
 
     });
-    
+
+    // Search Product
+    searchProduct(quotationNew)
+    // Search Product
+
   } else { 
     const sliderProducts = quotationNew.querySelector('.slider--productos .slider--content')
     sliderProducts.insertAdjacentHTML('afterbegin', '<div class="quotation--loading"><span class="quotation--title">No hay Productos...</span></div>')
