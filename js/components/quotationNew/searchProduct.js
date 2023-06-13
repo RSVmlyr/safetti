@@ -1,18 +1,24 @@
 const searchProduct = (quotationNew) => {
   const qnSearchProduct = quotationNew.querySelector('#qnsearchproduct')
-  const sliderProductsRows = quotationNew.querySelectorAll('.slider--productos .slider--content .slider--row')
+  const sliderProductsRow = quotationNew.querySelectorAll('.slider--productos .slider--content .slider--row')
 
   qnSearchProduct.addEventListener('input', (e) => {
     const searchTerm = e.target.value.toLowerCase();
 
-    sliderProductsRows.forEach(row => {
+    sliderProductsRow.forEach(row => {
       const cardTitle = row.querySelector('.card--title');
-      const rowText = cardTitle.textContent.toLowerCase();
+      const cardReference = row.querySelector('.card--reference');
+      const rowTitle = cardTitle.textContent.toLowerCase();
+      const rowReference = cardReference.textContent.toLowerCase();
 
-      if (rowText.includes(searchTerm)) {
-        row.style.display = 'block';
+      if (rowTitle.includes(searchTerm) || rowReference.includes(searchTerm)) {
+        if (row.style.display === 'none') {
+          row.style.display = '';
+        }
       } else {
-        row.style.display = 'none';
+        if (row.style.display !== 'none') {
+          row.style.display = 'none';
+        }
       }
     });
   });

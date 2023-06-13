@@ -49,7 +49,8 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts) => {
               <img src="../img/icon/image-product.jpeg" loading="lazy" alt="Producto" title="Producto" >
             </div>
             <div class="card--body">
-              <h3 class="card--title quotation--title__quo">${pro.id ? pro.id : ''} / ${pro.name ? pro.name : ''}</h3>
+              <h3 class="card--title quotation--title__quo">${pro.id ? pro.id : ''} - ${pro.name ? pro.name : ''}</h3>
+              <span class="card--reference">${pro.referencia ? pro.referencia : ''}</span>
               <p class="quotation--info">${description}</p>
             </div>
             <div class="card--actions">
