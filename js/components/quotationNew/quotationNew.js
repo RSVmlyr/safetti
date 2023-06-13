@@ -1,4 +1,5 @@
 
+import dateFormat from "../../helpers/dateFormat.js";
 import fillSelectProduct from "../../helpers/fillSelectProduct.js";
 // import countryValidate from "./countryValidate.js";
 import inputNumber from "./inputNumber.js";
@@ -8,6 +9,10 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts) => {
   
   console.log('Object User', resQueryUser);
   console.log('Object Products', resQueryProducts.products);
+
+  const dateCurrent = new Date()
+  const idQnDate = quotationNew.querySelector('#qndate')
+  idQnDate.innerHTML = 'Creación: ' + dateFormat(dateCurrent)
 
   const idQnClient = quotationNew.querySelector('#qnclient')
   idQnClient.innerHTML = 'Cliente: ' + resQueryUser.fullName
