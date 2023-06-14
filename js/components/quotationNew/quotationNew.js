@@ -39,19 +39,20 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts) => {
       if (pro.description && pro.description.length > 40) {
         description += '...';
       }
-      // Short description
-  
-      // let mainImage = pro.mainImage;
-      // const originUrlPath = 'https://dev-co-safetti-b2b.pantheonsite.io/sites/default/files/';
-      // const modifiedStringImage = mainImage.replace('public://', originUrlPath);
-      // console.log(modifiedStringImage);
+      // Short description+
+
+      // Get URL Image
+      let mainImage = pro.mainImage ? pro.mainImage : '../img/icon/image-product.jpg';
+      console.log( mainImage);
+      const originUrlPath = 'https://dev-co-safetti-b2b.pantheonsite.io/sites/default/files/';
+      const modifiedStringImage = mainImage.replace('public://', originUrlPath);
   
       let sliderRow = 
       `<div class="slider--row">
         <div class="card">
           <div class="card__front">
             <div class="card--image">
-              <img src="../img/icon/image-product.jpeg" loading="lazy" alt="Producto" title="Producto" >
+              <img src="${modifiedStringImage}" loading="lazy" alt="Producto" title="Producto" >
             </div>
             <div class="card--body">
               <h3 class="card--title quotation--title__quo">${pro.id ? pro.id : ''} - ${pro.name ? pro.name : ''}</h3>
