@@ -5,6 +5,8 @@ import getAdvisors from "./services/advisors/getAdvisors.js"
 import getProduct from "./services/product/getProduct.js"
 import getQuotation from "./services/quotation/getQuotation.js"
 import getUser from "./services/user/getUser.js"
+import { createPaginator, pageNumberCallback } from './components/paginator/Paginator.js';
+import QuotationSearch from "./services/quotation/QuotationSearch.js"
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -22,6 +24,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const spinner = quotation.querySelector('#quotation--content--list .quotation--loading')
         spinner.remove()
 
+        window.drupalSettings = window.drupalSettings || {};
+        console.log(' window.drupalSettings ',  window.drupalSettings );
+        const uid = window.drupalSettings.user?.uid || 4;
+        const searchQuery = await QuotationSearch(uid, 1, 0)
+        createPaginator(searchQuery.totalPages)
+        pageNumberCallback(uid, 1, 0)
+
         // Get Advisors
         const getAdvisor = () => {
           if (resQueryAdvisors.length > 0) {
@@ -32,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Get Advisors
 
         // Get Quotations
-        const getQuotations = () => {
+     /*    const getQuotations = () => {
           if (resQuery.length > 0) {
             resQuery.forEach(cot => {
               quotationListRow(cot)
@@ -42,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
             quotationContentList.insertAdjacentHTML('afterbegin', '<div class="quotation--loading"><span>No existen Cotizaciones...</span></div>')
           }
         }
-        getQuotations()
+        getQuotations() */
         // Get Quotations
 
       }

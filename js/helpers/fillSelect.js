@@ -5,7 +5,7 @@ const fillSelect = (nodeSelectId, arr) => {
 
   arr.forEach((item) => {
     const optionElement = document.createElement('option');
-    optionElement.value = item.fullName;
+    optionElement.value = item.id;
     optionElement.textContent = item.fullName;
     nodeSelectId.appendChild(optionElement);
   });
