@@ -2,7 +2,7 @@ import createProductCards from "./createProductsCards.js";
 
 const searchProduct = (quotationNew, resQueryProducts) => {
 
-  console.log('Array para Filtrar: ', resQueryProducts.products);
+  // console.log('Array para Filtrar: ', resQueryProducts.products);
   
   // Nombre / referencia
   const qnSearchProduct = quotationNew.querySelector('#qnsearchproduct')
@@ -22,6 +22,47 @@ const searchProduct = (quotationNew, resQueryProducts) => {
 
   });
 
+  const filterSelects = () => {
+
+    const qnCuentos = quotationNew.querySelector('#qncuentos')
+    let qnCuentosValue = qnCuentos.value.toLowerCase()
+
+    const qnTiposPrenda = quotationNew.querySelector('#qntiposprenda')
+    let qnTiposPrendaValue = qnTiposPrenda.value.toLowerCase()
+
+    const qnClasificaciones = quotationNew.querySelector('#qnclasificaciones')
+    let qnClasificacionesValue = qnClasificaciones.value.toLowerCase()
+
+    const qnFitprenda = quotationNew.querySelector('#qnfitprenda')
+    let qnFitprendaValue = qnFitprenda.value.toLowerCase()
+ 
+    let filterPro = resQueryProducts.products.filter((pro) => (
+      (qnCuentosValue === "" || pro.cuento.toLowerCase() === qnCuentosValue) &&
+      (qnTiposPrendaValue === "" || pro.garment.toLowerCase() === qnTiposPrendaValue) &&
+      (qnClasificacionesValue === "" || pro.classification.toLowerCase() === qnClasificacionesValue) &&
+      (qnFitprendaValue === "" || pro.garmentFit.toLowerCase() === qnFitprendaValue)
+    ));
+
+    const sliderProductsRows = quotationNew.querySelectorAll('.slider--productos .slider--content .slider--row')
+
+    let dataFilterPro = [{products:filterPro}]
+    sliderProductsRows.forEach(row => {
+      row.remove()
+    });
+    createProductCards(quotationNew, dataFilterPro[0])
+
+  }
+
+  let selectCuento = quotationNew.querySelector('#qncuentos')
+  let selectTipoPrenda = quotationNew.querySelector('#qntiposprenda')
+  let selectClasificacion = quotationNew.querySelector('#qnclasificaciones')
+  let selectPrenda = quotationNew.querySelector('#qnfitprenda')
+
+  selectCuento.addEventListener('change', filterSelects)
+  selectTipoPrenda.addEventListener('change', filterSelects)
+  selectClasificacion.addEventListener('change', filterSelects)
+  selectPrenda.addEventListener('change', filterSelects)
+  
 }
 
 export default searchProduct;
