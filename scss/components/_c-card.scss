@@ -24,6 +24,7 @@
     padding: 5px 10px;
     position: absolute;
     top: 0;
+    text-transform: uppercase;
   }
   &--actions {
     display: flex;
@@ -73,7 +74,7 @@
     justify-content: start;
   }
   &__back--country {
-    margin: 0 0 15px;
+    margin: 15px 0;
     width: 100%;
   }
 }
