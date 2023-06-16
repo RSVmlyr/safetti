@@ -264,9 +264,6 @@ const createProductCards = (quotationNew, resQueryProducts) => {
     sliderProducts.insertAdjacentHTML('afterbegin', '<div class="quotation--loading"><span class="quotation--title">No hay Productos...</span></div>')  
   }
 
- 
-
-
 }
 
 export default createProductCards
