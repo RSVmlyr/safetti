@@ -1,5 +1,6 @@
 import fillSelectProduct from "../../helpers/fillSelectProduct.js";
 import inputNumber from "./inputNumber.js";
+import localStorage from "./localStorage.js";
 
 const createProductCards = (quotationNew, resQueryProducts) => {
 
@@ -106,6 +107,8 @@ const createProductCards = (quotationNew, resQueryProducts) => {
         //   otherRow.classList.remove('active') 
         // });
         e.target ? sliderProductsRow.classList.add('active') : false
+
+        localStorage()
 
       })
 
