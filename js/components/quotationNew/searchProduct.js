@@ -50,6 +50,7 @@ const searchProduct = (quotationNew, resQueryProducts) => {
       row.remove()
     });
     createProductCards(quotationNew, dataFilterPro[0])
+    localStorage.setItem("productosFiltrados", JSON.stringify(dataFilterPro[0]));
 
   }
 

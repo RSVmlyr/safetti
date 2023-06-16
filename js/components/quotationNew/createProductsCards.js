@@ -40,8 +40,9 @@ const createProductCards = (quotationNew, resQueryProducts) => {
             </div>
           </div>
           <div class="card__back">
+          <label>País</label>
            <select class="qncountry card__back--country">
-            <option value="" disabled selected>País</option>
+            <option value="" selected>-- Seleccionar --</option>
            </select>
            <div id="card__back--items" class="card__back--items">
   
@@ -105,6 +106,7 @@ const createProductCards = (quotationNew, resQueryProducts) => {
         //   otherRow.classList.remove('active') 
         // });
         e.target ? sliderProductsRow.classList.add('active') : false
+
       })
 
       // Card button Cancelar
@@ -187,28 +189,46 @@ const createProductCards = (quotationNew, resQueryProducts) => {
 
       const inputMan = quotationNew.querySelector('.inputman')
       inputMan.id = `inputman--${index + 1}`;
+      let idInputMan = quotationNew.querySelector(`#inputman--${index + 1}`);
+      const amountM = idInputMan.querySelector('.card--amount__input')
+      amountM.classList.add('quotation-hidden')
+
       const inputwoman = quotationNew.querySelector('.inputwoman')
       inputwoman.id = `inputwoman--${index + 1}`;
+      let idInputwoman = quotationNew.querySelector(`#inputwoman--${index + 1}`);
+      const amountW = idInputwoman.querySelector('.card--amount__input')
+      amountW.classList.add('quotation-hidden')
+
       const inputUnisex = quotationNew.querySelector('.inputunisex')
       inputUnisex.id = `inputunisex--${index + 1}`;
+      let idInputUnisex = quotationNew.querySelector(`#inputunisex--${index + 1}`);
+      const amountU = idInputUnisex.querySelector('.card--amount__input')
+      amountU.classList.add('quotation-hidden')
+
       const inputJunior = quotationNew.querySelector('.inputjunior')
       inputJunior.id = `inputjunior--${index + 1}`;
+      let idInputJunior = quotationNew.querySelector(`#inputjunior--${index + 1}`);
+      const amountJ = idInputJunior.querySelector('.card--amount__input')
+      amountJ.classList.add('quotation-hidden')
 
       idQnCountry.addEventListener('change', (e) => {
-
-        let idInputMan = quotationNew.querySelector(`#inputman--${index + 1}`);
+        amountM.classList.remove('quotation-hidden')
+        amountW.classList.remove('quotation-hidden')
+        amountU.classList.remove('quotation-hidden')
+        amountJ.classList.remove('quotation-hidden')
+        
         if (idInputMan.classList.contains('quotation-hidden')) {
           idInputMan.classList.remove('quotation-hidden')
         }  
-        let idInputwoman = quotationNew.querySelector(`#inputwoman--${index + 1}`);
+        
         if (idInputwoman.classList.contains('quotation-hidden')) {
           idInputwoman.classList.remove('quotation-hidden')
         }  
-        let idInputUnisex = quotationNew.querySelector(`#inputunisex--${index + 1}`);
+        
         if (idInputUnisex.classList.contains('quotation-hidden')) {
           idInputUnisex.classList.remove('quotation-hidden')
         }  
-        let idInputJunior = quotationNew.querySelector(`#inputjunior--${index + 1}`);
+        
         if (idInputJunior.classList.contains('quotation-hidden')) {
           idInputJunior.classList.remove('quotation-hidden')
         }
@@ -222,12 +242,17 @@ const createProductCards = (quotationNew, resQueryProducts) => {
           pro.canadaMan === null ? idInputMan.classList.add('quotation-hidden') : idInputMan.classList.remove('quotation-hidden')
           pro.canadaWoman === null ? idInputwoman.classList.add('quotation-hidden') : idInputwoman.classList.remove('quotation-hidden')
           idInputJunior.classList.add('quotation-hidden')
-          idInputUnisex.classList.add('quotation-hidden')         
+          idInputUnisex.classList.add('quotation-hidden')    
         } else if (e.target.value === 'vR7') {
           pro.vR7Man === null ? idInputMan.classList.add('quotation-hidden') : idInputMan.classList.remove('quotation-hidden')
           pro.vR7Woman === null ? idInputwoman.classList.add('quotation-hidden') : idInputwoman.classList.remove('quotation-hidden')
           idInputJunior.classList.add('quotation-hidden')
           idInputUnisex.classList.add('quotation-hidden')
+        } else {
+          amountM.classList.add('quotation-hidden')
+          amountW.classList.add('quotation-hidden')
+          amountU.classList.add('quotation-hidden')
+          amountJ.classList.add('quotation-hidden')
         }
 
       })

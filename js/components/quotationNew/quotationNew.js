@@ -2,6 +2,7 @@
 import dateFormat from "../../helpers/dateFormat.js";
 import fillSelectProduct from "../../helpers/fillSelectProduct.js";
 import createProductCards from "./createProductsCards.js";
+import localStorage from "./localStorage.js";
 import searchProduct from "./searchProduct.js";
 
 const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts) => {
@@ -34,6 +35,8 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts) => {
   // Search Product
   searchProduct(quotationNew, resQueryProducts)
   // Search Product
+
+  localStorage()
 
 }
 
