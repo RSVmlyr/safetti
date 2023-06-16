@@ -1,31 +1,5 @@
 const setQuotation = async () => {
   try {
-    let dataSetQuotation = {
-      "currency": "COP",
-      "name": "Renata Novais",
-      "comments": "string",
-      "client": 19,
-      "clientName": "Renata Novais",
-      "advisor": 4,
-      "advisorName": "Alejandro Ramírez",
-      "scenarios": [
-        {
-          "name": "testEscenarioTest 1",
-          "selected": true,
-          "discountPercent": 10,
-          "applyTaxIVA": true,
-          "products": [
-            {
-              "product": 46,
-              "productName": "SHORT BIO AQUA ZERO GCC - FAJÓN EN CINTURA CON BOLSILLOS",
-              "selectedMoldeCode": "G50004",
-              "quantity": 5,
-              "unitPrice": 187000
-            }
-          ]
-        }
-      ]
-    }
     const requestOptions = {
       method: 'POST',
       headers: {

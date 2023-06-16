@@ -25,7 +25,7 @@ const localStorage = () => {
     }
   ]
 
-  console.log(dataProductSend);
+  // console.log(dataProductSend);
 
   return dataProductSend
 

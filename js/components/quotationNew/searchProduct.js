@@ -1,6 +1,6 @@
 import createProductCards from "./createProductsCards.js";
 
-const searchProduct = (quotationNew, resQueryProducts) => {
+const searchProduct = (quotationNew, resQueryUser, resQueryProducts) => {
 
   // console.log('Array para Filtrar: ', resQueryProducts.products);
   
@@ -18,7 +18,7 @@ const searchProduct = (quotationNew, resQueryProducts) => {
     sliderProductsRows.forEach(row => {
       row.remove()
     });
-    createProductCards(quotationNew, dataNames[0])
+    createProductCards(quotationNew, resQueryUser ,dataNames[0])
 
   });
 
@@ -49,7 +49,7 @@ const searchProduct = (quotationNew, resQueryProducts) => {
     sliderProductsRows.forEach(row => {
       row.remove()
     });
-    createProductCards(quotationNew, dataFilterPro[0])
+    createProductCards(quotationNew, resQueryUser, dataFilterPro[0])
     localStorage.setItem("productosFiltrados", JSON.stringify(dataFilterPro[0]));
 
   }

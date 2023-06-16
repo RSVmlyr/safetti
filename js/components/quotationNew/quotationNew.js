@@ -30,10 +30,10 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts) => {
   const idQnFitPrenda = quotationNew.querySelector('#qnfitprenda')
   fillSelectProduct(idQnFitPrenda, resQueryProducts.fitPrenda)
 
-  createProductCards(quotationNew, resQueryProducts)
+  createProductCards(quotationNew, resQueryUser, resQueryProducts)
 
   // Search Product
-  searchProduct(quotationNew, resQueryProducts)
+  searchProduct(quotationNew, resQueryUser, resQueryProducts)
   // Search Product
 
   localStorage()
