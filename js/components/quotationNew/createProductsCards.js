@@ -1,5 +1,6 @@
 import fillSelectProduct from "../../helpers/fillSelectProduct.js";
 import inputNumber from "./inputNumber.js";
+import QuotationCalculation from './QuotationCalculation.js';
 
 const createProductCards = (quotationNew, resQueryProducts) => {
 
@@ -36,7 +37,7 @@ const createProductCards = (quotationNew, resQueryProducts) => {
             </div>
             <div class="card--actions">
               <button class="qnviewdetailproducts">Ver detalle</button>
-              <button class="qnaddproducts">Agregar +</button>
+              <button class="qnaddproducts add">Agregar +</button>
             </div>
           </div>
           <div class="card__back">
@@ -106,7 +107,35 @@ const createProductCards = (quotationNew, resQueryProducts) => {
         // });
         e.target ? sliderProductsRow.classList.add('active') : false
       })
-
+      const button = quotationNew.querySelector('.qnaceptproduct');     
+      button.addEventListener('click', () => {
+        const quotationCalculation = new QuotationCalculation();
+        const product = [
+          {
+            colombiaJunior: "G11834",
+            genera: "Colombia",
+            cant: 10,
+          },
+          {
+            colombiaMan: "G11834",
+            genera: "Colombia",
+            cant: 10,
+          },
+          {
+            colombiaUnisex: "G11834",
+            genera: "Colombia",
+            cant: 10,
+          },
+          {
+            colombiaWoman: "G11834",
+            genera: "Colombia",
+            cant: 10,
+          },
+        ];
+        quotationCalculation.createRow(product);
+        //document.querySelector('#myContainer').appendChild(quotationCalculation);
+      });
+  
       // Card button Cancelar
       const cardCancelProducts = quotationNew.querySelector('.card .qncancelproduct')
       cardCancelProducts.addEventListener('click', (e) => {
