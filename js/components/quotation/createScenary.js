@@ -4,12 +4,12 @@ import statusQuotation from "../../helpers/statusQuotation.js"
 import deleteScenary from "./deleteSecenary.js"
 
 const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
-
     const quotationCreatescenary = quotation.querySelector('#quotation--content--list .quotation--list--row')
     const scenaryContainerTop = quotation.querySelector('#scenary--container__top')
     const scenaryCreatedBody = quotation.querySelector('#scenary--container__bottom')
 
     quotationCreatescenary.addEventListener('click', (e) => {
+      console.log('cot.id ', cot.id );
 
       const quotationLoading = quotation.querySelector('.quotation--container__bottom  .quotation--right .quotation--loading')
       if (quotationLoading) {
@@ -29,14 +29,14 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               <span class="quotation--status">${cotStatus.statusName}</span>
             </div>
             <div class="region region__two">
-              <div class="quotation--email">
+              <a class="quotation--email" href="https://safetticustom.azurewebsites.net/api/Quotation/pdf/${cot.id}" target="_blank">
                 <span class="quotation--info">Enviar correo</span>
                 <img class="quotation--email__img" src='../../img/icon/icon-email.svg' loading="lazy" alt="Email" title="Email">
-              </div>
-              <div class="quotation--download">
+              </a>
+              <a class="quotation--download" href="https://safetticustom.azurewebsites.net/api/Quotation/pdf/${cot.id}" target="_blank">
                 <span class="quotation--info">Generar PDF</span>
                 <img class="quotation--download__img" src='../../img/icon/icon-download.svg' loading="lazy" alt="Descargar" title="Descargar">
-              </div>
+              </a>
             </div>
           </section>
           <section class="scenary--two">
@@ -60,7 +60,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                 <div class="quotation--notification"><span class="quotation--title">No existen escenarios.</span></div>
               </div>
               <div class="scenary--data__actions">
-                <a href="./index-q.html" class="quotation--btn__new">Nuevo escenario +</a>
+                <a href="" class="quotation--btn__new">Nuevo escenario +</a>
                 <div id="quotation--btn__delete" class="scenary--data__actionsDelete">
                   <span class="quotation--info">Cancelar cotización</span>
                   <img src='../../img/icon/icon-delete.svg' loading="lazy" alt="Eliminar" title="Eliminar">

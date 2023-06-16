@@ -126,53 +126,48 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         const unisexInput = parentElement.querySelector('.qnUnisexInput');
         const juniorInput = parentElement.querySelector('.qnJuniorInput');
         const product = [];
-
         if (manInput.value > 0) {
           product.push({
             country: countrySelect.value,
-            id: pro.id,
-            name: pro.name,
-            ref: pro.colombiaMan,
-            genera: "Colombia",
-            cant: manInput.value,
+            product: pro.id,
+            productName: pro.name,
+            selectedMoldeCode: pro.colombiaMan,
+            quantity: manInput.value,
           });
         }
         
         if (womanInput.value > 0) {
           product.push({
             country: countrySelect.value,
-            id: pro.id,
-            name: pro.name,
-            ref: pro.colombiaWoman,
-            genera: "Colombia",
-            cant: womanInput.value,
+            product: pro.id,
+            productName: pro.name,
+            selectedMoldeCode: pro.colombiaWoman,
+            quantity: womanInput.value,
           });
         }
         
         if (unisexInput.value > 0) {
           product.push({
             country: countrySelect.value,
-            id: pro.id,
-            name: pro.name,
-            ref: pro.colombiaUnisex,
-            genera: "Colombia",
-            cant: unisexInput.value,
+            product: pro.id,
+            productName: pro.name,
+            selectedMoldeCode: pro.colombiaUnisex,
+            quantity: unisexInput.value,
           });
         }
         
         if (juniorInput.value > 0) {
           product.push({
             country: countrySelect.value,
-            id: pro.id,
-            name: pro.name,
-            ref: pro.colombiaJunior,
-            genera: "Colombia",
-            cant: juniorInput.value,
+            product: pro.id,
+            productName: pro.name,
+            selectedMoldeCode: pro.colombiaJunior,
+            quantity: juniorInput.value,
           });
         }
         
         const quotationCalculation = new QuotationCalculation();
-        quotationCalculation.createRow(product);
+        quotationCalculation.createRow(product, resQueryUser);
       });
   
       // Card button Cancelar

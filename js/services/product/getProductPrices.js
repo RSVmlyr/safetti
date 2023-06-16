@@ -1,5 +1,4 @@
 const getProductPrices = async (productId, currency, rol) => {
-    console.log(productId, currency, rol);
     try {
       const url = `https://safetticustom.azurewebsites.net/api/Product/prices/${productId}/${currency}/${rol}` 
       const reqQueryProducts = await fetch(url)
