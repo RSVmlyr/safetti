@@ -4,8 +4,8 @@ const dataSetQuotation = (resQueryUser) => {
 
   let dataSet = {
     "currency": resQueryUser.currency,
-    "name": "string",
-    "comments": "string",
+    "name": "strings",
+    "comments": "strings",
     "client": resQueryUser.id,
     "clientName": resQueryUser.fullName,
     "advisor": resQueryUser.advisorId,

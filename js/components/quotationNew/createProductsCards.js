@@ -118,32 +118,61 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
 
       })
       const button = quotationNew.querySelector('.qnaceptproduct');     
-      button.addEventListener('click', () => {
+      button.addEventListener('click', (e) => {
+        const parentElement = e.target.parentNode.parentNode;
+        const countrySelect = parentElement.parentElement.querySelector('.card__back--country');
+        const manInput = parentElement.querySelector('.qnManInput');
+        const womanInput = parentElement.querySelector('.qnWomanInput');
+        const unisexInput = parentElement.querySelector('.qnUnisexInput');
+        const juniorInput = parentElement.querySelector('.qnJuniorInput');
+        const product = [];
+
+        if (manInput.value > 0) {
+          product.push({
+            country: countrySelect.value,
+            id: pro.id,
+            name: pro.name,
+            ref: pro.colombiaMan,
+            genera: "Colombia",
+            cant: manInput.value,
+          });
+        }
+        
+        if (womanInput.value > 0) {
+          product.push({
+            country: countrySelect.value,
+            id: pro.id,
+            name: pro.name,
+            ref: pro.colombiaWoman,
+            genera: "Colombia",
+            cant: womanInput.value,
+          });
+        }
+        
+        if (unisexInput.value > 0) {
+          product.push({
+            country: countrySelect.value,
+            id: pro.id,
+            name: pro.name,
+            ref: pro.colombiaUnisex,
+            genera: "Colombia",
+            cant: unisexInput.value,
+          });
+        }
+        
+        if (juniorInput.value > 0) {
+          product.push({
+            country: countrySelect.value,
+            id: pro.id,
+            name: pro.name,
+            ref: pro.colombiaJunior,
+            genera: "Colombia",
+            cant: juniorInput.value,
+          });
+        }
+        
         const quotationCalculation = new QuotationCalculation();
-        const product = [
-          {
-            colombiaJunior: "G11834",
-            genera: "Colombia",
-            cant: 10,
-          },
-          {
-            colombiaMan: "G11834",
-            genera: "Colombia",
-            cant: 10,
-          },
-          {
-            colombiaUnisex: "G11834",
-            genera: "Colombia",
-            cant: 10,
-          },
-          {
-            colombiaWoman: "G11834",
-            genera: "Colombia",
-            cant: 10,
-          },
-        ];
         quotationCalculation.createRow(product);
-        //document.querySelector('#myContainer').appendChild(quotationCalculation);
       });
   
       // Card button Cancelar

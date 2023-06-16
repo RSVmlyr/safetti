@@ -1,22 +1,8 @@
+import getProductPrices from '../../services/product/getProductPrices.js'
 class QuotationCalculation extends HTMLElement {
   constructor() {
     super();
-
-    // Agregar el contenido HTML
     this.innerHTML = `
-      <style>
-        /* Estilos para el custom element */
-        .quotation-calculation {
-          /* Estilos del contenedor principal */
-        }
-
-        .scenary-row {
-          /* Estilos de las filas de la tabla */
-        }
-
-        /* Otros estilos... */
-      </style>
-
       <div class="quotation-calculation">
         <div class="quotationew--calculation__body">
           <div class="scenary--row__table">
@@ -46,30 +32,25 @@ class QuotationCalculation extends HTMLElement {
     `;
   }
   
-  createRow(product) {
-    console.log(product);
-    const qnProducts = this.querySelector('#qnproducts');
-    const unitPrices = this.querySelector('#unitPrices');
-    const prices = this.querySelector('#prices');
-    const quantities = this.querySelector('#quantities');
-    const subtotals = this.querySelector('#subtotals');
-    
-    //const productDetails = getProductDetails();
-    const row = document.createElement('div');
-    row.classList.add('scenary--row__table');
-    row.innerHTML = `
-      <div class="scenary--row">${product.name}</div>
-      <div class="scenary--row">${product.molde}</div>
-      <div class="scenary--row">${product.colombiaJunior}</div>
-      <div class="scenary--row">${product.cantidad}</div>
-      <div class="scenary--row">${product.subtotal}</div>
-    `;
-     // Agregar la fila a los contenedores correspondientes
-     document.querySelector('.quotationew--calculation__body').appendChild(row);
-   /*   unitPrices.appendChild(row.cloneNode(true));
-     prices.appendChild(row.cloneNode(true));
-     quantities.appendChild(row.cloneNode(true));
-     subtotals.appendChild(row.cloneNode(true)); */
+  createRow(products) {
+    console.log(products);
+    const getPrices = async () => {
+      const prices = await getProductPrices(4, 'cop', 'partner');
+      console.log(prices);
+      products.forEach(product => {
+        const row = document.createElement('div');
+        row.classList.add('scenary--row__table');
+        row.innerHTML = `
+          <div class="scenary--row">${product.name}</div>
+          <div class="scenary--row">${product.ref}</div>
+          <div class="scenary--row">${product.colombiaJunior}</div>
+          <div class="scenary--row">${product.cant}</div>
+          <div class="scenary--row">${product.subtotal}</div>
+        `;
+        document.querySelector('.quotationew--calculation__body').appendChild(row);
+      });
+    };
+    getPrices();
   }
 
   connectedCallback() {
