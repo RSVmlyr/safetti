@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const quotation = document.querySelector('#quotation')
   const quotationNew = document.querySelector('#quotationew')
 
+  window.drupalSettings = window.drupalSettings || {};
+  console.log(' window.drupalSettings ',  window.drupalSettings );
+
   const query = async () => {
 
     if( quotation ) {
