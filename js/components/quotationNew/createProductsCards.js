@@ -1,4 +1,5 @@
 import fillSelectProduct from "../../helpers/fillSelectProduct.js";
+import getIamages from "../../services/iamges/getImages.js";
 import dataSetQuotation from "./dataSetQuotation.js";
 import inputNumber from "./inputNumber.js";
 import localStorage from "./localStorage.js";
@@ -187,25 +188,31 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
 
       const cardViewDetailProducts = quotationNew.querySelector('.card .qnviewdetailproducts')
       cardViewDetailProducts.addEventListener('click', (e) => {
+      
         if(e.target) {
           let modalCard =
           `<div class="modal">
             <div class="modal--container">
-              <div class="modal--header">
-                <h3 class="quotation--title__quo">${pro.id ? pro.id : ''} / ${pro.name ? pro.name : ''}</h3>
-              </div>
-              <div class="modal--body">
-                <div class="modal--body__content">
-                  <h4 class="modal--title"><span>Deporte:</span> ${pro.cuento ? pro.cuento : ''}</h4>
-                  <h4 class="modal--title"><span>Referencia:</span> ${pro.referencia ? pro.referencia : ''}</h4>
-                  <h4 class="modal--title"><span>Clasificación:</span> ${pro.classification ? pro.classification : ''}</h4>
-                  <h4 class="modal--title"><span>Descripción:</span></h4>
-                  ${pro.description ? pro.description : ''}
-                  <h4 class="modal--title"><span>Características:</span></h4>
-                  ${pro.features ? pro.features : ''}
-                </div>  
-                <div class="modal--close">x</div>
-              </div>
+              <div class="modal--container__body">
+                <div class="modal--container__bodyLeft"></div>
+                <div class="modal--container__bodyRight">
+                  <div class="modal--header">
+                    <h3 class="quotation--title__quo">${pro.id ? pro.id : ''} / ${pro.name ? pro.name : ''}</h3>
+                  </div>
+                  <div class="modal--body">
+                    <div class="modal--body__content">
+                      <h4 class="modal--title"><span>Deporte:</span> ${pro.cuento ? pro.cuento : ''}</h4>
+                      <h4 class="modal--title"><span>Referencia:</span> ${pro.referencia ? pro.referencia : ''}</h4>
+                      <h4 class="modal--title"><span>Clasificación:</span> ${pro.classification ? pro.classification : ''}</h4>
+                      <h4 class="modal--title"><span>Descripción:</span></h4>
+                      ${pro.description ? pro.description : ''}
+                      <h4 class="modal--title"><span>Características:</span></h4>
+                      ${pro.features ? pro.features : ''}
+                    </div>  
+                    <div class="modal--close">x</div>
+                  </div>
+                </div>
+              </div>  
             </div>
           </div>
           `
@@ -217,6 +224,36 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             quotationNew.style.overflow = 'auto'
             modal.remove()  
           })
+
+          const imagesData = async () => {
+            // Get Images
+            let idProduct = pro.id
+            const resQueryImages = await getIamages(idProduct)
+            console.log(resQueryImages);
+
+            const containerLeft = document.querySelector('.modal--container__bodyLeft')
+            console.log(containerLeft);
+
+            resQueryImages.forEach(e => {
+
+              // Get URL Image
+              let mainImage = e.imageUrl ? e.imageUrl : '../img/icon/image-product.jpg';
+              const originUrlPath = 'https://dev-co-safetti-b2b.pantheonsite.io/sites/default/files/';
+              let modifiedStringImage = mainImage.replace('public://', originUrlPath);
+              modifiedStringImage = modifiedStringImage.replace(/ /g, '%20');
+
+              console.log(modifiedStringImage);
+              const image = document.createElement('img')
+              image.src = modifiedStringImage
+              image.setAttribute('loading', 'lazy')
+              image.setAttribute('alt', 'Producto')
+              image.setAttribute('title', 'Producto')
+              containerLeft.insertAdjacentElement('afterbegin', image);
+            });
+          }
+  
+          imagesData()
+
         }
       })
   

@@ -1,6 +1,6 @@
 const dataSetQuotation = (resQueryUser) => {
 
-  console.log('Recibido user: ', resQueryUser.currency);
+  // console.log('Recibido user: ', resQueryUser.currency);
 
   let dataSet = {
     "currency": resQueryUser.currency,
@@ -29,7 +29,7 @@ const dataSetQuotation = (resQueryUser) => {
     ]
   }
 
-  console.log('Data Creada', dataSet);
+  // console.log('Data Creada', dataSet);
 
 }
 

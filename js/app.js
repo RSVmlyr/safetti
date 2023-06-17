@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       window.drupalSettings = window.drupalSettings || {};
       console.log(' window.drupalSettings ',  window.drupalSettings );
+      // console.log(window.drupalSettings.user.uid);
       /*  var parametro = window.parent.getParametro();
       console.log('Parámetro del iframe padre:', parametro); */
 
