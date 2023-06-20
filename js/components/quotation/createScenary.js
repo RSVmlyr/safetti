@@ -2,6 +2,7 @@ import deleteChilds from "../../helpers/deleChilds.js"
 import nodeListPrice from "../../helpers/nodeListPrice.js"
 import statusQuotation from "../../helpers/statusQuotation.js"
 import deleteScenary from "./deleteSecenary.js"
+import sendEmail from "./../../services/email/sendEmail.js"
 
 const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     const quotationCreatescenary = quotation.querySelector('#quotation--content--list .quotation--list--row')
@@ -28,11 +29,11 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               <span class="quotation--status">${cotStatus.statusName}</span>
             </div>
             <div class="region region__two">
-              <a class="quotation--email" href="https://safetticustom.azurewebsites.net/api/Quotation/pdf/${cot.id}" target="_blank">
-                <span class="quotation--info">Enviar correo</span>
+              <a class="quotation--email" href="https://safetticustom.azurewebsites.net/api/Quotation/email/${cot.id}">
+                <span class="quotation--send--data quotation--info">Enviar correo</span>
                 <img class="quotation--email__img" src='../../img/icon/icon-email.svg' loading="lazy" alt="Email" title="Email">
               </a>
-              <a class="quotation--download" href="https://safetticustom.azurewebsites.net/api/Quotation/pdf/${cot.id}" target="_blank">
+              <a class="quotation--download" href="https://safetticustom.azurewebsites.net/api/Quotation/pdf/${cot.id}">
                 <span class="quotation--info">Generar PDF</span>
                 <img class="quotation--download__img" src='../../img/icon/icon-download.svg' loading="lazy" alt="Descargar" title="Descargar">
               </a>
@@ -59,7 +60,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                 <div class="quotation--notification"><span class="quotation--title">No existen escenarios.</span></div>
               </div>
               <div class="scenary--data__actions">
-                <a href="" class="quotation--btn__new">Nuevo escenario +</a>
+                <span class="quotation--btn__new">Nuevo escenario +</span>
                 <div id="quotation--btn__delete" class="scenary--data__actionsDelete">
                   <span class="quotation--info">Cancelar cotización</span>
                   <img src='../../img/icon/icon-delete.svg' loading="lazy" alt="Eliminar" title="Eliminar">
@@ -72,19 +73,29 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
       `
       scenaryContainerTop.insertAdjacentHTML('afterbegin', `${scenaryTop}`)
 
-      // Origin quotation spotify
+      // Origin quotation shopify
       const quotationOriginScenary = quotation.querySelector('.scenary--created .quotation--origin__shopify')
       if (cot.fromShopify === true) {
         quotationOriginScenary.classList.remove('quotation-hide')
       } else if (cot.fromShopify === null || cot.fromShopify === undefined || cot.fromShopify === '') {
         return false
       }
-      // Origin quotation spotify
+      // Origin quotation shopify
 
       // Status quotation
         const quotationStatusScenary = quotation.querySelector('.scenary--created .quotation--status')
         statusQuotation(cotStatus.statusId, quotationStatusScenary)
       // Status quotation
+
+      // Send Email
+      const quotationEmail = quotation.querySelector('.quotation--email')
+      const quotationSendData = quotation.querySelector('.quotation--send--data')
+      quotationSendData.addEventListener('click', (e) => {
+        e.preventDefault()
+        let urlEmail = quotationEmail.getAttribute('href')
+        sendEmail(quotationEmail, urlEmail)
+      })
+      // Send Email
 
       // Delete Scenary Top
       const quotationBtnDelete = quotation.querySelector('#quotation--btn__delete')

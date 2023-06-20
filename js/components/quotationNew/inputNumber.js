@@ -11,6 +11,7 @@ const inputNumber = (inputSelector, increase, decrease) => {
       inputSelector.stepDown();
     }
   });
+
 }
 
 export default inputNumber
