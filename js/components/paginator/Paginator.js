@@ -3,9 +3,14 @@ import QuotationSearch from "../../services/quotation/QuotationSearch.js"
 //import  '../LoadingIndicator/LoadingIndicator.js';
 
 function renderPaginator(totalPages) {
-  const pager = document.querySelector('.pager')
-  console.log(pager);
- 
+  const btn = document.querySelectorAll('.pager button')
+  console.log(btn);
+  btn.forEach((element, i) => {
+    console.log(i);
+    if(i > totalPages) {
+      element.remove()
+    }
+  });
   console.log(totalPages);
   const paginator = document.createElement('div');
   const start = document.createElement('button');
@@ -15,15 +20,19 @@ function renderPaginator(totalPages) {
   for (let i = 1; i <= totalPages; i++) {
     const pageButton = document.createElement('button');
     pageButton.textContent = i
+    pageButton.value = i
+    pageButton.classList.add('item')
     if(i === 1){
       pageButton.classList.add('active')
-      start.textContent = i
+      start.textContent = '<<'
+      start.value = i
       start.classList.add('start')
       paginator.appendChild(start);
     }
     if(i === totalPages){
       end.classList.add('end')
-      end.textContent = i
+      end.value = i
+      end.textContent = '>>'
     } 
     paginator.appendChild(pageButton);
   }
@@ -39,12 +48,11 @@ export async function pageNumberCallback(uid, pageNumber, advisorId) {
   });
 
   console.log('debug', uid, pageNumber, advisorId);
-  if(advisorId === 'undefined'){
+  if(advisorId === undefined){
     advisorId = '0'
   }
   const resQuery = await QuotationSearch(uid, pageNumber, advisorId)
   let data = resQuery.results
-  const paginatorElement = renderPaginator(resQuery.totalPages);
 
   data.forEach(cot => {
     quotationListRow(cot)
@@ -77,13 +85,12 @@ export function createPaginator(totalPages) {
       
       buttons.forEach(button => {
         button.addEventListener('click', () => {
-          const pageNumber = parseInt(button.textContent);
+          const pageNumber = parseInt(button.value);
           this.pageNumber = pageNumber;
           buttons.forEach(btn => {
             btn.classList.remove('active');
           });
           button.classList.add('active');
-
           //loadingIndicator.style.display = 'block'
           //document.body.appendChild(loadingIndicator);
           this.appendChild(this._loadingIndicator);
