@@ -3,7 +3,10 @@ import QuotationSearch from "../../services/quotation/QuotationSearch.js"
 //import  '../LoadingIndicator/LoadingIndicator.js';
 
 function renderPaginator(totalPages) {
-  console.log('crea', totalPages);
+  const pager = document.querySelector('.pager')
+  console.log(pager);
+ 
+  console.log(totalPages);
   const paginator = document.createElement('div');
   const start = document.createElement('button');
   const end = document.createElement('button');
@@ -34,17 +37,15 @@ export async function pageNumberCallback(uid, pageNumber, advisorId) {
   quotationContentList.forEach(element => {
     element.remove();
   });
-  if(advisorId === undefined){
+
+  console.log('debug', uid, pageNumber, advisorId);
+  if(advisorId === 'undefined'){
     advisorId = '0'
   }
   const resQuery = await QuotationSearch(uid, pageNumber, advisorId)
   let data = resQuery.results
-
-  const pager = document.querySelector('.pager')
-
   const paginatorElement = renderPaginator(resQuery.totalPages);
-  const shadowRoot = document.createElement('div');
-  shadowRoot.appendChild(paginatorElement);
+
   data.forEach(cot => {
     quotationListRow(cot)
   });
@@ -59,8 +60,8 @@ export function createPaginator(totalPages) {
     constructor() {
       super();
       this.appendChild(paginatorElement);
-      this._pageNumber = 1;
-      this._advisorId = 0
+      this.pageNumber = 1;
+      this.advisorId = 0
       this._loadingIndicator = document.createElement('loading-indicator');
     }
 
@@ -69,10 +70,11 @@ export function createPaginator(totalPages) {
       const selectAdvisorId = document.querySelector('#advisors');
       selectAdvisorId.addEventListener('change', (e) => {
         this.advisorId = e.target.value 
-        pageNumberCallback(this.pageNumber, this.advisorId).then(() => {
+        pageNumberCallback(4, this.pageNumber, this.advisorId).then(() => {
           this._loadingIndicator.remove()
         });
       });
+      
       buttons.forEach(button => {
         button.addEventListener('click', () => {
           const pageNumber = parseInt(button.textContent);
@@ -85,7 +87,8 @@ export function createPaginator(totalPages) {
           //loadingIndicator.style.display = 'block'
           //document.body.appendChild(loadingIndicator);
           this.appendChild(this._loadingIndicator);
-          pageNumberCallback(this.pageNumber, this.advisorId).then(() => {
+          console.log(this.advisorId);
+          pageNumberCallback(4, this.pageNumber, this.advisorId).then(() => {
             this._loadingIndicator.remove()
           });
         });
