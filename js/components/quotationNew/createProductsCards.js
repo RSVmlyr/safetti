@@ -28,7 +28,8 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
       // Get URL Image
       let mainImage = pro.mainImage ? pro.mainImage : '../img/icon/image-product.jpg';
       const originUrlPath = 'https://dev-co-safetti-b2b.pantheonsite.io/sites/default/files/';
-      const modifiedStringImage = mainImage.replace('public://', originUrlPath);
+      let modifiedStringImage = mainImage.replace('public://', originUrlPath);
+      modifiedStringImage = modifiedStringImage.replace(/ /g, '%20');         
   
       let sliderRow = 
       `<div class="slider--row">
@@ -192,6 +193,10 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
                 <div class="modal--container__bodyLeft"></div>
                 <div class="modal--container__bodyRight">
                   <div class="modal--header">
+                    <div class="modal--header__languages">
+                      <div class="es quotation--btn__add">ES</div>
+                      <div class="en quotation--btn__add">EN</div>
+                    </div>
                     <h3 class="quotation--title__quo">${pro.id ? pro.id : ''} / ${pro.name ? pro.name : ''}</h3>
                   </div>
                   <div class="modal--body">
@@ -221,34 +226,44 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           })
 
           const imagesData = async () => {
-            // Get Images
-            let idProduct = pro.id
-            const resQueryImages = await getIamages(idProduct)
-            console.log(resQueryImages);
 
             const containerLeft = document.querySelector('.modal--container__bodyLeft')
-            console.log(containerLeft);
 
-            resQueryImages.forEach(e => {
+            const spinnerImages = document.createElement('img')
+            spinnerImages.classList.add('qnimage--auto')
+            spinnerImages.src = '../img/icon/icon-spinner.gif'
+            containerLeft.insertAdjacentElement('afterbegin', spinnerImages);
+            // Get Images|
+            let idProduct = pro.id
+            const resQueryImages = await getIamages(idProduct)
+            spinnerImages.remove()
+    
+            if (resQueryImages.length > 0) {
+              resQueryImages.forEach(e => {
+                // console.log(e.imageUrl);
 
-              // Get URL Image
-              let mainImage = e.imageUrl ? e.imageUrl : '../img/icon/image-product.jpg';
-              const originUrlPath = 'https://dev-co-safetti-b2b.pantheonsite.io/sites/default/files/';
-              let modifiedStringImage = mainImage.replace('public://', originUrlPath);
-              modifiedStringImage = modifiedStringImage.replace(/ /g, '%20');
-
-              console.log(modifiedStringImage);
-              const image = document.createElement('img')
-              image.src = modifiedStringImage
-              image.setAttribute('loading', 'lazy')
-              image.setAttribute('alt', 'Producto')
-              image.setAttribute('title', 'Producto')
-              containerLeft.insertAdjacentElement('afterbegin', image);
-            });
+                // Get URL Image
+                let mainImage = e.imageUrl ? e.imageUrl : '../img/icon/image-product.jpg'
+                const originUrlPath = 'https://dev-co-safetti-b2b.pantheonsite.io/sites/default/files/';
+                let modifiedStringImage = mainImage.replace('public://', originUrlPath);
+                modifiedStringImage = modifiedStringImage.replace(/ /g, '%20');
+                const image = document.createElement('img')
+                image.src = modifiedStringImage
+                image.setAttribute('loading', 'lazy')
+                image.setAttribute('alt', 'Safetti')
+                image.setAttribute('title', 'Safetti')
+                containerLeft.insertAdjacentElement('afterbegin', image);
+              });
+            } else {
+              const imageEmpty = document.createElement('img')
+              imageEmpty.classList.add('qnimage--auto')
+              imageEmpty.src = '../img/icon/image-product.jpg'
+              imageEmpty.setAttribute('alt', 'Safetti')
+              imageEmpty.setAttribute('title', 'Safetti')
+              containerLeft.insertAdjacentElement('afterbegin', imageEmpty);
+            }
           }
-  
           imagesData()
-
         }
       })
   

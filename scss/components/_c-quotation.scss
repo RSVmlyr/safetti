@@ -39,6 +39,20 @@
           }
           &__three {
             .quotation {
+              &--content {
+                position: relative;
+                min-height: 60vh;
+                .qnimage--auto {
+                  position: absolute;
+                  left: 0;
+                  right: 0;
+                  margin: auto;
+                  width: max-content;
+                  top: 0;
+                  bottom: 0;
+                  height: max-content;
+                }
+              }
               &--list--row {
                 padding: 14px 8px 10px;
                 border-bottom: 1px solid #F6F6F6;

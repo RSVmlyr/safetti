@@ -27,6 +27,7 @@
   &--container__bodyRight {
     width: 50%;
     height: 100%;
+    position: relative;
   }
   &--container__bodyLeft {
     display: grid;
@@ -36,17 +37,39 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      opacity: 1;
+      transition: all ease-in-out .5s;
       &:first-child {
         grid-column: 2;
         grid-row: 1 / span 4;
       }
+    }
+    .qnimage--auto {
+      height: auto;
+      width: auto;
+      margin: auto;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
     }
   }
   &--container__bodyRight {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    padding: 0 0 0 3%;
+    padding: 0 3%;
+    .modal--header {
+      &__languages {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        .quotation--btn__add {
+          cursor: pointer;
+        }
+      }
+    }
   }
   &--header {
     .quotation--title__quo {

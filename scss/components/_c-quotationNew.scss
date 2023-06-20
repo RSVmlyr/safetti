@@ -120,7 +120,7 @@
         .region {
           &--left {
             width: 100%;
-            max-width: 30%;
+            max-width: 25%;
             .quotationew {
               &__filter--input {
                 display: flex;
@@ -154,17 +154,32 @@
           }
           &--right {
             width: 100%;
-            max-width: 70%;
+            max-width: 75%;
             .slider {
               &--productos {
                 .slider {
                   &--content {
                     display: flex;
                     flex-wrap: wrap;
+                    justify-content: center;
+                    position: relative;
+                    top: -15px;
+                    width: 100%;
+                    min-height: 50vh;
+                    .qnimage--auto {
+                      position: absolute;
+                      left: 0;
+                      right: 0;
+                      margin: auto;
+                      width: max-content;
+                      top: 0;
+                      bottom: 0;
+                      height: max-content;
+                    }
                   }
                   &--row {
                     position: relative;
-                    margin: 10px;
+                    margin: 15px;
                     &.active {
                       .card {
                         transform: rotateY(180deg);
