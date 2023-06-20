@@ -105,6 +105,11 @@ class QuotationCalculation extends HTMLElement {
     getPrices();
   }
 
+  add(){
+    document.querySelector('.quotation--btn__add').appendChild(row);
+    
+  }
+
   connectedCallback() {
   
   }

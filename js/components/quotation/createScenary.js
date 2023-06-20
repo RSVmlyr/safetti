@@ -9,7 +9,6 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     const scenaryCreatedBody = quotation.querySelector('#scenary--container__bottom')
 
     quotationCreatescenary.addEventListener('click', (e) => {
-      console.log('cot.id ', cot.id );
 
       const quotationLoading = quotation.querySelector('.quotation--container__bottom  .quotation--right .quotation--loading')
       if (quotationLoading) {

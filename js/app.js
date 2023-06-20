@@ -5,10 +5,9 @@ import getAdvisors from "./services/advisors/getAdvisors.js"
 import getProduct from "./services/product/getProduct.js"
 import getQuotation from "./services/quotation/getQuotation.js"
 import getUser from "./services/user/getUser.js"
-import { createPaginator, pageNumberCallback } from './components/paginator/Paginator.js';
 import QuotationSearch from "./services/quotation/QuotationSearch.js"
 import './components/quotationNew/QuotationCalculation.js';
-
+import PaginatorElement from './components/paginator/PaginatorElement.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -31,14 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       window.drupalSettings = window.drupalSettings || {};
       console.log(' window.drupalSettings ',  window.drupalSettings );
-      // console.log(window.drupalSettings.user.uid);
-      /*  var parametro = window.parent.getParametro();
-      console.log('Parámetro del iframe padre:', parametro); */
-
       const uid = window.drupalSettings.user?.uid || 4;
-      const searchQuery = await QuotationSearch(uid, 1, 0)
-      createPaginator(searchQuery.totalPages)
-      pageNumberCallback(uid, 1, 0)
+      const searchQuery = await QuotationSearch(uid, 1, 0)  
+      
+      const paginatorElement = new PaginatorElement(uid, 1, 0, searchQuery.totalPages);
+      paginatorElement.renderPaginator();
 
       // Get Advisors
       const getAdvisor = () => {
