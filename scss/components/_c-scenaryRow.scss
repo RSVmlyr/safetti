@@ -24,16 +24,33 @@
     .scenary--row {
       display: block;
       margin: 0 0 12px;
-      width: 20%; 
+      width: 20%;
+      #products,
+      #unitPrices,
+      #prices {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+      }
     }
     .quotation--title__quo,
     .quotation--info {
       color: $black;
       font-family: $FuturaMedium;
       font-size: 16px;
+      margin: 0;
+      display: flex;
+      width: 100%;
+      align-items: center;
+      height: inherit;
+    }
+    .quotation--title__quo {
+      margin: 5px 0;
     }
     .quotation--info {
       font-family: $FuturaLight;
+      margin: 0;
     }
   }
 }
