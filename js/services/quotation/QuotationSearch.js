@@ -11,8 +11,7 @@ const QuotationSearch = async (uid, pageNumber, advisorId) => {
       console.log('Error 500. Ocurrió un error al procesar su solicitud.');
     }
 
-    return resQueryAdvisors
-    
+    return resQueryAdvisors  
   }
   
   catch(error) {
