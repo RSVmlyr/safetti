@@ -93,8 +93,9 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
       const quotationSendData = quotation.querySelector('.quotation--send--data')
       quotationSendData.addEventListener('click', (e) => {
         e.preventDefault()
+        quotationSendData.textContent = 'Enviando...'
         let urlEmail = quotationEmail.getAttribute('href')
-        sendEmail(quotationEmail, urlEmail)
+        sendEmail(quotationEmail, urlEmail, quotationSendData)
       })
       // Send Email
 
