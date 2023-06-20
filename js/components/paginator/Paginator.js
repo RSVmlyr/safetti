@@ -3,7 +3,7 @@ import QuotationSearch from "../../services/quotation/QuotationSearch.js"
 //import  '../LoadingIndicator/LoadingIndicator.js';
 
 function renderPaginator(totalPages) {
-  const btn = document.querySelectorAll('.pager button')
+  const btn = document.querySelectorAll('.item-pager')
   console.log(btn);
   btn.forEach((element, i) => {
     console.log(i);
@@ -21,7 +21,7 @@ function renderPaginator(totalPages) {
     const pageButton = document.createElement('button');
     pageButton.textContent = i
     pageButton.value = i
-    pageButton.classList.add('item')
+    pageButton.classList.add('item-pager')
     if(i === 1){
       pageButton.classList.add('active')
       start.textContent = '<<'
@@ -70,7 +70,6 @@ export function createPaginator(totalPages) {
       this.appendChild(paginatorElement);
       this.pageNumber = 1;
       this.advisorId = 0
-      this._loadingIndicator = document.createElement('loading-indicator');
     }
 
     connectedCallback() {
@@ -78,9 +77,7 @@ export function createPaginator(totalPages) {
       const selectAdvisorId = document.querySelector('#advisors');
       selectAdvisorId.addEventListener('change', (e) => {
         this.advisorId = e.target.value 
-        pageNumberCallback(4, this.pageNumber, this.advisorId).then(() => {
-          this._loadingIndicator.remove()
-        });
+        pageNumberCallback(4, this.pageNumber, this.advisorId)
       });
       
       buttons.forEach(button => {
@@ -91,13 +88,8 @@ export function createPaginator(totalPages) {
             btn.classList.remove('active');
           });
           button.classList.add('active');
-          //loadingIndicator.style.display = 'block'
-          //document.body.appendChild(loadingIndicator);
-          this.appendChild(this._loadingIndicator);
           console.log(this.advisorId);
-          pageNumberCallback(4, this.pageNumber, this.advisorId).then(() => {
-            this._loadingIndicator.remove()
-          });
+          pageNumberCallback(4, this.pageNumber, this.advisorId)
         });
       });
     }

@@ -3,7 +3,7 @@ const QuotationSearch = async (uid, pageNumber, advisorId) => {
     const urlQueryAdvisors = `https://safetticustom.azurewebsites.net/api/Quotation/search/${uid}/${pageNumber}/4/${advisorId}/%20`
     const reqQueryAdvisors = await fetch(urlQueryAdvisors)
     const resQueryAdvisors = await reqQueryAdvisors.json()
-    console.log('Array Service Advisors', resQueryAdvisors);
+    //console.log('Array Service Advisors', resQueryAdvisors);
 
     if (reqQueryAdvisors.status == 403) {
       console.log('Error 403');
