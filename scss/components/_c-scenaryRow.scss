@@ -21,6 +21,11 @@
   &__table {
     display: flex;
     justify-content: space-between;
+    .scenary--row {
+      display: block;
+      margin: 0 0 12px;
+      width: 20%; 
+    }
     .quotation--title__quo,
     .quotation--info {
       color: $black;

@@ -35,46 +35,76 @@ class QuotationCalculation extends HTMLElement {
   getPriceInRange = (prices, value) => {
     if(prices !=undefined) {
 
-      const newData = {};
-      Object.keys(prices).forEach(key => {
-        const newKey = key.replace(/^p/, ''); // Eliminar la letra 'p' del inicio de la clave
-        newData[newKey] = prices[key];
-      });
+      // const newData = {};
+      // Object.keys(prices).forEach(key => {
+      //   const newKey = key.replace(/^p/, ''); // Eliminar la letra 'p' del inicio de la clave
+      //   newData[newKey] = prices[key];
+      // });
 
-      console.log('p', newData);
+      // console.log('p', newData);
 
-      Object.keys(newData).forEach(key => {
-        if (typeof newData[key] !== "number") {
-          delete newData[key];
-        }
-      })
-      console.log('num', newData);
+      // Object.keys(newData).forEach(key => {
+      //   if (typeof newData[key] !== "number") {
+      //     delete newData[key];
+      //   }
+      // })
+      // console.log('num', newData);
 
-      const keys = Object.keys(prices);
-      const lastKey = keys[keys.length - 1];
-      console.log(lastKey);
+      // const keys = Object.keys(prices);
+      // const lastKey = keys[keys.length - 1];
+      // console.log(lastKey);
+
+      console.log('P', prices);
+      console.log('V', value);
 
       // Verificar si el valor es menor que el primer precio
-      if (value < parseFloat(prices[keys[0]])) {
-        return null;
-      }
+      // if (value < parseFloat(prices[keys[0]])) {
+      //   return null;
+      // }
       
-      // Verificar si el valor es mayor que el último precio
-      if (value > parseFloat(prices[lastKey])) {
-        return null;
-      }
+      // // Verificar si el valor es mayor que el último precio
+      // if (value > parseFloat(prices[lastKey])) {
+      //   return null;
+      // }
       
-      // Obtener el valor correspondiente al rango
-      for (let i = 0; i < keys.length - 1; i++) {
-        const currentPrice = parseFloat(prices[keys[i]]);
-        const nextPrice = parseFloat(prices[keys[i + 1]]);
+      // // Obtener el valor correspondiente al rango
+      // for (let i = 0; i < keys.length - 1; i++) {
+      //   const currentPrice = parseFloat(prices[keys[i]]);
+      //   const nextPrice = parseFloat(prices[keys[i + 1]]);
         
-        if (value >= currentPrice && value < nextPrice) {
-          return prices[keys[i]];
-        }
+      //   if (value >= currentPrice && value < nextPrice) {
+      //     return prices[keys[i]];
+      //   }
+      // }
+
+      if ( value <= 5) {
+        return prices["p" + value];
       }
-      
-      return null;
+
+      if ( value > 5 && value <= 10) {
+        return prices["p10"];
+      }
+
+      if ( value > 10 && value <= 15) {
+        return prices["p15"];
+      }
+
+      if ( value > 15 && value <= 20) {
+        return prices["p20"];
+      }
+
+      if ( value > 20 && value <= 50) {
+        return prices["p50"];
+      }
+
+      if ( value > 50 && value <= 100) {
+        return prices["p100"];
+      }
+
+      if ( value > 100) {
+        return prices["p300"];
+      }
+    
     }
   };
   
@@ -86,18 +116,19 @@ class QuotationCalculation extends HTMLElement {
 
       products.forEach(product => {
 
-
-        const priceInRange = this.getPriceInRange(prices, product.cant);
-        console.log(priceInRange)
+        const priceInRange = this.getPriceInRange(prices, product.quantity);
+        
+        let PRange = priceInRange
+        let numPrange = PRange.replace(",", ".");
 
         const row = document.createElement('div');
         row.classList.add('scenary--row__table');
         row.innerHTML = `
           <div class="scenary--row">${product.productName}</div>
           <div class="scenary--row">${product.selectedMoldeCode}</div>
-          <div class="scenary--row">${product.colombiaJunior}</div>
+          <div class="scenary--row">${numPrange}</div>
           <div class="scenary--row">${product.quantity}</div>
-          <div class="scenary--row">${product.subtotal}</div>
+          <div class="scenary--row">${parseFloat((parseFloat(numPrange) * product.quantity).toFixed(2))} </div>
         `;
         document.querySelector('.quotationew--calculation__body').appendChild(row);
       });
