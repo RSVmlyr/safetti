@@ -1,6 +1,6 @@
 const sendEmail = async (nodo, url) => {
   try {
-    const urlQuerySendEmail = 'https://safetticustom.azurewebsites.net/api/Product'
+    const urlQuerySendEmail = url
     const reqQuerySendEmail = await fetch(urlQuerySendEmail)
     // console.log('Status Service SendEmail', reqQuerySendEmail);
     const resQuerySendEmail = await reqQuerySendEmail.json()
