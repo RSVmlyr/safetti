@@ -1,4 +1,5 @@
 import fillSelectProduct from "../../helpers/fillSelectProduct.js";
+import getIamages from "../../services/iamges/getImages.js";
 import dataSetQuotation from "./dataSetQuotation.js";
 import inputNumber from "./inputNumber.js";
 import localStorage from "./localStorage.js";
@@ -27,7 +28,8 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
       // Get URL Image
       let mainImage = pro.mainImage ? pro.mainImage : '../img/icon/image-product.jpg';
       const originUrlPath = 'https://dev-co-safetti-b2b.pantheonsite.io/sites/default/files/';
-      const modifiedStringImage = mainImage.replace('public://', originUrlPath);
+      let modifiedStringImage = mainImage.replace('public://', originUrlPath);
+      modifiedStringImage = modifiedStringImage.replace(/ /g, '%20');         
   
       let sliderRow = 
       `<div class="slider--row">
@@ -182,25 +184,35 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
 
       const cardViewDetailProducts = quotationNew.querySelector('.card .qnviewdetailproducts')
       cardViewDetailProducts.addEventListener('click', (e) => {
+      
         if(e.target) {
           let modalCard =
           `<div class="modal">
             <div class="modal--container">
-              <div class="modal--header">
-                <h3 class="quotation--title__quo">${pro.id ? pro.id : ''} / ${pro.name ? pro.name : ''}</h3>
-              </div>
-              <div class="modal--body">
-                <div class="modal--body__content">
-                  <h4 class="modal--title"><span>Deporte:</span> ${pro.cuento ? pro.cuento : ''}</h4>
-                  <h4 class="modal--title"><span>Referencia:</span> ${pro.referencia ? pro.referencia : ''}</h4>
-                  <h4 class="modal--title"><span>Clasificación:</span> ${pro.classification ? pro.classification : ''}</h4>
-                  <h4 class="modal--title"><span>Descripción:</span></h4>
-                  ${pro.description ? pro.description : ''}
-                  <h4 class="modal--title"><span>Características:</span></h4>
-                  ${pro.features ? pro.features : ''}
-                </div>  
-                <div class="modal--close">x</div>
-              </div>
+              <div class="modal--container__body">
+                <div class="modal--container__bodyLeft"></div>
+                <div class="modal--container__bodyRight">
+                  <div class="modal--header">
+                    <div class="modal--header__languages">
+                      <div class="es quotation--btn__add">ES</div>
+                      <div class="en quotation--btn__add">EN</div>
+                    </div>
+                    <h3 class="quotation--title__quo">${pro.id ? pro.id : ''} / ${pro.name ? pro.name : ''}</h3>
+                  </div>
+                  <div class="modal--body">
+                    <div class="modal--body__content">
+                      <h4 class="modal--title"><span>Deporte:</span> ${pro.cuento ? pro.cuento : ''}</h4>
+                      <h4 class="modal--title"><span>Referencia:</span> ${pro.referencia ? pro.referencia : ''}</h4>
+                      <h4 class="modal--title"><span>Clasificación:</span> ${pro.classification ? pro.classification : ''}</h4>
+                      <h4 class="modal--title"><span>Descripción:</span></h4>
+                      ${pro.description ? pro.description : ''}
+                      <h4 class="modal--title"><span>Características:</span></h4>
+                      ${pro.features ? pro.features : ''}
+                    </div>  
+                    <div class="modal--close">x</div>
+                  </div>
+                </div>
+              </div>  
             </div>
           </div>
           `
@@ -212,6 +224,46 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             quotationNew.style.overflow = 'auto'
             modal.remove()  
           })
+
+          const imagesData = async () => {
+
+            const containerLeft = document.querySelector('.modal--container__bodyLeft')
+
+            const spinnerImages = document.createElement('img')
+            spinnerImages.classList.add('qnimage--auto')
+            spinnerImages.src = '../img/icon/icon-spinner.gif'
+            containerLeft.insertAdjacentElement('afterbegin', spinnerImages);
+            // Get Images|
+            let idProduct = pro.id
+            const resQueryImages = await getIamages(idProduct)
+            spinnerImages.remove()
+    
+            if (resQueryImages.length > 0) {
+              resQueryImages.forEach(e => {
+                // console.log(e.imageUrl);
+
+                // Get URL Image
+                let mainImage = e.imageUrl ? e.imageUrl : '../img/icon/image-product.jpg'
+                const originUrlPath = 'https://dev-co-safetti-b2b.pantheonsite.io/sites/default/files/';
+                let modifiedStringImage = mainImage.replace('public://', originUrlPath);
+                modifiedStringImage = modifiedStringImage.replace(/ /g, '%20');
+                const image = document.createElement('img')
+                image.src = modifiedStringImage
+                image.setAttribute('loading', 'lazy')
+                image.setAttribute('alt', 'Safetti')
+                image.setAttribute('title', 'Safetti')
+                containerLeft.insertAdjacentElement('afterbegin', image);
+              });
+            } else {
+              const imageEmpty = document.createElement('img')
+              imageEmpty.classList.add('qnimage--auto')
+              imageEmpty.src = '../img/icon/image-product.jpg'
+              imageEmpty.setAttribute('alt', 'Safetti')
+              imageEmpty.setAttribute('title', 'Safetti')
+              containerLeft.insertAdjacentElement('afterbegin', imageEmpty);
+            }
+          }
+          imagesData()
         }
       })
   

@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if( quotation ) {
 
       const quotationContentList = quotation.querySelector('#quotation--content--list')
-      quotationContentList.insertAdjacentHTML('afterbegin', '<div class="quotation--loading"><span class="quotation--title">Cargando Cotizaciones...</span></div>')
+      quotationContentList.insertAdjacentHTML('afterbegin', '<img class="quotation--loading qnimage--auto" src="../img/icon/icon-spinner.gif">')
       const resQuery = await getQuotation()
       const resQueryAdvisors = await getAdvisors()
       const spinner = quotation.querySelector('#quotation--content--list .quotation--loading')
@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       window.drupalSettings = window.drupalSettings || {};
       console.log(' window.drupalSettings ',  window.drupalSettings );
+      // console.log(window.drupalSettings.user.uid);
       /*  var parametro = window.parent.getParametro();
       console.log('Parámetro del iframe padre:', parametro); */
 
@@ -66,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if ( quotationNew ) {
       const sliderProducts = quotationNew.querySelector('.slider--productos .slider--content')
-      sliderProducts.insertAdjacentHTML('afterbegin', '<div class="quotation--loading"><span class="quotation--title">Cargando Productos...</span></div>')
+      sliderProducts.insertAdjacentHTML('afterbegin', '<img class="quotation--loading qnimage--auto" src="../img/icon/icon-spinner.gif">')
 
       const resQueryUser = await getUser()
       const resQueryProducts = await getProduct()
