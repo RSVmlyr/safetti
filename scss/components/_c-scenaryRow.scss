@@ -1,17 +1,16 @@
 .scenary--row {
   &__header {
+    background-color: $c4;
+    border: 1px solid $black;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    height: 32px;
+    padding: 8px;
     position: relative;
-    &::after {
-      content: '';
-      position: absolute;
-      display: block;
-      background-color: $c4;
-      height: 2px;
-      width: 100%;
-      bottom: -20px;
+    &.selected {
+      background-color: $c10;
+      border: 1px solid $c9;
     }
     .quotation--title__quo {
       font-family: $FuturaBold;
@@ -24,7 +23,7 @@
     .scenary--row {
       display: block;
       margin: 0 0 12px;
-      width: 20%;
+      width: 25%;
       #products,
       #unitPrices,
       #prices {
@@ -38,7 +37,7 @@
     .quotation--info {
       color: $black;
       font-family: $FuturaMedium;
-      font-size: 16px;
+      font-size: 14px;
       margin: 0;
       display: flex;
       width: 100%;
@@ -47,10 +46,12 @@
     }
     .quotation--title__quo {
       margin: 5px 0;
+      padding: 0 8px;
     }
     .quotation--info {
       font-family: $FuturaLight;
       margin: 0;
+      padding: 0 8px;
     }
   }
 }

@@ -107,7 +107,7 @@
                   background-color: $c4;
                   height: 2px;
                   width: 100%;
-                  bottom: -50px;
+                  bottom: -40px;
                 }
               }
               &--one,
@@ -185,6 +185,10 @@
                     align-items: center;
                     height: 32px;
                     padding: 8px;
+                    &.selected {
+                      background-color: $c10;
+                      border: 1px solid $c9;
+                    }
                     .quotation--title__quo {
                       color: $c5;
                       font-size: 14px;
@@ -205,6 +209,9 @@
                       font-size: 14px;
                       padding: 8px;        
                     }
+                    .quotation--info {
+                      padding: 0 8px;
+                    }
                   }
                   &__scenary {
                     display: flex;
@@ -218,6 +225,9 @@
                         display: flex;
                         align-items: flex-end;
                         justify-content: flex-end;
+                        .quotation--btn__view {
+                          padding: 0 8px;
+                        }
                       }
                     }
                   }
@@ -237,12 +247,12 @@
             }
           }
           &--container__bottom {
-            overflow: auto;
             .scenary {
               &--created__body {
                 box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.08);
-                margin: 35px 15px;
-                padding: 15px;
+                margin: 0 0 90px;
+                // margin: 35px 15px;
+                // padding: 15px;
               }
             }
             .scenary--data {
@@ -255,10 +265,10 @@
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
-                gap: 40px;
+                gap: 5px;
                 .scenary--row {
                   @media screen and (min-width: 992px) {
-                    width: 33.3%;
+                    width: 25%;
                     max-width: 50%;
                   }
                 }

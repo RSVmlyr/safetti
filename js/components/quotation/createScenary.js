@@ -10,7 +10,6 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     const scenaryCreatedBody = quotation.querySelector('#scenary--container__bottom')
 
     quotationCreatescenary.addEventListener('click', (e) => {
-      console.log('cot.id ', cot.id );
 
       const quotationLoading = quotation.querySelector('.quotation--container__bottom  .quotation--right .quotation--loading')
       if (quotationLoading) {
@@ -54,7 +53,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
           </section>
           <section class="scenary--five">
             <div class="scenary--data">
-              <div class="scenary--data__header">
+              <div class="scenary--data__header selected">
                 <h4 class="quotation--title__quo">Escenario seleccionado</h4>
               </div>
               <div class="scenary--data__body">
@@ -166,18 +165,20 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
           let productName = []
           let linePrice = []
           let unitPrice = []
+          let scenSelected
 
           scen.products.forEach(product => {
+            scenSelected = scen.selected
             productName.push(product.productName)
             linePrice.push(product.linePrice)
             unitPrice.push(product.unitPrice)
           });
-
+        
           let scenaryList = 
           `<div class="scenary--created__body">
             <div class="scenary--data__body">
               <div class="scenary--data__scenary">
-                <div class="scenary--row__header">
+                ${scenSelected === true ? '<div class="scenary--row__header selected">' : '<div class="scenary--row__header">'}
                   <span class="quotation--title__quo">${scen.name ? scen.name : ''}</span>
                   <span class="quotation--btn__view">Ver detalle</span>
                 </div>
