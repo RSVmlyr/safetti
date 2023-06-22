@@ -2,7 +2,7 @@ import deleteChilds from "../../helpers/deleChilds.js"
 import nodeListPrice from "../../helpers/nodeListPrice.js"
 import statusQuotation from "../../helpers/statusQuotation.js"
 import deleteScenary from "./deleteSecenary.js"
-import sendEmail from "./../../services/email/sendEmail.js"
+import sendEmailHelper from "../../helpers/sendEmailHelper.js"
 
 const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     const quotationCreatescenary = quotation.querySelector('#quotation--content--list .quotation--list--row')
@@ -60,7 +60,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                 <div class="quotation--notification"><span class="quotation--title">No existen escenarios.</span></div>
               </div>
               <div class="scenary--data__actions">
-                <span class="quotation--btn__new">Nuevo escenario +</span>
+                <a href="./index-q.html?cotId=${cot.id}&cotName=${encodeURIComponent(cot.name)}" class="quotation--btn__new">Nuevo escenario +</a>
                 <div id="quotation--btn__delete" class="scenary--data__actionsDelete">
                   <span class="quotation--info">Cancelar cotización</span>
                   <img src='../../img/icon/icon-delete.svg' loading="lazy" alt="Eliminar" title="Eliminar">
@@ -71,6 +71,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         </div>
       </div>
       `
+
       scenaryContainerTop.insertAdjacentHTML('afterbegin', `${scenaryTop}`)
 
       // Origin quotation shopify
@@ -90,12 +91,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
       // Send Email
       const quotationEmail = quotation.querySelector('.quotation--email')
       const quotationSendData = quotation.querySelector('.quotation--send--data')
-      quotationSendData.addEventListener('click', (e) => {
-        e.preventDefault()
-        quotationSendData.textContent = 'Enviando...'
-        let urlEmail = quotationEmail.getAttribute('href')
-        sendEmail(quotationEmail, urlEmail, quotationSendData)
-      })
+      sendEmailHelper(quotationEmail, quotationSendData)
       // Send Email
 
       // Delete Scenary Top
