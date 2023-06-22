@@ -3,6 +3,7 @@ class QuotationCalculation extends HTMLElement {
   constructor() {
     super();
     this.getPriceInRange()
+    this.addValor()
     this.innerHTML = `
       <div class="quotation-calculation">
         <div class="quotationew--calculation__body">
@@ -34,49 +35,8 @@ class QuotationCalculation extends HTMLElement {
   }
   getPriceInRange = (prices, value) => {
     if(prices !=undefined) {
-
-      // const newData = {};
-      // Object.keys(prices).forEach(key => {
-      //   const newKey = key.replace(/^p/, ''); // Eliminar la letra 'p' del inicio de la clave
-      //   newData[newKey] = prices[key];
-      // });
-
-      // console.log('p', newData);
-
-      // Object.keys(newData).forEach(key => {
-      //   if (typeof newData[key] !== "number") {
-      //     delete newData[key];
-      //   }
-      // })
-      // console.log('num', newData);
-
-      // const keys = Object.keys(prices);
-      // const lastKey = keys[keys.length - 1];
-      // console.log(lastKey);
-
       console.log('P', prices);
       console.log('V', value);
-
-      // Verificar si el valor es menor que el primer precio
-      // if (value < parseFloat(prices[keys[0]])) {
-      //   return null;
-      // }
-      
-      // // Verificar si el valor es mayor que el último precio
-      // if (value > parseFloat(prices[lastKey])) {
-      //   return null;
-      // }
-      
-      // // Obtener el valor correspondiente al rango
-      // for (let i = 0; i < keys.length - 1; i++) {
-      //   const currentPrice = parseFloat(prices[keys[i]]);
-      //   const nextPrice = parseFloat(prices[keys[i + 1]]);
-        
-      //   if (value >= currentPrice && value < nextPrice) {
-      //     return prices[keys[i]];
-      //   }
-      // }
-
       if ( value <= 5) {
         return prices["p" + value];
       }
@@ -111,16 +71,13 @@ class QuotationCalculation extends HTMLElement {
   createRow(products, resQueryUser) {
     const getPrices = async () => {
       const prices = await getProductPrices(19, resQueryUser.currency, resQueryUser.rol);
-      console.log(prices);
-      console.log('build', products);
+      let count = 0
 
       products.forEach(product => {
-
         const priceInRange = this.getPriceInRange(prices, product.quantity);
-        
         let PRange = priceInRange
         let numPrange = PRange.replace(",", ".");
-
+        const subtotal =  parseFloat((parseFloat(numPrange) * product.quantity).toFixed(2)) 
         const row = document.createElement('div');
         row.classList.add('scenary--row__table');
         row.innerHTML = `
@@ -128,21 +85,45 @@ class QuotationCalculation extends HTMLElement {
           <div class="scenary--row">${product.selectedMoldeCode}</div>
           <div class="scenary--row">${numPrange}</div>
           <div class="scenary--row">${product.quantity}</div>
-          <div class="scenary--row">${parseFloat((parseFloat(numPrange) * product.quantity).toFixed(2))} </div>
+          <div class="scenary--row subtotal">${subtotal} </div>
         `;
         document.querySelector('.quotationew--calculation__body').appendChild(row);
       });
+      const subtotal = document.querySelectorAll('.subtotal')
+      subtotal.forEach(element => {
+        const valor = parseFloat(element.textContent).toFixed(2);
+        count += valor
+        console.log(count);
+      });
+      this.addValor(count)
     };
     getPrices();
   }
 
-  add(){
-    document.querySelector('.quotation--btn__add').appendChild(row);
-    
+  addValor(valor){
+    const fieldValor =  document.querySelector('.quotation--btn__add')
+    fieldValor.textContent = valor
   }
 
   connectedCallback() {
-  
+    const btniva = document.querySelector('.quotation--iva');
+    const total = document.querySelector('.quotation--total');
+    const fieldValor =  document.querySelector('.quotation--btn__add')
+    fieldValor.textContent = 0
+    btniva.addEventListener('click', (e) => {
+      const current = parseFloat(total.textContent);
+      const currentold = current
+      const iva = current * 0.19;
+      if (btniva.checked) {
+        console.log('iva', iva);
+        total.textContent = current + iva;
+        console.log('El botón de IVA está marcado. total actual:', current);
+      } else {
+        total.textContent = currentold;
+        console.log('El botón de IVA no está marcado.', currentold);
+      }
+    });
+      
   }
 }
 customElements.define('quotation-calculation', QuotationCalculation);
