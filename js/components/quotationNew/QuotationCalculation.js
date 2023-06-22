@@ -3,7 +3,7 @@ class QuotationCalculation extends HTMLElement {
   constructor() {
     super();
     this.getPriceInRange()
-    this.add()
+    this.addValor()
     this.innerHTML = `
       <div class="quotation-calculation">
         <div class="quotationew--calculation__body">
@@ -92,25 +92,40 @@ class QuotationCalculation extends HTMLElement {
         document.querySelector('.quotationew--calculation__body').appendChild(row);
       });
       const subtotal = document.querySelectorAll('.subtotal')
-      console.log('subtotal', subtotal);
       subtotal.forEach(element => {
-        const valor = parseInt(element.textContent)
-        console.log(valor);
+        const valor = parseFloat(element.textContent).toFixed(2);
         count += valor
+        console.log(count);
       });
-      this.add(count)
+      this.addValor(count)
     };
     getPrices();
   }
 
-  add(valor){
-    const c =  document.querySelector('.quotation--btn__add')
-    c.textContent = valor
+  addValor(valor){
+    const fieldValor =  document.querySelector('.quotation--btn__add')
+    fieldValor.textContent = valor
   }
 
   connectedCallback() {
-    const btniva = document.querySelector()
-  
+    const btniva = document.querySelector('.quotation--iva');
+    const total = document.querySelector('.quotation--total');
+    const fieldValor =  document.querySelector('.quotation--btn__add')
+    fieldValor.textContent = 0
+    btniva.addEventListener('click', (e) => {
+      const current = parseFloat(total.textContent);
+      const currentold = current
+      const iva = current * 0.19;
+      if (btniva.checked) {
+        console.log('iva', iva);
+        total.textContent = current + iva;
+        console.log('El botón de IVA está marcado. total actual:', current);
+      } else {
+        total.textContent = currentold;
+        console.log('El botón de IVA no está marcado.', currentold);
+      }
+    });
+      
   }
 }
 customElements.define('quotation-calculation', QuotationCalculation);

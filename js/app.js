@@ -5,41 +5,46 @@ import getAdvisors from "./services/advisors/getAdvisors.js"
 import getProduct from "./services/product/getProduct.js"
 import getQuotation from "./services/quotation/getQuotation.js"
 import getUser from "./services/user/getUser.js"
-import { createPaginator, pageNumberCallback } from './components/paginator/Paginator.js';
 import QuotationSearch from "./services/quotation/QuotationSearch.js"
 import './components/quotationNew/QuotationCalculation.js';
-
+import PaginatorElement from './components/paginator/PaginatorElement.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
   const quotation = document.querySelector('#quotation')
   const quotationNew = document.querySelector('#quotationew')
 
-  window.drupalSettings = window.drupalSettings || {};
-  console.log(' window.drupalSettings ',  window.drupalSettings );
 
   const query = async () => {
+    
+    const uid = window.location.search.match(/\d+/)?.[0] ?? 4;
+    const resQueryUser = await getUser(uid)
+
+    console.log(resQueryUser.rol);
 
     if( quotation ) {
 
       const quotationContentList = quotation.querySelector('#quotation--content--list')
       quotationContentList.insertAdjacentHTML('afterbegin', '<img class="quotation--loading qnimage--auto" src="../img/icon/icon-spinner.gif">')
-      const resQuery = await getQuotation()
       const resQueryAdvisors = await getAdvisors()
       const spinner = quotation.querySelector('#quotation--content--list .quotation--loading')
       spinner.remove()
 
-      window.drupalSettings = window.drupalSettings || {};
-      console.log(' window.drupalSettings ',  window.drupalSettings );
-      // console.log(window.drupalSettings.user.uid);
-      /*  var parametro = window.parent.getParametro();
-      console.log('Parámetro del iframe padre:', parametro); */
-
-      const uid = window.drupalSettings.user?.uid || 4;
-      const searchQuery = await QuotationSearch(uid, 1, 0)
-      createPaginator(searchQuery.totalPages)
-      pageNumberCallback(uid, 1, 0)
-
+      let Quotation='';
+      switch (resQueryUser.rol) {
+        case 'advisors':
+            const q = await QuotationSearch(uid, 1, 0)
+            Quotation = q.results
+          break;
+        case 'partner':
+            document.querySelector('.quotation--container__action').remove();
+            Quotation = await getQuotation(uid)
+          break;
+        default:
+          break;
+      }
+      const paginatorElement = new PaginatorElement(uid, 1, Quotation);
+      paginatorElement.renderPaginator();
       // Get Advisors
       const getAdvisor = () => {
         if (resQueryAdvisors.length > 0) {
@@ -69,7 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const sliderProducts = quotationNew.querySelector('.slider--productos .slider--content')
       sliderProducts.insertAdjacentHTML('afterbegin', '<img class="quotation--loading qnimage--auto" src="../img/icon/icon-spinner.gif">')
 
-      const resQueryUser = await getUser()
       const resQueryProducts = await getProduct()
 
       const spinnerP = quotationNew.querySelector('.slider--productos .quotation--loading')

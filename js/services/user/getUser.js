@@ -1,6 +1,6 @@
-const getUser = async () => {
+const getUser = async (uid) => {
   try {
-    const urlQueryUser = 'https://safetticustom.azurewebsites.net/api/User/19'
+    const urlQueryUser = `https://safetticustom.azurewebsites.net/api/User/${uid}`
     const reqQueryUser = await fetch(urlQueryUser)
     // console.log('Status Service User', reqQueryUser);
     const resQueryUser = await reqQueryUser.json()
