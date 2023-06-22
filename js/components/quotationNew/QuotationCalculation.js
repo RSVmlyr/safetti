@@ -71,6 +71,8 @@ class QuotationCalculation extends HTMLElement {
   createRow(products, resQueryUser) {
     const getPrices = async () => {
       const prices = await getProductPrices(19, resQueryUser.currency, resQueryUser.rol);
+      console.log(prices);
+      console.log('build', products);
       let count = 0
 
       products.forEach(product => {

@@ -53,7 +53,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
           </section>
           <section class="scenary--five">
             <div class="scenary--data">
-              <div class="scenary--data__header">
+              <div class="scenary--data__header selected">
                 <h4 class="quotation--title__quo">Escenario seleccionado</h4>
               </div>
               <div class="scenary--data__body">
@@ -92,8 +92,9 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
       const quotationSendData = quotation.querySelector('.quotation--send--data')
       quotationSendData.addEventListener('click', (e) => {
         e.preventDefault()
+        quotationSendData.textContent = 'Enviando...'
         let urlEmail = quotationEmail.getAttribute('href')
-        sendEmail(quotationEmail, urlEmail)
+        sendEmail(quotationEmail, urlEmail, quotationSendData)
       })
       // Send Email
 
@@ -135,22 +136,20 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
 
             let scenaryBody =
             `<div class="scenary--data__scenary">
-              <div class="scenary--row">
-                <span class="quotation--title__quo">${scen.name ? scen.name : ''}</span>
-              </div>
-              <div class="scenary--row">
-                <span class="quotation--title__quo">Productos</span>
-                <p class="quotation--info">$ ${totalPro >= 0 ? totalPro : ''}</p>
-              </div>
-              <div class="scenary--row">
-                <span class="quotation--title__quo">Total</span>
-                <p class="quotation--info">$ ${scen.total >= 0 ? scen.total : ''}</p>
-              </div>
-              <div class="scenary--row">
-                <div class="scenary--cta">
-                  <span class="quotation--btn__view">Ver detalle</span>
-                </div>
-              </div>
+              <table>
+                <tr>
+                  <td><span class="quotation--title__quo">${scen.name ? scen.name : ''}</span></td>
+                  <td><span class="quotation--title__quo">Productos</span></td>
+                  <td><span class="quotation--title__quo">Total</span></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td><p class="quotation--info">$ ${totalPro >= 0 ? totalPro : ''}</p></td>
+                  <td><p class="quotation--info">$ ${scen.total >= 0 ? scen.total : ''}</p></td>
+                  <td><span class="quotation--btn__view">Ver detalle</span></td>
+                </tr>
+              </table>
             </div>
             `
             scenaryDataBody.insertAdjacentHTML('afterbegin', `${scenaryBody}`)
@@ -164,37 +163,42 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
           let productName = []
           let linePrice = []
           let unitPrice = []
+          let scenSelected
 
           scen.products.forEach(product => {
+            scenSelected = scen.selected
             productName.push(product.productName)
             linePrice.push(product.linePrice)
             unitPrice.push(product.unitPrice)
           });
-
+        
           let scenaryList = 
           `<div class="scenary--created__body">
             <div class="scenary--data__body">
               <div class="scenary--data__scenary">
-                <div class="scenary--row__header">
+                ${scenSelected === true ? '<div class="scenary--row__header selected">' : '<div class="scenary--row__header">'}
                   <span class="quotation--title__quo">${scen.name ? scen.name : ''}</span>
                   <span class="quotation--btn__view">Ver detalle</span>
                 </div>
                 <div class="scenary--row__body">
                   <div class="scenary--row__table">
-                    <div class="scenary--row">
-                      <span class="quotation--title__quo">Producto</span>
-                      <div id="products"></div>
-                      <span class="quotation--title__quo">Total con IVA</span>
-                    </div>
-                    <div class="scenary--row">
-                      <span class="quotation--title__quo">Precio Base</span>
-                      <div id="unitPrices"></div>
-                    </div>
-                    <div class="scenary--row">
-                      <span class="quotation--title__quo">Precio Total</span>
-                      <div id="prices"></div>
-                      <p class="quotation--title__quo">$ ${scen.total >= 0 ? scen.total : ''}</p>
-                    </div>
+                    <table>
+                      <tr>
+                        <td><span class="quotation--title__quo">Producto</span></td>
+                        <td><span class="quotation--title__quo">Precio Base</span></td>
+                        <td><span class="quotation--title__quo">Precio Total</span></td>
+                      </tr>
+                      <tr>
+                        <td><div id="products"></div></td>
+                        <td><div id="unitPrices"></div></td>
+                        <td><div id="prices"></div></td>
+                      </tr>
+                      <tr>
+                        <td><span class="quotation--title__quo">Total con IVA</span></td>
+                        <td></td>
+                        <td><p class="quotation--title__quo">$ ${scen.total >= 0 ? scen.total : ''}</p></td>
+                      </tr>
+                    </table>
                   </div>  
                 </div>
               </div>

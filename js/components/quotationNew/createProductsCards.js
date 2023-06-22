@@ -29,7 +29,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
       let mainImage = pro.mainImage ? pro.mainImage : '../img/icon/image-product.jpg';
       const originUrlPath = 'https://dev-co-safetti-b2b.pantheonsite.io/sites/default/files/';
       let modifiedStringImage = mainImage.replace('public://', originUrlPath);
-      modifiedStringImage = modifiedStringImage.replace(/ /g, '%20');         
+      modifiedStringImage = modifiedStringImage.replace(/ /g, '%20');   
   
       let sliderRow = 
       `<div class="slider--row">
