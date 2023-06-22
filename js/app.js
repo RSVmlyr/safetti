@@ -17,10 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const query = async () => {
     
-    const uid = window.location.search.match(/\d+/)?.[0] ?? 4;
+    const uid = window.location.search.match(/\d+/)?.[0] ?? 19;
     const resQueryUser = await getUser(uid)
-
     console.log(resQueryUser.rol);
+    console.log(uid);
 
     if( quotation ) {
 
@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const resQueryAdvisors = await getAdvisors()
       const spinner = quotation.querySelector('#quotation--content--list .quotation--loading')
       spinner.remove()
-
       let Quotation='';
       switch (resQueryUser.rol) {
         case 'advisors':
@@ -43,8 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
         default:
           break;
       }
-      const paginatorElement = new PaginatorElement(uid, 1, Quotation);
-      paginatorElement.renderPaginator();
+        const paginatorElement = new PaginatorElement(uid, 1, Quotation);
+        paginatorElement.renderPaginator();
       // Get Advisors
       const getAdvisor = () => {
         if (resQueryAdvisors.length > 0) {

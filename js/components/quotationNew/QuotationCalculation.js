@@ -69,27 +69,32 @@ class QuotationCalculation extends HTMLElement {
   };
   
   createRow(products, resQueryUser) {
-    const getPrices = async () => {
-      const prices = await getProductPrices(19, resQueryUser.currency, resQueryUser.rol);
-      console.log(prices);
-      console.log('build', products);
       let count = 0
-
       products.forEach(product => {
-        const priceInRange = this.getPriceInRange(prices, product.quantity);
-        let PRange = priceInRange
-        let numPrange = PRange.replace(",", ".");
-        const subtotal =  parseFloat((parseFloat(numPrange) * product.quantity).toFixed(2)) 
-        const row = document.createElement('div');
-        row.classList.add('scenary--row__table');
-        row.innerHTML = `
-          <div class="scenary--row">${product.productName}</div>
-          <div class="scenary--row">${product.selectedMoldeCode}</div>
-          <div class="scenary--row">${numPrange}</div>
-          <div class="scenary--row">${product.quantity}</div>
-          <div class="scenary--row subtotal">${subtotal} </div>
-        `;
-        document.querySelector('.quotationew--calculation__body').appendChild(row);
+
+      const getPrices = async () => {
+          
+          console.log(product.id);
+          const prices = await getProductPrices(product.id, resQueryUser.currency, resQueryUser.rol);
+          console.log(prices);
+          const priceInRange = this.getPriceInRange(prices, product.quantity);
+          let PRange = priceInRange
+          console.log(priceInRange);
+          let numPrange = PRange.replace(",", ".");
+          const subtotal =  parseFloat((parseFloat(numPrange) * product.quantity).toFixed(2)) 
+          const row = document.createElement('div');
+          row.classList.add('scenary--row__table');
+          row.innerHTML = `
+            <div class="scenary--row">${product.productName}</div>
+            <div class="scenary--row">${product.selectedMoldeCode}</div>
+            <div class="scenary--row">${numPrange}</div>
+            <div class="scenary--row">${product.quantity}</div>
+            <div class="scenary--row subtotal">${subtotal} </div>
+          `;
+          document.querySelector('.quotationew--calculation__body').appendChild(row);
+      };
+      getPrices();
+
       });
       const subtotal = document.querySelectorAll('.subtotal')
       subtotal.forEach(element => {
@@ -98,8 +103,6 @@ class QuotationCalculation extends HTMLElement {
         console.log(count);
       });
       this.addValor(count)
-    };
-    getPrices();
   }
 
   addValor(valor){
