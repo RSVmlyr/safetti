@@ -102,6 +102,13 @@
           &__infoOne {
             width: 100%;
             max-width: 35%;
+            position: relative;
+            .error {
+              color: $c11;
+              position: absolute;
+              bottom: 8px;
+              font-size: 12px;
+            }
           }
           &__infoTwo {
             width: 100%;

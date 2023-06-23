@@ -79,11 +79,43 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts) => {
   }
 
   const quotationDownload = quotationNew.querySelector('.quotation--download')
-  quotationDownload.setAttribute('href', `https://safetticustom.azurewebsites.net/api/Quotation/pdf/${cotId}`);
+  if (quotationDownload) {
+    quotationDownload.setAttribute('href', `https://safetticustom.azurewebsites.net/api/Quotation/pdf/${cotId}`);
+  }
   const quotationEmail = quotationNew.querySelector('.quotation--email')
-  quotationEmail.setAttribute('href', `https://safetticustom.azurewebsites.net/api/Quotation/email/${cotId}`);
-  const quotationEmailSendData = quotationNew.querySelector('.quotation--send--data')
-  sendEmailHelper(quotationEmail, quotationEmailSendData)
+  if (quotationEmail) {
+    quotationEmail.setAttribute('href', `https://safetticustom.azurewebsites.net/api/Quotation/email/${cotId}`);
+    const quotationEmailSendData = quotationNew.querySelector('.quotation--send--data')
+    sendEmailHelper(quotationEmail, quotationEmailSendData)
+  }
+
+  // Special Discount
+  const quotationewCalculationDiscount = quotationNew.querySelector('.quotationew--calculation__discount span')
+  quotationewCalculationDiscount.textContent = resQueryUser.specialDiscount ? resQueryUser.specialDiscount + '%' : '0%'
+  // Special Discount
+
+  // Button Save
+  const quotationBtnSave = quotationNew.querySelector('#quotation--btn__save')
+  cotId && cotName ? quotationBtnSave.textContent = 'Guardar Escenario' : quotationBtnSave.textContent = 'Guardar Cotización'
+  // Button Save
+
+  const quotatioewScenary = quotationNew.querySelector('#quotationewscenary')
+  const idQuotationComments = quotationNew.querySelector('#quotationcomments')
+
+  quotationBtnSave.addEventListener('click', () => {
+    // if (quotationewname.value === '') {
+    //   const error = document.createElement('span')
+    //   error.classList.add('error')
+    //   error.textContent = 'Este campo es obligatorio'
+    //   quotationewname.insertAdjacentElement('afterend', error)
+    // }
+    console.log(quotationewname.value);
+    if (cotId && cotName) {
+      console.log(quotatioewScenary.value);
+    } else {
+      console.log(idQuotationComments.value);
+    }
+  })
 
 }
 

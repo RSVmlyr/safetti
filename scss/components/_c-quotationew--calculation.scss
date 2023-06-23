@@ -13,6 +13,15 @@
       }
       &--left {
         gap: 16px;
+        .quotationew--calculation__discount {
+          background-color: $c6;
+          padding: 12px;
+        }
+      }
+      &--right {
+        .quotation--btn__new {
+          cursor: pointer;
+        }
       }
     }
   }
