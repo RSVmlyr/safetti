@@ -98,34 +98,35 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts) => {
 
   const quotationCalculation = new QuotationCalculation(resQueryUser);
 
-  const btnSave = document.querySelector('.quotation--btn__new');
-  btnSave.addEventListener('click', (e) => {
-    console.log('click');
-    quotationCalculation.SendNewQuotation(resQueryUser);
-  });
+  // const btnSave = document.querySelector('.quotation--btn__new');
+  // btnSave.addEventListener('click', (e) => {
+  //   console.log('click');
+  //   quotationCalculation.SendNewQuotation(resQueryUser);
+  // });
 
-  // Button Save
-  /* const quotationBtnSave = quotationNew.querySelector('#quotation--btn__save')
+
+  const quotationBtnSave = quotationNew.querySelector('#quotation--btn__save')
   cotId && cotName ? quotationBtnSave.textContent = 'Guardar Escenario' : quotationBtnSave.textContent = 'Guardar Cotización'
-  // Button Save
 
   const quotatioewScenary = quotationNew.querySelector('#quotationewscenary')
   const idQuotationComments = quotationNew.querySelector('#quotationcomments')
 
   quotationBtnSave.addEventListener('click', () => {
-    // if (quotationewname.value === '') {
-    //   const error = document.createElement('span')
-    //   error.classList.add('error')
-    //   error.textContent = 'Este campo es obligatorio'
-    //   quotationewname.insertAdjacentElement('afterend', error)
-    // }
+    if (quotationewname.value === '') {
+      const error = document.createElement('span')
+      error.classList.add('error')
+      error.textContent = 'Este campo es obligatorio'
+      quotationewname.insertAdjacentElement('afterend', error)
+    }
     console.log(quotationewname.value);
+
     if (cotId && cotName) {
       console.log(quotatioewScenary.value);
     } else {
+      quotationCalculation.SendNewQuotation(resQueryUser);
       console.log(idQuotationComments.value);
     }
-  }) */
+  })
 
 }
 
