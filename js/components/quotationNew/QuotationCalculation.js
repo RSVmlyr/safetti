@@ -1,9 +1,13 @@
-import getProductPrices from '../../services/product/getProductPrices.js'
+import getProductPrices from '../../services/product/getProductPrices.js';
+
 class QuotationCalculation extends HTMLElement {
-  constructor() {
+  constructor(resQueryUser) {
     super();
-    this.getPriceInRange()
-    this.addValor()
+    this.resQueryUser = resQueryUser;
+    this.getPriceInRange();
+    this.sumar();
+    this.SendNewQuotation();
+    this.createArrayProducto()
     this.innerHTML = `
       <div class="quotation-calculation">
         <div class="quotationew--calculation__body">
@@ -33,103 +37,160 @@ class QuotationCalculation extends HTMLElement {
       </div>
     `;
   }
-  getPriceInRange = (prices, value) => {
-    if(prices !=undefined) {
-      console.log('P', prices);
-      console.log('V', value);
-      if ( value <= 5) {
+
+  get resQueryUser() {
+    return this._resQueryUser;
+  }
+
+  set resQueryUser(value) {
+    this._resQueryUser = value;
+  }
+
+  getPriceInRange(prices, value) {
+    if (prices != undefined) {
+      if (value <= 5) {
         return prices["p" + value];
       }
 
-      if ( value > 5 && value <= 10) {
+      if (value > 5 && value <= 10) {
         return prices["p10"];
       }
 
-      if ( value > 10 && value <= 15) {
+      if (value > 10 && value <= 15) {
         return prices["p15"];
       }
 
-      if ( value > 15 && value <= 20) {
+      if (value > 15 && value <= 20) {
         return prices["p20"];
       }
 
-      if ( value > 20 && value <= 50) {
+      if (value > 20 && value <= 50) {
         return prices["p50"];
       }
 
-      if ( value > 50 && value <= 100) {
+      if (value > 50 && value <= 100) {
         return prices["p100"];
       }
 
-      if ( value > 100) {
+      if (value > 100) {
         return prices["p300"];
       }
-    
     }
-  };
-  
-  createRow(products, resQueryUser) {
-      let count = 0
-      products.forEach(product => {
+  }
+  SendNewQuotation(data) {
+    if(data) {
+      const storedProducts = localStorage.getItem('products');
+      const products = storedProducts ? JSON.parse(storedProducts) : [];
+      console.log(products);
+      const dataSetQuotation = {
+        currency: 'COP',
+        name: 'Nombre de la Cotización',
+        comments: 'string',
+        client: data.id,
+        clientName: data.fullName,
+        advisor: 4,
+        advisorName: 'Alejandro Ramírez',
+        scenarios: [
+          {
+            name: 'testEscenarioTest 1',
+            selected: true,
+            discountPercent: data.specialDiscount,
+            applyTaxIVA: true,
+            products: products
+          }
+        ]
+      }
+      console.log('body', dataSetQuotation );
 
+    }
+  }
+  
+  createRow(products) {
+    localStorage.removeItem("products");
+    products.forEach(product => {
       const getPrices = async () => {
-          
-          console.log(product.id);
-          const prices = await getProductPrices(product.id, resQueryUser.currency, resQueryUser.rol);
-          console.log(prices);
-          const priceInRange = this.getPriceInRange(prices, product.quantity);
-          let PRange = priceInRange
-          console.log(priceInRange);
-          let numPrange = PRange.replace(",", ".");
-          const subtotal =  parseFloat((parseFloat(numPrange) * product.quantity).toFixed(2)) 
-          const row = document.createElement('div');
-          row.classList.add('scenary--row__table');
-          row.innerHTML = `
-            <div class="scenary--row">${product.productName}</div>
-            <div class="scenary--row">${product.selectedMoldeCode}</div>
-            <div class="scenary--row">${numPrange}</div>
-            <div class="scenary--row">${product.quantity}</div>
-            <div class="scenary--row subtotal">${subtotal} </div>
-          `;
-          document.querySelector('.quotationew--calculation__body').appendChild(row);
+        const prices = await getProductPrices(
+          product.id,
+          this.resQueryUser.currency,
+          this.resQueryUser.rol
+        );
+        const priceInRange = this.getPriceInRange(prices, product.quantity);
+        let PRange = priceInRange;
+        let numPrange = PRange.replace(",", ".");
+        const subtotal = parseFloat((parseFloat(numPrange) * product.quantity).toFixed(2));
+        const row = document.createElement('div');
+        this.createArrayProducto(product, numPrange)
+        row.classList.add('scenary--row__table');
+        row.classList.add('scenary--row__data');
+        row.innerHTML = `
+          <div class="scenary--row">${product.productName}</div>
+          <div class="scenary--row">${product.selectedMoldeCode}</div>
+          <div class="scenary--row">${numPrange}</div>
+          <div class="scenary--row">${product.quantity}</div>
+          <div class="scenary--row subtotal">${subtotal}</div>
+        `;
+        document.querySelector('.quotationew--calculation__body').appendChild(row);
+        this.sumar();
       };
       getPrices();
+    });
+  }
+  createArrayProducto(product, numPrange) {
+    if(product) {
+      const storedProducts = localStorage.getItem('products');
+      let arr = [];
+      if (storedProducts) {
+        arr = JSON.parse(storedProducts);
+      }
 
+      // Add the new item to the array
+      arr.push({
+        product: product.id,
+        productName: product.productName,
+        selectedMoldeCode: product.selectedMoldeCode,
+        quantity: product.quantity,
+        unitPrice: numPrange
       });
-      const subtotal = document.querySelectorAll('.subtotal')
-      subtotal.forEach(element => {
-        const valor = parseFloat(element.textContent).toFixed(2);
-        count += valor
-        console.log(count);
-      });
-      this.addValor(count)
+
+      // Store the updated array back in local storage
+      localStorage.setItem('products', JSON.stringify(arr));
+    }
   }
 
-  addValor(valor){
-    const fieldValor =  document.querySelector('.quotation--btn__add')
-    fieldValor.textContent = valor
+  async sumar() {
+    const subtotalElements = document.querySelectorAll('.subtotal');
+    const quotationSave = document.querySelector('.quotation--btn__add');
+
+    let count = 0;
+    subtotalElements.forEach(element => {
+      const valor = parseFloat(element.textContent).toFixed(2);
+      count += parseFloat(valor);
+    });
+
+    const btniva = document.querySelector('.quotation--iva');
+    if (btniva.checked) {
+      const iva = count * 0.19;
+      const quo = document.querySelector('.calculation__dis');
+      const dis = count * (parseFloat(quo.textContent).toFixed(2) / 100);
+      quotationSave.textContent = ((count + iva) - dis).toFixed(2);
+    } else {
+      const quo = document.querySelector('.calculation__dis');
+      const dis = (count * (parseFloat(quo.textContent).toFixed(2) / 100)).toFixed(2);
+      quotationSave.textContent = (count - dis).toFixed(2);
+    }
   }
 
   connectedCallback() {
+    this.SendNewQuotation();
     const btniva = document.querySelector('.quotation--iva');
-    const total = document.querySelector('.quotation--total');
-    const fieldValor =  document.querySelector('.quotation--btn__add')
-    fieldValor.textContent = 0
+    const fieldValor = document.querySelector('.quotation--btn__add');
+    fieldValor.textContent = 0;
     btniva.addEventListener('click', (e) => {
-      const current = parseFloat(total.textContent);
-      const currentold = current
-      const iva = current * 0.19;
-      if (btniva.checked) {
-        console.log('iva', iva);
-        total.textContent = current + iva;
-        console.log('El botón de IVA está marcado. total actual:', current);
-      } else {
-        total.textContent = currentold;
-        console.log('El botón de IVA no está marcado.', currentold);
-      }
+      this.sumar();
     });
-      
   }
 }
+
 customElements.define('quotation-calculation', QuotationCalculation);
+
 export default QuotationCalculation;

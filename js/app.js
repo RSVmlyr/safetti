@@ -3,7 +3,6 @@ import selectAdvisors from "./components/quotation/selectAdvisors.js"
 import quotationNewPage from "./components/quotationNew/quotationNew.js"
 import getAdvisors from "./services/advisors/getAdvisors.js"
 import getProduct from "./services/product/getProduct.js"
-import getQuotation from "./services/quotation/getQuotation.js"
 import getUser from "./services/user/getUser.js"
 import QuotationSearch from "./services/quotation/QuotationSearch.js"
 import './components/quotationNew/QuotationCalculation.js';
@@ -16,34 +15,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   const query = async () => {
-    
-    const uid = window.location.search.match(/\d+/)?.[0] ?? 19;
+    const url = new URL(window.location.href);
+    const searchParams = new URLSearchParams(url.search);
+    const uid = searchParams.get('uid') || '19';
     const resQueryUser = await getUser(uid)
     console.log(resQueryUser.rol);
-    console.log(uid);
+    console.log("user id ", uid);
 
     if( quotation ) {
-
       const quotationContentList = quotation.querySelector('#quotation--content--list')
       quotationContentList.insertAdjacentHTML('afterbegin', '<img class="quotation--loading qnimage--auto" src="../img/icon/icon-spinner.gif">')
       const resQueryAdvisors = await getAdvisors()
       const spinner = quotation.querySelector('#quotation--content--list .quotation--loading')
       spinner.remove()
-      let Quotation='';
+      let Quotation='', totalPages = '', advisorId = 0, q = ''
       switch (resQueryUser.rol) {
         case 'advisors':
-            const q = await QuotationSearch(uid, 1, 0)
-            Quotation = q.results
+          q = await QuotationSearch(uid, 1, advisorId)
+          Quotation = q.results
+          totalPages = q.totalPages
           break;
-        case 'partner':
-            document.querySelector('.quotation--container__action').remove();
-            Quotation = await getQuotation(uid)
-          break;
+
         default:
+          document.querySelector('.quotation--container__action').remove();
+          q = await QuotationSearch(uid, 1, advisorId)
+          Quotation = q.results
+          totalPages = q.totalPages
           break;
       }
-        const paginatorElement = new PaginatorElement(uid, 1, Quotation);
-        paginatorElement.renderPaginator();
+      console.log(q);
+      const paginatorElement = new PaginatorElement(uid, 1, Quotation, totalPages);
+      paginatorElement.renderPaginator();
+      paginatorElement.selectAdvisor();
+      //paginatorElement.clickPager();
       // Get Advisors
       const getAdvisor = () => {
         if (resQueryAdvisors.length > 0) {
