@@ -131,7 +131,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         if (manInput.value > 0) {
           product.push({
             country: countrySelect.value,
-            product: pro.id,
+            id: pro.id,
             productName: pro.name,
             selectedMoldeCode: pro.colombiaMan,
             quantity: manInput.value,
@@ -141,7 +141,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         if (womanInput.value > 0) {
           product.push({
             country: countrySelect.value,
-            product: pro.id,
+            id: pro.id,
             productName: pro.name,
             selectedMoldeCode: pro.colombiaWoman,
             quantity: womanInput.value,
@@ -151,7 +151,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         if (unisexInput.value > 0) {
           product.push({
             country: countrySelect.value,
-            product: pro.id,
+            id: pro.id,
             productName: pro.name,
             selectedMoldeCode: pro.colombiaUnisex,
             quantity: unisexInput.value,
@@ -161,7 +161,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         if (juniorInput.value > 0) {
           product.push({
             country: countrySelect.value,
-            product: pro.id,
+            id: pro.id,
             productName: pro.name,
             selectedMoldeCode: pro.colombiaJunior,
             quantity: juniorInput.value,
