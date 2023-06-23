@@ -17,8 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const query = async () => {
     const url = new URL(window.location.href);
     const searchParams = new URLSearchParams(url.search);
-    const uid = searchParams.get('uid') || '19';
+    const uid = searchParams.get('uid') || '4';
     const resQueryUser = await getUser(uid)
+    console.log('searchParams.get uid', searchParams.get('uid') );
     console.log(resQueryUser.rol);
     console.log("user id ", uid);
 
@@ -28,6 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const resQueryAdvisors = await getAdvisors()
       const spinner = quotation.querySelector('#quotation--content--list .quotation--loading')
       spinner.remove()
+      const btn_ = document.querySelector('.quotation--btn__add')
+      btn_.setAttribute('href', '/index-q.html?uid=' + resQueryUser.id)
+
       let Quotation='', totalPages = '', advisorId = 0, q = ''
       switch (resQueryUser.rol) {
         case 'advisors':
@@ -74,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if ( quotationNew ) {
+
       const sliderProducts = quotationNew.querySelector('.slider--productos .slider--content')
       sliderProducts.insertAdjacentHTML('afterbegin', '<img class="quotation--loading qnimage--auto" src="../img/icon/icon-spinner.gif">')
 

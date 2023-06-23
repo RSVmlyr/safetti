@@ -6,56 +6,52 @@ import createProductCards from "./createProductsCards.js";
 import localStorage from "./localStorage.js";
 import searchProduct from "./searchProduct.js";
 import QuotationCalculation from './QuotationCalculation.js';
+import GetIdQuotation from "../../services/quotation/getIdQuotation.js";
 
 const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts) => {
-  
   console.log('Object User', resQueryUser);
   console.log('Object Products', resQueryProducts.products);
-
+  const url = new URL(window.location.href);
+  const searchParams = new URLSearchParams(url.search);
+  const cotId = searchParams.get('cotId');
+  const cotName = searchParams.get('cotName');
   const dateCurrent = new Date()
   const idQnDate = quotationNew.querySelector('#qndate')
-  idQnDate.innerHTML = 'Creación: ' + dateFormat(dateCurrent)
-
   const idQnClient = quotationNew.querySelector('#qnclient')
-  idQnClient.innerHTML = 'Cliente: ' + resQueryUser.fullName
+  const idQnLabelCliente = resQueryUser.rol === "advisors" ? 'Asesor: ' : 'Cliente: ';
   const idQnAdvisor = quotationNew.querySelector('#qnadvisor')
-  idQnAdvisor.innerHTML = 'Asesor: ' + resQueryUser.advisorName
+  const idQnLabelAdvisors = resQueryUser.rol === "advisors" ? 'Cliente: ' : 'Asesor: ';
+  const resQueryUserAdvisorName = resQueryUser.advisorName === null ? '' : resQueryUser.advisorName
   const idQnCurrency = quotationNew.querySelector('#qncurrency')
-  idQnCurrency.innerHTML = 'Moneda: ' + resQueryUser.currency
-
+  const resQueryUserCurrency = resQueryUser.rol === "advisors" ? '' : resQueryUser.currency; 
   const idQnCuentos = quotationNew.querySelector('#qncuentos')
-  fillSelectProduct(idQnCuentos, resQueryProducts.cuentos)
   const idQnTiposPrenda = quotationNew.querySelector('#qntiposprenda')
-  fillSelectProduct(idQnTiposPrenda, resQueryProducts.tiposPrenda)
   const idQnClasificaciones = quotationNew.querySelector('#qnclasificaciones')
-  fillSelectProduct(idQnClasificaciones, resQueryProducts.clasificaciones)
   const idQnFitPrenda = quotationNew.querySelector('#qnfitprenda')
+
+  idQnDate.innerHTML = 'Creación: ' + dateFormat(dateCurrent)
+  idQnClient.innerHTML = idQnLabelCliente + resQueryUser.fullName;
+  idQnAdvisor.innerHTML = idQnLabelAdvisors + resQueryUserAdvisorName
+  idQnCurrency.innerHTML = 'Moneda: ' + resQueryUserCurrency
+  
+  fillSelectProduct(idQnCuentos, resQueryProducts.cuentos)
+  fillSelectProduct(idQnTiposPrenda, resQueryProducts.tiposPrenda)
+  fillSelectProduct(idQnClasificaciones, resQueryProducts.clasificaciones)
   fillSelectProduct(idQnFitPrenda, resQueryProducts.fitPrenda)
-
   createProductCards(quotationNew, resQueryUser, resQueryProducts)
-
-  // Search Product
   searchProduct(quotationNew, resQueryUser, resQueryProducts)
-  // Search Product
-
   localStorage()
-
-  // Obtener la URL actual
-  var url = new URL(window.location.href);
-
-  // Obtener el objeto URLSearchParams
-  var searchParams = new URLSearchParams(url.search);
-
-  // Obtener el valor del parámetro 'cotId'
-  var cotId = searchParams.get('cotId');
-  var cotName = searchParams.get('cotName');
-
-  // Reemplazar %20 por espacios en blanco en cotName
-  // cotName = cotName.replace(/%20/g, ' ');
-
-  // Imprimir los valores de los parámetros
-  // console.log(cotId);
-  // console.log(cotName);
+  if(cotId){
+    console.log('debugger...', cotId);
+    //llamar servicio
+    const getinfouser = async () => {
+      const data = await GetIdQuotation(cotId)   
+      console.log(data);
+      idQnAdvisor.innerHTML = idQnLabelAdvisors + data.clientName
+      idQnCurrency.innerHTML = 'Moneda: ' + data.currency
+    }
+    getinfouser()
+  }
 
   const QnEmail = quotationNew.querySelector('.quotation--email')
   cotId ? false : QnEmail.remove()
