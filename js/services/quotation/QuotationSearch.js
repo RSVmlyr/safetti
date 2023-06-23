@@ -1,6 +1,6 @@
 const QuotationSearch = async (uid, pageNumber, advisorId) => {
   try {
-    const urlQueryAdvisors = `https://safetticustom.azurewebsites.net/api/Quotation/search/${uid}/${pageNumber}/4/${advisorId}/%20`
+    const urlQueryAdvisors = `https://safetticustom.azurewebsites.net/api/Quotation/search/${uid}/${pageNumber}/30/${advisorId}/%20`
     const reqQueryAdvisors = await fetch(urlQueryAdvisors)
     const resQueryAdvisors = await reqQueryAdvisors.json()
     //console.log('Array Service Advisors', resQueryAdvisors);

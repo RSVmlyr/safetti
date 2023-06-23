@@ -29,3 +29,23 @@ let dataSetQuotation = {
     }
   ]
 }
+
+
+"id": 19
+"scenarios": [
+    {
+      "name": "testEscenarioTest 1",
+      "selected": true,
+      "discountPercent": 10,
+      "applyTaxIVA": true,
+      "products": [
+        {
+          "product": 46,
+          "productName": "SHORT BIO AQUA ZERO GCC - FAJÓN EN CINTURA CON BOLSILLOS",
+          "selectedMoldeCode": "G50004",
+          "quantity": 5,
+          "unitPrice": 187000
+        }
+      ]
+    }
+  ]
