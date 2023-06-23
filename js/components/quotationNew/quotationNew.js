@@ -5,6 +5,7 @@ import sendEmailHelper from "../../helpers/sendEmailHelper.js";
 import createProductCards from "./createProductsCards.js";
 import localStorage from "./localStorage.js";
 import searchProduct from "./searchProduct.js";
+import QuotationCalculation from './QuotationCalculation.js';
 
 const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts) => {
   
@@ -94,8 +95,17 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts) => {
   quotationewCalculationDiscount.textContent = resQueryUser.specialDiscount ? resQueryUser.specialDiscount + '%' : '0%'
   // Special Discount
 
+
+  const quotationCalculation = new QuotationCalculation(resQueryUser);
+
+  const btnSave = document.querySelector('.quotation--btn__new');
+  btnSave.addEventListener('click', (e) => {
+    console.log('click');
+    quotationCalculation.SendNewQuotation(resQueryUser);
+  });
+
   // Button Save
-  const quotationBtnSave = quotationNew.querySelector('#quotation--btn__save')
+  /* const quotationBtnSave = quotationNew.querySelector('#quotation--btn__save')
   cotId && cotName ? quotationBtnSave.textContent = 'Guardar Escenario' : quotationBtnSave.textContent = 'Guardar Cotización'
   // Button Save
 
@@ -115,7 +125,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts) => {
     } else {
       console.log(idQuotationComments.value);
     }
-  })
+  }) */
 
 }
 
