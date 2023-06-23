@@ -78,10 +78,14 @@ class QuotationCalculation extends HTMLElement {
     }
   }
   SendNewQuotation(data) {
+    console.log('here');
     if(data) {
       const storedProducts = localStorage.getItem('products');
       const products = storedProducts ? JSON.parse(storedProducts) : [];
       console.log(products);
+      
+
+
       const dataSetQuotation = {
         currency: 'COP',
         name: 'Nombre de la Cotización',
@@ -105,8 +109,7 @@ class QuotationCalculation extends HTMLElement {
     }
   }
   
-  createRow(products) {
-    localStorage.removeItem("products");
+  createRow(products) { 
     products.forEach(product => {
       const getPrices = async () => {
         const prices = await getProductPrices(
@@ -117,9 +120,10 @@ class QuotationCalculation extends HTMLElement {
         const priceInRange = this.getPriceInRange(prices, product.quantity);
         let PRange = priceInRange;
         let numPrange = PRange.replace(",", ".");
-        const subtotal = parseFloat((parseFloat(numPrange) * product.quantity).toFixed(2));
-        const row = document.createElement('div');
         this.createArrayProducto(product, numPrange)
+       
+        /* const subtotal = parseFloat((parseFloat(numPrange) * product.quantity).toFixed(2));
+        const row = document.createElement('div');
         row.classList.add('scenary--row__table');
         row.classList.add('scenary--row__data');
         row.innerHTML = `
@@ -129,11 +133,32 @@ class QuotationCalculation extends HTMLElement {
           <div class="scenary--row">${product.quantity}</div>
           <div class="scenary--row subtotal">${subtotal}</div>
         `;
-        document.querySelector('.quotationew--calculation__body').appendChild(row);
+        document.querySelector('.quotationew--calculation__body').appendChild(row); */
         this.sumar();
       };
       getPrices();
     });
+
+    const storedProducts = localStorage.getItem('products');
+    const productsLocalStores = storedProducts ? JSON.parse(storedProducts) : [];
+    console.log(productsLocalStores);
+    if(productsLocalStores) {
+      productsLocalStores.forEach(product => {
+        const subtotal = parseFloat((parseFloat(product.unitPrice) * product.quantity).toFixed(2));
+        const row = document.createElement('div');
+        row.classList.add('scenary--row__table');
+        row.classList.add('scenary--row__data');
+        row.innerHTML = `
+          <div class="scenary--row">${product.productName}</div>
+          <div class="scenary--row">${product.selectedMoldeCode}</div>
+          <div class="scenary--row">${product.unitPrice}</div>
+          <div class="scenary--row">${product.quantity}</div>
+          <div class="scenary--row subtotal">${subtotal}</div>
+        `;
+        document.querySelector('.quotationew--calculation__body').appendChild(row);
+      });
+    }
+    
   }
   createArrayProducto(product, numPrange) {
     if(product) {
@@ -188,6 +213,26 @@ class QuotationCalculation extends HTMLElement {
     btniva.addEventListener('click', (e) => {
       this.sumar();
     });
+
+    const storedProducts = localStorage.getItem('products');
+    const productsLocalStores = storedProducts ? JSON.parse(storedProducts) : [];
+    console.log(productsLocalStores);
+    if(productsLocalStores) {
+      productsLocalStores.forEach(product => {
+        const subtotal = parseFloat((parseFloat(product.unitPrice) * product.quantity).toFixed(2));
+        const row = document.createElement('div');
+        row.classList.add('scenary--row__table');
+        row.classList.add('scenary--row__data');
+        row.innerHTML = `
+          <div class="scenary--row">${product.productName}</div>
+          <div class="scenary--row">${product.selectedMoldeCode}</div>
+          <div class="scenary--row">${product.unitPrice}</div>
+          <div class="scenary--row">${product.quantity}</div>
+          <div class="scenary--row subtotal">${subtotal}</div>
+        `;
+        document.querySelector('.quotationew--calculation__body').appendChild(row);
+      });
+    }
   }
 }
 
