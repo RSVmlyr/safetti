@@ -49,10 +49,10 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             </div>
           </div>
           <div class="card__back">
-          <label>País</label>
-           <select class="qncountry card__back--country">
-            <option value="" selected>-- Seleccionar --</option>
-           </select>
+            <label for="">País:</label>
+            <select id="" class="qncountry card__back--country">
+              <option value="" selected>-- Seleccionar --</option>
+            </select>
            <div id="card__back--items" class="card__back--items">
   
             <div class="inputman card--amount">

@@ -82,21 +82,20 @@ class QuotationCalculation extends HTMLElement {
     if(data) {
       const storedProducts = localStorage.getItem('products');
       const products = storedProducts ? JSON.parse(storedProducts) : [];
+      console.log('Data', data);
       console.log(products);
       
-
-
       const dataSetQuotation = {
-        currency: 'COP',
+        currency: data.currency,
         name: 'Nombre de la Cotización',
         comments: 'string',
         client: data.id,
         clientName: data.fullName,
-        advisor: 4,
-        advisorName: 'Alejandro Ramírez',
+        advisor: data.advisorId,
+        advisorName: data.advisorName,
         scenarios: [
           {
-            name: 'testEscenarioTest 1',
+            name: 'Primer Escenario',
             selected: true,
             discountPercent: data.specialDiscount,
             applyTaxIVA: true,
