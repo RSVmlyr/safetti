@@ -8,7 +8,7 @@ import searchProduct from "./searchProduct.js";
 import QuotationCalculation from './QuotationCalculation.js';
 import GetIdQuotation from "../../services/quotation/getIdQuotation.js";
 
-const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts) => {
+const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQueryClients) => {
   console.log('Object User', resQueryUser);
   console.log('Object Products', resQueryProducts.products);
   const url = new URL(window.location.href);
@@ -68,12 +68,55 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts) => {
     const quotationewInfo = quotationNew.querySelector('.quotationew__info')
     let quotatioNewInfoTwo =
     `<div class="quotationew__infoTwo">
-      <label class="quotation--title__quo">Nombre del Escenario: <span>*</span></label>
+      <label class="quotation--title__quo" for='quotationewscenary'>Nombre del Escenario: <span>*</span></label>
       <input id="quotationewscenary" type="text" placeholder="Nombre Escenario" required>
     </div>
     `
     quotationewInfo.insertAdjacentHTML('beforeend', `${quotatioNewInfoTwo}`)
   }
+
+  if (resQueryUser.rol === 'advisors') {
+    let quotatioNewSearchClient =
+    `<div class='quotationew__searchclient'>
+      <label for='quotationewclient'>Buscar Cliente:</label>
+      <input id="quotationewclient" type="text" placeholder="Escribe el Nombre del cliente" required>
+      <ul id="quotationewsearchclient"></ul>
+     </div>
+    `
+    quotationewname.insertAdjacentHTML('afterend', `${quotatioNewSearchClient}`)
+
+    const quotatioNewClient = quotationNew.querySelector('#quotationewclient')
+    const idQuotatioNewSearchClient = quotationNew.querySelector('#quotationewsearchclient')
+
+    quotatioNewClient.addEventListener('input', (e) => {
+      let searchTerm = e.target.value.trim().toLowerCase();
+      console.log(searchTerm);
+
+      // Limpiar resultados anteriores
+      idQuotatioNewSearchClient.innerHTML = '';
+
+      if (searchTerm !== '') {
+        const filteredClients = resQueryClients.filter(client =>
+          client.fullName.toLowerCase().includes(searchTerm)
+        );
+
+        const sortedClients = filteredClients.sort((a, b) =>
+          a.fullName.localeCompare(b.fullName)
+        );
+
+        sortedClients.forEach(client => {
+          const li = document.createElement('li');
+          li.textContent = client.fullName;
+          li.addEventListener('click', function() {
+            quotatioNewClient.value = client.fullName;
+            idQuotatioNewSearchClient.innerHTML = '';
+          });
+          idQuotatioNewSearchClient.appendChild(li);
+        });
+      }
+    });
+
+  } 
 
   const quotationDownload = quotationNew.querySelector('.quotation--download')
   if (quotationDownload) {

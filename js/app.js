@@ -7,6 +7,7 @@ import getUser from "./services/user/getUser.js"
 import QuotationSearch from "./services/quotation/QuotationSearch.js"
 import './components/quotationNew/QuotationCalculation.js';
 import PaginatorElement from './components/paginator/PaginatorElement.js';
+import getClients from "./services/clients/getClients.js"
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -83,13 +84,14 @@ document.addEventListener('DOMContentLoaded', () => {
       sliderProducts.insertAdjacentHTML('afterbegin', '<img class="quotation--loading qnimage--auto" src="../img/icon/icon-spinner.gif">')
 
       const resQueryProducts = await getProduct()
+      const resQueryClients = await getClients()
 
       const spinnerP = quotationNew.querySelector('.slider--productos .quotation--loading')
       spinnerP.remove()
 
       // Get Users and Products
       const getDataQuotationNew = () => {
-        quotationNewPage(quotationNew, resQueryUser, resQueryProducts)
+        quotationNewPage(quotationNew, resQueryUser, resQueryProducts, resQueryClients)
       }
       // Get Users and Products
       getDataQuotationNew()

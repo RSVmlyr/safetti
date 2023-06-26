@@ -89,7 +89,7 @@
             input {
               border: 1px solid $c4;
               height: 40px;
-              margin: 10px 0 25px;
+              margin: 10px 0 45px;
               padding: 0 10px;
             }
           }
@@ -108,6 +108,26 @@
               position: absolute;
               bottom: 8px;
               font-size: 12px;
+            }
+            .quotationew__searchclient {
+              display: flex;
+              flex-direction: column;
+              position: relative;
+              #quotationewsearchclient {
+                position: absolute;
+                top: 90px;
+                margin: 0;
+                padding: 10px 0;
+                width: 100%;
+                background-color: $white;
+                z-index: 1;
+                li {
+                  margin: 0;
+                  padding: 6px 12px;
+                  list-style: none;
+                  cursor: pointer;
+                }
+              }
             }
           }
           &__infoTwo {
