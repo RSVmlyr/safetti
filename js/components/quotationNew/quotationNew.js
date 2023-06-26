@@ -7,6 +7,7 @@ import localStorage from "./localStorage.js";
 import searchProduct from "./searchProduct.js";
 import QuotationCalculation from './QuotationCalculation.js';
 import GetIdQuotation from "../../services/quotation/getIdQuotation.js";
+import ExpiringLocalStorage from "../localStore/ExpiringLocalStorage.js";
 
 const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQueryClients) => {
   console.log('Object User', resQueryUser);
@@ -90,6 +91,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
     quotatioNewClient.addEventListener('input', (e) => {
       let searchTerm = e.target.value.trim().toLowerCase();
       idQuotatioNewSearchClient.innerHTML = '';
+      idQuotatioNewSearchClient.classList.remove('quotationewsearchclient')
       if (searchTerm !== '') {
         const filteredClients = resQueryClients.filter(client =>
           client.fullName.toLowerCase().includes(searchTerm)
@@ -98,6 +100,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
           a.fullName.localeCompare(b.fullName)
         );
         sortedClients.forEach(client => {
+          idQuotatioNewSearchClient.classList.add('quotationewsearchclient')
           const li = document.createElement('li');
           li.textContent = client.fullName ? client.fullName : '';
           li.setAttribute('data-currency', client.currency ? client.currency : '')
@@ -118,6 +121,14 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       const qnCurrency = quotationNew.querySelector('#qncurrency')
       qnClient.textContent = 'Cliente: ' + client
       qnCurrency.textContent = 'Moneda: ' + currency
+      const dataClientStorage = [
+        {
+          client,
+          currency,
+          rol
+        }
+      ]
+      ExpiringLocalStorage.saveDataWithExpiration("ClientFullName", JSON.stringify(dataClientStorage))
     }
 
     const quotatioNewSearchClientLi = quotationNew.querySelectorAll('#quotationewsearchclient li')
