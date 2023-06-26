@@ -236,5 +236,4 @@ class QuotationCalculation extends HTMLElement {
 }
 
 customElements.define('quotation-calculation', QuotationCalculation);
-
 export default QuotationCalculation;
