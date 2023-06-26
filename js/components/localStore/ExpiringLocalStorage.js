@@ -1,5 +1,6 @@
 class ExpiringLocalStorage {
-    static saveDataWithExpiration(key, value, expirationTime) {
+    static saveDataWithExpiration(key, value) {
+        const expirationTime = 2 * 60 * 60 * 1000;
         const item = {
         value: value,
         expiration: Date.now() + expirationTime
