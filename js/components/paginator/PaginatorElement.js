@@ -108,7 +108,6 @@ class PaginatorElement extends HTMLElement {
       element.remove();
     });
     if (Array.isArray(quotation)) {
-      console.log(quotation);
       quotation.reverse();
       quotation.forEach(cot => {
         quotationListRow(cot);
