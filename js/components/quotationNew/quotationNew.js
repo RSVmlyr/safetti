@@ -42,7 +42,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   createProductCards(quotationNew, resQueryUser, resQueryProducts)
   searchProduct(quotationNew, resQueryUser, resQueryProducts)
   localStorage()
-  if(cotId){
+  if(cotId && resQueryUser.rol === 'advisors'){
     console.log('debugger...', cotId);
     //llamar servicio
     const getinfouser = async () => {
@@ -172,21 +172,35 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   const quotatioewScenary = quotationNew.querySelector('#quotationewscenary')
   const idQuotationComments = quotationNew.querySelector('#quotationcomments')
 
+  
   quotationBtnSave.addEventListener('click', () => {
+    
     if (quotationewname.value === '') {
-      const error = document.createElement('span')
-      error.classList.add('error')
-      error.textContent = 'Este campo es obligatorio'
-      quotationewname.insertAdjacentElement('afterend', error)
+      const error = document.createElement('span');
+      error.classList.add('error');
+      error.textContent = 'Este campo es obligatorio';
+      quotationewname.insertAdjacentElement('afterend', error);
     }
-    if (cotId && cotName) {
-      console.log(quotatioewScenary.value);
-    } else {
-      quotationCalculation.SendNewQuotation(resQueryUser);
-      console.log(idQuotationComments.value);
-    }
-  })
 
+    quotationewname.addEventListener('input', (e) => {
+      const nodeError = quotationNew.querySelector('.error');
+      console.log(e.target.value);
+      if (e.target.value !== '') {
+        nodeError ? nodeError.style.display = 'none' : false
+      } else {
+        nodeError.style.display = 'block'
+      }
+    });
+  
+    // if (cotId && cotName) {
+    //   console.log(quotatioewScenary.value);
+    // } else {
+    //   quotationCalculation.SendNewQuotation(resQueryUser);
+    //   console.log(idQuotationComments.value);
+    // }
+
+  });
+  
 }
 
 export default quotationNewPage
