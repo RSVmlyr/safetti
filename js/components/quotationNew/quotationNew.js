@@ -114,8 +114,6 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts) => {
       error.textContent = 'Este campo es obligatorio'
       quotationewname.insertAdjacentElement('afterend', error)
     }
-    console.log(quotationewname.value);
-
     if (cotId && cotName) {
       console.log(quotatioewScenary.value);
     } else {
