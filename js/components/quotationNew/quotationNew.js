@@ -98,13 +98,12 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
           a.fullName.localeCompare(b.fullName)
         );
         sortedClients.forEach(client => {
-          console.log('---', client);
           const li = document.createElement('li');
-          li.textContent = client.fullName;
-          li.setAttribute('data-currency', client.currency)
-          li.setAttribute('data-rol', client.rol)
+          li.textContent = client.fullName ? client.fullName : '';
+          li.setAttribute('data-currency', client.currency ? client.currency : '')
+          li.setAttribute('data-rol', client.rol ? client.rol : '')
           li.addEventListener('click', function() {
-            quotatioNewClient.value = client.fullName;
+            quotatioNewClient.value = client.fullName ? client.fullName : '';
             idQuotatioNewSearchClient.innerHTML = '';
             selectedValueSearchLi(client.fullName, client.currency, client.rol)
           });
@@ -115,7 +114,6 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
     });
 
     const selectedValueSearchLi = (client, currency, rol) => {
-      console.log(client, currency, rol);
       const qnClient = quotationNew.querySelector('#qnadvisor')
       const qnCurrency = quotationNew.querySelector('#qncurrency')
       qnClient.textContent = 'Cliente: ' + client
@@ -170,8 +168,6 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       error.textContent = 'Este campo es obligatorio'
       quotationewname.insertAdjacentElement('afterend', error)
     }
-    console.log(quotationewname.value);
-
     if (cotId && cotName) {
       console.log(quotatioewScenary.value);
     } else {

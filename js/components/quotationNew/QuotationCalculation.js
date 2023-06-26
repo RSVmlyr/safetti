@@ -1,5 +1,5 @@
 import getProductPrices from '../../services/product/getProductPrices.js';
-
+import ExpiringLocalStorage from '../localStore/ExpiringLocalStorage.js'
 class QuotationCalculation extends HTMLElement {
   constructor(resQueryUser) {
     super();
@@ -78,13 +78,9 @@ class QuotationCalculation extends HTMLElement {
     }
   }
   SendNewQuotation(data) {
-    console.log('here');
     if(data) {
       const storedProducts = localStorage.getItem('products');
       const products = storedProducts ? JSON.parse(storedProducts) : [];
-      console.log('Data', data);
-      console.log(products);
-      
       const dataSetQuotation = {
         currency: data.currency,
         name: 'Nombre de la Cotización',
@@ -120,29 +116,16 @@ class QuotationCalculation extends HTMLElement {
         let PRange = priceInRange;
         let numPrange = PRange.replace(",", ".");
         this.createArrayProducto(product, numPrange)
-       
-        /* const subtotal = parseFloat((parseFloat(numPrange) * product.quantity).toFixed(2));
-        const row = document.createElement('div');
-        row.classList.add('scenary--row__table');
-        row.classList.add('scenary--row__data');
-        row.innerHTML = `
-          <div class="scenary--row">${product.productName}</div>
-          <div class="scenary--row">${product.selectedMoldeCode}</div>
-          <div class="scenary--row">${numPrange}</div>
-          <div class="scenary--row">${product.quantity}</div>
-          <div class="scenary--row subtotal">${subtotal}</div>
-        `;
-        document.querySelector('.quotationew--calculation__body').appendChild(row); */
         this.sumar();
       };
       getPrices();
     });
 
     const storedProducts = localStorage.getItem('products');
-    const productsLocalStores = storedProducts ? JSON.parse(storedProducts) : [];
-    console.log(productsLocalStores);
-    if(productsLocalStores) {
-      productsLocalStores.forEach(product => {
+    if(storedProducts) {
+      const productsLocalStores = storedProducts ? JSON.parse(storedProducts) : [];
+      const productsList = JSON.parse(productsLocalStores.value)
+      productsList.forEach(product => {
         const subtotal = parseFloat((parseFloat(product.unitPrice) * product.quantity).toFixed(2));
         const row = document.createElement('div');
         row.classList.add('scenary--row__table');
@@ -164,10 +147,11 @@ class QuotationCalculation extends HTMLElement {
       const storedProducts = localStorage.getItem('products');
       let arr = [];
       if (storedProducts) {
-        arr = JSON.parse(storedProducts);
+        const productsLocalStores = storedProducts ? JSON.parse(storedProducts) : [];
+        arr = JSON.parse(productsLocalStores.value)
       }
+      console.log('arr', arr);
 
-      // Add the new item to the array
       arr.push({
         product: product.id,
         productName: product.productName,
@@ -175,16 +159,15 @@ class QuotationCalculation extends HTMLElement {
         quantity: product.quantity,
         unitPrice: numPrange
       });
-
-      // Store the updated array back in local storage
-      localStorage.setItem('products', JSON.stringify(arr));
+      ExpiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(arr));
+      const retrievedData = ExpiringLocalStorage.getDataWithExpiration("myData");
+      console.log(retrievedData);
     }
   }
 
   async sumar() {
     const subtotalElements = document.querySelectorAll('.subtotal');
     const quotationSave = document.querySelector('.quotation--btn__add');
-
     let count = 0;
     subtotalElements.forEach(element => {
       const valor = parseFloat(element.textContent).toFixed(2);
@@ -212,12 +195,11 @@ class QuotationCalculation extends HTMLElement {
     btniva.addEventListener('click', (e) => {
       this.sumar();
     });
-
     const storedProducts = localStorage.getItem('products');
-    const productsLocalStores = storedProducts ? JSON.parse(storedProducts) : [];
-    console.log(productsLocalStores);
-    if(productsLocalStores) {
-      productsLocalStores.forEach(product => {
+    if(storedProducts) {
+      const productsLocalStores = storedProducts ? JSON.parse(storedProducts) : [];
+      const productsList = JSON.parse(productsLocalStores.value)
+      productsList.forEach(product => {
         const subtotal = parseFloat((parseFloat(product.unitPrice) * product.quantity).toFixed(2));
         const row = document.createElement('div');
         row.classList.add('scenary--row__table');
