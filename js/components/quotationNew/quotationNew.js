@@ -75,7 +75,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
     quotationewInfo.insertAdjacentHTML('beforeend', `${quotatioNewInfoTwo}`)
   }
 
-  if (resQueryUser.rol === 'advisors') {
+  if (resQueryUser.rol === 'advisors' && cotId === null) {
     let quotatioNewSearchClient =
     `<div class='quotationew__searchclient'>
       <label for='quotationewclient'>Buscar Cliente:</label>
@@ -87,35 +87,48 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
 
     const quotatioNewClient = quotationNew.querySelector('#quotationewclient')
     const idQuotatioNewSearchClient = quotationNew.querySelector('#quotationewsearchclient')
-
     quotatioNewClient.addEventListener('input', (e) => {
       let searchTerm = e.target.value.trim().toLowerCase();
-      console.log(searchTerm);
-
-      // Limpiar resultados anteriores
       idQuotatioNewSearchClient.innerHTML = '';
-
       if (searchTerm !== '') {
         const filteredClients = resQueryClients.filter(client =>
           client.fullName.toLowerCase().includes(searchTerm)
         );
-
         const sortedClients = filteredClients.sort((a, b) =>
           a.fullName.localeCompare(b.fullName)
         );
-
         sortedClients.forEach(client => {
+          console.log('---', client);
           const li = document.createElement('li');
           li.textContent = client.fullName;
+          li.setAttribute('data-currency', client.currency)
+          li.setAttribute('data-rol', client.rol)
           li.addEventListener('click', function() {
             quotatioNewClient.value = client.fullName;
             idQuotatioNewSearchClient.innerHTML = '';
+            selectedValueSearchLi(client.fullName, client.currency, client.rol)
           });
           idQuotatioNewSearchClient.appendChild(li);
         });
+
       }
     });
 
+    const selectedValueSearchLi = (client, currency, rol) => {
+      console.log(client, currency, rol);
+      const qnClient = quotationNew.querySelector('#qnadvisor')
+      const qnCurrency = quotationNew.querySelector('#qncurrency')
+      qnClient.textContent = 'Cliente: ' + client
+      qnCurrency.textContent = 'Moneda: ' + currency
+    }
+
+    const quotatioNewSearchClientLi = quotationNew.querySelectorAll('#quotationewsearchclient li')
+      if (quotatioNewSearchClientLi.length > 0) {
+        console.log(quotatioNewSearchClientLi);
+        quotatioNewSearchClientLi.addEventListener('click', (e) => {
+          console.log(e.target);
+        })
+      }    
   } 
 
   const quotationDownload = quotationNew.querySelector('.quotation--download')
