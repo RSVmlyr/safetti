@@ -35,7 +35,7 @@ let dataSetQuotation = {
 "scenarios": [
     {
       "name": "testEscenarioTest 1",
-      "selected": true,
+      "selected": false,
       "discountPercent": 10,
       "applyTaxIVA": true,
       "products": [
