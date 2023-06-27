@@ -165,21 +165,22 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   //   quotationCalculation.SendNewQuotation(resQueryUser);
   // });
 
-  const quotationBtnSave = quotationNew.querySelector('#quotation--btn__save')
+  const quotationBtnSave =  quotationNew.querySelector('#quotation--btn__save')
   cotId && cotName ? quotationBtnSave.textContent = 'Guardar Escenario' : quotationBtnSave.textContent = 'Guardar Cotización'
 
   const quotatioewScenary = quotationNew.querySelector('#quotationewscenary')
+  const quotatioewScenaryNode = quotatioewScenary ? quotatioewScenary.value : false
   const idQuotationComments = quotationNew.querySelector('#quotationcomments')
   const quotationewCalculationDiscountValue = resQueryUser.rol !== 'advisors' ? resQueryUser.specialDiscount : false
   const quotationIva = quotationNew.querySelector('.quotation--iva')
 
   quotationBtnSave.addEventListener('click', () => {
-    if (quotationewname.value === '' || quotatioewScenary.value === '') {
+    if (quotationewname.value === '' || quotatioewScenaryNode === '') {
       const error = document.createElement('span');
       error.classList.add('error');
       error.textContent = 'Este campo es obligatorio';
       quotationewname.insertAdjacentElement('afterend', error);
-      quotatioewScenary ? quotatioewScenary.insertAdjacentElement('afterend', error) : false 
+      quotatioewScenary ? quotatioewScenary.insertAdjacentElement('afterend', error) : false
     }
     const nodeError = quotationNew.querySelector('.error');
     if (quotationewname) {

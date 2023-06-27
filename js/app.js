@@ -13,11 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const quotation = document.querySelector('#quotation')
   const quotationNew = document.querySelector('#quotationew')
-  
+
   const query = async () => {
     const url = new URL(window.location.href);
     const searchParams = new URLSearchParams(url.search);
-    const uid = searchParams.get('uid') || '19';
+    const uid = searchParams.get('uid') || '4';
     const resQueryUser = await getUser(uid)
 
     if( quotation ) {
