@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
           totalPages = q.totalPages
           break;
       }
-      console.log(q);
+      // console.log(q);
       const paginatorElement = new PaginatorElement(uid, 1, Quotation, totalPages);
       paginatorElement.renderPaginator();
       paginatorElement.selectAdvisor();

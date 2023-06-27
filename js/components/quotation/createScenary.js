@@ -111,20 +111,16 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         }
         cot.scenarios.forEach(scen => {
 
-          // Total products unit price
-          let totalProducts = 0
+          let totalProducts = 0;
 
           scen.products.forEach(product => {
-            // console.log('--------------');
-            // console.log(product.productName);
-            // console.log('Unitario', product.unitPrice);
-            // console.log('--------------');
-            totalProducts += product.unitPrice ? product.unitPrice : '';
-            console.log('Total PRoductos: ', product.unitPrice);
+            if (typeof product.unitPrice === 'number') {
+              totalProducts += product.unitPrice;
+            }
           });
-          // console.log('Total', totalProducts.toFixed(2));
-          let totalPro = totalProducts.toFixed(2)
-          // Total products unit price
+          
+          console.log(totalProducts);
+          let totalPro = totalProducts;
 
           // Scenary selected 
           if ( scen.selected === true ) {

@@ -1,4 +1,4 @@
-const setQuotation = async () => {
+const setQuotation = async dataSetQuotation => {
   try {
     const requestOptions = {
       method: 'POST',
@@ -23,7 +23,7 @@ const setQuotation = async () => {
   }
   
   catch(error) {
-    console.log('No se pudo traer las cotizaciones', error);
+    console.log('No se pudo crear las cotizaciones', error);
     const quotationContentList = document.querySelector('#quotation--content--list')
     quotationContentList.insertAdjacentHTML('afterbegin', '<div class="quotation--loading"><span>No existen Cotizaciones...</span></div>')
   }

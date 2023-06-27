@@ -159,11 +159,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
 
   const quotationCalculation = new QuotationCalculation(resQueryUser);
 
-  // const btnSave = document.querySelector('.quotation--btn__new');
-  // btnSave.addEventListener('click', (e) => {
-  //   console.log('click');
-  //   quotationCalculation.SendNewQuotation(resQueryUser);
-  // });
+
 
   const quotationBtnSave =  quotationNew.querySelector('#quotation--btn__save')
   cotId && cotName ? quotationBtnSave.textContent = 'Guardar Escenario' : quotationBtnSave.textContent = 'Guardar Cotización'
@@ -173,7 +169,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   const idQuotationComments = quotationNew.querySelector('#quotationcomments')
   const quotationewCalculationDiscountValue = resQueryUser.rol !== 'advisors' ? resQueryUser.specialDiscount : false
   const quotationIva = quotationNew.querySelector('.quotation--iva')
-
+  let v = false
   quotationBtnSave.addEventListener('click', () => {
     if (quotationewname.value === '' || quotatioewScenaryNode === '') {
       const error = document.createElement('span');
@@ -187,7 +183,10 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       quotationewname.addEventListener('input', (e) => {
         if (e.target.value !== '') {
           nodeError ? nodeError.style.display = 'none' : false
+          v = true
+          console.log('333', e);
         } else {
+          v = false
           nodeError.style.display = 'block'
         }
       });
@@ -196,22 +195,29 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       quotatioewScenary.addEventListener('input', (e) => {
         if (e.target.value !== '') {
           nodeError ? nodeError.style.display = 'none' : false
+          console.log('444', e);
         } else {
           nodeError.style.display = 'block'
         }
       });
     }
 
-    console.log('Name: ', quotationewname.value);
-    console.log('Comentarios: ', idQuotationComments.value);
-
-    console.log('Especial Discount', quotationewCalculationDiscountValue);
-    console.log('IVA', quotationIva.checked);
+  
 
     if (cotId && cotName) {
       console.log('Cliente Nuevo Escenario: ', quotatioewScenary.value);
     } else {
-      // quotationCalculation.SendNewQuotation(resQueryUser);
+      quotationCalculation.SendNewQuotation(resQueryUser, quotationIva.checked, quotationewname.value, idQuotationComments.value );
+
+    }
+    if(v === true) {
+
+      console.log('Name: ', quotationewname.value);
+      console.log('Comentarios: ', idQuotationComments.value);
+  
+      console.log('Especial Discount', quotationewCalculationDiscountValue);
+      console.log('IVA', quotationIva.checked);
+
     }
 
   });

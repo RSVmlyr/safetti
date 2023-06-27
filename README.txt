@@ -2,7 +2,7 @@ scss/
 
 sass --watch --style=compressed main.scss ../css/main.css
 
-
+/// nueva cotizacion
 let dataSetQuotation = {
   "currency": "COP",
   "name": "Nombre de la Cotización",
@@ -30,7 +30,7 @@ let dataSetQuotation = {
   ]
 }
 
-
+/// esenario 
 "id": 19
 "scenarios": [
     {
