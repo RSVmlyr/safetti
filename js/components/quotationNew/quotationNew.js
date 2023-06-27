@@ -77,6 +77,10 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   }
 
   if (resQueryUser.rol === 'advisors' && cotId === null) {
+    console.log('here');
+    const c = ExpiringLocalStorage.getDataWithExpiration('ClientFullName')
+    const client = JSON.parse(c)
+    //ExpiringLocalStorage.deleteDataWithExpiration('products')
     let quotatioNewSearchClient =
     `<div class='quotationew__searchclient'>
       <label for='quotationewclient'>Buscar Cliente:</label>

@@ -20,6 +20,9 @@ class ExpiringLocalStorage {
         }
         return null;
     }
+    static deleteDataWithExpiration(key) {
+        localStorage.removeItem(key);
+    }
 }
 export default ExpiringLocalStorage;
   
