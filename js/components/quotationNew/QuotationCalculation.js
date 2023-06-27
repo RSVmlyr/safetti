@@ -1,4 +1,5 @@
 import getProductPrices from '../../services/product/getProductPrices.js'
+import getProductPrices from '../../services/quotation/setQuotation.js'
 import ExpiringLocalStorage from '../localStore/ExpiringLocalStorage.js'
 class QuotationCalculation extends HTMLElement {
   constructor(resQueryUser) {
@@ -99,6 +100,31 @@ class QuotationCalculation extends HTMLElement {
       console.log('body', dataSetQuotation )
 
     }
+    const createQuotation = async  (dataSetQuotation) => {
+      getProductPrices(dataSetQuotation)
+    }
+    createQuotation(dataSetQuotation)
+  }
+
+  insertList () {
+    const retrievedData = ExpiringLocalStorage.getDataWithExpiration("products")
+    if(retrievedData) {
+      const productsList = retrievedData ? JSON.parse(retrievedData) : []
+      productsList.forEach(product => {
+        const subtotal = parseFloat((parseFloat(product.unitPrice) * product.quantity).toFixed(2))
+        const row = document.createElement('div')
+        row.classList.add('scenary--row__table')
+        row.classList.add('scenary--row__data')
+        row.innerHTML = `
+          <div class="scenary--row">${product.productName}</div>
+          <div class="scenary--row">${product.selectedMoldeCode}</div>
+          <div class="scenary--row">${product.unitPrice}</div>
+          <div class="scenary--row">${product.quantity}</div>
+          <div class="scenary--row subtotal">${subtotal}</div>
+        `
+        document.querySelector('.quotationew--calculation__body').appendChild(row)
+      })
+    }
   }
   
   createRow(products) { 
@@ -140,23 +166,32 @@ class QuotationCalculation extends HTMLElement {
     
   }
   createArrayProducto(product, numPrange) {
-    this.removeList()
     if(product) {
       const retrievedData = ExpiringLocalStorage.getDataWithExpiration("products")
-      let arr = []
+      let productForSave = []
       if (retrievedData) {
         const productsLocalStores = retrievedData ? JSON.parse(retrievedData) : []
-        arr = productsLocalStores
+        productForSave = productsLocalStores
       }
-      console.log('createArrayProducto', arr)
-      arr.push({
+      console.log('createArrayProducto', productForSave)
+
+      const indice = productForSave.findIndex(item => item.id === product.id);
+      console.log(indice);
+      if (indice !== -1) {
+        // Si ya existe un elemento con el mismo ID, se suman las cantidades
+        productForSave[indice].quantity += productForSave.quantity;
+      } 
+
+      productForSave.push({
         product: product.id,
         productName: product.productName,
         selectedMoldeCode: product.selectedMoldeCode,
         quantity: product.quantity,
         unitPrice: numPrange
       })
-      ExpiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(arr))
+      ExpiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(productForSave))
+      this.removeList()
+      this.insertList()
     }
   }
 
@@ -195,32 +230,13 @@ class QuotationCalculation extends HTMLElement {
   }
 
   connectedCallback() {
-    //this.SendNewQuotation()
     const btniva = document.querySelector('.quotation--iva')
     const fieldValor = document.querySelector('.quotation--btn__add')
     fieldValor.textContent = 0
     btniva.addEventListener('click', (e) => {
       this.sumar()
     })
-    const retrievedData = ExpiringLocalStorage.getDataWithExpiration("products")
-    if(retrievedData) {
-      const productsList = retrievedData ? JSON.parse(retrievedData) : []
-      productsList.forEach(product => {
-        const subtotal = parseFloat((parseFloat(product.unitPrice) * product.quantity).toFixed(2))
-        const row = document.createElement('div')
-        row.classList.add('scenary--row__table')
-        row.classList.add('scenary--row__data')
-        row.innerHTML = `
-          <div class="scenary--row">${product.productName}</div>
-          <div class="scenary--row">${product.selectedMoldeCode}</div>
-          <div class="scenary--row">${product.unitPrice}</div>
-          <div class="scenary--row">${product.quantity}</div>
-          <div class="scenary--row subtotal">${subtotal}</div>
-        `
-        document.querySelector('.quotationew--calculation__body').appendChild(row)
-      })
-    }
-    
+    this.insertList()
   }
 }
 
