@@ -57,7 +57,7 @@ const quotationListRow = (cot) => {
   // Search Clients
   const idClients = quotation.querySelector('#clients');
 
-  idClients.addEventListener('input', (e) => {
+  /* idClients.addEventListener('input', (e) => {
     const quotationListContainer = quotation.querySelector('#quotation--content--list');
     const quotationListRow = quotationListContainer.querySelectorAll('.quotation--list--row');
     const searchTerm = e.target.value.toLowerCase().trim();
@@ -72,7 +72,7 @@ const quotationListRow = (cot) => {
         element.style.display = 'none';
       }
     });
-  });
+  }); */
 
 
   // Origin quotation spotify

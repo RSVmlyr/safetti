@@ -1,5 +1,6 @@
 import getProductPrices from '../../services/product/getProductPrices.js'
 import setQuotation from '../../services/quotation/setQuotation.js'
+import setScenario from '../../services/quotation/setScenario.js'
 import ExpiringLocalStorage from '../localStore/ExpiringLocalStorage.js'
 class QuotationCalculation extends HTMLElement {
   constructor(resQueryUser) {
@@ -129,7 +130,6 @@ class QuotationCalculation extends HTMLElement {
         }
       }
     }
-
    
     console.log(dataSetQuotation);
     const createQuotation = async  () => {
@@ -138,8 +138,26 @@ class QuotationCalculation extends HTMLElement {
     }
     createQuotation(dataSetQuotation)
   }
-  SendNewScenary() {
-
+  SendNewScenary(data, cotId, nameScenary) {
+    let dataSetScenario = ''
+    const retrievedData = ExpiringLocalStorage.getDataWithExpiration("products")
+    const products = retrievedData ? JSON.parse(retrievedData) : []
+    if(data) {
+      dataSetScenario = {
+        "quotationId": cotId,
+        "name": nameScenary,
+        "selected": false,
+        "discountPercent": 0,
+        "applyTaxIVA": true,
+        "products": products,
+      }
+      console.log('obj: ', dataSetScenario);
+      const createScenario = async  () => {
+        const data = await setScenario(dataSetScenario)
+        console.log(data);
+      }
+      createScenario(dataSetScenario)
+    }
   }
 
   insertList () {
@@ -282,8 +300,8 @@ class QuotationCalculation extends HTMLElement {
   removeList() {
     console.log('removeList');
     const scenaryTableRow = document.querySelectorAll('.scenary--row__table .scenary--row');
-    scenaryTableRow.forEach(e => {
-      e.remove();
+    scenaryTableRow.forEach((e, i) => {
+      e.remove(); 
     });
     return true
   }

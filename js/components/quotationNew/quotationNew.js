@@ -8,6 +8,7 @@ import searchProduct from "./searchProduct.js";
 import QuotationCalculation from './QuotationCalculation.js';
 import GetIdQuotation from "../../services/quotation/getIdQuotation.js";
 import ExpiringLocalStorage from "../localStore/ExpiringLocalStorage.js";
+import getUser from "../../services/user/getUser.js"
 
 const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQueryClients) => {
   console.log('Object User', resQueryUser);
@@ -43,14 +44,31 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   searchProduct(quotationNew, resQueryUser, resQueryProducts)
   localStorage()
   if(cotId && resQueryUser.rol === 'advisors'){
-    console.log('debugger...', cotId);
+    console.log('cotId', cotId);
     //llamar servicio
+    const getUserCurren = async (id) => {
+      const user = await getUser(id) 
+      console.log(user);
+      const dataClientStorage = [
+        {
+          id: user.id,
+          client: user.fullName,
+          currency: user.currency,
+          rol: user.rol,
+        }
+      ]
+      ExpiringLocalStorage.saveDataWithExpiration("ClientFullName", JSON.stringify(dataClientStorage))
+    }
+
     const getinfouser = async () => {
       const data = await GetIdQuotation(cotId)   
       console.log(data);
       idQnAdvisor.innerHTML = idQnLabelAdvisors + data.clientName
       idQnCurrency.innerHTML = 'Moneda: ' + data.currency
+      getUserCurren(data.client);
+      
     }
+    
     getinfouser()
   }
 
@@ -186,7 +204,6 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   const quotationIva = quotationNew.querySelector('.quotation--iva')
   let v = false
   quotationBtnSave.addEventListener('click', () => {
-
     if (quotationewname.value === '' || quotatioewScenaryNode === '') {
       const error = document.createElement('span');
       error.classList.add('error');
@@ -225,9 +242,9 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
 
     if (cotId && cotName) {
       console.log('Cliente Nuevo Escenario: ', quotatioewScenary.value);
+      quotationCalculation.SendNewScenary(resQueryUser, cotId, quotatioewScenary.value)
     } else {
       quotationCalculation.SendNewQuotation(resQueryUser, quotationIva.checked, quotationewname.value, idQuotationComments.value );
-
     }
     if(v === true) {
       console.log('Name: ', quotationewname.value);
