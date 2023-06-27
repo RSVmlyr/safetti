@@ -81,6 +81,11 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   const QnTitle = quotationNew.querySelector('.quotationew__title .quotation--title')
   cotId ? QnTitle.textContent = 'Nuevo Escenario' : QnTitle.textContent = 'Nueva Cotización'
   const quotationewname = quotationNew.querySelector('#quotationewname')
+
+  const NameQuotation = ExpiringLocalStorage.getDataWithExpiration('NameQuotation')
+  const nQuotation = JSON.parse(NameQuotation)
+  quotationewname.value = nQuotation
+
   if (cotId && quotationewname) {
     quotationewname.disabled = true
     quotationewname.value = cotName
@@ -112,11 +117,6 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       const cFulName = JSON.parse(ClientFullName)
       quotatioNewClient.value = cFulName[0].client
     }
- 
-
-    const NameQuotation = ExpiringLocalStorage.getDataWithExpiration('NameQuotation')
-    const nQuotation = JSON.parse(NameQuotation)
-    quotationewname.value = nQuotation
 
     quotatioNewClient.addEventListener('input', (e) => {
       let searchTerm = e.target.value.trim().toLowerCase();

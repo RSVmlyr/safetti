@@ -57,23 +57,24 @@ const quotationListRow = (cot) => {
   // Search Clients
   const idClients = quotation.querySelector('#clients');
 
-  /* idClients.addEventListener('input', (e) => {
-    const quotationListContainer = quotation.querySelector('#quotation--content--list');
-    const quotationListRow = quotationListContainer.querySelectorAll('.quotation--list--row');
-    const searchTerm = e.target.value.toLowerCase().trim();
-    const removerTildes = texto => texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
-    quotationListRow.forEach(element => {
-      const elementText = removerTildes(element.textContent).toLowerCase();
-
-      if (elementText.includes(removerTildes(searchTerm))) {
-        element.style.display = 'block';
-      } else {
-        element.style.display = 'none';
-      }
+  if (idClients) {
+    idClients.addEventListener('input', (e) => {
+      const quotationListContainer = quotation.querySelector('#quotation--content--list');
+      const quotationListRow = quotationListContainer.querySelectorAll('.quotation--list--row');
+      const searchTerm = e.target.value.toLowerCase().trim();
+      const removerTildes = texto => texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  
+      quotationListRow.forEach(element => {
+        const elementText = removerTildes(element.textContent).toLowerCase();
+  
+        if (elementText.includes(removerTildes(searchTerm))) {
+          element.style.display = 'block';
+        } else {
+          element.style.display = 'none';
+        }
+      });
     });
-  }); */
-
+  }
 
   // Origin quotation spotify
   const quotationOrigin = quotation.querySelector('.quotation--origin__shopify')
