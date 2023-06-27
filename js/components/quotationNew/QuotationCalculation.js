@@ -80,9 +80,8 @@ class QuotationCalculation extends HTMLElement {
     console.log('data', data, iva, name, comments);
     const comment = comments ? comments : "string"
     let dataSetQuotation = ''
-    const expiringLocalStorage = new ExpiringLocalStorage();
-    console.log(expiringLocalStorage);
-    const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
+
+    const c = ExpiringLocalStorage.getDataWithExpiration('ClientFullName')
     if(c) {
       const client = JSON.parse(c)
       if(data) {
@@ -293,8 +292,7 @@ class QuotationCalculation extends HTMLElement {
         quantity: parseInt(product.quantity),
         unitPrice: unitPrice
       })
-      const expiringLocalStorage = new ExpiringLocalStorage();
-      expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(productForSave))
+      ExpiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(productForSave))
       this.removeList()
       this.insertList()
     }

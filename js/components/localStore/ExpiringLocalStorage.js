@@ -1,5 +1,5 @@
 class ExpiringLocalStorage {
-    saveDataWithExpiration(key, value) {
+    static saveDataWithExpiration(key, value) {
         const expirationTime = 2 * 60 * 60 * 1000;
         const item = {
         value: value,
@@ -20,8 +20,11 @@ class ExpiringLocalStorage {
         }
         return null;
     }
-    deleteDataWithExpiration(key) {
+    static deleteDataWithExpiration(key) {
         localStorage.removeItem(key);
+    }
+    connectedCallback() {
+
     }
 }
 export default ExpiringLocalStorage;
