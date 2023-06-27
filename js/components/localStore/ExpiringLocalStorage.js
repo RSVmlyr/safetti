@@ -7,8 +7,8 @@ class ExpiringLocalStorage {
         };
         localStorage.setItem(key, JSON.stringify(item));
     }
-
-    getDataWithExpiration(key) {
+ 
+    static getDataWithExpiration(key) {
         const item = localStorage.getItem(key);
         if (item) {
         const parsedItem = JSON.parse(item);

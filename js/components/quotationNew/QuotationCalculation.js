@@ -80,7 +80,9 @@ class QuotationCalculation extends HTMLElement {
     console.log('data', data, iva, name, comments);
     const comment = comments ? comments : "string"
     let dataSetQuotation = ''
-    const c = ExpiringLocalStorage.getDataWithExpiration('ClientFullName')
+    const expiringLocalStorage = new ExpiringLocalStorage();
+    console.log(expiringLocalStorage);
+    const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
     if(c) {
       const client = JSON.parse(c)
       if(data) {
@@ -291,7 +293,8 @@ class QuotationCalculation extends HTMLElement {
         quantity: parseInt(product.quantity),
         unitPrice: unitPrice
       })
-      ExpiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(productForSave))
+      const expiringLocalStorage = new ExpiringLocalStorage();
+      expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(productForSave))
       this.removeList()
       this.insertList()
     }
@@ -338,7 +341,7 @@ class QuotationCalculation extends HTMLElement {
     btniva.addEventListener('click', (e) => {
       this.sumar()
     })
-    this.insertList()
+    //this.insertList()
   }
 }
 
