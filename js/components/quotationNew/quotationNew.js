@@ -90,8 +90,11 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
     const idQuotatioNewSearchClient = quotationNew.querySelector('#quotationewsearchclient')
 
     const ClientFullName = ExpiringLocalStorage.getDataWithExpiration('ClientFullName')
-    const cFulName = JSON.parse(ClientFullName)
-    quotatioNewClient.value = cFulName[0].client
+    if(ClientFullName){
+      const cFulName = JSON.parse(ClientFullName)
+      quotatioNewClient.value = cFulName[0].client
+    }
+ 
 
     const NameQuotation = ExpiringLocalStorage.getDataWithExpiration('NameQuotation')
     const nQuotation = JSON.parse(NameQuotation)
