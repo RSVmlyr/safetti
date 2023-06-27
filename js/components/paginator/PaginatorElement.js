@@ -109,7 +109,7 @@ class PaginatorElement extends HTMLElement {
     });
     if (Array.isArray(quotation)) {
       quotation.reverse();
-      quotation.forEach(cot => {
+      quotation.forEach(cot => {        
         quotationListRow(cot);
       });
     } else {

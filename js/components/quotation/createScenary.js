@@ -113,11 +113,11 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
 
           let totalProducts = 0;
           scen.products.forEach(product => {
-            if (typeof product.unitPrice === 'number') {
+            if (typeof product.unitPrice === 'number' && product.unitPrice !== '') {
               totalProducts += product.unitPrice;
             }
           });
-          let totalPro = totalProducts;
+          let totalPro = totalProducts.toLocaleString();
 
           // Scenary selected 
           if ( scen.selected === true ) {
@@ -135,8 +135,8 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                 </tr>
                 <tr>
                   <td></td>
-                  <td><p class="quotation--info">$ ${totalPro >= 0 ? totalPro : ''}</p></td>
-                  <td><p class="quotation--info">$ ${scen.total >= 0 ? scen.total : ''}</p></td>
+                  <td><p class="quotation--info">$ ${totalPro}</p></td>
+                  <td><p class="quotation--info">$ ${scen.total.toLocaleString()}</p></td>
                   <td><span class="quotation--btn__view">Ver detalle</span></td>
                 </tr>
               </table>
@@ -186,7 +186,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                       <tr>
                         <td><span class="quotation--title__quo">Total con IVA</span></td>
                         <td></td>
-                        <td><p class="quotation--title__quo">$ ${scen.total >= 0 ? scen.total : ''}</p></td>
+                        <td><p class="quotation--title__quo">$ ${scen.total.toLocaleString()}</p></td>
                       </tr>
                     </table>
                   </div>  
@@ -194,6 +194,8 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               </div>
             </div>
           </div>`
+
+          console.log(scen);
 
           scenaryContainerBottom.insertAdjacentHTML('afterbegin', `${scenaryList}`)
 
