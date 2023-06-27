@@ -75,15 +75,18 @@ class QuotationCalculation extends HTMLElement {
       }
     }
   }
-  SendNewQuotation(data) {
-    console.log(data);
+  SendNewQuotation(data, iva, name, comments ) {
+    console.log('data', data, iva, name, comments);
+    const c = comments ? comments : "string"
+    let dataSetQuotation = ''
     if(data) {
-      const storedProducts = localStorage.getItem('products')
-      const products = storedProducts ? JSON.parse(storedProducts) : []
-      const dataSetQuotation = {
+      const retrievedData = ExpiringLocalStorage.getDataWithExpiration("products")
+      const products = retrievedData ? JSON.parse(retrievedData) : []
+      console.log(products);
+      dataSetQuotation = {
         currency: data.currency,
-        name: 'Nombre de la Cotización',
-        comments: 'string',
+        name: name,
+        comments: c,
         client: data.id,
         clientName: data.fullName,
         advisor: data.advisorId,
@@ -92,20 +95,22 @@ class QuotationCalculation extends HTMLElement {
           {
             name: 'Primer Escenario',
             selected: true,
-            discountPercent: data.specialDiscount,
-            applyTaxIVA: true,
-            products: products
+            discountPercent: parseInt(data.specialDiscount),
+            applyTaxIVA: iva,
+            products: products,
           }
         ]
       }
-      console.log('body', dataSetQuotation )
-
     }
-    const createQuotation = async  (dataSetQuotation) => {
+    const createQuotation = async  () => {
+      console.log('debug', dataSetQuotation);
       const data = await setQuotation(dataSetQuotation)
       console.log(data);
     }
     createQuotation(dataSetQuotation)
+  }
+  SendNewScenary() {
+
   }
 
   insertList () {
@@ -188,8 +193,8 @@ class QuotationCalculation extends HTMLElement {
         product: product.id,
         productName: product.productName,
         selectedMoldeCode: product.selectedMoldeCode,
-        quantity: product.quantity,
-        unitPrice: numPrange
+        quantity: parseInt(product.quantity),
+        unitPrice: parseFloat(numPrange).toFixed(2)
       })
       ExpiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(productForSave))
       this.removeList()
