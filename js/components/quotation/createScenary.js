@@ -112,14 +112,11 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         cot.scenarios.forEach(scen => {
 
           let totalProducts = 0;
-
           scen.products.forEach(product => {
             if (typeof product.unitPrice === 'number') {
               totalProducts += product.unitPrice;
             }
           });
-          
-          console.log(totalProducts);
           let totalPro = totalProducts;
 
           // Scenary selected 
