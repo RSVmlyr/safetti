@@ -77,37 +77,66 @@ class QuotationCalculation extends HTMLElement {
   }
   SendNewQuotation(data, iva, name, comments ) {
     console.log('data', data, iva, name, comments);
-    const c = comments ? comments : "string"
+    const comment = comments ? comments : "string"
     let dataSetQuotation = ''
-    if(data) {
-      const retrievedData = ExpiringLocalStorage.getDataWithExpiration("products")
-      const products = retrievedData ? JSON.parse(retrievedData) : []
-      console.log(products);
-      dataSetQuotation = {
-        currency: data.currency,
-        name: name,
-        comments: c,
-        client: data.id,
-        clientName: data.fullName,
-        advisor: data.advisorId,
-        advisorName: data.advisorName,
-        scenarios: [
-          {
-            name: 'Primer Escenario',
-            selected: true,
-            discountPercent: parseInt(data.specialDiscount),
-            applyTaxIVA: iva,
-            products: products,
-          }
-        ]
+    const c = ExpiringLocalStorage.getDataWithExpiration('ClientFullName')
+    if(c) {
+      const client = JSON.parse(c)
+      if(data) {
+        console.log(data);
+        const retrievedData = ExpiringLocalStorage.getDataWithExpiration("products")
+        const products = retrievedData ? JSON.parse(retrievedData) : []
+        dataSetQuotation = {
+          currency: data.currency,
+          name: name,
+          comments: comment,
+          client: data.id,
+          clientName: client['0'].client,
+          advisor: data.id,
+          advisorName: data.fullName,
+          scenarios: [
+            {
+              name: 'Primer Escenario',
+              selected: true,
+              discountPercent: parseInt(data.specialDiscount),
+              applyTaxIVA: iva,
+              products: products,
+            }
+          ]
+        }
+      }
+    } else {
+      if(data) {
+        const retrievedData = ExpiringLocalStorage.getDataWithExpiration("products")
+        const products = retrievedData ? JSON.parse(retrievedData) : []
+        dataSetQuotation = {
+          currency: data.currency,
+          name: name,
+          comments: comment,
+          client: data.id,
+          clientName: data.fullName,
+          advisor: data.advisorId,
+          advisorName: data.advisorName,
+          scenarios: [
+            {
+              name: 'Primer Escenario',
+              selected: true,
+              discountPercent: parseInt(data.specialDiscount),
+              applyTaxIVA: iva,
+              products: products,
+            }
+          ]
+        }
       }
     }
+
+   
+    console.log(dataSetQuotation);
     const createQuotation = async  () => {
-      console.log('debug', dataSetQuotation);
       const data = await setQuotation(dataSetQuotation)
       console.log(data);
     }
-    createQuotation(dataSetQuotation)
+    //createQuotation(dataSetQuotation)
   }
   SendNewScenary() {
 
@@ -146,17 +175,30 @@ class QuotationCalculation extends HTMLElement {
             client[0].currency,
             client[0].rol
           )
-          console.log(prices);
+          const priceInRange = this.getPriceInRange(prices, product.quantity)
+          if(client[0].currency === 'COP') {
+            const numPrange = priceInRange.replace(".", "")
+            this.createArrayProducto(product, numPrange)
+          } else {
+            const numPrange = priceInRange.replace(",", ".")
+            this.createArrayProducto(product, numPrange)
+          }
+         
         } else {
           prices = await getProductPrices(
             product.id,
             this.resQueryUser.currency,
             this.resQueryUser.rol
           )
+          if(this.resQueryUser.currency === 'COP') {
+            const numPrange = priceInRange.replace(".", "")
+            this.createArrayProducto(product, numPrange)
+          } else {
+            const numPrange = priceInRange.replace(",", ".")
+            this.createArrayProducto(product, numPrange)
+          }
         }
-        const priceInRange = this.getPriceInRange(prices, product.quantity)
-        const numPrange = priceInRange.replace(",", ".")
-        this.createArrayProducto(product, numPrange)
+       
         this.sumar()
       }
       getPrices()
@@ -166,8 +208,17 @@ class QuotationCalculation extends HTMLElement {
     if(storedProducts) {
       const productsLocalStores = storedProducts ? JSON.parse(storedProducts) : []
       const productsList = JSON.parse(productsLocalStores.value)
+      let subtotal = 0
       productsList.forEach(product => {
-        const subtotal = parseFloat((parseFloat(product.unitPrice) * product.quantity).toFixed(2))
+        const c = ExpiringLocalStorage.getDataWithExpiration('ClientFullName')
+        if (c) {
+          const client = JSON.parse(c)
+          subtotal = client['0'].currency == 'COP'
+            ? Math.floor(product.unitPrice * product.quantity)
+            : parseFloat((parseFloat(product.unitPrice) * product.quantity).toFixed(2));
+        } else {
+          subtotal =  this.resQueryUser.currency === 'COP' ? product.unitPrice * product.quantity : parseFloat((parseFloat(product.unitPrice) * product.quantity).toFixed(2))
+        }
         const row = document.createElement('div')
         row.classList.add('scenary--row__table')
         row.classList.add('scenary--row__data')
@@ -185,6 +236,7 @@ class QuotationCalculation extends HTMLElement {
   }
   createArrayProducto(product, numPrange) {
     if(product) {
+      let unitPrice = 0
       const retrievedData = ExpiringLocalStorage.getDataWithExpiration("products")
       let productForSave = []
       if (retrievedData) {
@@ -192,20 +244,29 @@ class QuotationCalculation extends HTMLElement {
         productForSave = productsLocalStores
       }
       console.log('createArrayProducto', productForSave)
+      console.log('createArrayProducto', productForSave)
 
-      const indice = productForSave.findIndex(item => item.id === product.id);
+
+      /* const indice = productForSave.findIndex(item => item.id === product.id);
       console.log(indice);
       if (indice !== -1) {
         // Si ya existe un elemento con el mismo ID, se suman las cantidades
         productForSave[indice].quantity += productForSave.quantity;
-      } 
-
+      }  */
+      const c = ExpiringLocalStorage.getDataWithExpiration('ClientFullName')
+      if (c) {
+        const client = JSON.parse(c)
+        unitPrice = client['0'].currency === 'COP' ? numPrange : parseFloat(numPrange).toFixed(2)
+      } else {
+        unitPrice = numPrange
+      }
+     
       productForSave.push({
         product: product.id,
         productName: product.productName,
         selectedMoldeCode: product.selectedMoldeCode,
         quantity: parseInt(product.quantity),
-        unitPrice: parseFloat(numPrange).toFixed(2)
+        unitPrice: unitPrice
       })
       ExpiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(productForSave))
       this.removeList()
