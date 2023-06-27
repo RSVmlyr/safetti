@@ -120,9 +120,10 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             // console.log('Unitario', product.unitPrice);
             // console.log('--------------');
             totalProducts += product.unitPrice ? product.unitPrice : '';
+            console.log('Total PRoductos: ', product.unitPrice);
           });
           // console.log('Total', totalProducts.toFixed(2));
-          let totalPro = totalProducts
+          let totalPro = totalProducts.toFixed(2)
           // Total products unit price
 
           // Scenary selected 

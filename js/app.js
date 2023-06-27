@@ -7,17 +7,17 @@ import getUser from "./services/user/getUser.js"
 import QuotationSearch from "./services/quotation/QuotationSearch.js"
 import './components/quotationNew/QuotationCalculation.js';
 import PaginatorElement from './components/paginator/PaginatorElement.js';
+import getClients from "./services/clients/getClients.js"
 
 document.addEventListener('DOMContentLoaded', () => {
 
   const quotation = document.querySelector('#quotation')
   const quotationNew = document.querySelector('#quotationew')
 
-
   const query = async () => {
     const url = new URL(window.location.href);
     const searchParams = new URLSearchParams(url.search);
-    const uid = searchParams.get('uid') || '19';
+    const uid = searchParams.get('uid') || '4';
     const resQueryUser = await getUser(uid)
 
     if( quotation ) {
@@ -80,13 +80,14 @@ document.addEventListener('DOMContentLoaded', () => {
       sliderProducts.insertAdjacentHTML('afterbegin', '<img class="quotation--loading qnimage--auto" src="../img/icon/icon-spinner.gif">')
 
       const resQueryProducts = await getProduct()
+      const resQueryClients = await getClients()
 
       const spinnerP = quotationNew.querySelector('.slider--productos .quotation--loading')
       spinnerP.remove()
 
       // Get Users and Products
       const getDataQuotationNew = () => {
-        quotationNewPage(quotationNew, resQueryUser, resQueryProducts)
+        quotationNewPage(quotationNew, resQueryUser, resQueryProducts, resQueryClients)
       }
       // Get Users and Products
       getDataQuotationNew()

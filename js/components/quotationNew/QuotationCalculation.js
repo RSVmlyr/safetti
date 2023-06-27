@@ -76,6 +76,7 @@ class QuotationCalculation extends HTMLElement {
     }
   }
   SendNewQuotation(data) {
+    console.log(data);
     if(data) {
       const storedProducts = localStorage.getItem('products')
       const products = storedProducts ? JSON.parse(storedProducts) : []
