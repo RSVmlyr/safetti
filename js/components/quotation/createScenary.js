@@ -15,10 +15,9 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
       if (quotationLoading) {
         quotationLoading.remove()
       }
-
       deleteChilds(scenaryContainerTop)
       deleteChilds(scenaryCreatedBody)
-
+      console.log(cot);
       let scenaryTop =
       `<div class="scenary--created">
         <div class="scenary--created__header">

@@ -48,30 +48,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const paginatorElement = new PaginatorElement(uid, 1, Quotation, totalPages);
       paginatorElement.renderPaginator();
       paginatorElement.selectAdvisor();
-      //paginatorElement.clickPager();
-      // Get Advisors
+    
       const getAdvisor = () => {
         if (resQueryAdvisors.length > 0) {
           selectAdvisors(resQueryAdvisors)
         }
       }
       getAdvisor()
-      // Get Advisors
-
-      // Get Quotations
-    /*    const getQuotations = () => {
-        if (resQuery.length > 0) {
-          resQuery.forEach(cot => {
-            quotationListRow(cot)
-          });
-        } else {
-          const quotationContentList = quotation.querySelector('#quotation--content--list')
-          quotationContentList.insertAdjacentHTML('afterbegin', '<div class="quotation--loading"><span>No existen Cotizaciones...</span></div>')
-        }
-      }
-      getQuotations() */
-      // Get Quotations
-
     }
 
     if ( quotationNew ) {
