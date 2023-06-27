@@ -1,5 +1,5 @@
 import getProductPrices from '../../services/product/getProductPrices.js'
-import getProductPrices from '../../services/quotation/setQuotation.js'
+import setQuotation from '../../services/quotation/setQuotation.js'
 import ExpiringLocalStorage from '../localStore/ExpiringLocalStorage.js'
 class QuotationCalculation extends HTMLElement {
   constructor(resQueryUser) {
@@ -101,7 +101,8 @@ class QuotationCalculation extends HTMLElement {
 
     }
     const createQuotation = async  (dataSetQuotation) => {
-      getProductPrices(dataSetQuotation)
+      const data = await setQuotation(dataSetQuotation)
+      console.log(data);
     }
     createQuotation(dataSetQuotation)
   }
