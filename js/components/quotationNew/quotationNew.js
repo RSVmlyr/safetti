@@ -88,6 +88,15 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
 
     const quotatioNewClient = quotationNew.querySelector('#quotationewclient')
     const idQuotatioNewSearchClient = quotationNew.querySelector('#quotationewsearchclient')
+
+    const ClientFullName = ExpiringLocalStorage.getDataWithExpiration('ClientFullName')
+    const cFulName = JSON.parse(ClientFullName)
+    quotatioNewClient.value = cFulName[0].client
+
+    const NameQuotation = ExpiringLocalStorage.getDataWithExpiration('NameQuotation')
+    const nQuotation = JSON.parse(NameQuotation)
+    quotationewname.value = nQuotation
+
     quotatioNewClient.addEventListener('input', (e) => {
       let searchTerm = e.target.value.trim().toLowerCase();
       idQuotatioNewSearchClient.innerHTML = '';
@@ -108,7 +117,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
           li.addEventListener('click', function() {
             quotatioNewClient.value = client.fullName ? client.fullName : '';
             idQuotatioNewSearchClient.innerHTML = '';
-            selectedValueSearchLi(client.fullName, client.currency, client.rol)
+            selectedValueSearchLi(client.fullName, client.currency, client.rol, client.id)
           });
           idQuotatioNewSearchClient.appendChild(li);
         });
@@ -116,13 +125,14 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       }
     });
 
-    const selectedValueSearchLi = (client, currency, rol) => {
+    const selectedValueSearchLi = (client, currency, rol, id) => {
       const qnClient = quotationNew.querySelector('#qnadvisor')
       const qnCurrency = quotationNew.querySelector('#qncurrency')
       qnClient.textContent = 'Cliente: ' + client
       qnCurrency.textContent = 'Moneda: ' + currency
       const dataClientStorage = [
         {
+          id,
           client,
           currency,
           rol
@@ -156,10 +166,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   quotationewCalculationDiscount.textContent = resQueryUser.specialDiscount ? resQueryUser.specialDiscount + '%' : '0%'
   // Special Discount
 
-
   const quotationCalculation = new QuotationCalculation(resQueryUser);
-
-
 
   const quotationBtnSave =  quotationNew.querySelector('#quotation--btn__save')
   cotId && cotName ? quotationBtnSave.textContent = 'Guardar Escenario' : quotationBtnSave.textContent = 'Guardar Cotización'
@@ -167,16 +174,25 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   const quotatioewScenary = quotationNew.querySelector('#quotationewscenary')
   const quotatioewScenaryNode = quotatioewScenary ? quotatioewScenary.value : false
   const idQuotationComments = quotationNew.querySelector('#quotationcomments')
+
+  const commentsText = ExpiringLocalStorage.getDataWithExpiration('Comments')
+  const cText = JSON.parse(commentsText)
+  idQuotationComments.value = cText
+
   const quotationewCalculationDiscountValue = resQueryUser.rol !== 'advisors' ? resQueryUser.specialDiscount : false
   const quotationIva = quotationNew.querySelector('.quotation--iva')
   let v = false
   quotationBtnSave.addEventListener('click', () => {
+
     if (quotationewname.value === '' || quotatioewScenaryNode === '') {
       const error = document.createElement('span');
       error.classList.add('error');
       error.textContent = 'Este campo es obligatorio';
       quotationewname.insertAdjacentElement('afterend', error);
       quotatioewScenary ? quotatioewScenary.insertAdjacentElement('afterend', error) : false
+    } else {
+      ExpiringLocalStorage.saveDataWithExpiration("NameQuotation", JSON.stringify(quotationewname.value))
+      ExpiringLocalStorage.saveDataWithExpiration("NameScenary", JSON.stringify(quotatioewScenaryNode.value))
     }
     const nodeError = quotationNew.querySelector('.error');
     if (quotationewname) {
@@ -202,7 +218,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       });
     }
 
-  
+    idQuotationComments.value !== '' ? ExpiringLocalStorage.saveDataWithExpiration("Comments", JSON.stringify(idQuotationComments.value)) : false
 
     if (cotId && cotName) {
       console.log('Cliente Nuevo Escenario: ', quotatioewScenary.value);
@@ -211,15 +227,11 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
 
     }
     if(v === true) {
-
       console.log('Name: ', quotationewname.value);
       console.log('Comentarios: ', idQuotationComments.value);
-  
       console.log('Especial Discount', quotationewCalculationDiscountValue);
       console.log('IVA', quotationIva.checked);
-
     }
-
   });
   
 }

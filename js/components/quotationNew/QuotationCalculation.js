@@ -135,16 +135,27 @@ class QuotationCalculation extends HTMLElement {
   }
   
   createRow(products) { 
+    let prices = ''
     products.forEach(product => {
       const getPrices = async () => {
-        const prices = await getProductPrices(
-          product.id,
-          this.resQueryUser.currency,
-          this.resQueryUser.rol
-        )
+        if (this.resQueryUser.rol === 'advisors'){
+          const c = ExpiringLocalStorage.getDataWithExpiration('ClientFullName')
+          const client = JSON.parse(c)
+          prices = await getProductPrices(
+            product.id,
+            client[0].currency,
+            client[0].rol
+          )
+          console.log(prices);
+        } else {
+          prices = await getProductPrices(
+            product.id,
+            this.resQueryUser.currency,
+            this.resQueryUser.rol
+          )
+        }
         const priceInRange = this.getPriceInRange(prices, product.quantity)
-        let PRange = priceInRange
-        let numPrange = PRange.replace(",", ".")
+        const numPrange = priceInRange.replace(",", ".")
         this.createArrayProducto(product, numPrange)
         this.sumar()
       }
