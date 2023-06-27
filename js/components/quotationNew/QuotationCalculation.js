@@ -172,9 +172,9 @@ class QuotationCalculation extends HTMLElement {
         row.innerHTML = `
           <div class="scenary--row">${product.productName}</div>
           <div class="scenary--row">${product.selectedMoldeCode}</div>
-          <div class="scenary--row">${product.unitPrice}</div>
+          <div class="scenary--row">${product.unitPrice.toLocaleString()}</div>
           <div class="scenary--row">${product.quantity}</div>
-          <div class="scenary--row subtotal">${subtotal}</div>
+          <div class="scenary--row subtotal">${subtotal.toLocaleString()}</div>
         `
         document.querySelector('.quotationew--calculation__body').appendChild(row)
       })
@@ -233,7 +233,7 @@ class QuotationCalculation extends HTMLElement {
         const c = ExpiringLocalStorage.getDataWithExpiration('ClientFullName')
         if (c) {
           const client = JSON.parse(c)
-          subtotal = client['0'].currency == 'COP'
+          subtotal = client['0'].currency === 'COP'
             ? Math.floor(product.unitPrice * product.quantity)
             : parseFloat((parseFloat(product.unitPrice) * product.quantity).toFixed(2));
         } else {
@@ -314,7 +314,7 @@ class QuotationCalculation extends HTMLElement {
     const quotationSave = document.querySelector('.quotation--btn__add')
     let count = 0
     subtotalElements.forEach(element => {
-      const valor = parseFloat(element.textContent).toFixed(2)
+      const valor = parseFloat(element.textContent)
       count += parseFloat(valor)
     })
 

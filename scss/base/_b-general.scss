@@ -57,6 +57,7 @@ body {
   &__new {
     color: $white;
     background-color: $black;
+    cursor: pointer;
   }
   &__add {
     background-color: $white;
