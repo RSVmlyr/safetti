@@ -1,5 +1,5 @@
 class ExpiringLocalStorage {
-    static saveDataWithExpiration(key, value) {
+    saveDataWithExpiration(key, value) {
         const expirationTime = 2 * 60 * 60 * 1000;
         const item = {
         value: value,
@@ -8,7 +8,7 @@ class ExpiringLocalStorage {
         localStorage.setItem(key, JSON.stringify(item));
     }
 
-    static getDataWithExpiration(key) {
+    getDataWithExpiration(key) {
         const item = localStorage.getItem(key);
         if (item) {
         const parsedItem = JSON.parse(item);
@@ -20,7 +20,7 @@ class ExpiringLocalStorage {
         }
         return null;
     }
-    static deleteDataWithExpiration(key) {
+    deleteDataWithExpiration(key) {
         localStorage.removeItem(key);
     }
 }
