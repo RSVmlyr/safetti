@@ -13,8 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const quotation = document.querySelector('#quotation')
   const quotationNew = document.querySelector('#quotationew')
-
-
+  
   const query = async () => {
     const url = new URL(window.location.href);
     const searchParams = new URLSearchParams(url.search);

@@ -165,39 +165,53 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   //   quotationCalculation.SendNewQuotation(resQueryUser);
   // });
 
-
   const quotationBtnSave = quotationNew.querySelector('#quotation--btn__save')
   cotId && cotName ? quotationBtnSave.textContent = 'Guardar Escenario' : quotationBtnSave.textContent = 'Guardar Cotización'
 
   const quotatioewScenary = quotationNew.querySelector('#quotationewscenary')
   const idQuotationComments = quotationNew.querySelector('#quotationcomments')
+  const quotationewCalculationDiscountValue = resQueryUser.rol !== 'advisors' ? resQueryUser.specialDiscount : false
+  const quotationIva = quotationNew.querySelector('.quotation--iva')
 
-  
   quotationBtnSave.addEventListener('click', () => {
-    
-    if (quotationewname.value === '') {
+    if (quotationewname.value === '' || quotatioewScenary.value === '') {
       const error = document.createElement('span');
       error.classList.add('error');
       error.textContent = 'Este campo es obligatorio';
       quotationewname.insertAdjacentElement('afterend', error);
+      quotatioewScenary ? quotatioewScenary.insertAdjacentElement('afterend', error) : false 
+    }
+    const nodeError = quotationNew.querySelector('.error');
+    if (quotationewname) {
+      quotationewname.addEventListener('input', (e) => {
+        if (e.target.value !== '') {
+          nodeError ? nodeError.style.display = 'none' : false
+        } else {
+          nodeError.style.display = 'block'
+        }
+      });
+    }
+    if (quotatioewScenary) {
+      quotatioewScenary.addEventListener('input', (e) => {
+        if (e.target.value !== '') {
+          nodeError ? nodeError.style.display = 'none' : false
+        } else {
+          nodeError.style.display = 'block'
+        }
+      });
     }
 
-    quotationewname.addEventListener('input', (e) => {
-      const nodeError = quotationNew.querySelector('.error');
-      console.log(e.target.value);
-      if (e.target.value !== '') {
-        nodeError ? nodeError.style.display = 'none' : false
-      } else {
-        nodeError.style.display = 'block'
-      }
-    });
-  
-    // if (cotId && cotName) {
-    //   console.log(quotatioewScenary.value);
-    // } else {
-    //   quotationCalculation.SendNewQuotation(resQueryUser);
-    //   console.log(idQuotationComments.value);
-    // }
+    console.log('Name: ', quotationewname.value);
+    console.log('Comentarios: ', idQuotationComments.value);
+
+    console.log('Especial Discount', quotationewCalculationDiscountValue);
+    console.log('IVA', quotationIva.checked);
+
+    if (cotId && cotName) {
+      console.log('Cliente Nuevo Escenario: ', quotatioewScenary.value);
+    } else {
+      // quotationCalculation.SendNewQuotation(resQueryUser);
+    }
 
   });
   
