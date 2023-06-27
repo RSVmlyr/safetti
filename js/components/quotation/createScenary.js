@@ -111,20 +111,13 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         }
         cot.scenarios.forEach(scen => {
 
-          // Total products unit price
-          let totalProducts = 0
-
+          let totalProducts = 0;
           scen.products.forEach(product => {
-            // console.log('--------------');
-            // console.log(product.productName);
-            // console.log('Unitario', product.unitPrice);
-            // console.log('--------------');
-            totalProducts += product.unitPrice ? product.unitPrice : '';
-            console.log('Total PRoductos: ', product.unitPrice);
+            if (typeof product.unitPrice === 'number' && product.unitPrice !== '') {
+              totalProducts += product.unitPrice;
+            }
           });
-          // console.log('Total', totalProducts.toFixed(2));
-          let totalPro = totalProducts.toFixed(2)
-          // Total products unit price
+          let totalPro = totalProducts.toLocaleString();
 
           // Scenary selected 
           if ( scen.selected === true ) {
@@ -142,8 +135,8 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                 </tr>
                 <tr>
                   <td></td>
-                  <td><p class="quotation--info">$ ${totalPro >= 0 ? totalPro : ''}</p></td>
-                  <td><p class="quotation--info">$ ${scen.total >= 0 ? scen.total : ''}</p></td>
+                  <td><p class="quotation--info">$ ${totalPro}</p></td>
+                  <td><p class="quotation--info">$ ${scen.total.toLocaleString()}</p></td>
                   <td><span class="quotation--btn__view">Ver detalle</span></td>
                 </tr>
               </table>
@@ -193,7 +186,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                       <tr>
                         <td><span class="quotation--title__quo">Total con IVA</span></td>
                         <td></td>
-                        <td><p class="quotation--title__quo">$ ${scen.total >= 0 ? scen.total : ''}</p></td>
+                        <td><p class="quotation--title__quo">$ ${scen.total.toLocaleString()}</p></td>
                       </tr>
                     </table>
                   </div>  
@@ -201,6 +194,8 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               </div>
             </div>
           </div>`
+
+          console.log(scen);
 
           scenaryContainerBottom.insertAdjacentHTML('afterbegin', `${scenaryList}`)
 

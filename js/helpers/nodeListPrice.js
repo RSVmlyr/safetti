@@ -3,7 +3,7 @@ const nodeListPrice = (array, node) => {
   array.forEach(newNode => {
     const nodeP = document.createElement("p");
     nodeP.classList.add('quotation--info')
-    nodeP.textContent = typeof newNode === 'string' ? newNode : '$ ' + newNode;
+    nodeP.textContent = typeof newNode === 'string' ? newNode.toLocaleString() : '$ ' + newNode.toLocaleString();
     node.insertAdjacentElement('afterbegin', nodeP);
   });
 }
