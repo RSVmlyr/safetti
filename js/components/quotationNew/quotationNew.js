@@ -135,6 +135,8 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
     if(ClientFullName){
       const cFulName = JSON.parse(ClientFullName)
       quotatioNewClient.value = cFulName[0].client
+      idQnAdvisor.innerHTML = 'Cliente: ' + cFulName[0].client
+      idQnCurrency.innerHTML = 'Moneda: ' + cFulName[0].currency
       validateNewCleint()
     }
 
