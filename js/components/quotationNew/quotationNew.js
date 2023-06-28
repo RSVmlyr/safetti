@@ -43,6 +43,15 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   createProductCards(quotationNew, resQueryUser, resQueryProducts)
   searchProduct(quotationNew, resQueryUser, resQueryProducts)
   localStorage()
+
+  const viewProducts = quotationNew.querySelector('#viewproducts')
+  viewProducts.addEventListener('click', () => {
+    var selects = document.querySelectorAll('select');
+    selects.forEach(function(select) {
+      select.selectedIndex = 0;
+    });
+  })
+
   if(cotId && resQueryUser.rol === 'advisors'){
     console.log('cotId', cotId);
     //llamar servicio
