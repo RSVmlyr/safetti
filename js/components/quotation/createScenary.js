@@ -10,16 +10,31 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     const scenaryContainerTop = quotation.querySelector('#scenary--container__top')
     const scenaryCreatedBody = quotation.querySelector('#scenary--container__bottom')
 
-    quotationCreatescenary.addEventListener('click', (e) => {
+    let lastClickedIndex = localStorage.getItem('lastClickedIndex');
 
-      quotationCreatescenarys.forEach(quotationCreatescenary => {
-        quotationCreatescenary.addEventListener('click', () => {
-          quotationCreatescenarys.forEach(other => {
-            other.classList.remove('active');
-          });
-          quotationCreatescenary.classList.add('active');
+    quotationCreatescenarys.forEach((other, index) => {
+      other.classList.remove('active');
+      if (lastClickedIndex !== null && index.toString() === lastClickedIndex) {
+        other.classList.add('active');
+        setTimeout(() => {
+          other.click()
+        }, 100);
+      }
+    });
+    
+    quotationCreatescenarys.forEach((q, index) => {
+      q.addEventListener('click', () => {
+        quotationCreatescenarys.forEach((other) => {
+          other.classList.remove('active');
         });
+        q.classList.add('active');
+        q.click()
+        lastClickedIndex = index.toString();
+        localStorage.setItem('lastClickedIndex', lastClickedIndex);
       });
+    });
+
+    quotationCreatescenary.addEventListener('click', (e) => {
 
       const quotationLoading = quotation.querySelector('.quotation--container__bottom  .quotation--right .quotation--loading')
       if (quotationLoading) {
