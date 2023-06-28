@@ -6,10 +6,20 @@ import sendEmailHelper from "../../helpers/sendEmailHelper.js"
 
 const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     const quotationCreatescenary = quotation.querySelector('#quotation--content--list .quotation--list--row')
+    const quotationCreatescenarys = quotation.querySelectorAll('#quotation--content--list .quotation--list--row')
     const scenaryContainerTop = quotation.querySelector('#scenary--container__top')
     const scenaryCreatedBody = quotation.querySelector('#scenary--container__bottom')
 
     quotationCreatescenary.addEventListener('click', (e) => {
+
+      quotationCreatescenarys.forEach(quotationCreatescenary => {
+        quotationCreatescenary.addEventListener('click', () => {
+          quotationCreatescenarys.forEach(other => {
+            other.classList.remove('active');
+          });
+          quotationCreatescenary.classList.add('active');
+        });
+      });
 
       const quotationLoading = quotation.querySelector('.quotation--container__bottom  .quotation--right .quotation--loading')
       if (quotationLoading) {
@@ -17,7 +27,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
       }
       deleteChilds(scenaryContainerTop)
       deleteChilds(scenaryCreatedBody)
-      console.log(cot);
+
       let scenaryTop =
       `<div class="scenary--created">
         <div class="scenary--created__header">
@@ -193,8 +203,6 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               </div>
             </div>
           </div>`
-
-          console.log(scen);
 
           scenaryContainerBottom.insertAdjacentHTML('afterbegin', `${scenaryList}`)
 

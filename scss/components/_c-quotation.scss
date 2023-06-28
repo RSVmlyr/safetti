@@ -57,6 +57,9 @@
                 padding: 14px 8px 10px;
                 border-bottom: 1px solid #F6F6F6;
                 cursor: pointer;
+                &.active {
+                  background-color: $c3;
+                }
                 &:hover {
                   background-color: $c3;
                 }
