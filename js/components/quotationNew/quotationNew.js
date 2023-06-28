@@ -44,6 +44,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   createProductCards(quotationNew, resQueryUser, resQueryProducts)
   searchProduct(quotationNew, resQueryUser, resQueryProducts)
   localStorage()
+
   if(cotId && resQueryUser.rol === 'advisors'){
     console.log('cotId', cotId);
     //llamar servicio
@@ -102,8 +103,6 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
     }
   }
 
- 
-
   if (resQueryUser.rol === 'advisors' && cotId === null) {
     let quotatioNewSearchClient =
     `<div class='quotationew__searchclient'>
@@ -136,6 +135,8 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
     if(ClientFullName){
       const cFulName = JSON.parse(ClientFullName)
       quotatioNewClient.value = cFulName[0].client
+      idQnAdvisor.innerHTML = 'Cliente: ' + cFulName[0].client
+      idQnCurrency.innerHTML = 'Moneda: ' + cFulName[0].currency
       validateNewCleint()
     }
 

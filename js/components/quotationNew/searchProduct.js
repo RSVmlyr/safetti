@@ -63,6 +63,22 @@ const searchProduct = (quotationNew, resQueryUser, resQueryProducts) => {
   selectTipoPrenda.addEventListener('change', filterSelects)
   selectClasificacion.addEventListener('change', filterSelects)
   selectPrenda.addEventListener('change', filterSelects)
+
+  const viewProducts = quotationNew.querySelector('#viewproducts');
+  viewProducts.addEventListener('click', () => {
+    var selects = document.querySelectorAll('select');
+    selects.forEach(function(select) {
+      select.selectedIndex = 0;
+    });
+
+    const sliderProductsRows = quotationNew.querySelectorAll('.slider--productos .slider--content .slider--row')
+    sliderProductsRows.forEach(row => {
+      row.remove()
+    });
+    createProductCards(quotationNew, resQueryUser, resQueryProducts);
+    localStorage.removeItem("productosFiltrados");
+    
+  });
   
 }
 
