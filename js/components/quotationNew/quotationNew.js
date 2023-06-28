@@ -45,14 +45,6 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   searchProduct(quotationNew, resQueryUser, resQueryProducts)
   localStorage()
 
-  const viewProducts = quotationNew.querySelector('#viewproducts')
-  viewProducts.addEventListener('click', () => {
-    var selects = document.querySelectorAll('select');
-    selects.forEach(function(select) {
-      select.selectedIndex = 0;
-    });
-  })
-
   if(cotId && resQueryUser.rol === 'advisors'){
     console.log('cotId', cotId);
     //llamar servicio
@@ -110,8 +102,6 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       quotationewInfo.insertAdjacentHTML('beforeend', `${quotatioNewInfoTwo}`)
     }
   }
-
- 
 
   if (resQueryUser.rol === 'advisors' && cotId === null) {
     let quotatioNewSearchClient =
