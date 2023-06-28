@@ -116,17 +116,32 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
 
     const quotatioNewClient = quotationNew.querySelector('#quotationewclient')
     const idQuotatioNewSearchClient = quotationNew.querySelector('#quotationewsearchclient')
+    const sliderProductos = quotationNew.querySelectorAll('.slider--productos .slider--row .card--actions .qnaddproducts')
+
+    const validateNewCleint = () => {
+      if (quotatioNewClient.value !== '') {
+        sliderProductos.forEach(add => {
+          add.style.display = 'block';
+        });
+      } else {
+        sliderProductos.forEach(add => {
+          add.style.display = 'none';
+        });
+      }
+    }
+
+    validateNewCleint()
 
     const ClientFullName = expiringLocalStorage.getDataWithExpiration('ClientFullName')
     if(ClientFullName){
       const cFulName = JSON.parse(ClientFullName)
       quotatioNewClient.value = cFulName[0].client
+      validateNewCleint()
     }
 
     quotatioNewClient.addEventListener('input', (e) => {
       let searchTerm = e.target.value.trim().toLowerCase();
       idQuotatioNewSearchClient.innerHTML = '';
-      idQuotatioNewSearchClient.classList.remove('quotationewsearchclient')
       if (searchTerm !== '') {
         const filteredClients = resQueryClients.filter(client =>
           client.fullName.toLowerCase().includes(searchTerm)
@@ -141,13 +156,16 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
           li.setAttribute('data-currency', client.currency ? client.currency : '')
           li.setAttribute('data-rol', client.rol ? client.rol : '')
           li.addEventListener('click', function() {
+            idQuotatioNewSearchClient.classList.remove('quotationewsearchclient')
+            validateNewCleint()
             quotatioNewClient.value = client.fullName ? client.fullName : '';
             idQuotatioNewSearchClient.innerHTML = '';
             selectedValueSearchLi(client.fullName, client.currency, client.rol, client.id)
           });
           idQuotatioNewSearchClient.appendChild(li);
         });
-
+      } else {
+        validateNewCleint()
       }
     });
 
