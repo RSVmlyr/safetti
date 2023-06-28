@@ -81,12 +81,12 @@ class QuotationCalculation extends HTMLElement {
     const comment = comments ? comments : "string"
     let dataSetQuotation = ''
 
-    const c = ExpiringLocalStorage.getDataWithExpiration('ClientFullName')
+    const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
     if(c) {
       const client = JSON.parse(c)
       if(data) {
         console.log(data);
-        const retrievedData = ExpiringLocalStorage.getDataWithExpiration("products")
+        const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
         const products = retrievedData ? JSON.parse(retrievedData) : []
         dataSetQuotation = {
           currency: client['0'].currency,
@@ -109,7 +109,7 @@ class QuotationCalculation extends HTMLElement {
       }
     } else {
       if(data) {
-        const retrievedData = ExpiringLocalStorage.getDataWithExpiration("products")
+        const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
         const products = retrievedData ? JSON.parse(retrievedData) : []
         dataSetQuotation = {
           currency: data.currency,
@@ -141,7 +141,7 @@ class QuotationCalculation extends HTMLElement {
   }
   SendNewScenary(data, cotId, nameScenary) {
     let dataSetScenario = ''
-    const retrievedData = ExpiringLocalStorage.getDataWithExpiration("products")
+    const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
     const products = retrievedData ? JSON.parse(retrievedData) : []
     if(data) {
       dataSetScenario = {
@@ -162,7 +162,8 @@ class QuotationCalculation extends HTMLElement {
   }
 
   insertList () {
-    const retrievedData = ExpiringLocalStorage.getDataWithExpiration("products")
+    const expiringLocalStorage = new ExpiringLocalStorage()
+    const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
     if(retrievedData) {
       const productsList = retrievedData ? JSON.parse(retrievedData) : []
       productsList.forEach(product => {
@@ -182,12 +183,13 @@ class QuotationCalculation extends HTMLElement {
     }
   }
   
-  createRow(products) { 
+  createRow(products) {
+    const expiringLocalStorage = new ExpiringLocalStorage()
     let prices = ''
     products.forEach(product => {
       const getPrices = async () => {
         if (this.resQueryUser.rol === 'advisors'){
-          const c = ExpiringLocalStorage.getDataWithExpiration('ClientFullName')
+          const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
           const client = JSON.parse(c)
           prices = await getProductPrices(
             product.id,
@@ -231,7 +233,7 @@ class QuotationCalculation extends HTMLElement {
       const productsList = JSON.parse(productsLocalStores.value)
       let subtotal = 0
       productsList.forEach(product => {
-        const c = ExpiringLocalStorage.getDataWithExpiration('ClientFullName')
+        const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
         if (c) {
           const client = JSON.parse(c)
           subtotal = client['0'].currency === 'COP'
@@ -256,9 +258,10 @@ class QuotationCalculation extends HTMLElement {
     
   }
   createArrayProducto(product, numPrange) {
+    const expiringLocalStorage = new ExpiringLocalStorage()
     if(product) {
       let unitPrice = 0
-      const retrievedData = ExpiringLocalStorage.getDataWithExpiration("products")
+      const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
       let productForSave = []
       if (retrievedData) {
         const productsLocalStores = retrievedData ? JSON.parse(retrievedData) : []
@@ -275,7 +278,7 @@ class QuotationCalculation extends HTMLElement {
         productForSave[indice].quantity += productForSave.quantity;
       }  */
       console.log(numPrange);
-      const c = ExpiringLocalStorage.getDataWithExpiration('ClientFullName')
+      const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
       if (c) {
         const client = JSON.parse(c)
         console.log('if');
@@ -292,7 +295,7 @@ class QuotationCalculation extends HTMLElement {
         quantity: parseInt(product.quantity),
         unitPrice: unitPrice
       })
-      ExpiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(productForSave))
+      expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(productForSave))
       this.removeList()
       this.insertList()
     }

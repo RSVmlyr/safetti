@@ -11,6 +11,7 @@ import ExpiringLocalStorage from "../localStore/ExpiringLocalStorage.js";
 import getUser from "../../services/user/getUser.js"
 
 const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQueryClients) => {
+  const expiringLocalStorage = new ExpiringLocalStorage()
   console.log('Object User', resQueryUser);
   console.log('Object Products', resQueryProducts.products);
   const url = new URL(window.location.href);
@@ -57,7 +58,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
           rol: user.rol,
         }
       ]
-      ExpiringLocalStorage.saveDataWithExpiration("ClientFullName", JSON.stringify(dataClientStorage))
+      expiringLocalStorage.saveDataWithExpiration("ClientFullName", JSON.stringify(dataClientStorage))
     }
 
     const getinfouser = async () => {
@@ -82,22 +83,26 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   cotId ? QnTitle.textContent = 'Nuevo Escenario' : QnTitle.textContent = 'Nueva Cotización'
   const quotationewname = quotationNew.querySelector('#quotationewname')
 
-  const NameQuotation = ExpiringLocalStorage.getDataWithExpiration('NameQuotation')
-  const nQuotation = JSON.parse(NameQuotation)
-  quotationewname.value = nQuotation
-
-  if (cotId && quotationewname) {
-    quotationewname.disabled = true
-    quotationewname.value = cotName
-    const quotationewInfo = quotationNew.querySelector('.quotationew__info')
-    let quotatioNewInfoTwo =
-    `<div class="quotationew__infoTwo">
-      <label class="quotation--title__quo" for='quotationewscenary'>Nombre del Escenario: <span>*</span></label>
-      <input id="quotationewscenary" type="text" placeholder="Nombre Escenario" required>
-    </div>
-    `
-    quotationewInfo.insertAdjacentHTML('beforeend', `${quotatioNewInfoTwo}`)
+  const NameQuotation = expiringLocalStorage.getDataWithExpiration('NameQuotation')
+  if(NameQuotation){
+    const nQuotation = JSON.parse(NameQuotation)
+    quotationewname.value = nQuotation
+  
+    if (cotId && quotationewname) {
+      quotationewname.disabled = true
+      quotationewname.value = cotName
+      const quotationewInfo = quotationNew.querySelector('.quotationew__info')
+      let quotatioNewInfoTwo =
+      `<div class="quotationew__infoTwo">
+        <label class="quotation--title__quo" for='quotationewscenary'>Nombre del Escenario: <span>*</span></label>
+        <input id="quotationewscenary" type="text" placeholder="Nombre Escenario" required>
+      </div>
+      `
+      quotationewInfo.insertAdjacentHTML('beforeend', `${quotatioNewInfoTwo}`)
+    }
   }
+
+ 
 
   if (resQueryUser.rol === 'advisors' && cotId === null) {
     let quotatioNewSearchClient =
@@ -112,7 +117,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
     const quotatioNewClient = quotationNew.querySelector('#quotationewclient')
     const idQuotatioNewSearchClient = quotationNew.querySelector('#quotationewsearchclient')
 
-    const ClientFullName = ExpiringLocalStorage.getDataWithExpiration('ClientFullName')
+    const ClientFullName = expiringLocalStorage.getDataWithExpiration('ClientFullName')
     if(ClientFullName){
       const cFulName = JSON.parse(ClientFullName)
       quotatioNewClient.value = cFulName[0].client
@@ -159,7 +164,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
           rol
         }
       ]
-      ExpiringLocalStorage.saveDataWithExpiration("ClientFullName", JSON.stringify(dataClientStorage))
+      expiringLocalStorage.saveDataWithExpiration("ClientFullName", JSON.stringify(dataClientStorage))
     }
 
     const quotatioNewSearchClientLi = quotationNew.querySelectorAll('#quotationewsearchclient li')
@@ -196,7 +201,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   const quotatioewScenaryNode = quotatioewScenary ? quotatioewScenary.value : false
   const idQuotationComments = quotationNew.querySelector('#quotationcomments')
 
-  const commentsText = ExpiringLocalStorage.getDataWithExpiration('Comments')
+  const commentsText = expiringLocalStorage.getDataWithExpiration('Comments')
   const cText = JSON.parse(commentsText)
   idQuotationComments.value = cText
 
@@ -211,8 +216,8 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       quotationewname.insertAdjacentElement('afterend', error);
       quotatioewScenary ? quotatioewScenary.insertAdjacentElement('afterend', error) : false
     } else {
-      ExpiringLocalStorage.saveDataWithExpiration("NameQuotation", JSON.stringify(quotationewname.value))
-      ExpiringLocalStorage.saveDataWithExpiration("NameScenary", JSON.stringify(quotatioewScenaryNode.value))
+      expiringLocalStorage.saveDataWithExpiration("NameQuotation", JSON.stringify(quotationewname.value))
+      expiringLocalStorage.saveDataWithExpiration("NameScenary", JSON.stringify(quotatioewScenaryNode.value))
     }
     const nodeError = quotationNew.querySelector('.error');
     if (quotationewname) {
@@ -238,7 +243,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       });
     }
 
-    idQuotationComments.value !== '' ? ExpiringLocalStorage.saveDataWithExpiration("Comments", JSON.stringify(idQuotationComments.value)) : false
+    idQuotationComments.value !== '' ? expiringLocalStorage.saveDataWithExpiration("Comments", JSON.stringify(idQuotationComments.value)) : false
 
     if (cotId && cotName) {
       console.log('Cliente Nuevo Escenario: ', quotatioewScenary.value);
