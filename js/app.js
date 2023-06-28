@@ -5,20 +5,24 @@ import getAdvisors from "./services/advisors/getAdvisors.js"
 import getProduct from "./services/product/getProduct.js"
 import getUser from "./services/user/getUser.js"
 import QuotationSearch from "./services/quotation/QuotationSearch.js"
-import './components/quotationNew/QuotationCalculation.js';
+//import './components/quotationNew/QuotationCalculation.js';
 import PaginatorElement from './components/paginator/PaginatorElement.js';
 import getClients from "./services/clients/getClients.js"
+import Login from "./login/login.js"
 
 document.addEventListener('DOMContentLoaded', () => {
-
   const quotation = document.querySelector('#quotation')
   const quotationNew = document.querySelector('#quotationew')
-
   const query = async () => {
     const url = new URL(window.location.href);
     const searchParams = new URLSearchParams(url.search);
-    const uid = searchParams.get('uid') || '4';
+    const uid = searchParams.get('uid') || '3';
     const resQueryUser = await getUser(uid)
+      // Ejemplo de uso
+    const login = new Login();
+    login.setHash(uid);
+    const storedHash = login.getStoredHash();
+    console.log(storedHash); // Imprimirá  usuario sirve para validar el usuario.
 
     if( quotation ) {
       const quotationContentList = quotation.querySelector('#quotation--content--list')
