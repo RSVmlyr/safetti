@@ -80,7 +80,7 @@ class QuotationCalculation extends HTMLElement {
     console.log('data', data, iva, name, comments)
     const comment = comments ? comments : "string"
     let dataSetQuotation = ''
-
+    const expiringLocalStorage = new ExpiringLocalStorage()
     const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
     if(c) {
       const client = JSON.parse(c)

@@ -84,23 +84,17 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   cotId ? QnTitle.textContent = 'Nuevo Escenario' : QnTitle.textContent = 'Nueva Cotización'
   const quotationewname = quotationNew.querySelector('#quotationewname')
 
-  const NameQuotation = expiringLocalStorage.getDataWithExpiration('NameQuotation')
-  if(NameQuotation){
-    const nQuotation = JSON.parse(NameQuotation)
-    quotationewname.value = nQuotation
-  
-    if (cotId && quotationewname) {
-      quotationewname.disabled = true
-      quotationewname.value = cotName
-      const quotationewInfo = quotationNew.querySelector('.quotationew__info')
-      let quotatioNewInfoTwo =
-      `<div class="quotationew__infoTwo">
-        <label class="quotation--title__quo" for='quotationewscenary'>Nombre del Escenario: <span>*</span></label>
-        <input id="quotationewscenary" type="text" placeholder="Nombre Escenario" required>
-      </div>
-      `
-      quotationewInfo.insertAdjacentHTML('beforeend', `${quotatioNewInfoTwo}`)
-    }
+  if (cotId && quotationewname) {
+    quotationewname.disabled = true
+    quotationewname.value = cotName
+    const quotationewInfo = quotationNew.querySelector('.quotationew__info')
+    let quotatioNewInfoTwo =
+    `<div class="quotationew__infoTwo">
+      <label class="quotation--title__quo" for='quotationewscenary'>Nombre del Escenario: <span>*</span></label>
+      <input id="quotationewscenary" type="text" placeholder="Nombre Escenario" required>
+    </div>
+    `
+    quotationewInfo.insertAdjacentHTML('beforeend', `${quotatioNewInfoTwo}`)
   }
 
   if (resQueryUser.rol === 'advisors' && cotId === null) {
