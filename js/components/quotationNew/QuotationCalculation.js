@@ -77,7 +77,7 @@ class QuotationCalculation extends HTMLElement {
     }
   }
   SendNewQuotation(data, iva, name, comments ) {
-    console.log('data', data, iva, name, comments);
+    console.log('data', data, iva, name, comments)
     const comment = comments ? comments : "string"
     let dataSetQuotation = ''
 
@@ -85,7 +85,7 @@ class QuotationCalculation extends HTMLElement {
     if(c) {
       const client = JSON.parse(c)
       if(data) {
-        console.log(data);
+        console.log(data)
         const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
         const products = retrievedData ? JSON.parse(retrievedData) : []
         dataSetQuotation = {
@@ -132,10 +132,10 @@ class QuotationCalculation extends HTMLElement {
       }
     }
    
-    console.log(dataSetQuotation);
+    console.log(dataSetQuotation)
     const createQuotation = async  () => {
       const data = await setQuotation(dataSetQuotation)
-      console.log(data);
+      console.log(data)
     }
     createQuotation(dataSetQuotation)
   }
@@ -152,18 +152,27 @@ class QuotationCalculation extends HTMLElement {
         "applyTaxIVA": true,
         "products": products,
       }
-      console.log('obj: ', dataSetScenario);
+      console.log('obj: ', dataSetScenario)
       const createScenario = async  () => {
         const data = await setScenario(dataSetScenario)
-        console.log(data);
+        console.log(data)
       }
       createScenario(dataSetScenario)
     }
   }
 
   insertList () {
+    const url = new URL(window.location.href);
+    const searchParams = new URLSearchParams(url.search);
+    const cotId = searchParams.get('cotId')
     const expiringLocalStorage = new ExpiringLocalStorage()
-    const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
+    let retrievedData = ''
+    if(cotId) {
+      retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-"+cotId)
+
+    } else {
+      retrievedData = expiringLocalStorage.getDataWithExpiration("products")
+    }
     if(retrievedData) {
       const productsList = retrievedData ? JSON.parse(retrievedData) : []
       productsList.forEach(product => {
@@ -238,7 +247,7 @@ class QuotationCalculation extends HTMLElement {
           const client = JSON.parse(c)
           subtotal = client['0'].currency === 'COP'
             ? Math.floor(product.unitPrice * product.quantity)
-            : parseFloat((parseFloat(product.unitPrice) * product.quantity).toFixed(2));
+            : parseFloat((parseFloat(product.unitPrice) * product.quantity).toFixed(2))
         } else {
           subtotal =  this.resQueryUser.currency === 'COP' ? product.unitPrice * product.quantity : parseFloat((parseFloat(product.unitPrice) * product.quantity).toFixed(2))
         }
@@ -259,32 +268,39 @@ class QuotationCalculation extends HTMLElement {
   }
   createArrayProducto(product, numPrange) {
     const expiringLocalStorage = new ExpiringLocalStorage()
+    const url = new URL(window.location.href);
+    const searchParams = new URLSearchParams(url.search);
+    const cotId = searchParams.get('cotId')
     if(product) {
       let unitPrice = 0
-      const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
+      let retrievedData = ''
+      if(cotId) {
+        retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
+      } else{
+        retrievedData = expiringLocalStorage.getDataWithExpiration("products")
+      }
+
       let productForSave = []
       if (retrievedData) {
         const productsLocalStores = retrievedData ? JSON.parse(retrievedData) : []
         productForSave = productsLocalStores
       }
+
       console.log('createArrayProducto', productForSave)
       console.log('createArrayProducto', productForSave)
 
-
-      /* const indice = productForSave.findIndex(item => item.id === product.id);
-      console.log(indice);
+      /* const indice = productForSave.findIndex(item => item.id === product.id)
+      console.log(indice)
       if (indice !== -1) {
         // Si ya existe un elemento con el mismo ID, se suman las cantidades
-        productForSave[indice].quantity += productForSave.quantity;
+        productForSave[indice].quantity += productForSave.quantity
       }  */
-      console.log(numPrange);
+      console.log(numPrange)
       const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
       if (c) {
         const client = JSON.parse(c)
-        console.log('if');
         unitPrice = client['0'].currency === 'COP' ? parseInt(numPrange) : parseFloat(numPrange).toFixed(2)
       } else {
-        console.log('else');
         unitPrice = parseFloat(numPrange).toFixed(2)
       }
      
@@ -295,18 +311,22 @@ class QuotationCalculation extends HTMLElement {
         quantity: parseInt(product.quantity),
         unitPrice: unitPrice
       })
-      expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(productForSave))
+      if(cotId) {
+        expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(productForSave))
+      } else{
+        expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(productForSave))
+      }
       this.removeList()
       this.insertList()
     }
   }
 
   removeList() {
-    console.log('removeList');
-    const scenaryTableRow = document.querySelectorAll('.scenary--row__table .scenary--row');
+    console.log('removeList')
+    const scenaryTableRow = document.querySelectorAll('.scenary--row__table .scenary--row')
     scenaryTableRow.forEach((e, i) => {
-      e.remove(); 
-    });
+      e.remove() 
+    })
     return true
   }
 
@@ -342,7 +362,7 @@ class QuotationCalculation extends HTMLElement {
     btniva.addEventListener('click', (e) => {
       this.sumar()
     })
-    //this.insertList()
+    this.insertList()
   }
 }
 
