@@ -6,8 +6,33 @@ import sendEmailHelper from "../../helpers/sendEmailHelper.js"
 
 const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     const quotationCreatescenary = quotation.querySelector('#quotation--content--list .quotation--list--row')
+    const quotationCreatescenarys = quotation.querySelectorAll('#quotation--content--list .quotation--list--row')
     const scenaryContainerTop = quotation.querySelector('#scenary--container__top')
     const scenaryCreatedBody = quotation.querySelector('#scenary--container__bottom')
+
+    let lastClickedIndex = localStorage.getItem('lastClickedIndex');
+
+    quotationCreatescenarys.forEach((other, index) => {
+      other.classList.remove('active');
+      if (lastClickedIndex !== null && index.toString() === lastClickedIndex) {
+        other.classList.add('active');
+        setTimeout(() => {
+          other.click()
+        }, 100);
+      }
+    });
+    
+    quotationCreatescenarys.forEach((q, index) => {
+      q.addEventListener('click', () => {
+        quotationCreatescenarys.forEach((other) => {
+          other.classList.remove('active');
+        });
+        q.classList.add('active');
+        q.click()
+        lastClickedIndex = index.toString();
+        localStorage.setItem('lastClickedIndex', lastClickedIndex);
+      });
+    });
 
     quotationCreatescenary.addEventListener('click', (e) => {
 
@@ -17,7 +42,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
       }
       deleteChilds(scenaryContainerTop)
       deleteChilds(scenaryCreatedBody)
-      console.log(cot);
+
       let scenaryTop =
       `<div class="scenary--created">
         <div class="scenary--created__header">
@@ -116,7 +141,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               totalProducts += product.unitPrice;
             }
           });
-          let totalPro = totalProducts.toLocaleString();
+          let totalPro = cot.currency === 'COP' ? totalProducts.toLocaleString() : totalProducts.toFixed(2)
 
           // Scenary selected 
           if ( scen.selected === true ) {
@@ -135,7 +160,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                 <tr>
                   <td></td>
                   <td><p class="quotation--info">$ ${totalPro}</p></td>
-                  <td><p class="quotation--info">$ ${scen.total.toLocaleString()}</p></td>
+                  <td><p class="quotation--info">$ ${cot.currency === 'COP' ? scen.total.toLocaleString() : scen.total.toFixed(2)}</p></td>
                   <td><span class="quotation--btn__view">Ver detalle</span></td>
                 </tr>
               </table>
@@ -185,7 +210,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                       <tr>
                         <td><span class="quotation--title__quo">Total con IVA</span></td>
                         <td></td>
-                        <td><p class="quotation--title__quo">$ ${scen.total.toLocaleString()}</p></td>
+                        <td><p class="quotation--title__quo">$ ${cot.currency === 'COP' ? scen.total.toLocaleString() : scen.total.toFixed(2)}</p></td>
                       </tr>
                     </table>
                   </div>  
@@ -193,8 +218,6 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               </div>
             </div>
           </div>`
-
-          console.log(scen);
 
           scenaryContainerBottom.insertAdjacentHTML('afterbegin', `${scenaryList}`)
 
