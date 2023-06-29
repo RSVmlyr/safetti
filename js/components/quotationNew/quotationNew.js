@@ -214,9 +214,16 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   const quotatioewScenaryNode = quotatioewScenary ? quotatioewScenary.value : false
   const idQuotationComments = quotationNew.querySelector('#quotationcomments')
 
-  const commentsText = expiringLocalStorage.getDataWithExpiration('Comments')
-  const cText = JSON.parse(commentsText)
-  idQuotationComments.value = cText
+  if (idQuotationComments) {
+    idQuotationComments.addEventListener('input', (e) => {
+      if (e.target.value !== '') {
+        idQuotationComments.value !== '' ? expiringLocalStorage.saveDataWithExpiration("Comments", JSON.stringify(idQuotationComments.value)) : false
+      }
+    });
+    const commentsText = expiringLocalStorage.getDataWithExpiration('Comments')
+    const cText = JSON.parse(commentsText)
+    idQuotationComments.value = cText
+  }
 
   const quotationewCalculationDiscountValue = resQueryUser.rol !== 'advisors' ? resQueryUser.specialDiscount : false
   const quotationIva = quotationNew.querySelector('.quotation--iva')
@@ -233,30 +240,28 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       expiringLocalStorage.saveDataWithExpiration("NameScenary", JSON.stringify(quotatioewScenaryNode.value))
     }
     const nodeError = quotationNew.querySelector('.error');
-    if (quotationewname) {
-      quotationewname.addEventListener('input', (e) => {
-        if (e.target.value !== '') {
-          nodeError ? nodeError.style.display = 'none' : false
-          v = true
-          console.log('333', e);
-        } else {
-          v = false
-          nodeError.style.display = 'block'
-        }
-      });
-    }
-    if (quotatioewScenary) {
-      quotatioewScenary.addEventListener('input', (e) => {
-        if (e.target.value !== '') {
-          nodeError ? nodeError.style.display = 'none' : false
-          console.log('444', e);
-        } else {
-          nodeError.style.display = 'block'
-        }
-      });
-    }
-
-    idQuotationComments.value !== '' ? expiringLocalStorage.saveDataWithExpiration("Comments", JSON.stringify(idQuotationComments.value)) : false
+    // if (quotationewname) {
+    //   quotationewname.addEventListener('input', (e) => {
+    //     if (e.target.value !== '') {
+    //       nodeError ? nodeError.style.display = 'none' : false
+    //       v = true
+    //       console.log('333', e);
+    //     } else {
+    //       v = false
+    //       nodeError.style.display = 'block'
+    //     }
+    //   });
+    // }
+    // if (quotatioewScenary) {
+    //   quotatioewScenary.addEventListener('input', (e) => {
+    //     if (e.target.value !== '') {
+    //       nodeError ? nodeError.style.display = 'none' : false
+    //       console.log('444', e);
+    //     } else {
+    //       nodeError.style.display = 'block'
+    //     }
+    //   });
+    // }    
 
     if (cotId && cotName) {
       console.log('Cliente Nuevo Escenario: ', quotatioewScenary.value);
