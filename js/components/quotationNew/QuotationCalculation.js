@@ -288,14 +288,20 @@ class QuotationCalculation extends HTMLElement {
 
       console.log('createArrayProducto', productForSave)
       console.log('createArrayProducto', productForSave)
+      
+      const result = Object.values(productForSave.reduce((acc, item) => {
+        const id = item.product;
+        if (acc[id]) {
+          acc[id].quantity += parseInt(item.quantity);
+        } else {
+          acc[id] = { ...item };
+        }
+        return acc;
+      }, {}));
+    
 
-      /* const indice = productForSave.findIndex(item => item.id === product.id)
-      console.log(indice)
-      if (indice !== -1) {
-        // Si ya existe un elemento con el mismo ID, se suman las cantidades
-        productForSave[indice].quantity += productForSave.quantity
-      }  */
-      console.log(numPrange)
+      const r = result
+      console.log('r', r)
       const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
       if (c) {
         const client = JSON.parse(c)
@@ -304,11 +310,11 @@ class QuotationCalculation extends HTMLElement {
         unitPrice = parseFloat(numPrange).toFixed(2)
       }
      
-      productForSave.push({
+      result.push({
         product: product.id,
         productName: product.productName,
         selectedMoldeCode: product.selectedMoldeCode,
-        quantity: parseInt(product.quantity),
+        quantity: product.quantity,
         unitPrice: unitPrice
       })
       if(cotId) {
@@ -336,22 +342,50 @@ class QuotationCalculation extends HTMLElement {
   async sumar() {
     const subtotalElements = document.querySelectorAll('.subtotal')
     const quotationSave = document.querySelector('.quotation--btn__add')
+    const expiringLocalStorage = new ExpiringLocalStorage()
+    const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
+
     let count = 0
+    let valor = 0 
     subtotalElements.forEach(element => {
-      const valor = parseFloat(element.textContent)
-      count += parseFloat(valor)
+      if (c) {
+        console.log(valor);
+        valor = parseInt(element.textContent)
+        const client = JSON.parse(c)
+        count += client['0'].currency === 'COP' ? count += parseInt(valor) : parseFloat(valor)
+      } else {
+        valor = parseFloat(element.textContent)
+        count += parseFloat(valor)
+      }
     })
+    console.log(count, 'count');
 
     const btniva = document.querySelector('.quotation--iva')
     if (btniva.checked) {
       const iva = count * 0.19
       const quo = document.querySelector('.calculation__dis')
-      const dis = count * (parseFloat(quo.textContent).toFixed(2) / 100)
-      quotationSave.textContent = ((count + iva) - dis).toFixed(2)
+      let dis = ''
+      if (c) {
+        dis = count * (parseInt(quo.textContent) / 100)
+      } else {
+        dis = count * (parseFloat(quo.textContent).toFixed(2) / 100)
+      }
+      if (c) {
+        const client = JSON.parse(c)
+        quotationSave.textContent = client['0'].currency === 'COP' ? (count + iva) - dis : ((count + iva) - dis).toFixed(2)
+      } else {
+        quotationSave.textContent = ((count + iva) - dis).toFixed(2)
+      }
+
     } else {
       const quo = document.querySelector('.calculation__dis')
       const dis = (count * (parseFloat(quo.textContent).toFixed(2) / 100)).toFixed(2)
-      quotationSave.textContent = (count - dis).toFixed(2)
+      if (c) {
+        const client = JSON.parse(c)
+        quotationSave.textContent = client['0'].currency === 'COP' ? (count - dis) : (count - dis).toFixed(2)
+      } else {
+        quotationSave.textContent = (count - dis).toFixed(2)
+      }
     }
   }
 
