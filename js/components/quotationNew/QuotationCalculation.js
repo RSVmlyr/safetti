@@ -141,6 +141,7 @@ class QuotationCalculation extends HTMLElement {
   }
   SendNewScenary(data, cotId, nameScenary) {
     let dataSetScenario = ''
+    const expiringLocalStorage = new ExpiringLocalStorage()
     const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
     const products = retrievedData ? JSON.parse(retrievedData) : []
     if(data) {

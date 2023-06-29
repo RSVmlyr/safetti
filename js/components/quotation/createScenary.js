@@ -141,7 +141,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               totalProducts += product.unitPrice;
             }
           });
-          let totalPro = totalProducts.toLocaleString();
+          let totalPro = cot.currency === 'COP' ? totalProducts.toLocaleString() : totalProducts.toFixed(2)
 
           // Scenary selected 
           if ( scen.selected === true ) {
@@ -160,7 +160,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                 <tr>
                   <td></td>
                   <td><p class="quotation--info">$ ${totalPro}</p></td>
-                  <td><p class="quotation--info">$ ${scen.total.toLocaleString()}</p></td>
+                  <td><p class="quotation--info">$ ${cot.currency === 'COP' ? scen.total.toLocaleString() : scen.total.toFixed(2)}</p></td>
                   <td><span class="quotation--btn__view">Ver detalle</span></td>
                 </tr>
               </table>
@@ -210,7 +210,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                       <tr>
                         <td><span class="quotation--title__quo">Total con IVA</span></td>
                         <td></td>
-                        <td><p class="quotation--title__quo">$ ${scen.total.toLocaleString()}</p></td>
+                        <td><p class="quotation--title__quo">$ ${cot.currency === 'COP' ? scen.total.toLocaleString() : scen.total.toFixed(2)}</p></td>
                       </tr>
                     </table>
                   </div>  
