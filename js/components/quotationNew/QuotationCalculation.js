@@ -142,8 +142,8 @@ class QuotationCalculation extends HTMLElement {
   SendNewScenary(data, cotId, nameScenary) {
     let dataSetScenario = ''
     const expiringLocalStorage = new ExpiringLocalStorage()
-    const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
-    const products = retrievedData ? JSON.parse(retrievedData) : []
+    const retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
+    const scenary = retrievedData ? JSON.parse(retrievedData) : []
     if(data) {
       dataSetScenario = {
         "quotationId": cotId,
@@ -151,7 +151,7 @@ class QuotationCalculation extends HTMLElement {
         "selected": false,
         "discountPercent": 0,
         "applyTaxIVA": true,
-        "products": products,
+        "products": scenary,
       }
       console.log('obj: ', dataSetScenario)
       const createScenario = async  () => {
@@ -169,7 +169,7 @@ class QuotationCalculation extends HTMLElement {
     const expiringLocalStorage = new ExpiringLocalStorage()
     let retrievedData = ''
     if(cotId) {
-      retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-"+cotId)
+      retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
 
     } else {
       retrievedData = expiringLocalStorage.getDataWithExpiration("products")
