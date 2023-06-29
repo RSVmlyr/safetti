@@ -272,6 +272,7 @@ class QuotationCalculation extends HTMLElement {
     const url = new URL(window.location.href);
     const searchParams = new URLSearchParams(url.search);
     const cotId = searchParams.get('cotId')
+
     if(product) {
       let unitPrice = 0
       let retrievedData = ''
@@ -280,7 +281,6 @@ class QuotationCalculation extends HTMLElement {
       } else{
         retrievedData = expiringLocalStorage.getDataWithExpiration("products")
       }
-
       let productForSave = []
       if (retrievedData) {
         const productsLocalStores = retrievedData ? JSON.parse(retrievedData) : []
@@ -289,20 +289,19 @@ class QuotationCalculation extends HTMLElement {
 
       console.log('createArrayProducto', productForSave)
       console.log('createArrayProducto', productForSave)
-      
-      const result = Object.values(productForSave.reduce((acc, item) => {
-        const id = item.product;
-        if (acc[id]) {
-          acc[id].quantity += parseInt(item.quantity);
-        } else {
-          acc[id] = { ...item };
-        }
-        return acc;
-      }, {}));
-    
 
-      const r = result
-      console.log('r', r)
+      /* const indice = productForSave.findIndex(item => item.id === product.id)
+
+      console.log(indice)
+
+      if (indice !== -1) {
+
+        // Si ya existe un elemento con el mismo ID, se suman las cantidades
+
+        productForSave[indice].quantity += productForSave.quantity
+
+      }  */
+      console.log(numPrange)
       const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
       if (c) {
         const client = JSON.parse(c)
@@ -310,12 +309,11 @@ class QuotationCalculation extends HTMLElement {
       } else {
         unitPrice = parseFloat(numPrange).toFixed(2)
       }
-     
-      result.push({
+      productForSave.push({
         product: product.id,
         productName: product.productName,
         selectedMoldeCode: product.selectedMoldeCode,
-        quantity: product.quantity,
+        quantity: parseInt(product.quantity),
         unitPrice: unitPrice
       })
       if(cotId) {
