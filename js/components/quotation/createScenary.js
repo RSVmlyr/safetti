@@ -4,6 +4,7 @@ import statusQuotation from "../../helpers/statusQuotation.js"
 import deleteScenary from "./deleteSecenary.js"
 import sendEmailHelper from "../../helpers/sendEmailHelper.js"
 import Login from "../../login/login.js"
+import statusQuotationCancel from "../../services/statusQuotation/statusQuotation.js"
 
 const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     const quotationCreatescenary = quotation.querySelector('#quotation--content--list .quotation--list--row')
@@ -126,7 +127,16 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
       const quotationBtnDelete = quotation.querySelector('#quotation--btn__delete')
       const scenaryCreated = quotation.querySelector('.scenary--created')
 
-      deleteScenary(quotationBtnDelete, scenaryCreated)
+      quotationBtnDelete.addEventListener('click', () => {
+        statusQuotationCancel(cot.id)
+        setTimeout(() => {
+          location.reload();
+        }, 1000);
+      })
+
+      
+
+      // deleteScenary(quotationBtnDelete, scenaryCreated)
       // Delete Scenary Top
 
       const getScenary = () => {
@@ -237,7 +247,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
 
           // Delete Scenary Bottom
           const scenaryCreatedBody = quotation.querySelector('.scenary--created__body')
-          deleteScenary(quotationBtnDelete, scenaryCreatedBody)
+          // deleteScenary(quotationBtnDelete, scenaryCreatedBody)
           // Delete Scenary Bottom
 
           // Scenary List

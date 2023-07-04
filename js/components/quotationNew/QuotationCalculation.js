@@ -6,6 +6,7 @@ import ExpiringLocalStorage from '../localStore/ExpiringLocalStorage.js'
 class QuotationCalculation extends HTMLElement {
   constructor(resQueryUser) {
     super()
+    this.removeItem()
     this.sumar()
     this.resQueryUser = resQueryUser
     this.innerHTML = `
@@ -26,6 +27,9 @@ class QuotationCalculation extends HTMLElement {
             </div>
             <div class="scenary--row">
               <span class="quotation--title__quo">Subtotal</span>
+            </div>
+            <div class="scenary--row">
+            <span class="quotation--title__quo">Borrar</span>
             </div>
           </div>
         </div>
@@ -173,6 +177,7 @@ class QuotationCalculation extends HTMLElement {
     if(retrievedData) {
       const productsList = retrievedData ? JSON.parse(retrievedData) : []
       productsList.forEach(product => {
+        console.log(product);
         const subtotal = parseFloat((parseFloat(product.unitPrice) * product.quantity).toFixed(2))
         const row = document.createElement('div')
         row.classList.add('scenary--row__table')
@@ -183,6 +188,7 @@ class QuotationCalculation extends HTMLElement {
           <div class="scenary--row">${product.unitPrice.toLocaleString()}</div>
           <div class="scenary--row">${product.quantity}</div>
           <div class="scenary--row subtotal">${subtotal.toLocaleString()}</div>
+          <div class="scenary--row cancel" data-product='${product.selectedMoldeCode}'>X</div>
         `
         document.querySelector('.quotationew--calculation__body').appendChild(row)
       })
@@ -318,6 +324,7 @@ class QuotationCalculation extends HTMLElement {
       this.removeList()
       this.insertList()
     }
+    this.removeItem()
   }
 
   removeList() {
@@ -330,7 +337,23 @@ class QuotationCalculation extends HTMLElement {
   }
 
   removeItem() {
-
+    const scenaryRowTable = document.querySelectorAll('.scenary--row__table .cancel')
+    scenaryRowTable.forEach(rowT => {
+      console.log(rowT);
+      rowT.addEventListener('click', () => {
+        const getDataProduct = rowT.getAttribute('data-product')
+        const expiringLocalStorage = new ExpiringLocalStorage()
+        const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
+        const retrievedDataParse = JSON.parse(retrievedData)
+        console.log(retrievedDataParse);
+        const newArray = retrievedDataParse.filter(item => item.selectedMoldeCode !== getDataProduct);
+        console.log(newArray);
+        expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(newArray))
+        this.removeList()
+        this.insertList()
+      })
+    });
+   
   }
   async sumar() {
     const subtotalElements = document.querySelectorAll('.subtotal')
