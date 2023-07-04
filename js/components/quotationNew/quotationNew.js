@@ -9,11 +9,14 @@ import QuotationCalculation from './QuotationCalculation.js';
 import GetIdQuotation from "../../services/quotation/getIdQuotation.js";
 import ExpiringLocalStorage from "../localStore/ExpiringLocalStorage.js";
 import getUser from "../../services/user/getUser.js"
+import nodeNotification from "../../helpers/nodeNotification.js";
 
 const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQueryClients) => {
   const expiringLocalStorage = new ExpiringLocalStorage()
-  console.log('Object User', resQueryUser);
-  console.log('Object Products', resQueryProducts.products);
+
+  // console.log('Object User', resQueryUser);
+  // console.log('Object Products', resQueryProducts.products);
+
   const url = new URL(window.location.href);
   const searchParams = new URLSearchParams(url.search);
   const cotId = searchParams.get('cotId');
@@ -46,11 +49,11 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   localStorage()
 
   if(cotId && resQueryUser.rol === 'advisors'){
-    console.log('cotId', cotId);
+    // console.log('cotId', cotId);
     //llamar servicio
     const getUserCurren = async (id) => {
       const user = await getUser(id) 
-      console.log(user);
+      // console.log(user);
       const dataClientStorage = [
         {
           id: user.id,
@@ -64,7 +67,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
 
     const getinfouser = async () => {
       const data = await GetIdQuotation(cotId)   
-      console.log(data);
+      // console.log(data);
       idQnAdvisor.innerHTML = idQnLabelAdvisors + data.clientName
       idQnCurrency.innerHTML = 'Moneda: ' + data.currency
       getUserCurren(data.client);
@@ -100,7 +103,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   if (resQueryUser.rol === 'advisors' && cotId === null) {
     let quotatioNewSearchClient =
     `<div class='quotationew__searchclient'>
-      <label for='quotationewclient'>Buscar Cliente:</label>
+      <label for='quotationewclient'>Buscar Cliente: <span>*</span></label>
       <input id="quotationewclient" type="text" placeholder="Escribe el Nombre del cliente" required>
       <ul id="quotationewsearchclient"></ul>
      </div>
@@ -160,6 +163,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
           idQuotatioNewSearchClient.appendChild(li);
         });
       } else {
+        idQuotatioNewSearchClient.classList.remove('quotationewsearchclient')
         validateNewCleint()
       }
     });
@@ -213,68 +217,93 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   const quotatioewScenary = quotationNew.querySelector('#quotationewscenary')
   const quotatioewScenaryNode = quotatioewScenary ? quotatioewScenary.value : false
   const idQuotationComments = quotationNew.querySelector('#quotationcomments')
+  const quotatioNewClient = quotationNew.querySelector('#quotationewclient')
+  const quotatioNewClientNode = quotatioNewClient ? quotatioNewClient.value : false
 
-  if (idQuotationComments) {
-    idQuotationComments.addEventListener('input', (e) => {
-      if (e.target.value !== '') {
-        idQuotationComments.value !== '' ? expiringLocalStorage.saveDataWithExpiration("Comments", JSON.stringify(idQuotationComments.value)) : false
+  // Name Scenary
+  if (quotatioewScenary) {
+    quotatioewScenary.addEventListener('input', (e) => {
+      const inputValue = e.target.value;
+      if (inputValue !== '') {
+        expiringLocalStorage.saveDataWithExpiration("NameScenary", JSON.stringify(inputValue));
+      } else {
+        expiringLocalStorage.saveDataWithExpiration("NameScenary", JSON.stringify(''));
       }
     });
-    const commentsText = expiringLocalStorage.getDataWithExpiration('Comments')
-    const cText = JSON.parse(commentsText)
-    idQuotationComments.value = cText
+    const commentsText = expiringLocalStorage.getDataWithExpiration('NameScenary');
+    const cText = JSON.parse(commentsText);
+    if (cText !== '') {
+      quotatioewScenary.value = cText;
+    }
+  }
+
+  // Commments Local Storage
+  if (idQuotationComments) {
+    idQuotationComments.addEventListener('input', (e) => {
+      const inputValue = e.target.value;
+      if (inputValue !== '') {
+        expiringLocalStorage.saveDataWithExpiration("Comments", JSON.stringify(inputValue));
+      } else {
+        expiringLocalStorage.saveDataWithExpiration("Comments", JSON.stringify(''));
+      }
+    });
+    const commentsText = expiringLocalStorage.getDataWithExpiration('Comments');
+    const cText = JSON.parse(commentsText);
+    if (cText !== '') {
+      idQuotationComments.value = cText;
+    }
   }
 
   const quotationewCalculationDiscountValue = resQueryUser.rol !== 'advisors' ? resQueryUser.specialDiscount : false
   const quotationIva = quotationNew.querySelector('.quotation--iva')
-  let v = false
-  quotationBtnSave.addEventListener('click', () => {
-    if (quotationewname.value === '' || quotatioewScenaryNode === '') {
-      const error = document.createElement('span');
-      error.classList.add('error');
-      error.textContent = 'Este campo es obligatorio';
-      quotationewname.insertAdjacentElement('afterend', error);
-      quotatioewScenary ? quotatioewScenary.insertAdjacentElement('afterend', error) : false
-    } else {
-      expiringLocalStorage.saveDataWithExpiration("NameQuotation", JSON.stringify(quotationewname.value))
-      expiringLocalStorage.saveDataWithExpiration("NameScenary", JSON.stringify(quotatioewScenaryNode.value))
-    }
-    const nodeError = quotationNew.querySelector('.error');
-    // if (quotationewname) {
-    //   quotationewname.addEventListener('input', (e) => {
-    //     if (e.target.value !== '') {
-    //       nodeError ? nodeError.style.display = 'none' : false
-    //       v = true
-    //       console.log('333', e);
-    //     } else {
-    //       v = false
-    //       nodeError.style.display = 'block'
-    //     }
-    //   });
-    // }
-    // if (quotatioewScenary) {
-    //   quotatioewScenary.addEventListener('input', (e) => {
-    //     if (e.target.value !== '') {
-    //       nodeError ? nodeError.style.display = 'none' : false
-    //       console.log('444', e);
-    //     } else {
-    //       nodeError.style.display = 'block'
-    //     }
-    //   });
-    // }    
 
-    if (cotId && cotName) {
-      console.log('Cliente Nuevo Escenario: ', quotatioewScenary.value);
-      quotationCalculation.SendNewScenary(resQueryUser, cotId, quotatioewScenary.value)
-    } else {
-      quotationCalculation.SendNewQuotation(resQueryUser, quotationIva.checked, quotationewname.value, idQuotationComments.value );
+  // const nodeNotification = (text) => {
+  //   const notification = document.createElement('div');
+  //   notification.classList.add('notification');
+  //   notification.textContent = text;
+  //   const body = document.querySelector('body')
+  //   body.insertAdjacentElement('afterend', notification);
+  //   const notificationDiv = document.querySelector('.notification')
+  //   setTimeout(() => {
+  //     notificationDiv.remove()
+  //   }, 10000);
+  // }
+
+  quotationBtnSave.addEventListener('click', () => {
+    
+    if (quotationewname && quotatioNewClient) {
+      if (quotationewname.value == '' || quotatioNewClientNode == '') {
+        nodeNotification('Los campos marcados con * son obligatorios')
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      } else {
+        expiringLocalStorage.saveDataWithExpiration("NameQuotation", JSON.stringify(quotationewname.value))
+      }
     }
-    if(v === true) {
-      console.log('Name: ', quotationewname.value);
-      console.log('Comentarios: ', idQuotationComments.value);
-      console.log('Especial Discount', quotationewCalculationDiscountValue);
-      console.log('IVA', quotationIva.checked);
+
+    if (quotatioewScenary) {
+      if (quotatioewScenary.value == '') {
+        console.log(quotatioewScenaryNode);
+        nodeNotification('Los campos marcados con * son obligatorios')
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      } else {
+        // expiringLocalStorage.saveDataWithExpiration("NameScenary", JSON.stringify(quotatioewScenaryNode.value))
+      }
     }
+
+    // if (cotId && cotName) {
+    //   // console.log('Cliente Nuevo Escenario: ', quotatioewScenary.value);
+    //   quotationCalculation.SendNewScenary(resQueryUser, cotId, quotatioewScenary.value)
+    // } else {
+    //   quotationCalculation.SendNewQuotation(resQueryUser, quotationIva.checked, quotationewname.value, idQuotationComments.value );
+    // }
+
+
   });
   
 }

@@ -1,0 +1,10 @@
+.notification {
+  background-color: $black;
+  color: $white;
+  font-family: $FuturaMedium;
+  box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.08);
+  position: fixed;
+  top: 50px;
+  right: 0;
+  padding: 15px 30px;
+}

@@ -12,10 +12,10 @@ const setScenario = async dataSetScenario => {
     const resQueryS = await reqQueryS.json()
     console.log(reqQueryS);
 
-    if (reqQueryS.status == 200) {
-      const quotationewBack = document.querySelector('#quotationew--back')
-      quotationewBack.click()
-    }
+    // if (reqQueryS.status == 200) {
+    //   const quotationewBack = document.querySelector('#quotationew--back')
+    //   quotationewBack.click()
+    // }
     
     if (reqQueryS.status == 403) {
       console.log('Error 403');

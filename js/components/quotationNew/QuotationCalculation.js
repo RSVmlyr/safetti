@@ -1,3 +1,4 @@
+import nodeNotification from '../../helpers/nodeNotification.js'
 import getProductPrices from '../../services/product/getProductPrices.js'
 import setQuotation from '../../services/quotation/setQuotation.js'
 import setScenario from '../../services/quotation/setScenario.js'
@@ -13,23 +14,18 @@ class QuotationCalculation extends HTMLElement {
           <div class="scenary--row__table">
             <div class="scenary--row">
               <span class="quotation--title__quo">Producto</span>
-              <div id="qnproducts"></div>
             </div>
             <div class="scenary--row">
               <span class="quotation--title__quo">Molde</span>
-              <div id="unitPrices"></div>
             </div>
             <div class="scenary--row">
               <span class="quotation--title__quo">Valor Unitario</span>
-              <div id="prices"></div>
             </div>
             <div class="scenary--row">
               <span class="quotation--title__quo">Cantidad</span>
-              <div id="quantities"></div>
             </div>
             <div class="scenary--row">
               <span class="quotation--title__quo">Subtotal</span>
-              <div id="subtotals"></div>
             </div>
           </div>
         </div>
@@ -286,22 +282,6 @@ class QuotationCalculation extends HTMLElement {
         const productsLocalStores = retrievedData ? JSON.parse(retrievedData) : []
         productForSave = productsLocalStores
       }
-
-      console.log('createArrayProducto', productForSave)
-      console.log('createArrayProducto', productForSave)
-
-      /* const indice = productForSave.findIndex(item => item.id === product.id)
-
-      console.log(indice)
-
-      if (indice !== -1) {
-
-        // Si ya existe un elemento con el mismo ID, se suman las cantidades
-
-        productForSave[indice].quantity += productForSave.quantity
-
-      }  */
-      console.log(numPrange)
       const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
       if (c) {
         const client = JSON.parse(c)
@@ -316,10 +296,24 @@ class QuotationCalculation extends HTMLElement {
         quantity: parseInt(product.quantity),
         unitPrice: unitPrice
       })
+
+      const result = Object.values(productForSave.reduce((acc, item) => {
+        const id = item.selectedMoldeCode;
+        if (acc[id]) {
+          acc[id].quantity += parseInt(item.quantity);
+        } else {
+          acc[id] = { ...item };
+        }
+        return acc;
+      }, {}));
+      
+      console.log("result", result)
+      console.log('createArrayProducto', productForSave)
+
       if(cotId) {
-        expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(productForSave))
+        expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(result))
       } else{
-        expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(productForSave))
+        expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(result))
       }
       this.removeList()
       this.insertList()
@@ -342,22 +336,43 @@ class QuotationCalculation extends HTMLElement {
     const subtotalElements = document.querySelectorAll('.subtotal')
     const quotationSave = document.querySelector('.quotation--btn__add')
     const expiringLocalStorage = new ExpiringLocalStorage()
+    const url = new URL(window.location.href);
     const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
+    const searchParams = new URLSearchParams(url.search);
+    const cotId = searchParams.get('cotId')
+
+    let retrievedData = ''
+    if(cotId) {
+      retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
+    } else{
+      retrievedData = expiringLocalStorage.getDataWithExpiration("products")
+    }
+    let productForSave = []
+    if (retrievedData) {
+      const productsLocalStores = retrievedData ? JSON.parse(retrievedData) : []
+      productForSave = productsLocalStores
+    }
 
     let count = 0
     let valor = 0 
-    subtotalElements.forEach(element => {
+    console.log(productForSave);
+    productForSave.forEach(e => {
       if (c) {
-        console.log(valor);
-        valor = parseInt(element.textContent)
+        valor = parseInt(e.textContent)
         const client = JSON.parse(c)
-        count += client['0'].currency === 'COP' ? count += parseInt(valor) : parseFloat(valor)
+        count += client['0'].currency === 'COP' ?parseInt(e.unitPrice * e.quantity) :parseFloat(e.unitPrice * e.quantity)
       } else {
-        valor = parseFloat(element.textContent)
+        console.log('debug');
+        valor = parseFloat(e.unitPrice * e.quantity)
+        console.log('e', valor);
         count += parseFloat(valor)
       }
     })
     console.log(count, 'count');
+
+    if (count > 0) {
+      nodeNotification('Agregado a la lista')
+    }
 
     const btniva = document.querySelector('.quotation--iva')
     if (btniva.checked) {
@@ -381,9 +396,11 @@ class QuotationCalculation extends HTMLElement {
       const dis = (count * (parseFloat(quo.textContent).toFixed(2) / 100)).toFixed(2)
       if (c) {
         const client = JSON.parse(c)
-        quotationSave.textContent = client['0'].currency === 'COP' ? (count - dis) : (count - dis).toFixed(2)
+        const a = client['0'].currency === 'COP' ? (count - dis) : (count - dis).toFixed(2)
+        quotationSave.textContent = a.toLocaleString()
       } else {
-        quotationSave.textContent = (count - dis).toFixed(2)
+        const a = (count - dis).toFixed(2)
+        quotationSave.textContent = a.toLocaleString()
       }
     }
   }
