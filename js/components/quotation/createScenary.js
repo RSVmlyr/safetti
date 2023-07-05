@@ -5,6 +5,7 @@ import deleteScenary from "./deleteSecenary.js"
 import sendEmailHelper from "../../helpers/sendEmailHelper.js"
 import Login from "../../login/login.js"
 import statusQuotationCancel from "../../services/statusQuotation/statusQuotation.js"
+import quotationNewPage from "../quotationNew/quotationNew.js"
 
 const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     const quotationCreatescenary = quotation.querySelector('#quotation--content--list .quotation--list--row')
@@ -89,7 +90,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                 <div class="quotation--notification"><span class="quotation--title">No existen escenarios.</span></div>
               </div>
               <div class="scenary--data__actions">
-                <a href="./index-q.html?cotId=${cot.id}&cotName=${encodeURIComponent(cot.name)}&uid=${storedHash}" class="quotation--btn__new">Nuevo escenario +</a>
+                <a href="./index-q.html?cotId=${cot.id}&cotName=${encodeURIComponent(cot.name)}&uid=${storedHash}" class="quotation--btn__new quotation--btn__Ne">Nuevo escenario +</a>
                 <div id="quotation--btn__delete" class="scenary--data__actionsDelete">
                   <span class="quotation--info">Cancelar cotización</span>
                   <img src='../../img/icon/icon-delete.svg' loading="lazy" alt="Eliminar" title="Eliminar">
@@ -117,6 +118,15 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         statusQuotation(cotStatus.statusId, quotationStatusScenary)
       // Status quotation
 
+      const scenaryCreated = quotation.querySelector('.scenary--created')
+      const quotationBtnDelete = quotation.querySelector('#quotation--btn__delete')
+
+      if (cotStatus.statusId === 3 && scenaryCreated) {
+        const quotationBtnNe = quotation.querySelector('.quotation--btn__Ne')
+        quotationBtnNe.remove()
+        quotationBtnDelete.remove()
+      }
+
       // Send Email
       const quotationEmail = quotation.querySelector('.quotation--email')
       const quotationSendData = quotation.querySelector('.quotation--send--data')
@@ -124,17 +134,12 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
       // Send Email
 
       // Delete Scenary Top
-      const quotationBtnDelete = quotation.querySelector('#quotation--btn__delete')
-      const scenaryCreated = quotation.querySelector('.scenary--created')
-
       quotationBtnDelete.addEventListener('click', () => {
         statusQuotationCancel(cot.id)
         setTimeout(() => {
           location.reload();
         }, 1000);
       })
-
-      
 
       // deleteScenary(quotationBtnDelete, scenaryCreated)
       // Delete Scenary Top
