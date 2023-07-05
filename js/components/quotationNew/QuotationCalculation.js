@@ -81,7 +81,7 @@ class QuotationCalculation extends HTMLElement {
             {
               name: 'Primer Escenario',
               selected: true,
-              discountPercent: 0,
+              discountPercent: data.specialDiscount !== null || !isNaN(data.specialDiscount) ? data.specialDiscount : 0,
               applyTaxIVA: iva,
               products: products,
             },
@@ -325,13 +325,30 @@ class QuotationCalculation extends HTMLElement {
         console.log('click', rowT );
         const getDataProduct = rowT.getAttribute('data-product')
         const expiringLocalStorage = new ExpiringLocalStorage()
-        const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
+        const url = new URL(window.location.href);
+        const searchParams = new URLSearchParams(url.search);
+        const cotId = searchParams.get('cotId')
+
+        let retrievedData = ''
+        if(cotId) {
+          retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
+        } else{
+          retrievedData = expiringLocalStorage.getDataWithExpiration("products")
+        }
+
         const retrievedDataParse = JSON.parse(retrievedData)
         console.log(retrievedDataParse);
         const newArray = retrievedDataParse.filter(item => item.selectedMoldeCode !== getDataProduct);
-        expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(newArray))
+        if(cotId) {
+          expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(newArray))
+        } else{
+          expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(newArray))
+        }
+        
         this.removeList()
         this.insertList()
+        this.sumar()
+
       })
     });
   }
@@ -407,9 +424,22 @@ class QuotationCalculation extends HTMLElement {
   connectedCallback() {
     const btniva = document.querySelector('.quotation--iva')
     const fieldValor = document.querySelector('.quotation--btn__add')
+    const scenaryDeleteAll = document.querySelector('.scenary-delete__all')
     fieldValor.textContent = 0
     btniva.addEventListener('click', (e) => {
       this.sumar()
+    })
+    scenaryDeleteAll.addEventListener('click', () => {
+      const expiringLocalStorage = new ExpiringLocalStorage()
+      const url = new URL(window.location.href);
+      const searchParams = new URLSearchParams(url.search);
+      const cotId = searchParams.get('cotId')
+      if(cotId) {
+        expiringLocalStorage.deleteDataWithExpiration("scenario-" + cotId)
+      } else{
+        expiringLocalStorage.deleteDataWithExpiration("products")
+      }
+      this.removeList()
     })
     this.insertList()
     const scenaryRowTable = document.querySelectorAll('.scenary--row__table .cancel')
