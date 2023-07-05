@@ -12,26 +12,7 @@ class QuotationCalculation extends HTMLElement {
     this.innerHTML = `
       <div class="quotation-calculation">
         <div class="quotationew--calculation__body">
-          <div class="scenary--row__table">
-            <div class="scenary--row">
-              <span class="quotation--title__quo">Producto</span>
-            </div>
-            <div class="scenary--row">
-              <span class="quotation--title__quo">Molde</span>
-            </div>
-            <div class="scenary--row">
-              <span class="quotation--title__quo">Valor Unitario</span>
-            </div>
-            <div class="scenary--row">
-              <span class="quotation--title__quo">Cantidad</span>
-            </div>
-            <div class="scenary--row">
-              <span class="quotation--title__quo">Subtotal</span>
-            </div>
-            <div class="scenary--row">
-            <span class="quotation--title__quo">Borrar</span>
-            </div>
-          </div>
+          
         </div>
       </div>
     `
@@ -190,6 +171,7 @@ class QuotationCalculation extends HTMLElement {
           <div class="scenary--row cancel" data-product='${product.selectedMoldeCode}'>X</div>
         `
         document.querySelector('.quotationew--calculation__body').appendChild(row)
+
       })
     }
     const scenaryRowTable = document.querySelectorAll('.scenary--row__table .cancel')
@@ -266,6 +248,7 @@ class QuotationCalculation extends HTMLElement {
           <div class="scenary--row subtotal">${subtotal.toLocaleString()}</div>
         `
         document.querySelector('.quotationew--calculation__body').appendChild(row)
+
       })
     }
     
@@ -338,7 +321,6 @@ class QuotationCalculation extends HTMLElement {
 
   removeItem(scenaryRowTable) {
     scenaryRowTable.forEach(rowT => {
-      console.log(rowT);
       rowT.addEventListener('click', () => {
         console.log('click', rowT );
         const getDataProduct = rowT.getAttribute('data-product')
