@@ -1,3 +1,4 @@
+import getUnityPrices from '../../helpers/getUnityPrices.js'
 import nodeNotification from '../../helpers/nodeNotification.js'
 import getProductPrices from '../../services/product/getProductPrices.js'
 import setQuotation from '../../services/quotation/setQuotation.js'
@@ -253,61 +254,90 @@ class QuotationCalculation extends HTMLElement {
     }
     
   }
-  createArrayProducto(product, numPrange) {
+  createArrayProducto(products) {
     const expiringLocalStorage = new ExpiringLocalStorage()
     const url = new URL(window.location.href);
     const searchParams = new URLSearchParams(url.search);
     const cotId = searchParams.get('cotId')
 
-    if(product) {
+    let result = ''
+    let productForSave = []
+
+    if(products) {
       let unitPrice = 0
       let retrievedData = ''
-      if(cotId) {
-        retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
-      } else{
-        retrievedData = expiringLocalStorage.getDataWithExpiration("products")
-      }
-      let productForSave = []
-      if (retrievedData) {
-        const productsLocalStores = retrievedData ? JSON.parse(retrievedData) : []
-        productForSave = productsLocalStores
-      }
-      const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
-      if (c) {
-        const client = JSON.parse(c)
-        unitPrice = client['0'].currency === 'COP' ? parseInt(numPrange) : parseFloat(numPrange).toFixed(2)
-      } else {
-        unitPrice = parseFloat(numPrange).toFixed(2)
-      }
-      productForSave.push({
-        product: product.id,
-        productName: product.productName,
-        selectedMoldeCode: product.selectedMoldeCode,
-        quantity: parseInt(product.quantity),
-        unitPrice: unitPrice
-      })
+      let numPrange = ''
+      products.forEach(product => { 
+        const productsDataAsync = async () => {
+          if(cotId) {
+            retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
+          } else{
+            retrievedData = expiringLocalStorage.getDataWithExpiration("products")
+          }
+        
+          if (retrievedData) {
+            const productsLocalStores = retrievedData ? JSON.parse(retrievedData) : []
+            productForSave = productsLocalStores
+          }
 
-      const result = Object.values(productForSave.reduce((acc, item) => {
-        const id = item.selectedMoldeCode;
-        if (acc[id]) {
-          acc[id].quantity += parseInt(item.quantity);
-        } else {
-          acc[id] = { ...item };
+          if (this.resQueryUser.rol === 'advisors'){
+            const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
+            const client = JSON.parse(c)
+            const price = await getUnityPrices(product.id, client['0'].currency, client['0'].rol);      
+            const priceInRange = this.getPriceInRange(price, product.quantity)
+            console.log('pppp', priceInRange);  
+
+            if(client['0'].currency === 'COP') {
+              numPrange = priceInRange.replace(".", "")
+            } else {
+              numPrange = priceInRange.replace(",", ".")
+            }
+            if (c) {
+              unitPrice = client['0'].currency === 'COP' ? parseInt(numPrange) : parseFloat(numPrange).toFixed(2)
+            } else {
+              unitPrice = parseFloat(numPrange).toFixed(2)
+            }
+          }
+        
+          productForSave.push({
+            product: product.id,
+            productName: product.productName,
+            selectedMoldeCode: product.selectedMoldeCode,
+            quantity: parseInt(product.quantity),
+            unitPrice: unitPrice
+          })
+
+          result = Object.values(productForSave.reduce((acc, item) => {
+            const id = item.selectedMoldeCode;
+            if (acc[id]) {
+              acc[id].quantity += parseInt(item.quantity);
+            } else {
+              acc[id] = { ...item };
+            }
+            return acc;
+          }, {}));
+        
+          console.log("result", result)
+
+          if(cotId) {
+            expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(result))
+          } else{
+            expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(result))
+          }
+
+          this.removeList()
+          this.insertList()
+
+          // console.log('createArrayProducto', productForSave)
+
         }
-        return acc;
-      }, {}));
-      
-      console.log("result", result)
-      console.log('createArrayProducto', productForSave)
 
-      if(cotId) {
-        expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(result))
-      } else{
-        expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(result))
-      }
-      this.removeList()
-      this.insertList()
+        productsDataAsync();
+
+      });
+
     }
+    
   }
 
   removeList() {
@@ -316,7 +346,6 @@ class QuotationCalculation extends HTMLElement {
       e.remove()
     })
     console.log('removeList')
-   
   }
 
   removeItem(scenaryRowTable) {

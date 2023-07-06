@@ -169,7 +169,8 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         }
         
         const quotationCalculation = new QuotationCalculation(resQueryUser);
-        quotationCalculation.createRow(product);
+        // quotationCalculation.createRow(product);
+        quotationCalculation.createArrayProducto(product);
       });
   
       // Card button Cancelar
