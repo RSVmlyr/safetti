@@ -93,7 +93,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
   
             <div class="card--amount__actions">
               <button class="qncancelproduct">Cancelar</button>
-              <button class="qnaceptproduct">Aceptar</button>
+              <button class="qnaceptproduct quotation-hidden">Agregar +</button>
             </div>
   
            </div>
@@ -169,7 +169,8 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         }
         
         const quotationCalculation = new QuotationCalculation(resQueryUser);
-        quotationCalculation.createRow(product);
+        // quotationCalculation.createRow(product);
+        quotationCalculation.createArrayProducto(product);
       });
   
       // Card button Cancelar
@@ -324,6 +325,8 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
       const amountJ = idInputJunior.querySelector('.card--amount__input')
       amountJ.classList.add('quotation-hidden')
 
+      const qnaceptProduct = quotationNew.querySelector('.qnaceptproduct')
+
       idQnCountry.addEventListener('change', (e) => {
         amountM.classList.remove('quotation-hidden')
         amountW.classList.remove('quotation-hidden')
@@ -351,21 +354,25 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           pro.colombiaWoman === null ? idInputwoman.classList.add('quotation-hidden') : idInputwoman.classList.remove('quotation-hidden')
           pro.colombiaJunior === null ? idInputJunior.classList.add('quotation-hidden') : idInputJunior.classList.remove('quotation-hidden')
           pro.colombiaUnisex === null ? idInputUnisex.classList.add('quotation-hidden') : idInputUnisex.classList.remove('quotation-hidden')
+          qnaceptProduct.classList.remove('quotation-hidden')
         } else if (e.target.value === 'USA - Canada') {
           pro.canadaMan === null ? idInputMan.classList.add('quotation-hidden') : idInputMan.classList.remove('quotation-hidden')
           pro.canadaWoman === null ? idInputwoman.classList.add('quotation-hidden') : idInputwoman.classList.remove('quotation-hidden')
           idInputJunior.classList.add('quotation-hidden')
-          idInputUnisex.classList.add('quotation-hidden')    
+          idInputUnisex.classList.add('quotation-hidden')
+          qnaceptProduct.classList.remove('quotation-hidden') 
         } else if (e.target.value === 'vR7') {
           pro.vR7Man === null ? idInputMan.classList.add('quotation-hidden') : idInputMan.classList.remove('quotation-hidden')
           pro.vR7Woman === null ? idInputwoman.classList.add('quotation-hidden') : idInputwoman.classList.remove('quotation-hidden')
           idInputJunior.classList.add('quotation-hidden')
           idInputUnisex.classList.add('quotation-hidden')
+          qnaceptProduct.classList.remove('quotation-hidden')
         } else {
           amountM.classList.add('quotation-hidden')
           amountW.classList.add('quotation-hidden')
           amountU.classList.add('quotation-hidden')
           amountJ.classList.add('quotation-hidden')
+          qnaceptProduct.classList.add('quotation-hidden')
         }
 
       })

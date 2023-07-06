@@ -1,0 +1,19 @@
+.scenary--titles {
+  display: flex;
+  margin: 0 0 15px;
+  .scenary--row {
+    width: 16.6%;
+    font-family: $FuturaMedium;
+    font-size: 18px;
+  }
+  .scenary-delete__all {
+    color: $white;
+    background-color: $black;
+    border-radius: 25px;
+    font-size: 18px;
+    padding: 2px 8px 5px;
+    position: relative;
+    left: 7px;
+    cursor: pointer;
+  }
+}

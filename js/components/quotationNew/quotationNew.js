@@ -292,16 +292,16 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
           behavior: 'smooth'
         });
       } else {
-        // expiringLocalStorage.saveDataWithExpiration("NameScenary", JSON.stringify(quotatioewScenaryNode.value))
+        expiringLocalStorage.saveDataWithExpiration("NameScenary", JSON.stringify(quotatioewScenaryNode.value))
       }
     }
 
-    // if (cotId && cotName) {
-    //   // console.log('Cliente Nuevo Escenario: ', quotatioewScenary.value);
-    //   quotationCalculation.SendNewScenary(resQueryUser, cotId, quotatioewScenary.value)
-    // } else {
-    //   quotationCalculation.SendNewQuotation(resQueryUser, quotationIva.checked, quotationewname.value, idQuotationComments.value );
-    // }
+    if (cotId && cotName) {
+      // console.log('Cliente Nuevo Escenario: ', quotatioewScenary.value);
+      quotationCalculation.SendNewScenary(resQueryUser, cotId, quotatioewScenary.value)
+    } else {
+      quotationCalculation.SendNewQuotation(resQueryUser, quotationIva.checked, quotationewname.value, idQuotationComments.value );
+    }
 
 
   });
