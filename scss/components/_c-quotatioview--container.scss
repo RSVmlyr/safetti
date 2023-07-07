@@ -1,0 +1,107 @@
+#quotatioview {
+  background-color: $cp14;
+  height: auto;
+  .region {
+    &__one {
+      .region__status {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        &--code {
+          color: $c2;
+          font-family: $FuturaBold;
+          font-size: 12px;
+          font-weight: 700;
+        }
+      }
+    }
+    &__two {
+      max-width: 90%;
+      margin: auto;
+      .quotationew__title--container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 33px;
+        .quotation--text {
+          margin-top: 2rem;
+        }
+      }
+    }
+  }
+  .quotatioview--container {
+    max-width: 90%;
+    margin: auto;
+    padding-bottom: 2rem;
+    hr {
+      border: solid 1px;
+      background: $c4;
+      color: $c4;
+      margin: 32px 0;
+      &:nth-child(2) {
+        margin: 16px;
+      }
+    }
+    .quotatioview__section {
+      margin-bottom: 4rem;
+      .quotatioview__title {
+        font-size: 24px;
+        font-weight: 500;
+        font-family: $FuturaMedium;
+        margin-bottom: 32px;
+      }
+      .quotatioview__table {
+        thead {
+          th {
+            font-family: $FuturaBold;
+            font-weight: 800;
+            font-size: 16px;
+            text-align: left;
+            padding-bottom: 16px;
+            &:nth-child(4),
+            &:nth-child(5),
+            &:nth-child(6) {
+              text-align: right;
+            }
+          }
+        }
+        tbody {
+          td {
+            padding-bottom: 16px;
+            &:nth-child(4),
+            &:nth-child(5),
+            &:nth-child(6) {
+              text-align: right;
+            }
+          }
+        }
+      }
+      .table__descuento {
+        thead {
+          th {
+            &:nth-child(3) {
+              text-align: right;
+            }
+          }
+        }
+        tbody {
+          td {
+            &:nth-child(3) {
+              text-align: right;
+            }
+          }
+        }
+      }
+      .table__total {
+        thead {
+          th {
+            &:nth-child(2) {
+              text-align: right;
+            }
+          }
+        }
+      }
+    }
+  }
+}

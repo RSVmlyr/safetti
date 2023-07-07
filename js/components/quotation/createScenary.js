@@ -7,6 +7,7 @@ import Login from "../../login/login.js"
 import statusQuotationCancel from "../../services/statusQuotation/statusQuotation.js"
 import quotationNewPage from "../quotationNew/quotationNew.js"
 
+
 const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     const quotationCreatescenary = quotation.querySelector('#quotation--content--list .quotation--list--row')
     const quotationCreatescenarys = quotation.querySelectorAll('#quotation--content--list .quotation--list--row')
@@ -164,9 +165,8 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
 
           // Scenary selected 
           if ( scen.selected === true ) {
-
+            console.log(scen);
             const scenaryDataBody = quotation.querySelector('.scenary--data__body')
-
             let scenaryBody =
             `<div class="scenary--data__scenary">
               <table>
@@ -180,13 +180,17 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                   <td></td>
                   <td><p class="quotation--info">$ ${totalPro}</p></td>
                   <td><p class="quotation--info">$ ${cot.currency === 'COP' ? scen.total.toLocaleString() : scen.total.toFixed(2)}</p></td>
-                  <td><span class="quotation--btn__view">Ver detalle</span></td>
+                  <td><span class="quotation--btn__view"><a href="./Cotizacion.html?id=${cot.id}&uid=${storedHash}">Ver detalle 1</a></span></td>
                 </tr>
               </table>
             </div>
             `
             scenaryDataBody.insertAdjacentHTML('afterbegin', `${scenaryBody}`)
 
+            // quotation.addEventListener('DOMContentLoaded', ()=> {
+            //   const btnViewQuotation = quotation.querySelector('quotation--btn__view')
+            //   console.log(btnViewQuotation);
+            // })
           }
           // Scenary selected
 
