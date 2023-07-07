@@ -6,7 +6,7 @@ import setScenario from '../../services/quotation/setScenario.js'
 import ExpiringLocalStorage from '../localStore/ExpiringLocalStorage.js'
 class QuotationCalculation extends HTMLElement {
   constructor(resQueryUser) {
-    console.log('constru');
+    // console.log('constru');
     super()
     this.sumar()
     this.resQueryUser = resQueryUser
@@ -63,7 +63,7 @@ class QuotationCalculation extends HTMLElement {
     }
   }
   SendNewQuotation(data, iva, name, comments ) {
-    console.log('data', data, iva, name, comments)
+    // console.log('data', data, iva, name, comments)
     const comment = comments ? comments : "string"
     let dataSetQuotation = ''
     const expiringLocalStorage = new ExpiringLocalStorage()
@@ -118,10 +118,10 @@ class QuotationCalculation extends HTMLElement {
       }
     }
    
-    console.log(dataSetQuotation)
-    const createQuotation = async  () => {
+    // console.log(dataSetQuotation)
+    const createQuotation = async () => {
       const data = await setQuotation(dataSetQuotation)
-      console.log(data)
+      // console.log(data)
     }
     createQuotation(dataSetQuotation)
   }
@@ -204,7 +204,6 @@ class QuotationCalculation extends HTMLElement {
             const numPrange = priceInRange.replace(",", ".")
             this.createArrayProducto(product, numPrange)
           }
-         
         } else {
           prices = await getProductPrices(
             product.id,

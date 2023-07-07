@@ -113,7 +113,7 @@ class PaginatorElement extends HTMLElement {
         quotationListRow(cot);
       });
     } else {
-      console.log('Invalid Quotation data:', quotation);
+      // console.log('Invalid Quotation data:', quotation);
     }
   }
 }

@@ -10,6 +10,7 @@ import GetIdQuotation from "../../services/quotation/getIdQuotation.js";
 import ExpiringLocalStorage from "../localStore/ExpiringLocalStorage.js";
 import getUser from "../../services/user/getUser.js"
 import nodeNotification from "../../helpers/nodeNotification.js";
+import setQuotation from "../../services/quotation/setQuotation.js";
 
 const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQueryClients) => {
   const expiringLocalStorage = new ExpiringLocalStorage()
@@ -269,40 +270,56 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   //   }, 10000);
   // }
 
+  
   quotationBtnSave.addEventListener('click', () => {
-    
-    if (quotationewname && quotatioNewClient) {
-      if (quotationewname.value == '' || quotatioNewClientNode == '') {
-        nodeNotification('Los campos marcados con * son obligatorios')
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
-      } else {
-        expiringLocalStorage.saveDataWithExpiration("NameQuotation", JSON.stringify(quotationewname.value))
+
+    const btnSave = () => {
+
+      if (quotationewname && quotatioNewClient) {
+        if (quotationewname.value == '' || quotatioNewClientNode == '') {
+          nodeNotification('Los campos marcados con * son obligatorios')
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        } else {
+          expiringLocalStorage.saveDataWithExpiration("NameQuotation", JSON.stringify(quotationewname.value))
+        }
       }
-    }
 
-    if (quotatioewScenary) {
-      if (quotatioewScenary.value == '') {
-        console.log(quotatioewScenaryNode);
-        nodeNotification('Los campos marcados con * son obligatorios')
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
-      } else {
-        expiringLocalStorage.saveDataWithExpiration("NameScenary", JSON.stringify(quotatioewScenaryNode.value))
+      if (quotationewname && idQuotationComments) {
+        if (quotationewname.value == '' && idQuotationComments) {
+          nodeNotification('Los campos marcados con * son obligatorios')
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        }
       }
+
+      if (quotatioewScenary) {
+        if (quotatioewScenary.value == '') {
+          console.log(quotatioewScenaryNode);
+          nodeNotification('Los campos marcados con * son obligatorios')
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        } else {
+          expiringLocalStorage.saveDataWithExpiration("NameScenary", JSON.stringify(quotatioewScenaryNode.value))
+        }
+      }
+
+      if (cotId && cotName) {
+        // console.log('Cliente Nuevo Escenario: ', quotatioewScenary.value);
+        quotationCalculation.SendNewScenary(resQueryUser, cotId, quotatioewScenary.value)
+      } else {
+        quotationCalculation.SendNewQuotation(resQueryUser, quotationIva.checked, quotationewname.value, idQuotationComments.value );
+      }
+
     }
 
-    if (cotId && cotName) {
-      // console.log('Cliente Nuevo Escenario: ', quotatioewScenary.value);
-      quotationCalculation.SendNewScenary(resQueryUser, cotId, quotatioewScenary.value)
-    } else {
-      quotationCalculation.SendNewQuotation(resQueryUser, quotationIva.checked, quotationewname.value, idQuotationComments.value );
-    }
-
+    btnSave()
 
   });
   

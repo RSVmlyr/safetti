@@ -165,7 +165,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
 
           // Scenary selected 
           if ( scen.selected === true ) {
-            console.log(scen);
+            // console.log(scen);
             const scenaryDataBody = quotation.querySelector('.scenary--data__body')
             let scenaryBody =
             `<div class="scenary--data__scenary">
@@ -180,7 +180,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                   <td></td>
                   <td><p class="quotation--info">$ ${totalPro}</p></td>
                   <td><p class="quotation--info">$ ${cot.currency === 'COP' ? scen.total.toLocaleString() : scen.total.toFixed(2)}</p></td>
-                  <td><span class="quotation--btn__view"><a href="./Cotizacion.html?id=${cot.id}&uid=${storedHash}">Ver detalle 1</a></span></td>
+                  <td><span class="quotation--btn__view"><a class="quotation--info" href="./Cotizacion.html?id=${cot.id}&uid=${storedHash}">Ver detalle 1</a></span></td>
                 </tr>
               </table>
             </div>
@@ -215,7 +215,6 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               <div class="scenary--data__scenary">
                 ${scenSelected === true ? '<div class="scenary--row__header selected">' : '<div class="scenary--row__header">'}
                   <span class="quotation--title__quo">${scen.name ? scen.name : ''}</span>
-                  <span class="quotation--btn__view">Ver detalle</span>
                 </div>
                 <div class="scenary--row__body">
                   <div class="scenary--row__table">

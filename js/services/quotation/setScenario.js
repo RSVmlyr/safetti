@@ -1,3 +1,5 @@
+import nodeNotification from "../../helpers/nodeNotification.js";
+
 const setScenario = async dataSetScenario => {
   try {
     const requestOptions = {
@@ -10,17 +12,18 @@ const setScenario = async dataSetScenario => {
     const urlQueryS = 'https://safetticustom.azurewebsites.net/api/Scenario'
     const reqQueryS = await fetch(urlQueryS, requestOptions)
     const resQueryS = await reqQueryS.json()
-    console.log(reqQueryS);
+    // console.log(reqQueryS);
 
-    // if (reqQueryS.status == 200) {
-    //   const quotationewBack = document.querySelector('#quotationew--back')
-    //   quotationewBack.click()
-    // }
-    
-    if (reqQueryS.status == 403) {
-      console.log('Error 403');
+    if(reqQueryS.status === 200) {
+      nodeNotification('Escenario Guardado...')
+      setTimeout(() => {
+        const quotationewBack = document.querySelector('#quotationew--back')
+        quotationewBack.click()
+      }, 1000);
+    } else if (reqQueryS.status === 400) {
+     nodeNotification('Valida que los campos estén correctos')
     } else if (reqQueryS.status == 500) {
-      console.log('Error 500. Ocurrió un error al procesar su solicitud.');
+      nodeNotification('Error 500, Error interno del servidor')
     }
 
     return resQueryS
@@ -29,8 +32,6 @@ const setScenario = async dataSetScenario => {
   
   catch(error) {
     console.log('No se pudo crear las cotizaciones', error);
-    const quotationContentList = document.querySelector('#quotation--content--list')
-    quotationContentList.insertAdjacentHTML('afterbegin', '<div class="quotation--loading"><span>No existen Cotizaciones...</span></div>')
   }
 }
 

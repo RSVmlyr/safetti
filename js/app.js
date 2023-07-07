@@ -26,7 +26,7 @@ class App {
       const login = new Login();
       login.setHash(uid);
       const storedHash = login.getStoredHash();
-      console.log(storedHash);
+      // console.log(storedHash);
 
       if (this.quotation) {
         const quotationContentList = this.quotation.querySelector('#quotation--content--list');
