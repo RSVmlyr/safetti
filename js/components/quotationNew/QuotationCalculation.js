@@ -33,27 +33,31 @@ class QuotationCalculation extends HTMLElement {
         return prices["p" + value]
       }
 
-      if (value > 5 && value <= 10) {
+      if (value >= 5 && value < 10) {
+        return prices["p5"]
+      }
+
+      if (value >= 10 && value < 15) {
         return prices["p10"]
       }
 
-      if (value > 10 && value <= 15) {
+      if (value >= 15 && value < 20) {
         return prices["p15"]
       }
 
-      if (value > 15 && value <= 20) {
+      if (value >= 20 && value < 50) {
         return prices["p20"]
       }
 
-      if (value > 20 && value <= 50) {
+      if (value >= 50 && value < 100) {
         return prices["p50"]
       }
 
-      if (value > 50 && value <= 100) {
+      if (value >= 100 && value < 300) {
         return prices["p100"]
       }
-
-      if (value > 100) {
+      
+      if (value >= 300) {
         return prices["p300"]
       }
     }
@@ -267,6 +271,7 @@ class QuotationCalculation extends HTMLElement {
       let unitPrice = 0
       let retrievedData = ''
       let numPrange = ''
+      let price = ''
       products.forEach(product => { 
         const productsDataAsync = async () => {
           if(cotId) {
@@ -283,9 +288,8 @@ class QuotationCalculation extends HTMLElement {
           if (this.resQueryUser.rol === 'advisors'){
             const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
             const client = JSON.parse(c)
-            const price = await getUnityPrices(product.id, client['0'].currency, client['0'].rol);      
+            price = await getUnityPrices(product.id, client['0'].currency, client['0'].rol);    
             const priceInRange = this.getPriceInRange(price, product.quantity)
-            console.log('pppp', priceInRange);  
 
             if(client['0'].currency === 'COP') {
               numPrange = priceInRange.replace(".", "")
@@ -295,6 +299,20 @@ class QuotationCalculation extends HTMLElement {
             if (c) {
               unitPrice = client['0'].currency === 'COP' ? parseInt(numPrange) : parseFloat(numPrange).toFixed(2)
             } else {
+              unitPrice = parseFloat(numPrange).toFixed(2)
+            }
+          } else {
+            price = await getProductPrices(
+              product.id,
+              this.resQueryUser.currency,
+              this.resQueryUser.rol
+            )
+            const priceInRange = this.getPriceInRange(price, product.quantity)
+            if(this.resQueryUser.currency === 'COP') {
+              numPrange = priceInRange.replace(".", "")
+              unitPrice = parseInt(numPrange)
+            } else {
+              numPrange = priceInRange.replace(",", ".")
               unitPrice = parseFloat(numPrange).toFixed(2)
             }
           }
@@ -311,6 +329,27 @@ class QuotationCalculation extends HTMLElement {
             const id = item.selectedMoldeCode;
             if (acc[id]) {
               acc[id].quantity += parseInt(item.quantity);
+              const priceInRange = this.getPriceInRange(price, acc[id].quantity)
+              const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
+              const client = JSON.parse(c)
+
+              if (c) {
+                if(client['0'].currency === 'COP') {
+                  numPrange = priceInRange.replace(".", "")
+                } else {
+                  numPrange = priceInRange.replace(",", ".")
+                }
+                unitPrice = client['0'].currency === 'COP' ? parseInt(numPrange) : parseFloat(numPrange).toFixed(2)
+              } else {
+                // Validar cuando es dolar
+                if(this.resQueryUser.currency === 'COP') {
+                  numPrange = priceInRange.replace(".", "")
+                } else {
+                  numPrange = priceInRange.replace(",", ".")
+                }
+                unitPrice = parseFloat(numPrange).toFixed(2)
+              }
+              acc[id].unitPrice = unitPrice
             } else {
               acc[id] = { ...item };
             }
@@ -327,6 +366,7 @@ class QuotationCalculation extends HTMLElement {
 
           this.removeList()
           this.insertList()
+          this.sumar()
 
           // console.log('createArrayProducto', productForSave)
 
