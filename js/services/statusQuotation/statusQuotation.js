@@ -1,6 +1,6 @@
-const statusQuotationCancel = async (Qid) => {
+const statusQuotationS = async (Qid, status) => {
   try {
-    const urlQuerySQ = `https://safetticustom.azurewebsites.net/api/Quotation/${Qid}/3`;
+    const urlQuerySQ = `https://safetticustom.azurewebsites.net/api/Quotation/${Qid}/${status}`;
     const requestOptions = {
       method: 'PUT',
       headers: {
@@ -17,4 +17,4 @@ const statusQuotationCancel = async (Qid) => {
   }
 };
 
-export default statusQuotationCancel;
+export default statusQuotationS;

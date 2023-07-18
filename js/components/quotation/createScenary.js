@@ -4,7 +4,7 @@ import statusQuotation from "../../helpers/statusQuotation.js"
 import deleteScenary from "./deleteSecenary.js"
 import sendEmailHelper from "../../helpers/sendEmailHelper.js"
 import Login from "../../login/login.js"
-import statusQuotationCancel from "../../services/statusQuotation/statusQuotation.js"
+import statusQuotationS from "../../services/statusQuotation/statusQuotation.js"
 import quotationNewPage from "../quotationNew/quotationNew.js"
 
 
@@ -49,7 +49,6 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
 
       const login = new Login();
       const storedHash = login.getStoredHash();
-
       let scenaryTop =
       `<div class="scenary--created">
         <div class="scenary--created__header">
@@ -92,6 +91,10 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               </div>
               <div class="scenary--data__actions">
                 <a href="./index-q.html?cotId=${cot.id}&cotName=${encodeURIComponent(cot.name)}&uid=${storedHash}" class="quotation--btn__new quotation--btn__Ne">Nuevo escenario +</a>
+                <div id="quotation--btn__approved" class="scenary--data__actionsDelete">
+                  <span class="quotation--info">Aprobar cotización</span>
+                  <img src='../../img/icon/check.svg' loading="lazy" alt="Eliminar" title="Eliminar">
+                </div>
                 <div id="quotation--btn__delete" class="scenary--data__actionsDelete">
                   <span class="quotation--info">Cancelar cotización</span>
                   <img src='../../img/icon/icon-delete.svg' loading="lazy" alt="Eliminar" title="Eliminar">
@@ -121,6 +124,14 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
 
       const scenaryCreated = quotation.querySelector('.scenary--created')
       const quotationBtnDelete = quotation.querySelector('#quotation--btn__delete')
+      const quotationBtnApproved = quotation.querySelector('#quotation--btn__approved')
+      const quotationContainer = quotation.querySelector('.scenary--data__actions')
+
+
+      
+      if (cot.status.id === 2 ) {
+        quotationContainer.style.display = 'none'
+      }
 
       if (cotStatus.statusId === 3 && scenaryCreated) {
         const quotationBtnNe = quotation.querySelector('.quotation--btn__Ne')
@@ -136,7 +147,14 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
 
       // Delete Scenary Top
       quotationBtnDelete.addEventListener('click', () => {
-        statusQuotationCancel(cot.id)
+        statusQuotationS(cot.id, 3)
+        setTimeout(() => {
+          location.reload();
+        }, 1000);
+      })
+
+      quotationBtnApproved.addEventListener('click', () => {
+        statusQuotationS(cot.id, 2)
         setTimeout(() => {
           location.reload();
         }, 1000);
@@ -165,7 +183,6 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
 
           // Scenary selected 
           if ( scen.selected === true ) {
-            // console.log(scen);
             const scenaryDataBody = quotation.querySelector('.scenary--data__body')
             let scenaryBody =
             `<div class="scenary--data__scenary">
@@ -180,7 +197,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                   <td></td>
                   <td><p class="quotation--info">$ ${totalPro}</p></td>
                   <td><p class="quotation--info">$ ${cot.currency === 'COP' ? scen.total.toLocaleString() : scen.total.toFixed(2)}</p></td>
-                  <td><span class="quotation--btn__view"><a class="quotation--info" href="./Cotizacion.html?id=${cot.id}&uid=${storedHash}">Ver detalle 1</a></span></td>
+                  <td><span class="quotation--btn__view"><a  class="quotation--info quotation--detail" href="./Cotizacion.html?id=${cot.id}&uid=${storedHash}">Ver detalle</a></span></td>
                 </tr>
               </table>
             </div>
