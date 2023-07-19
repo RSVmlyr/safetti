@@ -24,9 +24,9 @@ const quotationView = (node, infoQuotation) => {
                 <tr>
                 <td>${producto.productName}</td>
                 <td>${producto.selectedMoldeCode}</td>
-                <td>${producto.unitPrice}</td>
+                <td>$ ${producto.unitPrice.toLocaleString()}</td>
                 <td>${producto.quantity}</td>
-                <td>${producto.linePrice}</td>
+                <td>$ ${producto.linePrice.toLocaleString()}</td>
                 </tr>
             </tbody>
         `;
@@ -49,9 +49,9 @@ const quotationView = (node, infoQuotation) => {
             </thead>
             <tbody>
                 <tr>
-                    <td>$${element.subtotalWithDiscount}</td>
-                    <td>$0</td>
-                    <td>$${element.total}</td>
+                    <td>$ ${element.discountPercent.toLocaleString()}</td>
+                    <td>$ 0</td>
+                    <td>$ ${element.total.toLocaleString()}</td>
                 </tr>
             </tbody>
             </table>
@@ -60,7 +60,7 @@ const quotationView = (node, infoQuotation) => {
             <thead>
                 <tr>
                     <th>Total con IVA</th>
-                    <th>${element.subtotalWithTaxIVA}</th>
+                    <th>$ ${element.subtotalWithTaxIVA.toLocaleString()}</th>
                 </tr>
             </thead>
             </table>
