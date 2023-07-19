@@ -167,6 +167,14 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             quantity: juniorInput.value,
           });
         }
+
+        setTimeout(() => {
+          manInput.value = 0
+          womanInput.value = 0
+          unisexInput.value = 0
+          juniorInput.value = 0
+          sliderProductsRow.classList.remove('active')
+        }, 1000);        
         
         const quotationCalculation = new QuotationCalculation(resQueryUser);
         // quotationCalculation.createRow(product);
