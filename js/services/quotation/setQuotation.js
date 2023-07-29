@@ -16,16 +16,17 @@ const setQuotation = async dataSetQuotation => {
     // console.log(reqQueryS);
     
     if(reqQueryS.status === 200) {
-      nodeNotification('Cotización Guardada...')
+      nodeNotification('Guardando cotización...')
       const expiringLocalStorage = new ExpiringLocalStorage()
       expiringLocalStorage.deleteDataWithExpiration('ClientFullName')
+      expiringLocalStorage.deleteDataWithExpiration('Comments')
       expiringLocalStorage.deleteDataWithExpiration('products')
       setTimeout(() => {
         const quotationewBack = document.querySelector('#quotationew--back')
         quotationewBack.click()
       }, 1000);
     } else if (reqQueryS.status === 400) {
-     nodeNotification('Valida que los campos estén correctos')
+    //  nodeNotification('Valida que los campos estén correctos')
     } else if (reqQueryS.status == 500) {
       nodeNotification('Error 500, Error interno del servidor')
     }

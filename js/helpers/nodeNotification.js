@@ -1,5 +1,6 @@
 const nodeNotification = (text) => {
-  const notificationDiv = document.querySelector('.notification')
+  let notificationDiv
+  notificationDiv = document.querySelector('.notification')
   if (notificationDiv) {
     notificationDiv.remove()
   }
@@ -8,12 +9,10 @@ const nodeNotification = (text) => {
   notification.textContent = text;
   const body = document.querySelector('body')
   body.insertAdjacentElement('afterend', notification);
-  
+  notificationDiv = document.querySelector('.notification')
   setTimeout(() => {
-    if (notificationDiv) {
-      notificationDiv.remove()
-    }
-  }, 10000);
+    notificationDiv.remove()
+  }, 5000);
 }
 
 export default nodeNotification

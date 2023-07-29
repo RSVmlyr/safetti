@@ -16,7 +16,7 @@ const setScenario = async (dataSetScenario, cotId) => {
     // console.log(reqQueryS);
 
     if(reqQueryS.status === 200) {
-      nodeNotification('Escenario Guardado...')
+      nodeNotification('Guardando escenario...')
       const expiringLocalStorage = new ExpiringLocalStorage()
       expiringLocalStorage.deleteDataWithExpiration('NameScenary')
       expiringLocalStorage.deleteDataWithExpiration('scenario-' + cotId)
