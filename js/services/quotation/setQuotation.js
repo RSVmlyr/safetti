@@ -1,4 +1,5 @@
 import nodeNotification from "../../helpers/nodeNotification.js";
+import ExpiringLocalStorage from '../../components/localStore/ExpiringLocalStorage.js';
 
 const setQuotation = async dataSetQuotation => {
   try {
@@ -16,6 +17,9 @@ const setQuotation = async dataSetQuotation => {
     
     if(reqQueryS.status === 200) {
       nodeNotification('Cotización Guardada...')
+      const expiringLocalStorage = new ExpiringLocalStorage()
+      expiringLocalStorage.deleteDataWithExpiration('ClientFullName')
+      expiringLocalStorage.deleteDataWithExpiration('products')
       setTimeout(() => {
         const quotationewBack = document.querySelector('#quotationew--back')
         quotationewBack.click()
