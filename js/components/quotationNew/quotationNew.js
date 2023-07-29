@@ -54,7 +54,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
     //llamar servicio
     const getUserCurren = async (id) => {
       const user = await getUser(id) 
-      // console.log(user);
+      console.log(user);
       const dataClientStorage = [
         {
           id: user.id,
@@ -102,6 +102,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   }
 
   if (resQueryUser.rol === 'advisors' && cotId === null) {
+
     let quotatioNewSearchClient =
     `<div class='quotationew__searchclient'>
       <label for='quotationewclient'>Buscar Cliente: <span>*</span></label>
@@ -159,7 +160,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
             validateNewCleint()
             quotatioNewClient.value = client.fullName ? client.fullName : '';
             idQuotatioNewSearchClient.innerHTML = '';
-            selectedValueSearchLi(client.fullName, client.currency, client.rol, client.id)
+            selectedValueSearchLi(client.fullName, client.currency, client.rol, client.id, client.specialDiscount)
           });
           idQuotatioNewSearchClient.appendChild(li);
         });
@@ -169,17 +170,20 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       }
     });
 
-    const selectedValueSearchLi = (client, currency, rol, id) => {
+    const selectedValueSearchLi = (client, currency, rol, id, specialDiscount) => {
       const qnClient = quotationNew.querySelector('#qnadvisor')
       const qnCurrency = quotationNew.querySelector('#qncurrency')
       qnClient.textContent = 'Cliente: ' + client
       qnCurrency.textContent = 'Moneda: ' + currency
+      const discount = specialDiscount === null ? 0 : parseInt(specialDiscount, 10)
+
       const dataClientStorage = [
         {
           id,
           client,
           currency,
-          rol
+          rol,
+          discount
         }
       ]
       expiringLocalStorage.saveDataWithExpiration("ClientFullName", JSON.stringify(dataClientStorage))
@@ -232,8 +236,8 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       }
     });
     const commentsText = expiringLocalStorage.getDataWithExpiration('NameScenary');
-    const cText = JSON.parse(commentsText);
-    if (cText !== '') {
+    if(commentsText) {
+      const cText = JSON.parse(commentsText);
       quotatioewScenary.value = cText;
     }
   }
@@ -275,44 +279,35 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
 
     const btnSave = () => {
 
-      if (quotationewname && quotatioNewClient) {
-        if (quotationewname.value == '' || quotatioNewClientNode == '') {
-          nodeNotification('Los campos marcados con * son obligatorios')
-          window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-          });
-        } else {
-          expiringLocalStorage.saveDataWithExpiration("NameQuotation", JSON.stringify(quotationewname.value))
+      console.log('click', resQueryUser.rol)
+
+      if (resQueryUser.rol !== 'advisors') {
+        if (quotationewname) {
+          if (quotationewname.value == '') {
+            nodeNotification('Los campos marcados con * son obligatorios')
+          }
+        }
+      } else {
+        if (quotationewname && quotatioNewClient) {
+          if (quotationewname.value == '' || quotatioNewClientNode == '') {
+            nodeNotification('Los campos marcados con * son obligatorios')
+          } else {
+            expiringLocalStorage.saveDataWithExpiration("NameQuotation", JSON.stringify(quotationewname.value))
+          }
         }
       }
-
-      if (quotationewname && idQuotationComments) {
-        if (quotationewname.value == '' && idQuotationComments) {
-          nodeNotification('Los campos marcados con * son obligatorios')
-          window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-          });
-        }
-      }
-
-      if (quotatioewScenary) {
-        if (quotatioewScenary.value == '') {
-          console.log(quotatioewScenaryNode);
-          nodeNotification('Los campos marcados con * son obligatorios')
-          window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-          });
-        } else {
-          expiringLocalStorage.saveDataWithExpiration("NameScenary", JSON.stringify(quotatioewScenaryNode.value))
-        }
-      }
-
+      
       if (cotId && cotName) {
         // console.log('Cliente Nuevo Escenario: ', quotatioewScenary.value);
         quotationCalculation.SendNewScenary(resQueryUser, cotId, quotatioewScenary.value)
+        if (quotatioewScenary) {
+          if (quotatioewScenary.value == '') {
+            console.log(quotatioewScenaryNode);
+            nodeNotification('Los campos marcados con * son obligatorios')
+          } else {
+            expiringLocalStorage.saveDataWithExpiration("NameScenary", JSON.stringify(quotatioewScenaryNode.value))
+          }
+        }
       } else {
         quotationCalculation.SendNewQuotation(resQueryUser, quotationIva.checked, quotationewname.value, idQuotationComments.value );
       }

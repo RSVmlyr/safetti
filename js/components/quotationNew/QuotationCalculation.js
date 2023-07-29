@@ -71,7 +71,6 @@ class QuotationCalculation extends HTMLElement {
     if(c) {
       const client = JSON.parse(c)
       if(data) {
-        console.log(data)
         const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
         const products = retrievedData ? JSON.parse(retrievedData) : []
         dataSetQuotation = {
@@ -86,7 +85,7 @@ class QuotationCalculation extends HTMLElement {
             {
               name: 'Primer Escenario',
               selected: true,
-              discountPercent: data.specialDiscount !== null || !isNaN(data.specialDiscount) ? data.specialDiscount : 0,
+              discountPercent: client['0'].discount,
               applyTaxIVA: iva,
               products: products,
             },
@@ -97,6 +96,8 @@ class QuotationCalculation extends HTMLElement {
       if(data) {
         const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
         const products = retrievedData ? JSON.parse(retrievedData) : []
+        let specialDiscount = data.specialDiscount; 
+        specialDiscount = specialDiscount !== null && !isNaN(specialDiscount) ? specialDiscount : 0;
         dataSetQuotation = {
           currency: data.currency,
           name: name,
@@ -109,7 +110,7 @@ class QuotationCalculation extends HTMLElement {
             {
               name: 'Primer Escenario',
               selected: true,
-              discountPercent: 0,
+              discountPercent: specialDiscount,
               applyTaxIVA: iva,
               products: products,
             }
@@ -117,11 +118,8 @@ class QuotationCalculation extends HTMLElement {
         }
       }
     }
-   
-    // console.log(dataSetQuotation)
     const createQuotation = async () => {
       const data = await setQuotation(dataSetQuotation)
-      // console.log(data)
     }
     createQuotation(dataSetQuotation)
   }
@@ -130,19 +128,23 @@ class QuotationCalculation extends HTMLElement {
     const expiringLocalStorage = new ExpiringLocalStorage()
     const retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
     const scenary = retrievedData ? JSON.parse(retrievedData) : []
+    console.log(data);
+    let specialDiscount = data.specialDiscount; 
+    specialDiscount = specialDiscount !== null && !isNaN(specialDiscount) ? specialDiscount : 0;
     if(data) {
       dataSetScenario = {
         "quotationId": cotId,
         "name": nameScenary,
         "selected": false,
-        "discountPercent": 0,
+        "discountPercent": parseInt(specialDiscount),
         "applyTaxIVA": true,
         "products": scenary,
       }
       console.log('obj: ', dataSetScenario)
       const createScenario = async  () => {
-        const data = await setScenario(dataSetScenario)
-        console.log(data)
+        const data = await setScenario(dataSetScenario, cotId)
+       /* if(data.ok){
+        } */
       }
       createScenario(dataSetScenario)
     }
@@ -421,11 +423,11 @@ class QuotationCalculation extends HTMLElement {
     });
   }
   async sumar() {
-    const subtotalElements = document.querySelectorAll('.subtotal')
+    //const subtotalElements = document.querySelectorAll('.subtotal')
     const quotationSave = document.querySelector('.quotation--btn__add')
     const expiringLocalStorage = new ExpiringLocalStorage()
     const url = new URL(window.location.href);
-    const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
+    const clientename = expiringLocalStorage.getDataWithExpiration('ClientFullName')
     const searchParams = new URLSearchParams(url.search);
     const cotId = searchParams.get('cotId')
 
@@ -444,9 +446,9 @@ class QuotationCalculation extends HTMLElement {
     let count = 0
     let valor = 0 
     productForSave.forEach(e => {
-      if (c) {
+      if (clientename) {
         valor = parseInt(e.textContent)
-        const client = JSON.parse(c)
+        const client = JSON.parse(clientename)
         count += client['0'].currency === 'COP' ?parseInt(e.unitPrice * e.quantity) :parseFloat(e.unitPrice * e.quantity)
       } else {
         valor = parseFloat(e.unitPrice * e.quantity)
@@ -463,28 +465,39 @@ class QuotationCalculation extends HTMLElement {
       const iva = count * 0.19
       const quo = document.querySelector('.calculation__dis')
       let dis = ''
-      if (c) {
+      if (clientename) {
         dis = count * (parseInt(quo.textContent) / 100)
       } else {
         dis = count * (parseFloat(quo.textContent).toFixed(2) / 100)
       }
-      if (c) {
-        const client = JSON.parse(c)
+      if (clientename) {
+        const client = JSON.parse(clientename)
         quotationSave.textContent = client['0'].currency === 'COP' ? (count + iva) - dis : ((count + iva) - dis).toFixed(2)
       } else {
-        quotationSave.textContent = ((count + iva) - dis).toFixed(2)
+        quotationSave.textContent = ((count + iva) - dis).toFixed(2).toLocaleString()
       }
 
     } else {
       const quo = document.querySelector('.calculation__dis')
       const dis = (count * (parseFloat(quo.textContent).toFixed(2) / 100)).toFixed(2)
-      if (c) {
-        const client = JSON.parse(c)
+      
+      if (clientename) {
+        const client = JSON.parse(clientename)
         const a = client['0'].currency === 'COP' ? (count - dis) : (count - dis).toFixed(2)
         quotationSave.textContent = a.toLocaleString()
       } else {
-        const a = (count - dis).toFixed(2)
-        quotationSave.textContent = a.toLocaleString()
+        const qncurrencyElement = document.getElementById('qncurrency');
+        if (qncurrencyElement) {
+          const textContent = qncurrencyElement.textContent.trim();
+          const currency = textContent.replace(/Moneda: /g, "");
+          let a  = 0
+          if (currency == 'COP') {
+            a = (count - dis)
+          } else {
+            a = (count - dis).toFixed(2)
+          }
+          quotationSave.textContent = a.toLocaleString()          
+        }
       }
     }
   }
