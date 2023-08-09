@@ -27,10 +27,12 @@
         @media screen and (min-width: 992px) {
           padding: 25px;
           width: 100%;
-          max-width: 50%;
         }
       }
       &--left {
+        @media screen and (min-width: 992px) {
+          max-width: 35%;
+        }
         .region {
           &__one {
             display: flex;
@@ -86,6 +88,11 @@
                   }
                 }
               }
+              &--list--two {
+                .quotation--title__quo {
+                  margin: .2rem 0 1rem;
+                }
+              }
               &--list--three {
                 display: flex;
                 justify-content: space-between;
@@ -95,6 +102,9 @@
         }
       }
       &--right {
+        @media screen and (min-width: 992px) {
+          max-width: 65%;
+        }
         .scenary {
           &--container__top {
             margin: 0 0 50px;
