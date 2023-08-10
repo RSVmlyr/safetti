@@ -7,9 +7,8 @@ import getUser from "../../services/user/getUser.js";
 import ExpiringLocalStorage from '../localStore/ExpiringLocalStorage.js'
 class QuotationCalculation extends HTMLElement {
   constructor(resQueryUser) {
-    // console.log('constru');
     super()
-    this.sumar()
+    //this.sumar()
     this.resQueryUser = resQueryUser
     this.innerHTML = `
       <div class="quotation-calculation">
@@ -18,15 +17,6 @@ class QuotationCalculation extends HTMLElement {
       </div>
     `
   }
-
- /*  get resQueryUser() {
-    return this.resQueryUser
-  }
-
-  set resQueryUser(value) {
-    this.resQueryUser = value
-  } */
-
   getPriceInRange(prices, value) {
     if (prices != undefined) {
       if (value <= 5) {
@@ -62,6 +52,7 @@ class QuotationCalculation extends HTMLElement {
       }
     }
   }
+
   SendNewQuotation(data, iva, name, comments ) {
     const comment = comments ? comments : "string"
     const quo = document.querySelector('.calculation__dis')
@@ -132,7 +123,6 @@ class QuotationCalculation extends HTMLElement {
     const expiringLocalStorage = new ExpiringLocalStorage()
     const retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
     const scenary = retrievedData ? JSON.parse(retrievedData) : []
-    console.log(data);
     let specialDiscount = data.specialDiscount; 
     specialDiscount = specialDiscount !== null && !isNaN(specialDiscount) ? specialDiscount : 0;
     if(data) {
@@ -144,15 +134,13 @@ class QuotationCalculation extends HTMLElement {
         "applyTaxIVA": true,
         "products": scenary,
       }
-      console.log('obj: ', dataSetScenario)
       const createScenario = async  () => {
         const data = await setScenario(dataSetScenario, cotId)
-       /* if(data.ok){
-        } */
       }
       createScenario(dataSetScenario)
     }
   }
+
   insertList () {
     const url = new URL(window.location.href);
     const searchParams = new URLSearchParams(url.search);
@@ -187,14 +175,13 @@ class QuotationCalculation extends HTMLElement {
     const scenaryRowTable = document.querySelectorAll('.scenary--row__table .cancel')
     this.removeItem(scenaryRowTable)
   }
+
   createRow(products) {
     const expiringLocalStorage = new ExpiringLocalStorage()
     let prices = ''
     products.forEach(product => {
       const getPrices = async () => {
         if (this.resQueryUser.rol === 'advisors'){
-          console.log('if');
-
           const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
           const client = JSON.parse(c)
           prices = await getProductPrices(
@@ -211,7 +198,6 @@ class QuotationCalculation extends HTMLElement {
             this.createArrayProducto(product, numPrange)
           }
         } else {
-          console.log('else');
           prices = await getProductPrices(
             product.id,
             this.resQueryUser.currency,
@@ -362,8 +348,6 @@ class QuotationCalculation extends HTMLElement {
             }
             return acc;
           }, {}));
-        
-          console.log("result", result)
 
           if(cotId) {
             expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(result))
@@ -385,13 +369,11 @@ class QuotationCalculation extends HTMLElement {
     scenaryTableRow.forEach((e, i) => {
       e.remove()
     })
-    console.log('removeList')
   }
 
   removeItem(scenaryRowTable) {
     scenaryRowTable.forEach(rowT => {
       rowT.addEventListener('click', () => {
-        console.log('click', rowT );
         const getDataProduct = rowT.getAttribute('data-product')
         const expiringLocalStorage = new ExpiringLocalStorage()
         const url = new URL(window.location.href);
@@ -418,7 +400,7 @@ class QuotationCalculation extends HTMLElement {
     });
   }
   
-  async sumar(){
+  sumar(){
     const quotationSave = document.querySelector('.quotation--btn__add')
     const quo = document.querySelector('.calculation__dis')
     const expiringLocalStorage = new ExpiringLocalStorage()
@@ -430,17 +412,17 @@ class QuotationCalculation extends HTMLElement {
       const numeroclean = client['0'].currency === 'COP' ? quotationSave.textContent.replace(",", "") :  parseFloat(quotationSave.textContent);
       const t = this.btnivaChecked(numeroclean, client['0'].currency, quo, btniva)
       quotationSave.textContent = t.toLocaleString()
+
       quo.addEventListener('input', (event) => {
+        console.log(event.target.value);
         const maxValue = 10;
         if (event.target.value > maxValue) {
           event.target.value = maxValue;
         }
         const porcentaje = event.target.value;
-        console.log(porcentaje);
         const total = this.calcularDescuentoYTotal(porcentaje, client['0'].currency);
+        console.log('cicle', total);
         quotationSave.textContent = total.toLocaleString();
-        btniva.click();
-        btniva.click();
       });
     } else {
       const productForSave = this.retrievedData()
@@ -449,7 +431,6 @@ class QuotationCalculation extends HTMLElement {
       const textContent = qncurrencyElement.textContent.trim();
       const currency = textContent.replace(/Moneda: /g, "");
       const total = this.btnivaChecked(numeroclean, currency, quo, btniva)
-      console.log(total);
       quotationSave.textContent = total.toLocaleString()
     }
   } 
@@ -458,14 +439,7 @@ class QuotationCalculation extends HTMLElement {
     let total = 0
     if (btniva.checked) {  
       const iva = numeroclean * 0.19 
-      console.log('iva', iva);
       total = currency === 'COP' ? (parseInt(numeroclean) + iva) : (parseFloat(numeroclean) + iva).toFixed(2)
-
-     /*  if (client) {
-        total = currency === 'COP' ? (parseInt(numeroclean) + iva) : (parseFloat(numeroclean) + iva).toFixed(2)
-      } else {
-        total = currency === 'COP' ? (numeroclean + iva).toFixed(0) : (numeroclean + iva).toFixed(2)
-      } */
     } else {
       const productForSave = this.retrievedData()
       const count = this.count(productForSave)
@@ -475,25 +449,6 @@ class QuotationCalculation extends HTMLElement {
         porcentaje = quo.value
       }
       total = this.calcularDescuentoYTotal(porcentaje, currency);
-      console.log('else', a, 'total',total);
-     /*  if (client) {
-        const a = currency === 'COP' ? (parseInt(count)) : (parseFloat(count)).toFixed(2)
-        total = this.calcularDescuentoYTotal(quo.value);
-        console.log('a', a, 'total',total);
-      } else {
-        const qncurrencyElement = document.getElementById('qncurrency');fmodneda
-        if (qncurrencyElement) {
-          const textContent = qncurrencyElement.textContent.trim();
-          const currency = textContent.replace(/Moneda: /g, "");
-          if (currency == 'COP') {
-            total = count.toFixed(0)
-            total = currency === 'COP' ? count.toFixed(0) : count.toFixed(2)
-
-          } else {
-            total = count.toFixed(2)
-          }
-        }
-      } */
     }
     return total
   }
@@ -541,71 +496,16 @@ class QuotationCalculation extends HTMLElement {
         count += parseFloat(valor)
       }
     })
-<<<<<<< HEAD
     return count 
-=======
-
-    if (count > 0) {
-      nodeNotification('Agregado a la lista')
-    }
-
-    const btniva = document.querySelector('.quotation--iva')
-    if (btniva.checked) {
-      const iva = count * 0.19
-      const quo = document.querySelector('.calculation__dis')
-      let dis = ''
-      if (clientename) {
-        dis = count * (parseInt(quo.textContent) / 100)
-      } else {
-        dis = count * (parseFloat(quo.textContent).toFixed(2) / 100)
-      }
-      if (clientename) {
-        const client = JSON.parse(clientename)
-        quotationSave.textContent = client['0'].currency === 'COP' ? +(count + iva) - dis : ((count + iva) - dis).toFixed(2)
-      } else {
-        quotationSave.textContent = ((count + iva) - dis).toFixed(2).toLocaleString()
-      }
-
-    } else {
-      const quo = document.querySelector('.calculation__dis')
-      const dis = (count * (parseFloat(quo.textContent).toFixed(2) / 100)).toFixed(2)
-      
-      if (clientename) {
-        const client = JSON.parse(clientename)
-        const a = client['0'].currency === 'COP' ? (count - dis) : (count - dis).toFixed(2)
-        quotationSave.textContent = "$ " + a.toLocaleString()
-        console.log(quotationSave)
-
-        
-      } else {
-        const qncurrencyElement = document.getElementById('qncurrency');
-        if (qncurrencyElement) {
-          const textContent = qncurrencyElement.textContent.trim();
-          const currency = textContent.replace(/Moneda: /g, "");
-          let a  = 0
-          if (currency == 'COP') {
-            a = (count - dis)
-          } else {
-            a = (count - dis).toFixed(2)
-          }
-          
-          quotationSave.textContent = "$ " + (a.toLocaleString())          
-        }
-      }
-    }
->>>>>>> 9db4e4fdeb542485707df5cb7ec96601d8767e14
   }
 
   connectedCallback() {
     const btniva = document.querySelector('.quotation--iva')
     const fieldValor = document.querySelector('.quotation--btn__add')
     const scenaryDeleteAll = document.querySelector('.scenary-delete__all')
-<<<<<<< HEAD
     btniva.checked = false
     fieldValor.textContent = 0
-=======
-    fieldValor.textContent = "$ 0"
->>>>>>> 9db4e4fdeb542485707df5cb7ec96601d8767e14
+    this.sumar()
     btniva.addEventListener('click', (e) => {
       this.sumar()
     })
