@@ -15,17 +15,7 @@ const nodeNotification = (text) => {
   notificationText.textContent = text;
   notificationContent.appendChild(notificationText);
 
-  const buttonClose = document.querySelector('button');
-  buttonClose.classList.add('notification--content__button');
-  buttonClose.textContent = 'OK'
-
-  notificationContent.appendChild(buttonClose)
-
-
-
   notification.appendChild(notificationContent);
-
-
 
   const body = document.querySelector('body');
   body.appendChild(notification)
