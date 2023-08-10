@@ -412,7 +412,6 @@ class QuotationCalculation extends HTMLElement {
       const numeroclean = client['0'].currency === 'COP' ? quotationSave.textContent.replace(",", "") :  parseFloat(quotationSave.textContent);
       const t = this.btnivaChecked(numeroclean, client['0'].currency, quo, btniva)
       quotationSave.textContent = t.toLocaleString()
-
       quo.addEventListener('input', (event) => {
         console.log(event.target.value);
         const maxValue = 10;
@@ -420,8 +419,8 @@ class QuotationCalculation extends HTMLElement {
           event.target.value = maxValue;
         }
         const porcentaje = event.target.value;
-        const total = this.calcularDescuentoYTotal(porcentaje, client['0'].currency);
-        console.log('cicle', total);
+        const numeroclean = this.calcularDescuentoYTotal(porcentaje, client['0'].currency);
+        const total = this.btnivaChecked(numeroclean,  client['0'].currency, quo, btniva)
         quotationSave.textContent = total.toLocaleString();
       });
     } else {
@@ -438,7 +437,8 @@ class QuotationCalculation extends HTMLElement {
   btnivaChecked (numeroclean, currency, quo, btniva){
     let total = 0
     if (btniva.checked) {  
-      const iva = numeroclean * 0.19 
+      const iva = numeroclean * 0.19
+      console.log('iva', iva);
       total = currency === 'COP' ? (parseInt(numeroclean) + iva) : (parseFloat(numeroclean) + iva).toFixed(2)
     } else {
       const productForSave = this.retrievedData()
@@ -457,7 +457,7 @@ class QuotationCalculation extends HTMLElement {
     const productForSave = this.retrievedData()
     const count = this.count(productForSave)
     const disc = (count * porcentaje / 100);
-    const total = currency === 'COP' ? parseInt(count - disc).toFixed(0) : parseFloat(count - disc).toFixed(2);
+    const total = currency === 'COP' ? parseInt(count - disc) : parseFloat(count - disc).toFixed(2);
     return total
   }
 
@@ -466,7 +466,6 @@ class QuotationCalculation extends HTMLElement {
     const searchParams = new URLSearchParams(url.search);
     const cotId = searchParams.get('cotId')
     const expiringLocalStorage = new ExpiringLocalStorage()
-
     let retrievedData = ''
     if(cotId) {
       retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
@@ -485,7 +484,7 @@ class QuotationCalculation extends HTMLElement {
     const expiringLocalStorage = new ExpiringLocalStorage()
     const clientename = expiringLocalStorage.getDataWithExpiration('ClientFullName')
     let count = 0
-    let valor = 0 
+    let valor = 0
     productForSave.forEach(e => {
       if (clientename) {
         valor = parseInt(e.textContent)

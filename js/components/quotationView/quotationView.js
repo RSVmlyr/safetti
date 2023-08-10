@@ -77,7 +77,7 @@ const quotationView = async (node, infoQuotation) => {
                     <td></td>
                     <td>
                         <div class="quotatioview__withdiscount">
-                        <span>$</span>
+                        <span>$ </span>
                             ${resQueryUser.currency === 'COP' ? 
                                 `${element.subtotalWithDiscount.toLocaleString()}` : 
                                 `${element.subtotalWithDiscount.toFixed(2).toLocaleString()}`}
@@ -101,7 +101,7 @@ const quotationView = async (node, infoQuotation) => {
                     </th>
                     <th>
                         <div class="quotatioview__valueTotal">
-                        <span>$</span>
+                        <span>$ </span>
                             ${resQueryUser.currency === 'COP' ? 
                                 `${element.subtotalWithTaxIVA.toLocaleString()}` : 
                                 `${element.subtotalWithTaxIVA.toFixed(2).toLocaleString()}`}
@@ -146,6 +146,7 @@ const quotationView = async (node, infoQuotation) => {
                     quotatioviewDiscount.style.display = 'none';
                     quotatioviewDiscount.insertAdjacentHTML('afterend', inputEdit)
                     const rangeInput = section.querySelector('.rangeInput')
+
                     rangeInput.value = infoDiscuount
                     const quotatioviewWithdiscount = section.querySelector('.quotatioview__withdiscount')
                     const quotatioviewValueTotal = section.querySelector('.quotatioview__valueTotal')
@@ -155,19 +156,19 @@ const quotationView = async (node, infoQuotation) => {
                         if (quotatioviewIva.checked) {
                             console.log('ckech');
                             if(rangeInput.value == infoQuotation[i].discountPercent) {
-                                quotatioviewValueTotal.innerHTML = resQueryUser.currency === 'COP' ? infoQuotation[i].subtotalWithTaxIVA.toLocaleString() : infoQuotation[i].subtotalWithTaxIVA.toFixed(2).toLocaleString()
+                                quotatioviewValueTotal.innerHTML = resQueryUser.currency === 'COP' ? '$ ' + infoQuotation[i].subtotalWithTaxIVA.toLocaleString() : '$ ' + infoQuotation[i].subtotalWithTaxIVA.toFixed(2).toLocaleString()
                             } else {
                                 console.log(discountWithTotal);
                                 const calculateIva = discountWithTotal * infoQuotation[i].taxIVAApplied / 100
                                 console.log(calculateIva);
                                 const calculateIvaTotal = discountWithTotal + calculateIva
                                 console.log(calculateIvaTotal);
-                                quotatioviewValueTotal.innerHTML = resQueryUser.currency === 'COP' ? calculateIvaTotal.toLocaleString() : calculateIvaTotal.toFixed(2).toLocaleString()
+                                quotatioviewValueTotal.innerHTML = resQueryUser.currency === 'COP' ? '$ ' + calculateIvaTotal.toLocaleString() : '$ ' + calculateIvaTotal.toFixed(2).toLocaleString()
                             }
                         } else {
                             console.log('no ckech', discountWithTotal);
                             if(rangeInput.value == infoQuotation[i].discountPercent) {
-                                quotatioviewValueTotal.innerHTML = resQueryUser.currency === 'COP' ? infoQuotation[i].subtotalWithDiscount.toLocaleString() : infoQuotation[i].subtotalWithDiscount.toFixed(2).toLocaleString()
+                                quotatioviewValueTotal.innerHTML = resQueryUser.currency === 'COP' ? '$ ' + infoQuotation[i].subtotalWithDiscount.toLocaleString() : '$ ' + infoQuotation[i].subtotalWithDiscount.toFixed(2).toLocaleString()
                             } else {
                                 quotatioviewValueTotal.innerHTML = discountWithTotal
                             }
