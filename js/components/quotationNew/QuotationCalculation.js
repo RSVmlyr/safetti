@@ -175,10 +175,10 @@ class QuotationCalculation extends HTMLElement {
         row.innerHTML = `
           <div class="scenary--row">${product.productName}</div>
           <div class="scenary--row">${product.selectedMoldeCode}</div>
-          <div class="scenary--row">${product.unitPrice.toLocaleString()}</div>
+          <div class="scenary--row">$ ${product.unitPrice.toLocaleString()}</div>
           <div class="scenary--row">${product.quantity}</div>
-          <div class="scenary--row subtotal">${subtotal.toLocaleString()}</div>
-          <div class="scenary--row cancel" data-product='${product.selectedMoldeCode}'>X</div>
+          <div class="scenary--row subtotal">$ ${subtotal.toLocaleString()}</div>
+          <div class="scenary--row cancel" data-product='${product.selectedMoldeCode}'></div>
         `
         document.querySelector('.quotationew--calculation__body').appendChild(row)
 
@@ -541,15 +541,71 @@ class QuotationCalculation extends HTMLElement {
         count += parseFloat(valor)
       }
     })
+<<<<<<< HEAD
     return count 
+=======
+
+    if (count > 0) {
+      nodeNotification('Agregado a la lista')
+    }
+
+    const btniva = document.querySelector('.quotation--iva')
+    if (btniva.checked) {
+      const iva = count * 0.19
+      const quo = document.querySelector('.calculation__dis')
+      let dis = ''
+      if (clientename) {
+        dis = count * (parseInt(quo.textContent) / 100)
+      } else {
+        dis = count * (parseFloat(quo.textContent).toFixed(2) / 100)
+      }
+      if (clientename) {
+        const client = JSON.parse(clientename)
+        quotationSave.textContent = client['0'].currency === 'COP' ? +(count + iva) - dis : ((count + iva) - dis).toFixed(2)
+      } else {
+        quotationSave.textContent = ((count + iva) - dis).toFixed(2).toLocaleString()
+      }
+
+    } else {
+      const quo = document.querySelector('.calculation__dis')
+      const dis = (count * (parseFloat(quo.textContent).toFixed(2) / 100)).toFixed(2)
+      
+      if (clientename) {
+        const client = JSON.parse(clientename)
+        const a = client['0'].currency === 'COP' ? (count - dis) : (count - dis).toFixed(2)
+        quotationSave.textContent = "$ " + a.toLocaleString()
+        console.log(quotationSave)
+
+        
+      } else {
+        const qncurrencyElement = document.getElementById('qncurrency');
+        if (qncurrencyElement) {
+          const textContent = qncurrencyElement.textContent.trim();
+          const currency = textContent.replace(/Moneda: /g, "");
+          let a  = 0
+          if (currency == 'COP') {
+            a = (count - dis)
+          } else {
+            a = (count - dis).toFixed(2)
+          }
+          
+          quotationSave.textContent = "$ " + (a.toLocaleString())          
+        }
+      }
+    }
+>>>>>>> 9db4e4fdeb542485707df5cb7ec96601d8767e14
   }
 
   connectedCallback() {
     const btniva = document.querySelector('.quotation--iva')
     const fieldValor = document.querySelector('.quotation--btn__add')
     const scenaryDeleteAll = document.querySelector('.scenary-delete__all')
+<<<<<<< HEAD
     btniva.checked = false
     fieldValor.textContent = 0
+=======
+    fieldValor.textContent = "$ 0"
+>>>>>>> 9db4e4fdeb542485707df5cb7ec96601d8767e14
     btniva.addEventListener('click', (e) => {
       this.sumar()
     })

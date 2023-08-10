@@ -6,13 +6,15 @@ import sendEmailHelper from "../../helpers/sendEmailHelper.js"
 import Login from "../../login/login.js"
 import statusQuotationS from "../../services/statusQuotation/statusQuotation.js"
 import quotationNewPage from "../quotationNew/quotationNew.js"
+import getUser from "../../services/user/getUser.js"
 
-
-const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
+const createScenary = async (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     const quotationCreatescenary = quotation.querySelector('#quotation--content--list .quotation--list--row')
     const quotationCreatescenarys = quotation.querySelectorAll('#quotation--content--list .quotation--list--row')
     const scenaryContainerTop = quotation.querySelector('#scenary--container__top')
     const scenaryCreatedBody = quotation.querySelector('#scenary--container__bottom')
+    const currentUser = localStorage.getItem('current')
+    const resQueryUser = await getUser(currentUser);
 
     let lastClickedIndex = localStorage.getItem('lastClickedIndex');
 
@@ -126,17 +128,19 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
       const quotationBtnDelete = quotation.querySelector('#quotation--btn__delete')
       const quotationBtnApproved = quotation.querySelector('#quotation--btn__approved')
       const quotationContainer = quotation.querySelector('.scenary--data__actions')
-
-
       
       if (cot.status.id === 2 ) {
         quotationContainer.style.display = 'none'
       }
 
+      const quotationBtnNe = quotation.querySelector('.quotation--btn__Ne')
       if (cotStatus.statusId === 3 && scenaryCreated) {
-        const quotationBtnNe = quotation.querySelector('.quotation--btn__Ne')
         quotationBtnNe.remove()
         quotationBtnDelete.remove()
+      }
+
+      if(resQueryUser.rol !== 'advisors') {
+        quotationBtnNe.remove()
       }
 
       // Send Email

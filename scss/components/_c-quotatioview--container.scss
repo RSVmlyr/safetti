@@ -24,9 +24,6 @@
         align-items: center;
         justify-content: center;
         gap: 33px;
-        .quotation--text {
-          margin-top: 2rem;
-        }
       }
     }
   }
@@ -64,6 +61,10 @@
             &:nth-child(6) {
               text-align: right;
             }
+
+            &:nth-child(3) {
+              text-align: right;
+            }
           }
         }
         tbody {
@@ -72,6 +73,9 @@
             &:nth-child(4),
             &:nth-child(5),
             &:nth-child(6) {
+              text-align: right;
+            }
+            &:nth-child(3) {
               text-align: right;
             }
           }

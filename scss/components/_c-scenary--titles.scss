@@ -1,16 +1,41 @@
 .scenary--titles {
   display: flex;
+  justify-content: space-between;
   margin: 0 0 15px;
+  gap: 15px;
   .scenary--row {
-    width: 16.6%;
+    width: 25%;
     font-family: $FuturaMedium;
     font-size: 18px;
+    // width: 8.3%;
+    &:nth-child(2) {
+      width: 8%;
+    }
+    &:nth-child(3), &:nth-child(5) {
+      text-align: end;
+    }
+    &:nth-child(3) {
+      width: 10.6%;
+      // width: 8.3%;
+    }
+    &:nth-child(4) {
+      width: 10.6%;
+      text-align: center;
+      // width: 8.3%;
+    }
+    &:nth-child(5) {
+      width: 10.6%;
+    }
+    &:nth-child(6) {
+      // width: 10.6%;
+      text-align: center;
+    }
   }
   .scenary-delete__all {
     color: $white;
     background-color: $black;
     border-radius: 25px;
-    font-size: 18px;
+    font-size: 14px;
     padding: 2px 8px 5px;
     position: relative;
     left: 7px;

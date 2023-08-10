@@ -33,6 +33,7 @@ const quotationView = (node, infoQuotation) => {
     });
     container.innerHTML += `
             <div class="quotatioview__section">
+            <div class="quotatioview__edit quotation--btn__new">Editar</div>
             <h2 class="quotatioview__title">${element.name}</h2>
             <table class="quotatioview__table">
                 ${table}
@@ -43,14 +44,16 @@ const quotationView = (node, infoQuotation) => {
             <thead>
                 <tr>
                     <th>Descuento</th>
-                    <th>Envio</th>
+                    <th></th>
                     <th>Total</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>$ ${element.discountPercent.toLocaleString()}</td>
-                    <td>$ 0</td>
+                    <td>
+                        <div class="quotatioview__discount">$ ${element.discountPercent.toLocaleString()}</div>
+                    </td>
+                    <td></td>
                     <td>$ ${element.total.toLocaleString()}</td>
                 </tr>
             </tbody>
@@ -68,6 +71,34 @@ const quotationView = (node, infoQuotation) => {
       `;
   });
   node.appendChild(container);
+
+    const quotatioviewContainerSection = document.querySelectorAll('.quotatioview__section')
+    quotatioviewContainerSection.forEach(section => {
+        const quotatioviewEdit = section.querySelector('.quotatioview__edit')
+        const quotatioviewDiscount = section.querySelector('.quotatioview__discount')
+        const inputEdit = `
+        $ <input type="number" id="rangeInput" class="rangeInput" name="rangeInput" min="0" max="10" step="1">
+        `
+        const btnSave = `
+        <div class="quotation--btn__save quotation--btn__new">Guardar</div>
+        `;
+        quotatioviewEdit.addEventListener('click', () => {
+            quotatioviewDiscount.style.display = 'none';
+            quotatioviewDiscount.insertAdjacentHTML('afterend', inputEdit)
+            const rangeInput = section.querySelector('.rangeInput')
+
+            quotatioviewEdit.insertAdjacentHTML('afterend', btnSave)
+            const precioConDolar = quotatioviewDiscount.textContent;
+            const precioSinDolar = precioConDolar.replace('$ ', '');
+            rangeInput.value = precioSinDolar
+        })
+        const quotationBtnSave = section.querySelector('.quotation--btn__save')
+        if (quotationBtnSave) {
+            const rangeInput = section.querySelector('.rangeInput')
+            quotatioviewDiscount.value = rangeInput.value
+        }
+    });
+
 };
 
 export default quotationView;
