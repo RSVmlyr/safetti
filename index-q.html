@@ -98,12 +98,14 @@
       <div class="quotationew--calculation">
         <div class="quotationew--calculation__header">
           <div class="region region--left">
-            <p class="quotationew--calculation__discount">Descuento especial:  <span class="quotation--title__quo calculation__dis">0%</span></p>
+            <p class="quotationew--calculation__discount">Descuento especial:
+              <input class="quotation--title__quo calculation__dis" type="number" id="rangeInput" name="rangeInput" min="0" max="10" step="1" value="0"> %
+            </p>
             <span class="quotation--title__quo">IVA (19%)</span>
             <input type="checkbox" class="quotation--iva" name="" id="">
           </div>
           <div class="region region--right">
-            <p class="quotation--btn__add">Valor total: 0</p>
+            <span>$</span><p class="quotation--btn__add">Valor total: 0</p>
             <button id="quotation--btn__save" class="quotation--btn__new">Guardar</button>
           </div>
         </div>
@@ -115,7 +117,7 @@
               <td class="scenary--row">Valor unitario</td>
               <td class="scenary--row">Cantidad</td>
               <td class="scenary--row">Subtotal</td>
-              <td class="scenary--row">Borrar  <span class="scenary-delete__all">x</span> </td>
+              <td class="scenary--row">Borrar  <span class="scenary-delete__all">Limpiar todo</span> </td>
             </tr>
           </table>
         </div>

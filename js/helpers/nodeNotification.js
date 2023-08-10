@@ -6,13 +6,49 @@ const nodeNotification = (text) => {
   }
   const notification = document.createElement('div');
   notification.classList.add('notification');
-  notification.textContent = text;
-  const body = document.querySelector('body')
-  body.insertAdjacentElement('afterend', notification);
+
+  const notificationContent = document.createElement("div");
+  notificationContent.classList.add('notification--content');
+  
+  const notificationText = document.querySelector("h2");
+  notificationText.classList.add('notification--content__text');
+  notificationText.textContent = text;
+  notificationContent.appendChild(notificationText);
+
+  const buttonClose = document.querySelector('button');
+  buttonClose.classList.add('notification--content__button');
+  buttonClose.textContent = 'OK'
+
+  notificationContent.appendChild(buttonClose)
+
+
+
+  notification.appendChild(notificationContent);
+
+
+
+  const body = document.querySelector('body');
+  body.appendChild(notification)
+  // body.insertAdjacentElement('afterend', notification);
+  
   notificationDiv = document.querySelector('.notification')
-  setTimeout(() => {
-    notificationDiv.remove()
-  }, 5000);
+  
+  notification.addEventListener("click", close);
+
+  // setTimeout(() => {
+  //   notificationDiv.remove()
+  // }, 5000);
 }
+
+const close = (e) => {
+  const notification = e.target;
+  notification.style.display = 'none'
+  
+  console.log(notification.type);
+  if(notification.type === 'submit') {
+    notification.parentElement.parentElement.style.display = 'none'
+  }
+}
+
 
 export default nodeNotification

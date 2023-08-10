@@ -25,8 +25,6 @@ class App {
       const login = new Login();
       login.setHash(uid);
       const storedHash = login.getStoredHash();
-      // console.log(storedHash);
-
       if (this.quotation) {
         const quotationContentList = this.quotation.querySelector('#quotation--content--list');
         quotationContentList.insertAdjacentHTML('afterbegin', '<img class="quotation--loading qnimage--auto" src="../img/icon/icon-spinner.gif">');
