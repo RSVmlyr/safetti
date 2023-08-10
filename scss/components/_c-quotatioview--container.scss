@@ -46,7 +46,13 @@
         font-size: 24px;
         font-weight: 500;
         font-family: $FuturaMedium;
-        margin-bottom: 32px;
+        margin: 5px 0 20px;
+      }
+      .quotatioview__actions {
+        display: flex;
+        justify-content: flex-end;
+        margin: 0 0 15px;
+        gap: 15px;
       }
       .quotatioview__table {
         thead {
@@ -107,5 +113,14 @@
         }
       }
     }
+  }
+}
+
+.quotatioview__iva {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  input[type="checkbox"] {
+    box-shadow: none;
   }
 }

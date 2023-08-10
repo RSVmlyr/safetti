@@ -61,7 +61,7 @@ const createScenary = async (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               <span class="quotation--status">${cotStatus.statusName}</span>
             </div>
             <div class="region region__two">
-              <a class="quotation--email" href="https://safetticustom.azurewebsites.net/api/Quotation/email/${cot.id}">
+              <a class="quotation--email" href="https://safetticustom.azurewebsites.net/api/Quotation/email/${resQueryUser.id}/${cot.id}">
                 <span class="quotation--send--data quotation--info">Enviar correo</span>
                 <img class="quotation--email__img" src='../../img/icon/icon-email.svg' loading="lazy" alt="Email" title="Email">
               </a>
