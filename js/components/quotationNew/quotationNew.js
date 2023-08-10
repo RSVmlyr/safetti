@@ -71,10 +71,8 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       // console.log(data);
       idQnAdvisor.innerHTML = idQnLabelAdvisors + data.clientName
       idQnCurrency.innerHTML = 'Moneda: ' + data.currency
-      getUserCurren(data.client);
-      
+      getUserCurren(data.client); 
     }
-    
     getinfouser()
   }
 
@@ -209,9 +207,14 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
     sendEmailHelper(quotationEmail, quotationEmailSendData)
   }
 
-  // Special Discount
-  const quotationewCalculationDiscount = quotationNew.querySelector('.quotationew--calculation__discount span')
-  quotationewCalculationDiscount.textContent = resQueryUser.specialDiscount ? resQueryUser.specialDiscount + '%' : '0%'
+  // Special 
+
+  if(resQueryUser.rol != "advisors" ) {
+    const quotationewCalculationDiscount = quotationNew.querySelector('.quotationew--calculation__discount')
+    quotationewCalculationDiscount.remove()
+  }
+  //-edwin  
+  //-edwin quotationewCalculationDiscount.textContent = resQueryUser.specialDiscount ? resQueryUser.specialDiscount + '%' : '0%'
   // Special Discount
 
   const quotationCalculation = new QuotationCalculation(resQueryUser);
