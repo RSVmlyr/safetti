@@ -172,10 +172,10 @@ class QuotationCalculation extends HTMLElement {
         row.innerHTML = `
           <div class="scenary--row">${product.productName}</div>
           <div class="scenary--row">${product.selectedMoldeCode}</div>
-          <div class="scenary--row">${product.unitPrice.toLocaleString()}</div>
+          <div class="scenary--row">$ ${product.unitPrice.toLocaleString()}</div>
           <div class="scenary--row">${product.quantity}</div>
-          <div class="scenary--row subtotal">${subtotal.toLocaleString()}</div>
-          <div class="scenary--row cancel" data-product='${product.selectedMoldeCode}'>X</div>
+          <div class="scenary--row subtotal">$ ${subtotal.toLocaleString()}</div>
+          <div class="scenary--row cancel" data-product='${product.selectedMoldeCode}'></div>
         `
         document.querySelector('.quotationew--calculation__body').appendChild(row)
 
@@ -472,7 +472,7 @@ class QuotationCalculation extends HTMLElement {
       }
       if (clientename) {
         const client = JSON.parse(clientename)
-        quotationSave.textContent = client['0'].currency === 'COP' ? (count + iva) - dis : ((count + iva) - dis).toFixed(2)
+        quotationSave.textContent = client['0'].currency === 'COP' ? +(count + iva) - dis : ((count + iva) - dis).toFixed(2)
       } else {
         quotationSave.textContent = ((count + iva) - dis).toFixed(2).toLocaleString()
       }
@@ -484,7 +484,10 @@ class QuotationCalculation extends HTMLElement {
       if (clientename) {
         const client = JSON.parse(clientename)
         const a = client['0'].currency === 'COP' ? (count - dis) : (count - dis).toFixed(2)
-        quotationSave.textContent = a.toLocaleString()
+        quotationSave.textContent = "$ " + a.toLocaleString()
+        console.log(quotationSave)
+
+        
       } else {
         const qncurrencyElement = document.getElementById('qncurrency');
         if (qncurrencyElement) {
@@ -496,7 +499,8 @@ class QuotationCalculation extends HTMLElement {
           } else {
             a = (count - dis).toFixed(2)
           }
-          quotationSave.textContent = a.toLocaleString()          
+          
+          quotationSave.textContent = "$ " + (a.toLocaleString())          
         }
       }
     }
@@ -506,7 +510,7 @@ class QuotationCalculation extends HTMLElement {
     const btniva = document.querySelector('.quotation--iva')
     const fieldValor = document.querySelector('.quotation--btn__add')
     const scenaryDeleteAll = document.querySelector('.scenary-delete__all')
-    fieldValor.textContent = 0
+    fieldValor.textContent = "$ 0"
     btniva.addEventListener('click', (e) => {
       this.sumar()
     })
