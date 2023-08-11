@@ -74,7 +74,11 @@ const quotationView = async (node, infoQuotation) => {
                         <td>
                             <div>
                                 <span>$</span>
-                                <span>${element.subtotalProducts}</span>
+                                <span>
+                                    ${resQueryUser.currency === 'COP' ? 
+                                        `${element.subtotalProducts.toLocaleString()}` : 
+                                        `${element.subtotalProducts.toFixed(2).toLocaleString()}`}
+                                </span>
                             </div>
                         </td>
                     </tr>
@@ -84,23 +88,27 @@ const quotationView = async (node, infoQuotation) => {
                             <span class="quotatioview__discount">${element.discountPercent.toLocaleString()} % </span>
                         </td>
                         <td>
-                            <span>-</span>
-                            <span class="quotatioview__discountValueNumber">
-                                ${resQueryUser.currency === 'COP' ? 
-                                    `${discountValue.toLocaleString()}` : 
-                                    `${discountValue.toFixed(2).toLocaleString()}`}
-                            </span>
+                            <div>
+                                <span>-</span>
+                                <span class="quotatioview__discountValueNumber">
+                                    ${resQueryUser.currency === 'COP' ? 
+                                        `${discountValue.toLocaleString()}` : 
+                                        `${discountValue.toFixed(2).toLocaleString()}`}
+                                </span>
+                            </div>
                         </td>
                     </tr>
                     <tr>
                         <td>Subtotal con descuento</td>
                         <td>
-                            <span>$</span>
-                            <span class="quotatioview__withdiscount">
-                                ${resQueryUser.currency === 'COP' ? 
-                                ` ${element.subtotalWithDiscount.toLocaleString()}` : 
-                                ` ${element.subtotalWithDiscount.toFixed(2).toLocaleString()}`}
-                            </span>
+                            <div>
+                                <span>$</span>
+                                <span class="quotatioview__withdiscount">
+                                    ${resQueryUser.currency === 'COP' ? 
+                                    ` ${element.subtotalWithDiscount.toLocaleString()}` : 
+                                    ` ${element.subtotalWithDiscount.toFixed(2).toLocaleString()}`}
+                                </span>
+                            </div>
                         </td>
                     </tr>
                     <!-- Puedes agregar más filas aquí -->
@@ -182,18 +190,18 @@ const quotationView = async (node, infoQuotation) => {
                     quotatioviewIva.classList.remove('quotation-hide')
 
                     const mostrarEstadoCheckbox = (discountWithTotal) => {
-                        let discountWithTotalN = discountWithTotal;
-                        let dN = parseFloat(discountWithTotalN);
+                        let dN = parseFloat(discountWithTotal);
+                        
                         if (quotatioviewIva.checked) {
                             console.log('ckech');
                             if(rangeInput.value == infoQuotation[i].discountPercent) {
                                 quotatioviewValueTotal.innerHTML = resQueryUser.currency === 'COP' ? infoQuotation[i].subtotalWithTaxIVA.toLocaleString() : infoQuotation[i].subtotalWithTaxIVA.toFixed(2).toLocaleString()
                             } else {
-                                console.log('Total con Descuento:', dN);
+                                // console.log('Total con Descuento:', dN);
                                 const calculateIva = dN * infoQuotation[i].taxIVAApplied / 100
-                                console.log('Iva:', calculateIva);
+                                // console.log('Iva:', calculateIva);
                                 const calculateIvaTotal = dN + calculateIva
-                                console.log('Total con Iva', calculateIvaTotal);
+                                // console.log('Total con Iva', calculateIvaTotal);
                                 quotatioviewValueTotal.innerHTML = resQueryUser.currency === 'COP' ? calculateIvaTotal.toLocaleString() : calculateIvaTotal.toFixed(2).toLocaleString()
                             }
                         } else {
