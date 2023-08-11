@@ -37,11 +37,15 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   const idQnFitPrenda = quotationNew.querySelector('#qnfitprenda')
   const qnbusinessname = quotationNew.querySelector('#qnbusinessname')
   const qnrol = quotationNew.querySelector('#qnrol')
-
-
   idQnDate.innerHTML = 'Creación: ' + dateFormat(dateCurrent)
+
+  console.log(resQueryUser);
+  
+  if(resQueryUser.rol === 'advisors') {
+    qnrol.classList.remove('quotation-hide')
+  } 
   if(resQueryUser.razonSocial===null) {
-    //qnbusinessname.remove()
+    qnbusinessname.classList.add('quotation-hide')
   } else {
     idQnLabelCliente = resQueryUser.rol === "advisors" ? 'Asesor: ' : 'Contacto: ';
   }
@@ -189,6 +193,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       const qnCurrency = quotationNew.querySelector('#qncurrency')
       if(razon) {
         qnClient.textContent = 'Contacto: ' + client
+        qnbusinessname.classList.remove('quotation-hide')
       } else {
         qnClient.textContent = 'Cliente: ' + client
       }
