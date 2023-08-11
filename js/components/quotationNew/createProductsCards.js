@@ -4,6 +4,7 @@ import dataSetQuotation from "./dataSetQuotation.js";
 import inputNumber from "./inputNumber.js";
 import localStorage from "./localStorage.js";
 import QuotationCalculation from './QuotationCalculation.js';
+import nodeNotification from '../../helpers/nodeNotification.js'
 
 const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
 
@@ -115,7 +116,6 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         //   otherRow.classList.remove('active') 
         // });
         e.target ? sliderProductsRow.classList.add('active') : false
-
         localStorage()
 
       })
@@ -175,6 +175,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           juniorInput.value = 0
           sliderProductsRow.classList.remove('active')
         }, 1000);        
+        //nodeNotification('Agregado a la lista')
         
         const quotationCalculation = new QuotationCalculation(resQueryUser);
         // quotationCalculation.createRow(product);

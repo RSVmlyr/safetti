@@ -25,7 +25,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   const dateCurrent = new Date()
   const idQnDate = quotationNew.querySelector('#qndate')
   const idQnClient = quotationNew.querySelector('#qnclient')
-  const idQnLabelCliente = resQueryUser.rol === "advisors" ? 'Asesor: ' : 'Cliente: ';
+  let idQnLabelCliente = resQueryUser.rol === "advisors" ? 'Asesor: ' : 'Cliente: ';
   const idQnAdvisor = quotationNew.querySelector('#qnadvisor')
   const idQnLabelAdvisors = resQueryUser.rol === "advisors" ? 'Cliente: ' : 'Asesor: ';
   const resQueryUserAdvisorName = resQueryUser.advisorName === null ? '' : resQueryUser.advisorName
@@ -35,12 +35,21 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   const idQnTiposPrenda = quotationNew.querySelector('#qntiposprenda')
   const idQnClasificaciones = quotationNew.querySelector('#qnclasificaciones')
   const idQnFitPrenda = quotationNew.querySelector('#qnfitprenda')
+  const qnbusinessname = quotationNew.querySelector('#qnbusinessname')
+  const qnrol = quotationNew.querySelector('#qnrol')
+
 
   idQnDate.innerHTML = 'Creación: ' + dateFormat(dateCurrent)
+  if(resQueryUser.razonSocial===null) {
+    //qnbusinessname.remove()
+  } else {
+    idQnLabelCliente = resQueryUser.rol === "advisors" ? 'Asesor: ' : 'Contacto: ';
+  }
   idQnClient.innerHTML = idQnLabelCliente + resQueryUser.fullName;
+  qnbusinessname.innerHTML ='Razon Social: '  + resQueryUser.razonSocial
   idQnAdvisor.innerHTML = idQnLabelAdvisors + resQueryUserAdvisorName
   idQnCurrency.innerHTML = 'Moneda: ' + resQueryUserCurrency
-  
+ 
   fillSelectProduct(idQnCuentos, resQueryProducts.cuentos)
   fillSelectProduct(idQnTiposPrenda, resQueryProducts.tiposPrenda)
   fillSelectProduct(idQnClasificaciones, resQueryProducts.clasificaciones)
@@ -132,8 +141,15 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
     if(ClientFullName){
       const cFulName = JSON.parse(ClientFullName)
       quotatioNewClient.value = cFulName[0].client
-      idQnAdvisor.innerHTML = 'Cliente: ' + cFulName[0].client
       idQnCurrency.innerHTML = 'Moneda: ' + cFulName[0].currency
+      if(cFulName[0].razon) {
+        idQnAdvisor.innerHTML = 'Cliente: ' + cFulName[0].client
+      } else {
+        idQnAdvisor.innerHTML = 'Cliente: ' + cFulName[0].client
+      }
+      qnrol.innerHTML = 'Cliente: ' + cFulName[0].rol.replace(/_/g, ' ');
+      console.log(cFulName[0]);
+      qnbusinessname.innerHTML = cFulName[0].razon
       validateNewCleint()
     }
 
@@ -158,7 +174,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
             validateNewCleint()
             quotatioNewClient.value = client.fullName ? client.fullName : '';
             idQuotatioNewSearchClient.innerHTML = '';
-            selectedValueSearchLi(client.fullName, client.currency, client.rol, client.id, client.specialDiscount)
+            selectedValueSearchLi(client.razonSocial, client.fullName, client.currency, client.rol, client.id, client.specialDiscount)
           });
           idQuotatioNewSearchClient.appendChild(li);
         });
@@ -168,11 +184,16 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       }
     });
 
-    const selectedValueSearchLi = (client, currency, rol, id, specialDiscount) => {
+    const selectedValueSearchLi = (razon, client, currency, rol, id, specialDiscount) => {
       const qnClient = quotationNew.querySelector('#qnadvisor')
       const qnCurrency = quotationNew.querySelector('#qncurrency')
-      qnClient.textContent = 'Cliente: ' + client
+      if(razon) {
+        qnClient.textContent = 'Contacto: ' + client
+      } else {
+        qnClient.textContent = 'Cliente: ' + client
+      }
       qnCurrency.textContent = 'Moneda: ' + currency
+      qnrol.textContent = 'Rol: ' + rol.replace(/_/g, ' ');
       const discount = specialDiscount === null ? 0 : parseInt(specialDiscount, 10)
 
       const dataClientStorage = [
@@ -181,7 +202,8 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
           client,
           currency,
           rol,
-          discount
+          discount,
+          razon
         }
       ]
       expiringLocalStorage.saveDataWithExpiration("ClientFullName", JSON.stringify(dataClientStorage))
