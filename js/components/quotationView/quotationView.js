@@ -119,6 +119,9 @@ const quotationView = async (node, infoQuotation) => {
   const quotatioviewContainerSection = document.querySelectorAll('.quotatioview__section')
         quotatioviewContainerSection.forEach((section, i) => {
             const quotatioviewEdit = section.querySelector('.quotatioview__edit')
+
+            resQueryUser.rol === 'advisors' ? quotatioviewEdit : quotatioviewEdit.remove()
+
             const quotatioviewTitleScenary = section.querySelector('.quotatioview__title--scenary')
             let infoDiscuount = infoQuotation[i].discountPercent;
             const quotatioviewDiscount = section.querySelector('.quotatioview__discount')
