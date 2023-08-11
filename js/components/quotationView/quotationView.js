@@ -1,3 +1,4 @@
+import nodeNotification from "../../helpers/nodeNotification.js";
 import putScenario from "../../services/quotation/putScenario.js";
 import getUser from "../../services/user/getUser.js";
 
@@ -48,6 +49,9 @@ const quotationView = async (node, infoQuotation) => {
             </tbody>
         `;
     });
+
+    const discount = element.subtotalProducts - element.subtotalWithDiscount
+    const discountValue = discount
     
     container.innerHTML += `
             <div class="quotatioview__section">
@@ -61,35 +65,48 @@ const quotationView = async (node, infoQuotation) => {
                 ${table}
                 ${productos}
             </table>
+
             <table class="quotatioview__table table__descuento">
             <hr>
-            <thead>
-                <tr>
-                    <th>Descuento</th>
-                    <th></th>
-                    <th>Subtotal con Descuento</th>
-                    <th>Subtotal</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><div class="quotatioview__discount">% ${element.discountPercent.toLocaleString()}</div></td>
-                    <td></td>
-                    <td>
-                        <span>$ </span>
-                        <span class="quotatioview__withdiscount">
-                            ${resQueryUser.currency === 'COP' ? 
+                <tbody>
+                    <tr>
+                        <td>Costo Productos</td>
+                        <td>
+                            <div>
+                                <span>$</span>
+                                <span>${element.subtotalProducts}</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span>Descuento</span>
+                            <span class="quotatioview__discount">${element.discountPercent.toLocaleString()} % </span>
+                        </td>
+                        <td>
+                            <span>-</span>
+                            <span class="quotatioview__discountValueNumber">
+                                ${resQueryUser.currency === 'COP' ? 
+                                    `${discountValue.toLocaleString()}` : 
+                                    `${discountValue.toFixed(2).toLocaleString()}`}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Subtotal con descuento</td>
+                        <td>
+                            <span>$</span>
+                            <span class="quotatioview__withdiscount">
+                                ${resQueryUser.currency === 'COP' ? 
                                 ` ${element.subtotalWithDiscount.toLocaleString()}` : 
                                 ` ${element.subtotalWithDiscount.toFixed(2).toLocaleString()}`}
-                        </span>
-                    </td>
-                    <td>
-                        
-                        <div><span>$</span>${element.subtotalProducts}</div>
-                    </td>
-                </tr>
-            </tbody>
+                            </span>
+                        </td>
+                    </tr>
+                    <!-- Puedes agregar más filas aquí -->
+                </tbody>
             </table>
+
             <hr>
             <table class="quotatioview__table table__total">
             <thead>
@@ -103,13 +120,12 @@ const quotationView = async (node, infoQuotation) => {
                         </div>
                     </th>
                     <th>
-                        
-                        <div class="quotatioview__valueTotal">
-                            <span>$ </span>
+                        <span>$ </span>
+                        <span class="quotatioview__valueTotal">
                             ${resQueryUser.currency === 'COP' ? 
                                 ` ${element.subtotalWithTaxIVA.toLocaleString()}` : 
                                 ` ${element.subtotalWithTaxIVA.toFixed(2).toLocaleString()}`}
-                            </div>
+                        </span>
                     </th>
                     <td></td>
                 </tr>
@@ -129,6 +145,7 @@ const quotationView = async (node, infoQuotation) => {
             const quotatioviewTitleScenary = section.querySelector('.quotatioview__title--scenary')
             let infoDiscuount = infoQuotation[i].discountPercent;
             const quotatioviewDiscount = section.querySelector('.quotatioview__discount')
+            const quotatioviewDiscountValueNumber = section.querySelector('.quotatioview__discountValueNumber')
             const quotationBtnSave = section.querySelector('.quotation--btn__save')
             const quotatioviewIva = section.querySelector('.quotatioview--iva')
 
@@ -136,8 +153,10 @@ const quotationView = async (node, infoQuotation) => {
             <input type="text" id="nameInput" class="nameInput" name="nameInput">
             `
             const inputEdit = `
-            % <input type="number" id="rangeInput" class="rangeInput" name="rangeInput" min="0" max="10" step="1">
+            <input type="number" id="rangeInput" class="rangeInput" name="rangeInput" min="0" max="10" step="1"> %
             `
+            let nameInput;
+            let rangeInput
             let inputInserted = false;
             quotatioviewEdit.addEventListener('click', () => {
                 if (!inputInserted) {
@@ -147,44 +166,49 @@ const quotationView = async (node, infoQuotation) => {
                     newNode.innerHTML = inputNameScenary.trim();
                     
                     quotatioviewTitleScenary.parentNode.replaceChild(newNode, quotatioviewTitleScenary);
-                    const nameInput = section.querySelector('.nameInput')
+                    //    
+                    nameInput = section.querySelector('.nameInput')
                     nameInput.value = infoQuotation[i].name
+                    //
                     quotationBtnSave.classList.remove('quotation-hide')
                     quotatioviewDiscount.style.display = 'none';
                     quotatioviewDiscount.insertAdjacentHTML('afterend', inputEdit)
-                    const rangeInput = section.querySelector('.rangeInput')
-
+                    //
+                    rangeInput = section.querySelector('.rangeInput')
                     rangeInput.value = infoDiscuount
+                    //
                     const quotatioviewWithdiscount = section.querySelector('.quotatioview__withdiscount')
                     const quotatioviewValueTotal = section.querySelector('.quotatioview__valueTotal')
                     quotatioviewIva.classList.remove('quotation-hide')
 
                     const mostrarEstadoCheckbox = (discountWithTotal) => {
+                        let discountWithTotalN = discountWithTotal;
+                        let dN = parseFloat(discountWithTotalN);
                         if (quotatioviewIva.checked) {
                             console.log('ckech');
                             if(rangeInput.value == infoQuotation[i].discountPercent) {
-                                quotatioviewValueTotal.innerHTML = resQueryUser.currency === 'COP' ? '$ ' + infoQuotation[i].subtotalWithTaxIVA.toLocaleString() : '$ ' + infoQuotation[i].subtotalWithTaxIVA.toFixed(2).toLocaleString()
+                                quotatioviewValueTotal.innerHTML = resQueryUser.currency === 'COP' ? infoQuotation[i].subtotalWithTaxIVA.toLocaleString() : infoQuotation[i].subtotalWithTaxIVA.toFixed(2).toLocaleString()
                             } else {
-                                console.log(discountWithTotal);
-                                const calculateIva = discountWithTotal * infoQuotation[i].taxIVAApplied / 100
-                                console.log(calculateIva);
-                                const calculateIvaTotal = discountWithTotal + calculateIva
-                                console.log(calculateIvaTotal);
-                                quotatioviewValueTotal.innerHTML = resQueryUser.currency === 'COP' ? '$ ' + calculateIvaTotal.toLocaleString() : '$ ' + calculateIvaTotal.toFixed(2).toLocaleString()
+                                console.log('Total con Descuento:', dN);
+                                const calculateIva = dN * infoQuotation[i].taxIVAApplied / 100
+                                console.log('Iva:', calculateIva);
+                                const calculateIvaTotal = dN + calculateIva
+                                console.log('Total con Iva', calculateIvaTotal);
+                                quotatioviewValueTotal.innerHTML = resQueryUser.currency === 'COP' ? calculateIvaTotal.toLocaleString() : calculateIvaTotal.toFixed(2).toLocaleString()
                             }
                         } else {
-                            console.log('no ckech', discountWithTotal);
+                            console.log('no ckech', dN);
                             if(rangeInput.value == infoQuotation[i].discountPercent) {
-                                quotatioviewValueTotal.innerHTML = resQueryUser.currency === 'COP' ? '$ ' + infoQuotation[i].subtotalWithDiscount.toLocaleString() : '$ ' + infoQuotation[i].subtotalWithDiscount.toFixed(2).toLocaleString()
+                                quotatioviewValueTotal.innerHTML = resQueryUser.currency === 'COP' ? infoQuotation[i].subtotalWithDiscount.toLocaleString() : infoQuotation[i].subtotalWithDiscount.toFixed(2).toLocaleString()
                             } else {
-                                quotatioviewValueTotal.innerHTML = '$ ' + discountWithTotal
+                                quotatioviewValueTotal.innerHTML = resQueryUser.currency === 'COP' ? dN.toLocaleString() : dN.toFixed(2).toLocaleString()
                             }
                         }
                     };
                     quotatioviewIva.addEventListener('change', () => {
                         resQueryUser.currency === 'COP' ?
-                        mostrarEstadoCheckbox(parseInt(quotatioviewWithdiscount.textContent)) :
-                        mostrarEstadoCheckbox(parseFloat(quotatioviewWithdiscount.textContent))
+                        mostrarEstadoCheckbox(quotatioviewWithdiscount.textContent) :
+                        mostrarEstadoCheckbox(quotatioviewWithdiscount.textContent)
                     });
 
                     rangeInput.addEventListener('input', (event) => {
@@ -195,7 +219,10 @@ const quotationView = async (node, infoQuotation) => {
                         if (event.target.value >= 0) {
                             const calculateDiscout = infoQuotation[i].subtotalProducts * event.target.value / 100
                             const calculateDiscoutTotal = infoQuotation[i].subtotalProducts - calculateDiscout
+                            const calculateDiscoutValue = infoQuotation[i].subtotalProducts - calculateDiscoutTotal
+                            console.log('Descuento -', calculateDiscoutValue);
                             quotatioviewWithdiscount.innerHTML = resQueryUser.currency === 'COP' ? calculateDiscoutTotal.toLocaleString() : calculateDiscoutTotal.toFixed(2).toLocaleString()
+                            quotatioviewDiscountValueNumber.innerHTML = resQueryUser.currency === 'COP' ? calculateDiscoutValue.toLocaleString() : calculateDiscoutValue.toFixed(2).toLocaleString()
                             mostrarEstadoCheckbox(calculateDiscoutTotal);
                         }
                     });
@@ -205,6 +232,11 @@ const quotationView = async (node, infoQuotation) => {
 
             if (quotationBtnSave) {
                 quotationBtnSave.addEventListener('click', () => {
+                    if (nameInput.value === '') {
+                        nodeNotification('El campo NOMBRE DEL ESCENARIO es obligatorio.')
+                    } else if (rangeInput.value === '') {
+                        nodeNotification('El campo DESCUENTO del escenario es obligatorio.')
+                    }
                     const putBodyScenary = {
                         "id": infoQuotation[i].id,
                         "name": nameInput.value,
