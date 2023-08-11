@@ -147,13 +147,14 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       quotatioNewClient.value = cFulName[0].client
       idQnCurrency.innerHTML = 'Moneda: ' + cFulName[0].currency
       if(cFulName[0].razon) {
+        qnbusinessname.classList.remove('quotation-hide')
+        qnbusinessname.innerHTML = 'Razón social: ' + cFulName[0].razon
         idQnAdvisor.innerHTML = 'Cliente: ' + cFulName[0].client
       } else {
         idQnAdvisor.innerHTML = 'Cliente: ' + cFulName[0].client
       }
       qnrol.innerHTML = 'Cliente: ' + cFulName[0].rol.replace(/_/g, ' ');
       console.log(cFulName[0]);
-      qnbusinessname.innerHTML = cFulName[0].razon
       validateNewCleint()
     }
 
@@ -191,11 +192,14 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
     const selectedValueSearchLi = (razon, client, currency, rol, id, specialDiscount) => {
       const qnClient = quotationNew.querySelector('#qnadvisor')
       const qnCurrency = quotationNew.querySelector('#qncurrency')
+      console.log('rol---', razon);
       if(razon) {
         qnClient.textContent = 'Contacto: ' + client
         qnbusinessname.classList.remove('quotation-hide')
+        qnbusinessname.innerHTML = 'Razón social: ' + razon
       } else {
         qnClient.textContent = 'Cliente: ' + client
+        qnbusinessname.classList.add('quotation-hide')
       }
       qnCurrency.textContent = 'Moneda: ' + currency
       qnrol.textContent = 'Rol: ' + rol.replace(/_/g, ' ');
