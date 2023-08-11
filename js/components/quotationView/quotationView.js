@@ -76,12 +76,12 @@ const quotationView = async (node, infoQuotation) => {
                     <td><div class="quotatioview__discount">% ${element.discountPercent.toLocaleString()}</div></td>
                     <td></td>
                     <td>
-                        <div class="quotatioview__withdiscount">
-                            <span>$ </span>
+                        <span>$ </span>
+                        <span class="quotatioview__withdiscount">
                             ${resQueryUser.currency === 'COP' ? 
                                 ` ${element.subtotalWithDiscount.toLocaleString()}` : 
                                 ` ${element.subtotalWithDiscount.toFixed(2).toLocaleString()}`}
-                        </div>
+                        </span>
                     </td>
                     <td>
                         
