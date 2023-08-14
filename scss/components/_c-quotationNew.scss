@@ -23,6 +23,7 @@
           &--email,
           &--download {
             display: flex;
+            align-items: center;
             gap: 10px;
             text-decoration: none;
           }
