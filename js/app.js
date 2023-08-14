@@ -1,4 +1,3 @@
-import quotationListRow from "./components/quotation/quotationListRow.js";
 import selectAdvisors from "./components/quotation/selectAdvisors.js";
 import quotationNewPage from "./components/quotationNew/quotationNew.js";
 import getAdvisors from "./services/advisors/getAdvisors.js";
@@ -20,7 +19,7 @@ class App {
     document.addEventListener('DOMContentLoaded', async () => {
       const url = new URL(window.location.href);
       const searchParams = new URLSearchParams(url.search);
-      const uid = searchParams.get('uid') || '4';
+      const uid = searchParams.get('uid') || '19';
       const resQueryUser = await getUser(uid);
 
       localStorage.setItem('rol', resQueryUser.rol);

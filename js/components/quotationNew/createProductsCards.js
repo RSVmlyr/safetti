@@ -23,9 +23,6 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         description += '...';
       }
       // Short description+
-
-      // console.log(pro.mainImage);
-
       // Get URL Image
       let mainImage = pro.mainImage ? pro.mainImage : '../img/icon/image-product.jpg';
       const originUrlPath = 'https://dev-co-safetti-b2b.pantheonsite.io/sites/default/files/';
@@ -128,7 +125,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         const unisexInput = parentElement.querySelector('.qnUnisexInput');
         const juniorInput = parentElement.querySelector('.qnJuniorInput');
 
-        console.log(countrySelect.value,resQueryProducts);
+        //console.log(countrySelect.value,resQueryProducts);
 
         const product = [];
         if (manInput.value > 0) {

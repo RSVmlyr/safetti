@@ -6,7 +6,7 @@ const getUnityPrices = async (prod_id, currency, rol) => {
     currency,
     rol
   )
-  console.log('debug', prices);
+  //console.log('debug', prices);
   return prices
 }
 

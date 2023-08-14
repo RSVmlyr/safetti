@@ -406,7 +406,7 @@ class QuotationCalculation extends HTMLElement {
     if(client){
       const productForSave = this.retrievedData()
       const count = this.count(productForSave)
-      const numeroclean = client['0'].currency === 'COP' ? count :  parseFloat(quotationSave.textContent);
+      const numeroclean = client['0'].currency === 'COP' ? count :  parseFloat(count);
       const t = this.btnivaChecked(numeroclean, client['0'].currency, quo, btniva)
       quotationSave.textContent = t.toLocaleString()
       quo.addEventListener('input', (event) => {
@@ -435,8 +435,9 @@ class QuotationCalculation extends HTMLElement {
     const numero = currency === 'COP' ? (parseInt(numeroclean)) : (parseFloat(numeroclean)).toFixed(2)
     if (btniva.checked) {  
       const iva = (numero * 19) / 100
-      const valuesIva = currency === 'COP' ? (parseInt(iva)) : (parseFloat(iva)).toFixed(2)      
-      total = currency === 'COP' ? (parseInt(numero) + valuesIva) : (parseFloat(numero) + valuesIva).toFixed(2)
+      const valuesIva = currency === 'COP' ? (parseInt(iva)) : parseFloat(iva)
+       
+      total = currency === 'COP' ? (parseInt(numero) + valuesIva) : (parseFloat(numero) + valuesIva)
     } else {
       const productForSave = this.retrievedData()
       const count = this.count(productForSave)
