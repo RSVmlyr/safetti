@@ -8,13 +8,12 @@ import statusQuotationS from "../../services/statusQuotation/statusQuotation.js"
 import quotationNewPage from "../quotationNew/quotationNew.js"
 import getUser from "../../services/user/getUser.js"
 
-const createScenary = async (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
+const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     const quotationCreatescenary = quotation.querySelector('#quotation--content--list .quotation--list--row')
     const quotationCreatescenarys = quotation.querySelectorAll('#quotation--content--list .quotation--list--row')
     const scenaryContainerTop = quotation.querySelector('#scenary--container__top')
     const scenaryCreatedBody = quotation.querySelector('#scenary--container__bottom')
-    const currentUser = localStorage.getItem('current')
-    const resQueryUser = await getUser(currentUser);
+    const currentRol = localStorage.getItem('rol') 
 
     let lastClickedIndex = localStorage.getItem('lastClickedIndex');
 
@@ -61,7 +60,7 @@ const createScenary = async (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               <span class="quotation--status">${cotStatus.statusName}</span>
             </div>
             <div class="region region__two">
-              <a class="quotation--email" href="https://safetticustom.azurewebsites.net/api/Quotation/email/${resQueryUser.id}/${cot.id}">
+              <a class="quotation--email" href="https://safetticustom.azurewebsites.net/api/Quotation/email/${cot.client}/${cot.id}">
                 <span class="quotation--send--data quotation--info">Enviar correo</span>
                 <img class="quotation--email__img" src='../../img/icon/icon-email.svg' loading="lazy" alt="Email" title="Email">
               </a>
@@ -139,7 +138,7 @@ const createScenary = async (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         quotationBtnDelete.remove()
       }
 
-      if(resQueryUser.rol !== 'advisors') {
+      if(currentRol !== 'advisors') {
         quotationBtnNe.remove()
       }
 

@@ -22,6 +22,9 @@ class App {
       const searchParams = new URLSearchParams(url.search);
       const uid = searchParams.get('uid') || '4';
       const resQueryUser = await getUser(uid);
+
+      localStorage.setItem('rol', resQueryUser.rol);
+
       const login = new Login();
       login.setHash(uid);
       const storedHash = login.getStoredHash();

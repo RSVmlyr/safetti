@@ -101,6 +101,13 @@
           }
         }
         tbody {
+          tr {
+            td {
+              &:first-child {
+                font-family: "Futura Bold";
+              }
+            }
+          }
           td {
             &:nth-child(3) {
               text-align: right;
