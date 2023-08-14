@@ -70,7 +70,7 @@ const quotationView = async (node, infoQuotation) => {
             <hr>
                 <tbody>
                     <tr>
-                        <td>Costo Productos</td>
+                        <td class="quotatioview__title--table">Costo Productos</td>
                         <td>
                             <div>
                                 <span>$</span>
@@ -84,7 +84,7 @@ const quotationView = async (node, infoQuotation) => {
                     </tr>
                     <tr>
                         <td>
-                            <span>Descuento</span>
+                            <span class="quotatioview__title--table">Descuento</span>
                             <span class="quotatioview__discount">${element.discountPercent.toLocaleString()} % </span>
                         </td>
                         <td>
@@ -99,7 +99,7 @@ const quotationView = async (node, infoQuotation) => {
                         </td>
                     </tr>
                     <tr>
-                        <td>Subtotal con descuento</td>
+                        <td class="quotatioview__title--table">Subtotal con descuento</td>
                         <td>
                             <div>
                                 <span>$</span>
@@ -189,27 +189,35 @@ const quotationView = async (node, infoQuotation) => {
                     const quotatioviewValueTotal = section.querySelector('.quotatioview__valueTotal')
                     quotatioviewIva.classList.remove('quotation-hide')
 
+                    const qncurrencyElement = document.getElementById('qncurrency');
+                        const textContent = qncurrencyElement.textContent.trim();
+                        const currency = textContent.replace(/Moneda: /g, "");
+                        console.log(currency);
+
                     const mostrarEstadoCheckbox = (discountWithTotal) => {
-                        let dN = parseFloat(discountWithTotal);
-                        
+
+                        console.log('valor', discountWithTotal);
+                        const dataValueDis = typeof discountWithTotal === 'string' ? discountWithTotal.replace(/,/g, '') : discountWithTotal
+                        let dN = currency === 'COL' ? parseInt(dataValueDis) : parseFloat(dataValueDis)
+                        console.log(dN);
+
+
                         if (quotatioviewIva.checked) {
-                            console.log('ckech');
+                            console.log('ckeck', dataValueDis,  dN);
                             if(rangeInput.value == infoQuotation[i].discountPercent) {
-                                quotatioviewValueTotal.innerHTML = resQueryUser.currency === 'COP' ? infoQuotation[i].subtotalWithTaxIVA.toLocaleString() : infoQuotation[i].subtotalWithTaxIVA.toFixed(2).toLocaleString()
-                            } else {
-                                // console.log('Total con Descuento:', dN);
-                                const calculateIva = dN * infoQuotation[i].taxIVAApplied / 100
-                                // console.log('Iva:', calculateIva);
-                                const calculateIvaTotal = dN + calculateIva
-                                // console.log('Total con Iva', calculateIvaTotal);
-                                quotatioviewValueTotal.innerHTML = resQueryUser.currency === 'COP' ? calculateIvaTotal.toLocaleString() : calculateIvaTotal.toFixed(2).toLocaleString()
-                            }
+                                quotatioviewValueTotal.innerHTML = currency === 'COP' ? infoQuotation[i].subtotalWithTaxIVA.toLocaleString() : infoQuotation[i].subtotalWithTaxIVA.toFixed(2).toLocaleString()
+                            } 
+                            const calculateIva = (dN * 19) / 100
+                            // console.log('Iva:', calculateIva);
+                            const calculateIvaTotal = dN + calculateIva
+                            // console.log('Total con Iva', calculateIvaTotal);
+                            quotatioviewValueTotal.innerHTML = currency === 'COP' ? calculateIvaTotal.toLocaleString() : calculateIvaTotal.toFixed(2).toLocaleString()
                         } else {
-                            console.log('no ckech', dN);
+                            console.log('no check', typeof dN);
                             if(rangeInput.value == infoQuotation[i].discountPercent) {
-                                quotatioviewValueTotal.innerHTML = resQueryUser.currency === 'COP' ? infoQuotation[i].subtotalWithDiscount.toLocaleString() : infoQuotation[i].subtotalWithDiscount.toFixed(2).toLocaleString()
+                                quotatioviewValueTotal.innerHTML = currency === 'COP' ? infoQuotation[i].subtotalWithDiscount.toLocaleString() : infoQuotation[i].subtotalWithDiscount.toFixed(2).toLocaleString()
                             } else {
-                                quotatioviewValueTotal.innerHTML = resQueryUser.currency === 'COP' ? dN.toLocaleString() : dN.toFixed(2).toLocaleString()
+                                quotatioviewValueTotal.innerHTML = currency === 'COP' ? dN.toLocaleString() : dN.toFixed(2).toLocaleString()
                             }
                         }
                     };
@@ -228,9 +236,10 @@ const quotationView = async (node, infoQuotation) => {
                             const calculateDiscout = infoQuotation[i].subtotalProducts * event.target.value / 100
                             const calculateDiscoutTotal = infoQuotation[i].subtotalProducts - calculateDiscout
                             const calculateDiscoutValue = infoQuotation[i].subtotalProducts - calculateDiscoutTotal
-                            console.log('Descuento -', calculateDiscoutValue);
-                            quotatioviewWithdiscount.innerHTML = resQueryUser.currency === 'COP' ? calculateDiscoutTotal.toLocaleString() : calculateDiscoutTotal.toFixed(2).toLocaleString()
-                            quotatioviewDiscountValueNumber.innerHTML = resQueryUser.currency === 'COP' ? calculateDiscoutValue.toLocaleString() : calculateDiscoutValue.toFixed(2).toLocaleString()
+                            // console.log('Descuento -', calculateDiscoutValue);
+                            quotatioviewWithdiscount.innerHTML = currency === 'COP' ? calculateDiscoutTotal.toLocaleString() : calculateDiscoutTotal.toFixed(2).toLocaleString()
+                            quotatioviewDiscountValueNumber.innerHTML = currency === 'COP' ? calculateDiscoutValue.toLocaleString() : calculateDiscoutValue.toFixed(2).toLocaleString()
+                            console.log('Enviado', calculateDiscoutTotal);
                             mostrarEstadoCheckbox(calculateDiscoutTotal);
                         }
                     });

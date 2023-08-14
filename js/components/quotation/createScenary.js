@@ -16,29 +16,29 @@ const createScenary = async (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     const currentUser = localStorage.getItem('current')
     const resQueryUser = await getUser(currentUser);
 
-    let lastClickedIndex = localStorage.getItem('lastClickedIndex');
+    // let lastClickedIndex = localStorage.getItem('lastClickedIndex');
 
-    quotationCreatescenarys.forEach((other, index) => {
-      other.classList.remove('active');
-      if (lastClickedIndex !== null && index.toString() === lastClickedIndex) {
-        other.classList.add('active');
-        setTimeout(() => {
-          other.click()
-        }, 100);
-      }
-    });
+    // quotationCreatescenarys.forEach((other, index) => {
+    //   other.classList.remove('active');
+    //   if (lastClickedIndex !== null && index.toString() === lastClickedIndex) {
+    //     other.classList.add('active');
+    //     setTimeout(() => {
+    //       other.click()
+    //     }, 100);
+    //   }
+    // });
     
-    quotationCreatescenarys.forEach((q, index) => {
-      q.addEventListener('click', () => {
-        quotationCreatescenarys.forEach((other) => {
-          other.classList.remove('active');
-        });
-        q.classList.add('active');
-        q.click()
-        lastClickedIndex = index.toString();
-        localStorage.setItem('lastClickedIndex', lastClickedIndex);
-      });
-    });
+    // quotationCreatescenarys.forEach((q, index) => {
+    //   q.addEventListener('click', () => {
+    //     quotationCreatescenarys.forEach((other) => {
+    //       other.classList.remove('active');
+    //     });
+    //     q.classList.add('active');
+    //     q.click()
+    //     lastClickedIndex = index.toString();
+    //     localStorage.setItem('lastClickedIndex', lastClickedIndex);
+    //   });
+    // });
 
     quotationCreatescenary.addEventListener('click', (e) => {
 
