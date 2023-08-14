@@ -84,10 +84,15 @@
             &:nth-child(3) {
               text-align: right;
             }
+            div {
+              text-align: right;
+            }
           }
         }
       }
       .table__descuento {
+        margin: 0 0 0 auto;
+        max-width: 350px;
         thead {
           th {
             &:nth-child(3) {
