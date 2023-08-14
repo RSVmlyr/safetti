@@ -283,7 +283,11 @@ class QuotationCalculation extends HTMLElement {
             const client = JSON.parse(c)
             price = await getUnityPrices(product.id, client['0'].currency, client['0'].rol);    
             const priceInRange = this.getPriceInRange(price, product.quantity)
-
+            if(!priceInRange){
+              console.log('error this producto', product);
+              nodeNotification('Error en la información del producto')
+              return null
+            }
             if(client['0'].currency === 'COP') {
               numPrange = priceInRange.replace(".", "")
             } else {
@@ -380,13 +384,8 @@ class QuotationCalculation extends HTMLElement {
         const searchParams = new URLSearchParams(url.search);
         const cotId = searchParams.get('cotId')
 
-        let retrievedData = ''
-        if(cotId) {
-          retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
-        } else{
-          retrievedData = expiringLocalStorage.getDataWithExpiration("products")
-        }
-        const retrievedDataParse = JSON.parse(retrievedData)
+        const retrievedDataParse = this.retrievedData()
+        //const retrievedDataParse = JSON.parse(retrievedData)
         const newArray = retrievedDataParse.filter(item => item.selectedMoldeCode !== getDataProduct);
         if(cotId) {
           expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(newArray))
@@ -409,11 +408,12 @@ class QuotationCalculation extends HTMLElement {
     const btniva = document.querySelector('.quotation--iva')
 
     if(client){
-      const numeroclean = client['0'].currency === 'COP' ? quotationSave.textContent.replace(",", "") :  parseFloat(quotationSave.textContent);
+      const productForSave = this.retrievedData()
+      const count = this.count(productForSave)
+      const numeroclean = client['0'].currency === 'COP' ? count :  parseFloat(count);
       const t = this.btnivaChecked(numeroclean, client['0'].currency, quo, btniva)
       quotationSave.textContent = t.toLocaleString()
       quo.addEventListener('input', (event) => {
-        console.log(event.target.value);
         const maxValue = 10;
         if (event.target.value > maxValue) {
           event.target.value = maxValue;
@@ -436,14 +436,16 @@ class QuotationCalculation extends HTMLElement {
 
   btnivaChecked (numeroclean, currency, quo, btniva){
     let total = 0
+    const numero = currency === 'COP' ? (parseInt(numeroclean)) : (parseFloat(numeroclean)).toFixed(2)
     if (btniva.checked) {  
-      const iva = numeroclean * 0.19
-      console.log('iva', iva);
-      total = currency === 'COP' ? (parseInt(numeroclean) + iva) : (parseFloat(numeroclean) + iva).toFixed(2)
+      const iva = (numero * 19) / 100
+      const valuesIva = currency === 'COP' ? (parseInt(iva)) : parseFloat(iva)
+       
+      total = currency === 'COP' ? (parseInt(numero) + valuesIva) : (parseFloat(numero) + valuesIva)
     } else {
       const productForSave = this.retrievedData()
       const count = this.count(productForSave)
-      const a = currency === 'COP' ? (parseInt(count)) : (parseFloat(count)).toFixed(2)
+      //const a = currency === 'COP' ? (parseInt(count)) : (parseFloat(count)).toFixed(2)
       let porcentaje = 0
       if(quo != null) {
         porcentaje = quo.value
