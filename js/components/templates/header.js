@@ -14,6 +14,7 @@ const header = (node, infoQuotation) => {
   const dateCreat = dateFormat(createdAt);
   const dateUpdate = dateFormat(createdAt);
   const header = document.createElement("header");
+  const currentUser = localStorage.getItem('current')
 
   header.classList.add("quotationew--header");
   header.innerHTML = `
@@ -25,7 +26,7 @@ const header = (node, infoQuotation) => {
         <span id="qncurrency" class="quotation--info__white">Moneda: ${currency}</span>
     </div>
     <div class="region region--right">
-        <a href="https://safetticustom.azurewebsites.net/api/Quotation/email/${id}" class="quotation--email">
+        <a href="https://safetticustom.azurewebsites.net/api/Quotation/email/${currentUser}/${id}" class="quotation--email">
             <span id="qnemail" class="quotation--send--data quotation--info__white">Enviar correo</span>
             <img class="quotation--email__img" src="../../img/icon/icon-email-white.svg" loading="lazy"
                 alt="Email" title="Email">

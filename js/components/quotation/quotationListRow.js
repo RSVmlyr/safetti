@@ -35,7 +35,7 @@ const quotationListRow = (cot) => {
       </div>
     </div>
     <div class="quotation--list--two">
-      <span class="quotation--subtitle">Nombre de la cotización:</span>
+      <span class="quotation--info">Nombre del proyecto:</span>
       <h3 class="quotation--title__quo">${cot.name ? cot.name : ''}</h3>
     </div>
     <div class="quotation--list--three">

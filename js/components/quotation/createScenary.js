@@ -13,9 +13,11 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     const quotationCreatescenarys = quotation.querySelectorAll('#quotation--content--list .quotation--list--row')
     const scenaryContainerTop = quotation.querySelector('#scenary--container__top')
     const scenaryCreatedBody = quotation.querySelector('#scenary--container__bottom')
-    const currentRol = localStorage.getItem('rol') 
-
+    const currentRol = localStorage.getItem('rol')
+    const currentUser = localStorage.getItem('current')
     let lastClickedIndex = localStorage.getItem('lastClickedIndex');
+
+    console.log(cot);
 
     quotationCreatescenarys.forEach((other, index) => {
       other.classList.remove('active');
@@ -60,7 +62,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               <span class="quotation--status">${cotStatus.statusName}</span>
             </div>
             <div class="region region__two">
-              <a class="quotation--email" href="https://safetticustom.azurewebsites.net/api/Quotation/email/${cot.client}/${cot.id}">
+              <a class="quotation--email" href="https://safetticustom.azurewebsites.net/api/Quotation/email/${currentUser}/${cot.id}">
                 <span class="quotation--send--data quotation--info">Enviar correo</span>
                 <img class="quotation--email__img" src='../../img/icon/icon-email.svg' loading="lazy" alt="Email" title="Email">
               </a>
