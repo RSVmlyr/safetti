@@ -54,11 +54,11 @@ const nodeNotification = (text) => {
   const body = document.querySelector('body')
   body.insertAdjacentElement('afterend', notification);
   
-  // setTimeout(() => {
-  //   if (notificationDiv) {
-  //     notificationDiv.remove()
-  //   }
-  // }, 10000);
+  setTimeout(() => {
+    if (notification) {
+      notification.remove()
+    }
+  }, 2000);
 }
 
 export default nodeNotification
