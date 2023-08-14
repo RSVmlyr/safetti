@@ -57,7 +57,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
               <span class="card--amount__title">Hombre</span>
               <div class="card--amount__input">
                 <button class="qnManDecrease">-</button>
-                <input class="qnManInput" type="number" name="qnManInput" value="0" min="0" readonly>
+                <input class="qnManInput" type="number" name="qnManInput" value="0" min="0">
                 <button class="qnManIncrease">+</button>
               </div>
             </div>
@@ -66,7 +66,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
               <span class="card--amount__title">Mujer</span>
               <div class="card--amount__input">
                 <button class="qnWomanDecrease">-</button>
-                <input class="qnWomanInput" type="number" name="qnWomanInput" value="0" min="0" readonly>
+                <input class="qnWomanInput" type="number" name="qnWomanInput" value="0" min="0">
                 <button class="qnWomanIncrease">+</button>
               </div>
             </div>
@@ -75,7 +75,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
               <span class="card--amount__title">Unisex</span>
               <div class="card--amount__input">
                 <button class="qnUnisexDecrease">-</button>
-                <input class="qnUnisexInput" type="number" name="qnUnisexInput" value="0" min="0" readonly>
+                <input class="qnUnisexInput" type="number" name="qnUnisexInput" value="0" min="0">
                 <button class="qnUnisexIncrease">+</button>
               </div>
             </div>
@@ -84,7 +84,16 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
               <span class="card--amount__title">Junior</span>
               <div class="card--amount__input">
                 <button class="qnJuniorDecrease">-</button>
-                <input class="qnJuniorInput" type="number" name="qnJuniorInput" value="0" min="0" readonly>
+                <input class="qnJuniorInput" type="number" name="qnJuniorInput" value="0" min="0">
+                <button class="qnJuniorIncrease">+</button>
+              </div>
+            </div>
+
+            <div class="vrman card--amount">
+              <span class="card--amount__title">vR7Man</span>
+              <div class="card--amount__input">
+                <button class="qnJuniorDecrease">-</button>
+                <input class="vrman" type="number" name="qnvrmanInput" value="0" min="0">
                 <button class="qnJuniorIncrease">+</button>
               </div>
             </div>
@@ -126,6 +135,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         const juniorInput = parentElement.querySelector('.qnJuniorInput');
 
         //console.log(countrySelect.value,resQueryProducts);
+        console.log(pro);
 
         const product = [];
         if (manInput.value > 0) {

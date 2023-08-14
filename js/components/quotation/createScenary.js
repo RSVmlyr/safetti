@@ -94,7 +94,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                 <a href="./index-q.html?cotId=${cot.id}&cotName=${encodeURIComponent(cot.name)}&uid=${storedHash}" class="quotation--btn__new quotation--btn__Ne">Nuevo escenario +</a>
                 <div id="quotation--btn__approved" class="scenary--data__actionsDelete">
                   <span class="quotation--info">Aprobar cotización</span>
-                  <img src='../../img/icon/check.svg' loading="lazy" alt="Eliminar" title="Eliminar">
+                  <img src='../../img/icon/check.svg' loading="lazy" alt="Aprobar" title="Aprobar">
                 </div>
                 <div id="quotation--btn__delete" class="scenary--data__actionsDelete">
                   <span class="quotation--info">Cancelar cotización</span>

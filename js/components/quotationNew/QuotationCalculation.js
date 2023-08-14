@@ -78,7 +78,7 @@ class QuotationCalculation extends HTMLElement {
           advisorName: data.fullName,
           scenarios: [
             {
-              name: 'Primer Escenario',
+              name: 'Escenario #1',
               selected: true,
               discountPercent: p,
               applyTaxIVA: iva,
@@ -283,7 +283,7 @@ class QuotationCalculation extends HTMLElement {
             const client = JSON.parse(c)
             price = await getUnityPrices(product.id, client['0'].currency, client['0'].rol);    
             const priceInRange = this.getPriceInRange(price, product.quantity)
-            if(!priceInRange){
+            if(priceInRange===undefined) {
               console.log('error this producto', product);
               nodeNotification('Error en la información del producto')
               return null
