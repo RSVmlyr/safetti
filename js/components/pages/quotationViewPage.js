@@ -14,7 +14,7 @@ const quotationViewPage = async () => {
     const quotation = await getQuotation(id);
 
     header(quotatioview, quotation);
-    quotationView(quotatioview, quotation.scenarios);
+    quotationView(quotatioview, quotation, quotation.scenarios);
   }
 };
 

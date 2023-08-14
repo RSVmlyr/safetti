@@ -2,18 +2,19 @@ import nodeNotification from "../../helpers/nodeNotification.js";
 import putScenario from "../../services/quotation/putScenario.js";
 import getUser from "../../services/user/getUser.js";
 
-const quotationView = async (node, infoQuotation) => {
+const quotationView = async (node, quotation ,infoQuotation) => {
 
     const url = new URL(window.location.href);
     const searchParams = new URLSearchParams(url.search);
     const uid = searchParams.get('uid');
     const resQueryUser = await getUser(uid);
-    console.log(resQueryUser);
 
-  const container = document.createElement("div");
-  container.classList.add("quotatioview--container");
-  let elementDiscuount;
-  const table = `
+    console.log(quotation);
+
+    const container = document.createElement("div");
+    container.classList.add("quotatioview--container");
+    let elementDiscuount;
+    const table = `
         <thead>
             <tr>
                 <th>Producto</th>
@@ -23,7 +24,7 @@ const quotationView = async (node, infoQuotation) => {
                 <th>Sub Total</th>
             </tr>
         </thead>
-      `;
+        `;
 
   infoQuotation.forEach((element) => {
     let productos = "";
@@ -149,6 +150,7 @@ const quotationView = async (node, infoQuotation) => {
             const quotatioviewEdit = section.querySelector('.quotatioview__edit')
 
             resQueryUser.rol === 'advisors' ? quotatioviewEdit : quotatioviewEdit.remove()
+            quotation.status.id === 1 ? quotatioviewEdit : quotatioviewEdit.remove()
 
             const quotatioviewTitleScenary = section.querySelector('.quotatioview__title--scenary')
             let infoDiscuount = infoQuotation[i].discountPercent;
