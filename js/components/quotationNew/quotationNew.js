@@ -14,10 +14,6 @@ import setQuotation from "../../services/quotation/setQuotation.js";
 
 const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQueryClients) => {
   const expiringLocalStorage = new ExpiringLocalStorage()
-
-  // console.log('Object User', resQueryUser);
-  // console.log('Object Products', resQueryProducts.products);
-
   const url = new URL(window.location.href);
   const searchParams = new URLSearchParams(url.search);
   const cotId = searchParams.get('cotId');
@@ -39,8 +35,6 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   const qnrol = quotationNew.querySelector('#qnrol')
   idQnDate.innerHTML = 'Creación: ' + dateFormat(dateCurrent)
 
-  console.log(resQueryUser);
-  
   if(resQueryUser.rol === 'advisors') {
     qnrol.classList.remove('quotation-hide')
   } 
@@ -154,7 +148,6 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
         idQnAdvisor.innerHTML = 'Cliente: ' + cFulName[0].client
       }
       qnrol.innerHTML = 'Cliente: ' + cFulName[0].rol.replace(/_/g, ' ');
-      console.log(cFulName[0]);
       validateNewCleint()
     }
 
@@ -312,9 +305,6 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   quotationBtnSave.addEventListener('click', () => {
 
     const btnSave = () => {
-
-      console.log('click', resQueryUser.rol)
-
       if (resQueryUser.rol !== 'advisors') {
         if (quotationewname) {
           if (quotationewname.value == '') {

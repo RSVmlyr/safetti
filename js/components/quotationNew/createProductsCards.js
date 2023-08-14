@@ -127,6 +127,9 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         const womanInput = parentElement.querySelector('.qnWomanInput');
         const unisexInput = parentElement.querySelector('.qnUnisexInput');
         const juniorInput = parentElement.querySelector('.qnJuniorInput');
+
+        console.log(countrySelect.value,resQueryProducts);
+
         const product = [];
         if (manInput.value > 0) {
           product.push({
