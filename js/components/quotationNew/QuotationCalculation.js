@@ -518,6 +518,7 @@ class QuotationCalculation extends HTMLElement {
       } else{
         expiringLocalStorage.deleteDataWithExpiration("products")
       }
+      fieldValor.textContent = '0'
       this.removeList()
     })
     this.insertList()
