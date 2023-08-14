@@ -283,7 +283,11 @@ class QuotationCalculation extends HTMLElement {
             const client = JSON.parse(c)
             price = await getUnityPrices(product.id, client['0'].currency, client['0'].rol);    
             const priceInRange = this.getPriceInRange(price, product.quantity)
-
+            console.log(priceInRange);
+            if(!priceInRange){
+              console.log('error this producto', product);
+              return null
+            }
             if(client['0'].currency === 'COP') {
               numPrange = priceInRange.replace(".", "")
             } else {
