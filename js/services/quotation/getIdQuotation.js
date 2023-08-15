@@ -1,6 +1,10 @@
+import { config } from "../../../config.js"
+
+const API_DEV = config.API_KEY_DEV;
+
 const getQuotation = async (Qid) => {
   try {
-    const urlQuery = `https://safetticustom.azurewebsites.net/api/Quotation/${Qid}`
+    const urlQuery = `${API_DEV}/api/Quotation/${Qid}`
     const reqQuery = await fetch(urlQuery)
     const resQuery = await reqQuery.json()
     
