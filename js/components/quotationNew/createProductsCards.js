@@ -197,6 +197,10 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
 
       const cardViewDetailProducts = quotationNew.querySelector('.card .qnviewdetailproducts')
       cardViewDetailProducts.addEventListener('click', (e) => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth' // Agrega un desplazamiento suave
+        });
         bodyDom.style.overflow = 'hidden'
         if(e.target) {
           let modalCard =
@@ -219,17 +223,17 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
                       <h4 class="modal--title"><span>Clasificación:</span> ${pro.classification ? pro.classification : ''}</h4>
                       <h4 class="modal--title"><span>Descripción:</span></h4>
                       <div class="modal--des__es">
-                        ${pro.description ? pro.description : ''}
+                        ${pro.description ? pro.description : '...'}
                       </div>
                       <div class="modal--des__en quotation-hide">
-                        ${pro.descriptionEN ? pro.descriptionEN : ''}
+                        ${pro.descriptionEN ? pro.descriptionEN : '...'}
                       </div>
                       <h4 class="modal--title"><span>Características:</span></h4>
                       <div class="modal--features__es">
-                        ${pro.features ? pro.features : ''}
+                        ${pro.features ? pro.features : '...'}
                       </div>
                       <div class="modal--features__en quotation-hide">
-                        ${pro.featuresEN ? pro.featuresEN : ''}
+                        ${pro.featuresEN ? pro.featuresEN : '...'}
                       </div>
                     </div>  
                     <div class="modal--close">x</div>
@@ -248,8 +252,6 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             quotationNew.style.overflow = 'auto'
             modal.remove()  
           })
-
-          console.log(pro);
 
           const btnEs = document.querySelector('.es')
           const btnEn = document.querySelector('.en')
