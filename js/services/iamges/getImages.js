@@ -1,6 +1,10 @@
+import { config } from "../../../config.js"
+
+const API_DEV = config.API_KEY_DEV;
 const getIamages = async (id) => {
   try {
-    const urlQueryImages= `https://safetticustom.azurewebsites.net/api/Product/images/${id}`
+    const urlQueryImages= `${API_DEV}/api/Product/images/${id}`
+    // const urlQueryImages= `https://safetticustom.azurewebsites.net/api/Product/images/${id}`
     const reqQueryImages= await fetch(urlQueryImages)
     // console.log('Status Service Images', reqQueryImages);
     const resQueryImages= await reqQueryImages.json()

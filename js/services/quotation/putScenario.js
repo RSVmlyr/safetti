@@ -1,5 +1,8 @@
 import nodeNotification from "../../helpers/nodeNotification.js";
 import ExpiringLocalStorage from '../../components/localStore/ExpiringLocalStorage.js';
+import { config } from "../../../config.js"
+
+const API_DEV = config.API_KEY_DEV;
 
 const putScenario = async (dataSetScenario, cotId) => {
   try {
@@ -10,7 +13,7 @@ const putScenario = async (dataSetScenario, cotId) => {
       },
       body: JSON.stringify(dataSetScenario)
     };
-    const urlQueryS = 'https://safetticustom.azurewebsites.net/api/Scenario'
+    const urlQueryS = `${API_DEV}/api/Scenario`
     const reqQueryS = await fetch(urlQueryS, requestOptions)
     const resQueryS = await reqQueryS.json()
     // console.log(reqQueryS);

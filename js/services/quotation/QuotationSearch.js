@@ -1,6 +1,10 @@
+import { config } from "../../../config.js"
+
+const API_DEV = config.API_KEY_DEV;
+
 const QuotationSearch = async (uid, pageNumber, advisorId) => {
   try {
-    const urlQueryAdvisors = `https://safetticustom.azurewebsites.net/api/Quotation/search/${uid}/${pageNumber}/10/${advisorId}/%20`
+    const urlQueryAdvisors = `${API_DEV}/api/Quotation/search/${uid}/${pageNumber}/10/${advisorId}/%20`
     const reqQueryAdvisors = await fetch(urlQueryAdvisors)
     const resQueryAdvisors = await reqQueryAdvisors.json()
     //console.log('Array Service Advisors', resQueryAdvisors);

@@ -1,6 +1,9 @@
+import { config } from "../../../config.js"
+
+const API_DEV = config.API_KEY_DEV;
 const getUser = async (uid) => {
   try {
-    const urlQueryUser = `https://safetticustom.azurewebsites.net/api/User/${uid}`
+    const urlQueryUser = `${API_DEV}/api/User/${uid}`
     const reqQueryUser = await fetch(urlQueryUser)
     // console.log('Status Service User', reqQueryUser);
     const resQueryUser = await reqQueryUser.json()
