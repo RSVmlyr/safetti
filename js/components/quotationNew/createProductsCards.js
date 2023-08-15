@@ -88,15 +88,6 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
                 <button class="qnJuniorIncrease">+</button>
               </div>
             </div>
-
-            <div class="vrman card--amount">
-              <span class="card--amount__title">vR7Man</span>
-              <div class="card--amount__input">
-                <button class="qnJuniorDecrease">-</button>
-                <input class="vrman" type="number" name="qnvrmanInput" value="0" min="0">
-                <button class="qnJuniorIncrease">+</button>
-              </div>
-            </div>
   
             <div class="card--amount__actions">
               <button class="qncancelproduct">Cancelar</button>
