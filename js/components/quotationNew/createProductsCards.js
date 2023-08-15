@@ -8,6 +8,8 @@ import nodeNotification from '../../helpers/nodeNotification.js'
 
 const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
 
+  const bodyDom = document.querySelector('body')
+
   dataSetQuotation(resQueryUser)
 
   const loading = quotationNew.querySelector('.slider--productos .slider--content .quotation--loading')
@@ -195,7 +197,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
 
       const cardViewDetailProducts = quotationNew.querySelector('.card .qnviewdetailproducts')
       cardViewDetailProducts.addEventListener('click', (e) => {
-      
+        bodyDom.style.overflow = 'hidden'
         if(e.target) {
           let modalCard =
           `<div class="modal">
@@ -205,8 +207,8 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
                 <div class="modal--container__bodyRight">
                   <div class="modal--header">
                     <div class="modal--header__languages">
-                      <div class="es quotation--btn__add">ES</div>
-                      <div class="en quotation--btn__add">EN</div>
+                      <div class="es quotation--btn__new">ES</div>
+                      <div class="en quotation--btn__new">EN</div>
                     </div>
                     <h3 class="quotation--title__quo">${pro.id ? pro.id : ''} / ${pro.name ? pro.name : ''}</h3>
                   </div>
@@ -216,9 +218,19 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
                       <h4 class="modal--title"><span>Referencia:</span> ${pro.referencia ? pro.referencia : ''}</h4>
                       <h4 class="modal--title"><span>Clasificación:</span> ${pro.classification ? pro.classification : ''}</h4>
                       <h4 class="modal--title"><span>Descripción:</span></h4>
-                      ${pro.description ? pro.description : ''}
+                      <div class="modal--des__es">
+                        ${pro.description ? pro.description : ''}
+                      </div>
+                      <div class="modal--des__en quotation-hide">
+                        ${pro.descriptionEN ? pro.descriptionEN : ''}
+                      </div>
                       <h4 class="modal--title"><span>Características:</span></h4>
-                      ${pro.features ? pro.features : ''}
+                      <div class="modal--features__es">
+                        ${pro.features ? pro.features : ''}
+                      </div>
+                      <div class="modal--features__en quotation-hide">
+                        ${pro.featuresEN ? pro.featuresEN : ''}
+                      </div>
                     </div>  
                     <div class="modal--close">x</div>
                   </div>
@@ -232,8 +244,39 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           const modal = document.querySelector('.modal')
           const modalClose = document.querySelector('.modal--close')
           modalClose.addEventListener('click', () => {
+            bodyDom.style.overflow = 'initial'
             quotationNew.style.overflow = 'auto'
             modal.remove()  
+          })
+
+          console.log(pro);
+
+          const btnEs = document.querySelector('.es')
+          const btnEn = document.querySelector('.en')
+          const modalDesEs = document.querySelector('.modal--des__es')
+          const modalFeaturesEs = document.querySelector('.modal--features__es')
+          const modalDesEn = document.querySelector('.modal--des__en')
+          const modalFeaturesEn = document.querySelector('.modal--features__en')
+          
+          btnEs.addEventListener('click', () => {
+            btnEs.style.backgroundColor = 'transparent';
+            btnEs.style.color = 'black';
+            btnEn.style.backgroundColor = 'black';
+            btnEn.style.color = 'white';
+            modalDesEn.classList.add('quotation-hide')
+            modalFeaturesEn.classList.add('quotation-hide')
+            modalDesEs.classList.remove('quotation-hide')
+            modalFeaturesEs.classList.remove('quotation-hide')
+          })
+          btnEn.addEventListener('click', () => {
+            btnEn.style.backgroundColor = 'transparent';
+            btnEn.style.color = 'black';
+            btnEs.style.backgroundColor = 'black';
+            btnEs.style.color = 'white';
+            modalDesEs.classList.add('quotation-hide')
+            modalFeaturesEs.classList.add('quotation-hide')
+            modalDesEn.classList.remove('quotation-hide')
+            modalFeaturesEn.classList.remove('quotation-hide')
           })
 
           const imagesData = async () => {
