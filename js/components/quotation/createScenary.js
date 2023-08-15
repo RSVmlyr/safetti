@@ -176,7 +176,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             scenaryData.remove()
           }
         }
-        cot.scenarios.forEach(scen => {
+        cot.scenarios.reverse().forEach((scen, i) => {
 
           let totalProducts = 0;
           scen.products.forEach(product => {
@@ -193,7 +193,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             `<div class="scenary--data__scenary">
               <table>
                 <tr>
-                  <td><span class="quotation--title__quo">${scen.name ? scen.name : ''}</span></td>
+                  <td><span class="quotation--title__quo">#${i + 1} - ${scen.name ? scen.name : ''}</span></td>
                   <td><span class="quotation--title__quo">Productos</span></td>
                   <td><span class="quotation--title__quo">Total</span></td>
                   <td></td>
@@ -236,7 +236,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             <div class="scenary--data__body">
               <div class="scenary--data__scenary">
                 ${scenSelected === true ? '<div class="scenary--row__header selected">' : '<div class="scenary--row__header">'}
-                  <span class="quotation--title__quo">${scen.name ? scen.name : ''}</span>
+                  <span class="quotation--title__quo">#${i + 1} - ${scen.name ? scen.name : ''}</span>
                 </div>
                 <div class="scenary--row__body">
                   <div class="scenary--row__table">

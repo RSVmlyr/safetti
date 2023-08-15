@@ -39,7 +39,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
               <img src="${modifiedStringImage}" loading="lazy" alt="Producto" title="Producto" >
             </div>
             <div class="card--body">
-              <h3 class="card--title quotation--title__quo">${pro.id ? pro.id : ''} - ${pro.name ? pro.name : ''}</h3>
+              <h3 class="card--title quotation--title__quo">${pro.name ? pro.name : ''}</h3>
               <span class="card--reference">${pro.referencia ? pro.referencia : ''}</span>
               ${description}
             </div>
@@ -130,13 +130,17 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         //console.log(countrySelect.value,resQueryProducts);
         console.log(pro);
 
+        const a = countrySelect.value
+        console.log(countrySelect.value); 
+        // console.log(pro);
+
         const product = [];
         if (manInput.value > 0) {
           product.push({
             country: countrySelect.value,
             id: pro.id,
             productName: pro.name,
-            selectedMoldeCode: pro.colombiaMan,
+            selectedMoldeCode: pro[countrySelect.value + 'Man'],
             quantity: manInput.value,
           });
         }
@@ -146,7 +150,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             country: countrySelect.value,
             id: pro.id,
             productName: pro.name,
-            selectedMoldeCode: pro.colombiaWoman,
+            selectedMoldeCode: pro[countrySelect.value + 'Woman'],
             quantity: womanInput.value,
           });
         }
@@ -156,7 +160,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             country: countrySelect.value,
             id: pro.id,
             productName: pro.name,
-            selectedMoldeCode: pro.colombiaUnisex,
+            selectedMoldeCode: pro[countrySelect.value + 'Unisex'],
             quantity: unisexInput.value,
           });
         }
@@ -166,7 +170,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             country: countrySelect.value,
             id: pro.id,
             productName: pro.name,
-            selectedMoldeCode: pro.colombiaJunior,
+            selectedMoldeCode: pro[countrySelect.value + 'Junior'],
             quantity: juniorInput.value,
           });
         }
@@ -179,7 +183,8 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           sliderProductsRow.classList.remove('active')
         }, 1000);        
         //nodeNotification('Agregado a la lista')
-        
+        console.log(pro);
+        console.log(product);
         const quotationCalculation = new QuotationCalculation(resQueryUser);
         // quotationCalculation.createRow(product);
         quotationCalculation.createArrayProducto(product);
@@ -324,7 +329,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
       })
   
       const idQnCountry = quotationNew.querySelector('.qncountry')
-      const countryName = ['Colombia', 'USA - Canada', 'vR7']
+      const countryName = ['colombia', 'canada', 'vR7']
       fillSelectProduct(idQnCountry, countryName)
   
       // countryValidate
@@ -332,12 +337,12 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
       // countryValidate
 
       if (pro.colombiaMan === null && pro.colombiaWoman === null && pro.colombiaUnisex === null && pro.colombiaJunior === null) {
-        const optionToRemove = 'Colombia';
+        const optionToRemove = 'colombia';
         const option = idQnCountry.querySelector(`option[value="${optionToRemove}"]`);
         option ? option.remove() : null
       }
       if (pro.canadaMan === null && pro.canadaWoman === null) {
-        const optionToRemove = 'USA - Canada';
+        const optionToRemove = 'canada';
         const option = idQnCountry.querySelector(`option[value="${optionToRemove}"]`);
         option ? option.remove() : null
       }
@@ -404,13 +409,13 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           idInputJunior.classList.remove('quotation-hidden')
         }
 
-        if (e.target.value === 'Colombia') {
+        if (e.target.value === 'colombia') {
           pro.colombiaMan === null ? idInputMan.classList.add('quotation-hidden') : idInputMan.classList.remove('quotation-hidden')
           pro.colombiaWoman === null ? idInputwoman.classList.add('quotation-hidden') : idInputwoman.classList.remove('quotation-hidden')
           pro.colombiaJunior === null ? idInputJunior.classList.add('quotation-hidden') : idInputJunior.classList.remove('quotation-hidden')
           pro.colombiaUnisex === null ? idInputUnisex.classList.add('quotation-hidden') : idInputUnisex.classList.remove('quotation-hidden')
           qnaceptProduct.classList.remove('quotation-hidden')
-        } else if (e.target.value === 'USA - Canada') {
+        } else if (e.target.value === 'canada') {
           pro.canadaMan === null ? idInputMan.classList.add('quotation-hidden') : idInputMan.classList.remove('quotation-hidden')
           pro.canadaWoman === null ? idInputwoman.classList.add('quotation-hidden') : idInputwoman.classList.remove('quotation-hidden')
           idInputJunior.classList.add('quotation-hidden')
