@@ -12,6 +12,7 @@ const quotationViewPage = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
     const quotation = await getQuotation(id);
+    
 
     header(quotatioview, quotation);
     quotationView(quotatioview, quotation, quotation.scenarios);

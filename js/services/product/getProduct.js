@@ -1,6 +1,9 @@
+import { config } from "../../../config.js"
+
+const API_DEV = config.API_KEY_DEV;
 const getProduct = async () => {
   try {
-    const urlQueryProducts = 'https://safetticustom.azurewebsites.net/api/Product'
+    const urlQueryProducts = `${API_DEV}/api/Product`
     const reqQueryProducts = await fetch(urlQueryProducts)
     // console.log('Status Service Products', reqQueryProducts);
     const resQueryProducts = await reqQueryProducts.json()

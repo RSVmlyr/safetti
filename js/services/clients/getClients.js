@@ -1,9 +1,13 @@
+import { config } from "../../../config.js"
+
+const API_DEV = config.API_KEY_DEV;
+
 const getClients = async (resQueryClients) => {
   try {
-    const urlQueryClients = 'https://safetticustom.azurewebsites.net/api/User/clients'
-    const reqQueryClients = await fetch(urlQueryClients)
+    const urlQueryClients = `${API_DEV}/api/User/clients`;
+    const reqQueryClients = await fetch(urlQueryClients);
     // console.log('Status Service Clients', reqQueryClients);
-    const resQueryClients = await reqQueryClients.json()
+    const resQueryClients = await reqQueryClients.json();
     // console.log('Array Service Clients', resQueryClients);
     
     return resQueryClients

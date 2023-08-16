@@ -1,5 +1,6 @@
 import dateFormat from "../../helpers/dateFormat.js";
 import liteStatusQuotation from "../../helpers/liteStatusQuotation.js";
+import sendEmailHelper from "../../helpers/sendEmailHelper.js";
 
 const header = (node, infoQuotation) => {
   const {
@@ -26,7 +27,7 @@ const header = (node, infoQuotation) => {
         <span id="qncurrency" class="quotation--info__white">Moneda: ${currency}</span>
     </div>
     <div class="region region--right">
-        <a href="https://safetticustom.azurewebsites.net/api/Quotation/email/${currentUser}/${id}" class="quotation--email">
+        <a class="quotation--email" href="https://safetticustom.azurewebsites.net/api/Quotation/email/${currentUser}/${id}">
             <span id="qnemail" class="quotation--send--data quotation--info__white">Enviar correo</span>
             <img class="quotation--email__img" src="../../img/icon/icon-email-white.svg" loading="lazy"
                 alt="Email" title="Email">
@@ -51,6 +52,13 @@ const header = (node, infoQuotation) => {
   }
   const firstChild = node.firstChild;
   node.insertBefore(header, firstChild);
+
+  // Send Email
+  const quotationEmail = document.querySelector('.quotation--email')
+  const quotationSendData = document.querySelector('.quotation--send--data')
+  sendEmailHelper(quotationEmail, quotationSendData)
+  // Send Email  
+
 };
 
 export default header;

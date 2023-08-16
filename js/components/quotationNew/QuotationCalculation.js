@@ -81,7 +81,7 @@ class QuotationCalculation extends HTMLElement {
           advisorName: data.fullName,
           scenarios: [
             {
-              name: 'Escenario #1',
+              name: 'Escenario inicial',
               selected: true,
               discountPercent: p,
               applyTaxIVA: iva,
@@ -308,6 +308,11 @@ class QuotationCalculation extends HTMLElement {
               this.resQueryUser.rol
             )
             const priceInRange = this.getPriceInRange(price, product.quantity)
+            if(priceInRange===undefined) {
+              console.log('error this producto', product);
+              nodeNotification('Error en la información del producto')
+              return null
+            }
             if(this.resQueryUser.currency === 'COP') {
               numPrange = priceInRange.replace(".", "")
               unitPrice = parseInt(numPrange)

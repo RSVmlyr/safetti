@@ -1,6 +1,8 @@
 import nodeNotification from "../../helpers/nodeNotification.js";
 import ExpiringLocalStorage from '../../components/localStore/ExpiringLocalStorage.js';
+import { config } from "../../../config.js"
 
+const API_DEV = config.API_KEY_DEV;
 const setQuotation = async dataSetQuotation => {
   try {
     const requestOptions = {
@@ -10,7 +12,8 @@ const setQuotation = async dataSetQuotation => {
       },
       body: JSON.stringify(dataSetQuotation)
     };
-    const urlQueryS = 'https://safetticustom.azurewebsites.net/api/Quotation'
+    const urlQueryS = `${API_DEV}/api/Quotation`
+    // const urlQueryS = 'https://safetticustom.azurewebsites.net/api/Quotation'
     const reqQueryS = await fetch(urlQueryS, requestOptions)
     const resQueryS = await reqQueryS.json()
     // console.log(reqQueryS);
