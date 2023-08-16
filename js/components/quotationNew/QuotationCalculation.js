@@ -118,7 +118,7 @@ class QuotationCalculation extends HTMLElement {
     const createQuotation = async () => {
       const data = await setQuotation(dataSetQuotation)
     }
-    //createQuotation(dataSetQuotation)
+    createQuotation(dataSetQuotation)
   }
 
   SendNewScenary(data, cotId, nameScenary) {
@@ -417,9 +417,7 @@ class QuotationCalculation extends HTMLElement {
 
     if(client){
       const productForSave = this.retrievedData()
-      const count = this.count(productForSave)
-      const numeroclean = client['0'].currency === 'COP' ? count :  parseFloat(count);
-      const t = this.btnivaChecked(numeroclean, client['0'].currency, quo, btniva)
+      const t = this.btnivaChecked(client['0'].currency, quo, btniva)
       quotationSave.textContent = t.toLocaleString()
       quo.addEventListener('input', (event) => {
         const maxValue = 10;
@@ -427,33 +425,27 @@ class QuotationCalculation extends HTMLElement {
           event.target.value = maxValue;
         }
         const porcentaje = event.target.value;
-        const numeroclean = this.calcularDescuentoYTotal(porcentaje, client['0'].currency);
-        const total = this.btnivaChecked(numeroclean,  client['0'].currency, quo, btniva)
+        const total = this.btnivaChecked(client['0'].currency, quo, btniva)
         quotationSave.textContent = total.toLocaleString();
       });
     } else {
-      const productForSave = this.retrievedData()
-      const numeroclean = this.count(productForSave)
       const qncurrencyElement = document.getElementById('qncurrency');
       const textContent = qncurrencyElement.textContent.trim();
       const currency = textContent.replace(/Moneda: /g, "");
-      const total = this.btnivaChecked(numeroclean, currency, quo, btniva)
+      const total = this.btnivaChecked(currency, quo, btniva)
       quotationSave.textContent = total.toLocaleString()
     }
   } 
 
-  btnivaChecked (numeroclean, currency, quo, btniva){
+  btnivaChecked (currency, quo, btniva) {
+    const subtotal = this.calcularDescuentoYTotal(quo.value, currency);
     let total = 0
-    const numero = currency === 'COP' ? (parseInt(numeroclean)) : (parseFloat(numeroclean)).toFixed(2)
+    const numero = currency === 'COP' ? (parseInt(subtotal)) : (parseFloat(subtotal)).toFixed(2)
     if (btniva.checked) {  
       const iva = (numero * 19) / 100
       const valuesIva = currency === 'COP' ? (parseInt(iva)) : parseFloat(iva)
-       
       total = currency === 'COP' ? (parseInt(numero) + valuesIva) : (parseFloat(numero) + valuesIva)
     } else {
-      const productForSave = this.retrievedData()
-      const count = this.count(productForSave)
-      //const a = currency === 'COP' ? (parseInt(count)) : (parseFloat(count)).toFixed(2)
       let porcentaje = 0
       if(quo != null) {
         porcentaje = quo.value
