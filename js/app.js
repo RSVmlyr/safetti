@@ -40,6 +40,7 @@ class App {
         switch (resQueryUser.rol) {
           case 'advisors':
             q = await QuotationSearch(uid, 1, advisorId);
+            console.log('debug', q);
             Quotation = q.results;
             totalPages = q.totalPages;
             break;

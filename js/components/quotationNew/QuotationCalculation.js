@@ -438,15 +438,18 @@ class QuotationCalculation extends HTMLElement {
   } 
 
   btnivaChecked (currency, quo, btniva) {
-    const subtotal = this.calcularDescuentoYTotal(quo.value, currency);
     let total = 0
-    const numero = currency === 'COP' ? (parseInt(subtotal)) : (parseFloat(subtotal)).toFixed(2)
-    if (btniva.checked) {  
+    let porcentaje = 0
+    if (btniva.checked) { 
+      if(quo != null) {
+        porcentaje = quo.value
+      }
+      const subtotal = this.calcularDescuentoYTotal(porcentaje, currency);
+      const numero = currency === 'COP' ? (parseInt(subtotal)) : (parseFloat(subtotal)).toFixed(2)
       const iva = (numero * 19) / 100
       const valuesIva = currency === 'COP' ? (parseInt(iva)) : parseFloat(iva)
       total = currency === 'COP' ? (parseInt(numero) + valuesIva) : (parseFloat(numero) + valuesIva)
     } else {
-      let porcentaje = 0
       if(quo != null) {
         porcentaje = quo.value
       }

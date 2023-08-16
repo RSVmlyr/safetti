@@ -72,8 +72,9 @@ class PaginatorElement extends HTMLElement {
       e.target.classList.add('active');
       
       console.log(3, e.target.value, this.advisorId);
+      const uid = localStorage.getItem('current')
       try {
-        const Q = await QuotationSearch(19, e.target.value, this.advisorId);
+        const Q = await QuotationSearch(uid, e.target.value, this.advisorId);
         this.pageNumberCallback(Q.results);
       } catch (error) {
         console.log('QuotationSearch Error:', error);
