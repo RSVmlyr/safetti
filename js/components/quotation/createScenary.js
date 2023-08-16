@@ -17,8 +17,6 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     const currentUser = localStorage.getItem('current')
     let lastClickedIndex = localStorage.getItem('lastClickedIndex');
 
-    console.log(cot);
-
     quotationCreatescenarys.forEach((other, index) => {
       other.classList.remove('active');
       if (lastClickedIndex !== null && index.toString() === lastClickedIndex) {
