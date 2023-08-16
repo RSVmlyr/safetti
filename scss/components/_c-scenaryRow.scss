@@ -17,6 +17,17 @@
       font-size: 16px;
     }
   }
+  &__select {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: .5rem;
+    cursor: pointer;
+    img {
+      height: 1.2rem;
+      width: 1.2rem;
+    }
+  }
   &__table {
     display: flex;
     justify-content: space-between;

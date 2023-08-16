@@ -7,6 +7,7 @@ import Login from "../../login/login.js"
 import statusQuotationS from "../../services/statusQuotation/statusQuotation.js"
 import quotationNewPage from "../quotationNew/quotationNew.js"
 import getUser from "../../services/user/getUser.js"
+import putQuotationScenario from "../../services/quotation/putQuotationScenario.js"
 
 const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     const quotationCreatescenary = quotation.querySelector('#quotation--content--list .quotation--list--row')
@@ -176,8 +177,9 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             scenaryData.remove()
           }
         }
-        cot.scenarios.reverse().forEach((scen, i) => {
-
+        const sortedIndices = Object.keys(cot.scenarios).sort((a, b) => b - a);
+        sortedIndices.forEach(i => {
+          const scen = cot.scenarios[i];
           let totalProducts = 0;
           scen.products.forEach(product => {
             if (typeof product.unitPrice === 'number' && product.unitPrice !== '') {
@@ -193,7 +195,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             `<div class="scenary--data__scenary">
               <table>
                 <tr>
-                  <td><span class="quotation--title__quo">#${i + 1} - ${scen.name ? scen.name : ''}</span></td>
+                  <td><span class="quotation--title__quo">#${i} - ${scen.name ? scen.name : ''}</span></td>
                   <td><span class="quotation--title__quo">Productos</span></td>
                   <td><span class="quotation--title__quo">Total</span></td>
                   <td></td>
@@ -236,7 +238,11 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             <div class="scenary--data__body">
               <div class="scenary--data__scenary">
                 ${scenSelected === true ? '<div class="scenary--row__header selected">' : '<div class="scenary--row__header">'}
-                  <span class="quotation--title__quo">#${i + 1} - ${scen.name ? scen.name : ''}</span>
+                  <span class="quotation--title__quo">#${i} - ${scen.name ? scen.name : ''}</span>
+                  <div class="scenary--row__select">
+                    <span class="quotation--info">Seleccionar</span>
+                    <img src="../../img/icon/check.svg" loading="lazy" alt="Seleccionar" title="Seleccionar">
+                  </div>
                 </div>
                 <div class="scenary--row__body">
                   <div class="scenary--row__table">
@@ -264,6 +270,21 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
           </div>`
 
           scenaryContainerBottom.insertAdjacentHTML('afterbegin', `${scenaryList}`)
+
+          const scenaryRowSelect = quotation.querySelector('.scenary--row__select')
+          if(currentRol !== 'advisors') {
+            scenaryRowSelect.remove()
+          }
+          if (scenaryRowSelect) {
+            scenaryRowSelect.addEventListener('click', (e) => {
+              console.log(e.target);
+              putQuotationScenario(scen.id)
+            })
+          }
+
+          if (cotStatus.statusId === 2 || cotStatus.statusId === 3 && scenaryCreated) {
+            scenaryRowSelect.remove() 
+          }
 
           const idProducts = quotation.querySelector('#products');
           const idPrices = quotation.querySelector('#prices');
