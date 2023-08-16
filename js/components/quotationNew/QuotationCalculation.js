@@ -59,6 +59,9 @@ class QuotationCalculation extends HTMLElement {
     let p = 0
     if(quo != null) {
       p = quo.value
+    } 
+    if(quo.value === null) {
+      p = 0
     }
     let dataSetQuotation = ''
     const expiringLocalStorage = new ExpiringLocalStorage()
@@ -115,7 +118,7 @@ class QuotationCalculation extends HTMLElement {
     const createQuotation = async () => {
       const data = await setQuotation(dataSetQuotation)
     }
-    createQuotation(dataSetQuotation)
+    //createQuotation(dataSetQuotation)
   }
 
   SendNewScenary(data, cotId, nameScenary) {
