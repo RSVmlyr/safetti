@@ -19,7 +19,7 @@ class App {
     document.addEventListener('DOMContentLoaded', async () => {
       const url = new URL(window.location.href);
       const searchParams = new URLSearchParams(url.search);
-      const uid = searchParams.get('uid') || '19';
+      const uid = searchParams.get('uid') || '4';
       const resQueryUser = await getUser(uid);
 
       localStorage.setItem('rol', resQueryUser.rol);
@@ -40,7 +40,7 @@ class App {
         switch (resQueryUser.rol) {
           case 'advisors':
             q = await QuotationSearch(uid, 1, advisorId);
-            console.log('debug', q);
+            // console.log('debug', q);
             Quotation = q.results;
             totalPages = q.totalPages;
             break;

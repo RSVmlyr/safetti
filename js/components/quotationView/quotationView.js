@@ -40,7 +40,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                         `$ ${producto.unitPrice.toLocaleString()}` : 
                         `$ ${producto.unitPrice.toFixed(2).toLocaleString()}`}
                     </td>
-                <td>${producto.quantity}</td>
+                <td>${producto.quantity.toLocaleString()}</td>
                 <td>
                     ${resQueryUser.currency === 'COP' ? 
                         `$ ${producto.linePrice.toLocaleString()}` : 
@@ -90,6 +90,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                         </td>
                         <td>
                             <div>
+                                <span>$</span>
                                 <span>-</span>
                                 <span class="quotatioview__discountValueNumber">
                                     ${resQueryUser.currency === 'COP' ? 
@@ -122,7 +123,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                 <tr>
                     <th>
                         <div class="quotatioview__iva">
-                            <span>Total con IVA (19%)</span>
+                            <span>Total - IVA (19%)</span>
                             ${element.taxIVA !== 0 ? 
                                 `<input type="checkbox" class="quotatioview--iva quotation-hide" checked>` : 
                                 `<input type="checkbox" class="quotatioview--iva quotation-hide">`}

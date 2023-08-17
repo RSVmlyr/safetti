@@ -22,20 +22,20 @@ const quotationListRow = (cot) => {
   `<div class="quotation--list--row">
     <div class="quotation--list--one">
       <div class="region region__left">
-        <span class="quotation--info">Fecha de creación: ${datecreatedAt}</span>
+        <span class="quotation--info">Creación: ${datecreatedAt}</span>
       </div>
       <div class="region region__right">
        <div class="quotation--origin">
         <img class="quotation--origin__shopify quotation-hide" src='../../img/icon/icon-shopify.svg' loading="lazy" alt="Shopify" title="Shopify">
        </div>
        <div class="quotation--origin__data">
-        <span class="quotation--info quotation--info__bold">Código ${cot.id ? cot.id : ''}</span>
+        <span class="quotation--info quotation--info__bold">Ref: ${cot.id ? cot.id : ''}</span>
         <span class="quotation--status">${cotStatus.statusName}</span>
        </div>
       </div>
     </div>
     <div class="quotation--list--two">
-      <span class="quotation--info">Nombre del proyecto:</span>
+      <span class="quotation--info">Proyecto:</span>
       <h3 class="quotation--title__quo">${cot.name ? cot.name : ''}</h3>
     </div>
     <div class="quotation--list--three">

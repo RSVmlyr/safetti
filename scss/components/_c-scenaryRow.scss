@@ -1,7 +1,6 @@
 .scenary--row {
   &__header {
-    background-color: $c4;
-    border: 1px solid $black;
+    background-color: $black;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -13,7 +12,7 @@
       border: 1px solid $c9;
     }
     .quotation--title__quo {
-      font-family: $FuturaBold;
+      color: $white;
       font-size: 16px;
     }
   }
@@ -26,6 +25,9 @@
     img {
       height: 1.2rem;
       width: 1.2rem;
+    }
+    .quotation--info {
+      color: $white;
     }
   }
   &__table {

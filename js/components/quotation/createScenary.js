@@ -8,6 +8,7 @@ import statusQuotationS from "../../services/statusQuotation/statusQuotation.js"
 import quotationNewPage from "../quotationNew/quotationNew.js"
 import getUser from "../../services/user/getUser.js"
 import putQuotationScenario from "../../services/quotation/putQuotationScenario.js"
+import currencyFormatUSD from "../../helpers/currencyFormatUSD.js"
 
 const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     const quotationCreatescenary = quotation.querySelector('#quotation--content--list .quotation--list--row')
@@ -57,7 +58,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
           <section class="scenary--one">
             <div class="region region__one">
               <img class="quotation--origin__shopify quotation-hide" src='../../img/icon/icon-shopify.svg' loading="lazy" alt="Shopify" title="Shopify">
-              <span class="quotation--info quotation--info__bold">Código ${cot.id ? cot.id : ''}</span>
+              <span class="quotation--info quotation--info__bold">Ref: ${cot.id ? cot.id : ''}</span>
               <span class="quotation--status">${cotStatus.statusName}</span>
             </div>
             <div class="region region__two">
@@ -72,8 +73,8 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             </div>
           </section>
           <section class="scenary--two">
-            <span class="quotation--info">Creación ${datecreatedAt}</span>
-            <span class="quotation--info">Última modificación ${dateupdatedAt}</span>
+            <span class="quotation--info">Creación: ${datecreatedAt}</span>
+            <span class="quotation--info">Última modificación: ${dateupdatedAt}</span>
           </section>
           <section class="scenary--three">
             <h3 class="quotation--title">${cot.name ? cot.name : ''}</h3>
@@ -130,13 +131,12 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
       const quotationContainer = quotation.querySelector('.scenary--data__actions')
       
       if (cot.status.id === 2 ) {
-        quotationContainer.style.display = 'none'
+        quotationContainer.remove()
       }
 
       const quotationBtnNe = quotation.querySelector('.quotation--btn__Ne')
       if (cotStatus.statusId === 3 && scenaryCreated) {
-        quotationBtnNe.remove()
-        quotationBtnDelete.remove()
+        quotationContainer.remove()
       }
 
       if(currentRol !== 'advisors') {
@@ -169,6 +169,8 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
 
       const getScenary = () => {
 
+        console.log(cot);
+
         if(cot.scenarios.length > 0) {
           const scenaryData = quotation.querySelector('.scenary--data__body .quotation--notification')
           if (scenaryData) {
@@ -184,24 +186,28 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               totalProducts += product.unitPrice;
             }
           });
-          let totalPro = cot.currency === 'COP' ? totalProducts.toLocaleString() : totalProducts.toFixed(2)
+          let totalPro = totalProducts
+
+          const totalpValue = currencyFormatUSD(totalPro, scen.currency) 
+          const totalValue = currencyFormatUSD(scen.total, scen.currency)
 
           // Scenary selected 
           if ( scen.selected === true ) {
             const scenaryDataBody = quotation.querySelector('.scenary--data__body')
+
             let scenaryBody =
             `<div class="scenary--data__scenary">
               <table>
                 <tr>
                   <td><span class="quotation--title__quo">#${i} - ${scen.name ? scen.name : ''}</span></td>
-                  <td><span class="quotation--title__quo">Productos</span></td>
-                  <td><span class="quotation--title__quo">Total</span></td>
+                  <td><span class="quotation--title__quo">Precio Base</span></td>
+                  <td><span class="quotation--title__quo">Costo Productos</span></td>
                   <td></td>
                 </tr>
                 <tr>
                   <td></td>
-                  <td><p class="quotation--info">$ ${totalPro}</p></td>
-                  <td><p class="quotation--info">$ ${cot.currency === 'COP' ? scen.total.toLocaleString() : scen.total.toFixed(2)}</p></td>
+                  <td><p class="quotation--info">$ ${cot.currency === 'COP' ? totalPro.toLocaleString() : totalpValue}</p></td>
+                  <td><p class="quotation--info">$ ${cot.currency === 'COP' ? scen.total.toLocaleString() : totalValue}</p></td>
                   <td><span class="quotation--btn__view"><a  class="quotation--info quotation--detail" href="./Cotizacion.html?id=${cot.id}&uid=${storedHash}">Ver detalle</a></span></td>
                 </tr>
               </table>
@@ -248,7 +254,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                       <tr>
                         <td><span class="quotation--title__quo">Producto</span></td>
                         <td><span class="quotation--title__quo">Precio Base</span></td>
-                        <td><span class="quotation--title__quo">Precio Total</span></td>
+                        <td><span class="quotation--title__quo">Costo Productos</span></td>
                       </tr>
                       <tr>
                         <td><div id="products"></div></td>
@@ -256,9 +262,9 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                         <td><div id="prices"></div></td>
                       </tr>
                       <tr>
-                        <td><span class="quotation--title__quo">Total con IVA</span></td>
+                        <td><span class="quotation--title__quo">Total</span></td>
                         <td></td>
-                        <td><p class="quotation--title__quo">$ ${cot.currency === 'COP' ? scen.total.toLocaleString() : scen.total.toFixed(2)}</p></td>
+                        <td><p class="quotation--title__quo">$ ${cot.currency === 'COP' ? scen.total.toLocaleString() : totalValue}</p></td>
                       </tr>
                     </table>
                   </div>  
@@ -268,9 +274,8 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
           </div>`
 
           scenaryContainerBottom.insertAdjacentHTML('afterbegin', `${scenaryList}`)
-
           const scenaryRowSelect = quotation.querySelector('.scenary--row__select')
-          if(currentRol !== 'advisors') {
+          if(currentRol !== 'advisors' || scen.selected) {
             scenaryRowSelect.remove()
           }
           if (scenaryRowSelect) {
