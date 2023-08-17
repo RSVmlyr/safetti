@@ -29,7 +29,7 @@ const quotationListRow = (cot) => {
         <img class="quotation--origin__shopify quotation-hide" src='../../img/icon/icon-shopify.svg' loading="lazy" alt="Shopify" title="Shopify">
        </div>
        <div class="quotation--origin__data">
-        <span class="quotation--info quotation--info__bold">Ref: ${cot.id ? cot.id : ''}</span>
+        <span class="quotation--info quotation--info__bold">Nro. ${cot.id ? cot.id : ''}</span>
         <span class="quotation--status">${cotStatus.statusName}</span>
        </div>
       </div>
