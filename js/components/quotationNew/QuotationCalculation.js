@@ -54,7 +54,7 @@ class QuotationCalculation extends HTMLElement {
   }
 
   SendNewQuotation(data, iva, name, comments ) {
-    const comment = comments ? comments : "string"
+    const comment = comments ? comments : ""
     const quo = document.querySelector('.calculation__dis')
     let p = 0
     if(quo != null) {
