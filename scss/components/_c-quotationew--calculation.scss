@@ -1,10 +1,12 @@
 .quotationew--calculation {
   &__header {
     background-color: $white;
+    box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
     display: flex;
     justify-content: space-between;
     margin: 0 0 35px;
-    padding: 10px;
+    padding: 5px 20px;
     .region {
       &--left,
       &--right {

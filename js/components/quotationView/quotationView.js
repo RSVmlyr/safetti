@@ -82,7 +82,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                                 <span>
                                     ${currency === 'COP' ? 
                                         `${element.subtotalProducts.toLocaleString()}` : 
-                                        `${eSubtotalProducts}`}
+                                        `${element.subtotalProducts.toFixed(2).toLocaleString()}`}
                                 </span>
                             </div>
                         </td>
@@ -202,10 +202,6 @@ const quotationView = async (node, quotation ,infoQuotation) => {
 
                     const mostrarEstadoCheckbox = (discountWithTotal) => {
 
-                        // const stringValue = discountWithTotal;
-                        // const discountWithTotalConverted = parseFloat(stringValue.replace(/[,\.]/g, ''));
-                        // console.log('convertido', discountWithTotalConverted);
-
                         const dataValueDis = typeof discountWithTotal === 'string' ? discountWithTotal.replace(/,/g, '') : discountWithTotal
                         let dN = currency === 'COL' ? parseInt(dataValueDis) : parseFloat(dataValueDis)
                         console.log('dn', dN);
@@ -228,9 +224,9 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                                 quotatioviewValueTotal.innerHTML = currency === 'COP' ? infoQuotation[i].subtotalWithTaxIVA.toLocaleString() : withTaxIVA
                             } 
                             const calculateIva = (dN * 19) / 100
-                            // console.log('Iva:', calculateIva);
+                            console.log('Iva:', typeof calculateIva.toLocaleString());
                             const calculateIvaTotal = dN + calculateIva
-                            // console.log('Total con Iva', calculateIvaTotal);
+                            console.log('Total con Iva', calculateIvaTotal);
                             const cIvaTotal = currencyFormatUSD(calculateIvaTotal , currency)
                             quotatioviewValueTotal.innerHTML = currency === 'COP' ? calculateIvaTotal.toLocaleString() : cIvaTotal
 

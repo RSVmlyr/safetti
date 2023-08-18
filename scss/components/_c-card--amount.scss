@@ -31,6 +31,15 @@
       margin: 0;
       padding: 0;
       cursor: pointer;
+      &.qnaceptproduct {
+        color: $white;
+        background-color: $black;
+        padding: 7px;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        font-size: 13px;
+      }
     }
   }
 }

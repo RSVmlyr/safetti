@@ -240,7 +240,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
           let scenaryList = 
           `<div class="scenary--created__body">
             <div class="scenary--data__body">
-              <div class="scenary--data__scenary">
+              ${scenSelected === true ? '<div class="scenary--data__scenary selected">' : '<div class="scenary--data__scenary">'}
                 ${scenSelected === true ? '<div class="scenary--row__header selected">' : '<div class="scenary--row__header">'}
                   <span class="quotation--title__quo">#${i} - ${scen.name ? scen.name : ''}</span>
                   <div class="scenary--row__select">

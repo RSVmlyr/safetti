@@ -10,7 +10,7 @@
   &--container__bottom {
     display: flex;
     @media screen and (min-width: 992px) {
-      gap: 50px;
+      gap: 35px;
       width: 100%;
       max-width: 100%;
     }
@@ -210,7 +210,6 @@
                     padding: 8px;
                     &.selected {
                       background-color: $c10;
-                      border: 1px solid $c9;
                     }
                     .quotation--title__quo {
                       color: $white;
@@ -223,9 +222,10 @@
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
-                    border-right: 2px solid $c4;
-                    border-left: 2px solid $c4;
-                    border-bottom: 2px solid $c4;
+                    box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.08);
+                    background-color: #efefef;
+                    border-radius: 0 0 10px 10px;
+                    padding: 5px 5px 15px;
                     .quotation--title__quo {
                       color: $c5;
                       display: block;
@@ -283,9 +283,7 @@
           &--container__bottom {
             .scenary {
               &--created__body {
-                box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.08);
-                border-radius: 10px;
-                margin: 0 0 45px;
+                margin: 0 0 20px;
                 // margin: 35px 15px;
                 // padding: 15px;
               }
@@ -297,15 +295,41 @@
                 justify-content: space-between;
               }
               &__scenary {
+                box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.08);
+                border-radius: 10px;
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
                 gap: 10px;
                 padding: 15px;
+                &.selected {
+                  background-color: #efefef;
+                  #products,
+                  #unitPrices,
+                  #prices {
+                    .quotation--info {
+                      margin: 0;
+                      &:nth-child(even) {
+                        background-color: $white;
+                      }
+                    }
+                  }
+                }
                 .scenary--row {
                   @media screen and (min-width: 992px) {
                     width: 25%;
                     max-width: 50%;
+                  }
+                }
+                #products,
+                #unitPrices,
+                #prices {
+                  .quotation--info {
+                    margin: 0;
+                    padding: 4px;
+                    &:nth-child(even) {
+                      background-color: #efefef;
+                    }
                   }
                 }
               }
