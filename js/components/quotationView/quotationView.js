@@ -58,13 +58,14 @@ const quotationView = async (node, quotation ,infoQuotation) => {
     const discount = element.subtotalProducts - element.subtotalWithDiscount
     const discountValue = discount
     
+    
     container.innerHTML += `
             <div class="quotatioview__section">
             <div class="quotatioview__actions">
                 <div class="quotatioview__edit quotation--btn__new">Editar</div>
                 <div class="quotation--btn__save quotation--btn__new quotation-hide">Guardar</div>
             </div>
-            <span>Nombre del escenario:</span>
+            <span>Escenario:</span>
             <h2 class="quotatioview__title quotatioview__title--scenary">${element.name}</h2>
             <table class="quotatioview__table">
                 ${table}
@@ -82,7 +83,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                                 <span>
                                     ${currency === 'COP' ? 
                                         `${element.subtotalProducts.toLocaleString()}` : 
-                                        `${element.subtotalProducts.toFixed(2).toLocaleString()}`}
+                                        `${eSubtotalProducts}`}
                                 </span>
                             </div>
                         </td>
@@ -152,144 +153,147 @@ const quotationView = async (node, quotation ,infoQuotation) => {
   node.appendChild(container);
 
   const quotatioviewContainerSection = document.querySelectorAll('.quotatioview__section')
-        quotatioviewContainerSection.forEach((section, i) => {
-            const quotatioviewEdit = section.querySelector('.quotatioview__edit')
+    quotatioviewContainerSection.forEach((section, i) => {
+        const quotatioviewEdit = section.querySelector('.quotatioview__edit')
 
-            resQueryUser.rol === 'advisors' ? quotatioviewEdit : quotatioviewEdit.remove()
-            quotation.status.id === 1 ? quotatioviewEdit : quotatioviewEdit.remove()
+        resQueryUser.rol === 'advisors' ? quotatioviewEdit : quotatioviewEdit.remove()
+        quotation.status.id === 1 ? quotatioviewEdit : quotatioviewEdit.remove()
 
-            const quotatioviewTitleScenary = section.querySelector('.quotatioview__title--scenary')
-            let infoDiscuount = infoQuotation[i].discountPercent;
-            const quotatioviewDiscount = section.querySelector('.quotatioview__discount')
-            const quotatioviewDiscountValueNumber = section.querySelector('.quotatioview__discountValueNumber')
-            const quotationBtnSave = section.querySelector('.quotation--btn__save')
-            const quotatioviewIva = section.querySelector('.quotatioview--iva')
+        const quotatioviewTitleScenary = section.querySelector('.quotatioview__title--scenary')
+        if (infoQuotation[i].selected === true) {
+            quotatioviewTitleScenary.classList.add('selected')
+        }
+        let infoDiscuount = infoQuotation[i].discountPercent;
+        const quotatioviewDiscount = section.querySelector('.quotatioview__discount')
+        const quotatioviewDiscountValueNumber = section.querySelector('.quotatioview__discountValueNumber')
+        const quotationBtnSave = section.querySelector('.quotation--btn__save')
+        const quotatioviewIva = section.querySelector('.quotatioview--iva')
 
-            const inputNameScenary = `
-            <input type="text" id="nameInput" class="nameInput" name="nameInput">
-            `
-            const inputEdit = `
-            <input type="number" id="rangeInput" class="rangeInput" name="rangeInput" min="0" max="10" step="1"> %
-            `
-            let nameInput;
-            let rangeInput
-            let inputInserted = false;
-            quotatioviewEdit.addEventListener('click', () => {
-                if (!inputInserted) {
+        const inputNameScenary = `
+        <input type="text" id="nameInput" class="nameInput" name="nameInput">
+        `
+        const inputEdit = `
+        <input type="number" id="rangeInput" class="rangeInput" name="rangeInput" min="0" max="10" step="1"> %
+        `
+        let nameInput;
+        let rangeInput
+        let inputInserted = false;
+        quotatioviewEdit.addEventListener('click', () => {
+            if (!inputInserted) {
 
-                    const newNode = document.createElement('div');
-                    newNode.classList.add('quotatioview__title')
-                    newNode.innerHTML = inputNameScenary.trim();
+                const newNode = document.createElement('div');
+                newNode.classList.add('quotatioview__title')
+                newNode.innerHTML = inputNameScenary.trim();
+                
+                quotatioviewTitleScenary.parentNode.replaceChild(newNode, quotatioviewTitleScenary);
+                //    
+                nameInput = section.querySelector('.nameInput')
+                nameInput.value = infoQuotation[i].name
+                //
+                quotationBtnSave.classList.remove('quotation-hide')
+                quotatioviewDiscount.style.display = 'none';
+                quotatioviewDiscount.insertAdjacentHTML('afterend', inputEdit)
+                //
+                rangeInput = section.querySelector('.rangeInput')
+                rangeInput.value = infoDiscuount
+                //
+                const quotatioviewWithdiscount = section.querySelector('.quotatioview__withdiscount')
+                const quotatioviewValueTotal = section.querySelector('.quotatioview__valueTotal')
+                quotatioviewIva.classList.remove('quotation-hide')
+
+                const qncurrencyElement = document.getElementById('qncurrency');
+                    const textContent = qncurrencyElement.textContent.trim();
+
+                const mostrarEstadoCheckbox = (discountWithTotal) => {
+
+                    const dataValueDis = typeof discountWithTotal === 'string' ? discountWithTotal.replace(/,/g, '') : discountWithTotal
+                    let dN = currency === 'COL' ? parseInt(dataValueDis) : parseFloat(dataValueDis)
+                    console.log('dn', dN);
+
+
+                    let dataValueDisTotal
+                    if (currency === 'USD') {
+                        dataValueDisTotal = currencyFormatUSD(dN, currency)
+                    }    
                     
-                    quotatioviewTitleScenary.parentNode.replaceChild(newNode, quotatioviewTitleScenary);
-                    //    
-                    nameInput = section.querySelector('.nameInput')
-                    nameInput.value = infoQuotation[i].name
-                    //
-                    quotationBtnSave.classList.remove('quotation-hide')
-                    quotatioviewDiscount.style.display = 'none';
-                    quotatioviewDiscount.insertAdjacentHTML('afterend', inputEdit)
-                    //
-                    rangeInput = section.querySelector('.rangeInput')
-                    rangeInput.value = infoDiscuount
-                    //
-                    const quotatioviewWithdiscount = section.querySelector('.quotatioview__withdiscount')
-                    const quotatioviewValueTotal = section.querySelector('.quotatioview__valueTotal')
-                    quotatioviewIva.classList.remove('quotation-hide')
-
-                    const qncurrencyElement = document.getElementById('qncurrency');
-                        const textContent = qncurrencyElement.textContent.trim();
-
-                    const mostrarEstadoCheckbox = (discountWithTotal) => {
-
-                        const dataValueDis = typeof discountWithTotal === 'string' ? discountWithTotal.replace(/,/g, '') : discountWithTotal
-                        let dN = currency === 'COL' ? parseInt(dataValueDis) : parseFloat(dataValueDis)
-                        console.log('dn', dN);
+                    console.log('Two', dataValueDisTotal);
+                    const withTaxIVA = currencyFormatUSD(infoQuotation[i].subtotalWithTaxIVA, currency) 
+                    // console.log(withTaxIVA);
 
 
-                        let dataValueDisTotal
-                        if (currency === 'USD') {
-                            dataValueDisTotal = currencyFormatUSD(dN, currency)
-                        }    
-                        
-                        console.log('Two', dataValueDisTotal);
-                        const withTaxIVA = currencyFormatUSD(infoQuotation[i].subtotalWithTaxIVA, currency) 
-                        // console.log(withTaxIVA);
+                    if (quotatioviewIva.checked) {
+                        console.log('ckeck', typeof dN);
+                        console.log('ckeck', dN);
+                        if(rangeInput.value == infoQuotation[i].discountPercent) {
+                            quotatioviewValueTotal.innerHTML = currency === 'COP' ? infoQuotation[i].subtotalWithTaxIVA.toLocaleString() : withTaxIVA
+                        } 
+                        const calculateIva = (dN * 19) / 100
+                        console.log('Iva:', typeof calculateIva);
+                        const calculateIvaTotal = parseInt(dN + calculateIva)
+                        console.log('Total con Iva', calculateIvaTotal);
+                        const cIvaTotal = currencyFormatUSD(calculateIvaTotal , currency)
+                        quotatioviewValueTotal.innerHTML = currency === 'COP' ? calculateIvaTotal.toLocaleString() : cIvaTotal
 
-
-                        if (quotatioviewIva.checked) {
-                            console.log('ckeck', typeof dN);
-                            console.log('ckeck', dN);
-                            if(rangeInput.value == infoQuotation[i].discountPercent) {
-                                quotatioviewValueTotal.innerHTML = currency === 'COP' ? infoQuotation[i].subtotalWithTaxIVA.toLocaleString() : withTaxIVA
-                            } 
-                            const calculateIva = (dN * 19) / 100
-                            console.log('Iva:', typeof calculateIva.toLocaleString());
-                            const calculateIvaTotal = dN + calculateIva
-                            console.log('Total con Iva', calculateIvaTotal);
-                            const cIvaTotal = currencyFormatUSD(calculateIvaTotal , currency)
-                            quotatioviewValueTotal.innerHTML = currency === 'COP' ? calculateIvaTotal.toLocaleString() : cIvaTotal
-
+                    } else {
+                        console.log('no check', typeof dN);
+                        console.log('no check', dN);
+                        if(rangeInput.value == infoQuotation[i].discountPercent) {
+                            quotatioviewValueTotal.innerHTML = currency === 'COP' ? infoQuotation[i].subtotalWithDiscount.toLocaleString() : withTaxIVA
                         } else {
-                            console.log('no check', typeof dN);
-                            console.log('no check', dN);
-                            if(rangeInput.value == infoQuotation[i].discountPercent) {
-                                quotatioviewValueTotal.innerHTML = currency === 'COP' ? infoQuotation[i].subtotalWithDiscount.toLocaleString() : withTaxIVA
-                            } else {
-                                quotatioviewValueTotal.innerHTML = currency === 'COP' ? dN.toLocaleString() : dataValueDisTotal
-                            }
+                            quotatioviewValueTotal.innerHTML = currency === 'COP' ? dN.toLocaleString() : dataValueDisTotal
                         }
-                    };
-                    quotatioviewIva.addEventListener('change', () => {
-                        resQueryUser.currency === 'COP' ?
-                        mostrarEstadoCheckbox(quotatioviewWithdiscount.textContent) :
-                        mostrarEstadoCheckbox(quotatioviewWithdiscount.textContent)
-                    });
-
-                    rangeInput.addEventListener('input', (event) => {
-                        const maxValue = 10;
-                        if (event.target.value > maxValue) {
-                          event.target.value = maxValue;
-                        }
-                        if (event.target.value >= 0) {
-                            const calculateDiscout = infoQuotation[i].subtotalProducts * event.target.value / 100
-                            const calculateDiscoutTotal = infoQuotation[i].subtotalProducts - calculateDiscout
-                            const calculateDiscoutValue = infoQuotation[i].subtotalProducts - calculateDiscoutTotal
-                            // console.log('Descuento -', calculateDiscoutValue);
-
-                            const calculateDT = currencyFormatUSD(calculateDiscoutTotal, currency)
-                            const calculateDV = currencyFormatUSD(calculateDiscoutValue, currency)
-
-                            console.log(calculateDT);
-                            console.log(calculateDV);
-
-                            quotatioviewWithdiscount.innerHTML = currency === 'COP' ? calculateDiscoutTotal.toLocaleString() : calculateDT
-                            quotatioviewDiscountValueNumber.innerHTML = currency === 'COP' ? calculateDiscoutValue.toLocaleString() : calculateDV
-                            mostrarEstadoCheckbox(currency === 'COP' ? calculateDiscoutTotal.toLocaleString() : calculateDT);
-                        }
-                    });
-                    inputInserted = true;
-                } 
-            })
-
-            if (quotationBtnSave) {
-                quotationBtnSave.addEventListener('click', () => {
-                    if (nameInput.value === '') {
-                        nodeNotification('El campo NOMBRE DEL ESCENARIO es obligatorio.')
-                    } else if (rangeInput.value === '') {
-                        nodeNotification('El campo DESCUENTO del escenario es obligatorio.')
                     }
-                    const putBodyScenary = {
-                        "id": infoQuotation[i].id,
-                        "name": nameInput.value,
-                        "discountPercent": rangeInput.value,
-                        "applyTaxIVA": quotatioviewIva.checked
-                      }
-                    console.log(putBodyScenary);
-                    putScenario(putBodyScenary)
-                })
-            }
-        });
+                };
+                quotatioviewIva.addEventListener('change', () => {
+                    resQueryUser.currency === 'COP' ?
+                    mostrarEstadoCheckbox(quotatioviewWithdiscount.textContent) :
+                    mostrarEstadoCheckbox(quotatioviewWithdiscount.textContent)
+                });
+
+                rangeInput.addEventListener('input', (event) => {
+                    const maxValue = 10;
+                    if (event.target.value > maxValue) {
+                        event.target.value = maxValue;
+                    }
+                    if (event.target.value >= 0) {
+                        const calculateDiscout = infoQuotation[i].subtotalProducts * event.target.value / 100
+                        const calculateDiscoutTotal = infoQuotation[i].subtotalProducts - calculateDiscout
+                        const calculateDiscoutValue = infoQuotation[i].subtotalProducts - calculateDiscoutTotal
+                        // console.log('Descuento -', calculateDiscoutValue);
+
+                        const calculateDT = currencyFormatUSD(calculateDiscoutTotal, currency)
+                        const calculateDV = currencyFormatUSD(calculateDiscoutValue, currency)
+
+                        console.log(calculateDT);
+                        console.log(calculateDV);
+
+                        quotatioviewWithdiscount.innerHTML = currency === 'COP' ? calculateDiscoutTotal.toLocaleString() : calculateDT
+                        quotatioviewDiscountValueNumber.innerHTML = currency === 'COP' ? calculateDiscoutValue.toLocaleString() : calculateDV
+                        mostrarEstadoCheckbox(currency === 'COP' ? calculateDiscoutTotal.toLocaleString() : calculateDT);
+                    }
+                });
+                inputInserted = true;
+            } 
+        })
+
+        if (quotationBtnSave) {
+            quotationBtnSave.addEventListener('click', () => {
+                if (nameInput.value === '') {
+                    nodeNotification('El campo NOMBRE DEL ESCENARIO es obligatorio.')
+                } else if (rangeInput.value === '') {
+                    nodeNotification('El campo DESCUENTO del escenario es obligatorio.')
+                }
+                const putBodyScenary = {
+                    "id": infoQuotation[i].id,
+                    "name": nameInput.value,
+                    "discountPercent": rangeInput.value,
+                    "applyTaxIVA": quotatioviewIva.checked
+                    }
+                console.log(putBodyScenary);
+                putScenario(putBodyScenary)
+            })
+        }
+    });
 
 };
 
