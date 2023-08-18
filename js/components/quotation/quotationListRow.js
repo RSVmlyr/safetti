@@ -56,7 +56,7 @@ const quotationListRow = (cot) => {
   quotationContentList.insertAdjacentHTML('afterbegin', `${quotationListRow}`)
 
   // Search Clients
-  const idClients = quotation.querySelector('#clients');
+ /*  const idClients = quotation.querySelector('#clients');
 
   if (idClients) {
     idClients.addEventListener('input', (e) => {
@@ -75,7 +75,7 @@ const quotationListRow = (cot) => {
         }
       });
     });
-  }
+  } */
 
   // Origin quotation spotify
   const quotationOrigin = quotation.querySelector('.quotation--origin__shopify')

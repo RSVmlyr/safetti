@@ -413,15 +413,13 @@ class QuotationCalculation extends HTMLElement {
     const btniva = document.querySelector('.quotation--iva')
 
     if(client){
-      const productForSave = this.retrievedData()
-      const t = this.btnivaChecked(client['0'].currency, quo, btniva)
-      quotationSave.textContent = t.toLocaleString()
+      const total = this.btnivaChecked(client['0'].currency, quo, btniva)
+      quotationSave.textContent = total.toLocaleString()
       quo.addEventListener('input', (event) => {
         const maxValue = 10;
         if (event.target.value > maxValue) {
           event.target.value = maxValue;
         }
-        const porcentaje = event.target.value;
         const total = this.btnivaChecked(client['0'].currency, quo, btniva)
         quotationSave.textContent = total.toLocaleString();
       });
@@ -450,7 +448,8 @@ class QuotationCalculation extends HTMLElement {
       if(quo != null) {
         porcentaje = quo.value
       }
-      total = this.calcularDescuentoYTotal(porcentaje, currency);
+      const parsetotal = this.calcularDescuentoYTotal(porcentaje, currency);
+      total = currency === 'COP' ? parseInt(parsetotal) : parseFloat(parsetotal)
     }
     return total
   }
