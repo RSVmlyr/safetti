@@ -234,12 +234,11 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             unitPrice.push(product.unitPrice)
           });
           const count =  parseInt(i) + 1
-          
           let scenaryList = 
           `<div class="scenary--created__body">
             <div class="scenary--data__body">
-              ${scenSelected === true ? '<div class="scenary--data__scenary selected">' : '<div class="scenary--data__scenary">'}
-                ${scenSelected === true ? '<div class="scenary--row__header selected">' : '<div class="scenary--row__header">'}
+              ${scen.selected === true ? '<div class="scenary--data__scenary selected">' : '<div class="scenary--data__scenary">'}
+                ${scen.selected === true ? '<div class="scenary--row__header selected">' : '<div class="scenary--row__header">'}
                   <span class="quotation--title__quo">#${count} - ${scen.name ? scen.name : ''}</span>
                   <div class="scenary--row__select">
                     <span class="quotation--info">Seleccionar</span>
