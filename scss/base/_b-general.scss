@@ -11,12 +11,12 @@ body {
 }
 
 .quotation--title {
-  font-size: 32px;
+  font-size: 20px;
 }
 
 .quotation--title__quo {
   font-family: $FuturaMedium;
-  font-size: 18px;
+  font-size: 16px;
   text-transform: capitalize;
 }
 
@@ -27,13 +27,13 @@ body {
 .quotation--info {
   color: $c2;
   font-family: $FuturaMedium;
-  font-size: 14px;
+  font-size: 13px;
   text-decoration: none;
 
   &__white {
     color: $cp13;
     font-family: $FuturaMedium;
-    font-size: 14px;
+    font-size: 13px;
   }
 }
 .quotation--detail{
@@ -60,7 +60,7 @@ body {
     text-decoration: none;
     @media screen and (min-width: 992px) {
       padding: 8px 18px;
-      font-size: 14px;
+      font-size: 13px;
     }
     @media screen and (min-width: 1200px) {
       padding: 10px 20px;
@@ -75,7 +75,6 @@ body {
   &__add {
     background-color: $white;
     color: $black;
-
   }
 }
 
@@ -98,17 +97,14 @@ body {
   padding: 6px 12px;
   &--requested {
     background-color: $c8;
-    border: 1px solid $c7;
     color: $c7;  
   }
   &--confirmed {
     background-color: $c10;
-    border: 1px solid $c9;
     color: $c9;
   }
   &--cancelled {
     background-color: $c12;
-    border: 1px solid $c11;
     color: $c11;
   }
 }

@@ -4,6 +4,7 @@
   &--container {
     display: flex;
     flex-direction: column;
+    gap: 20px;
   }
   &--container__top,
   &--container__bottom {
@@ -23,6 +24,8 @@
       &--left,
       &--right {
         background-color: $white;
+        box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.05);
+        border-radius: 14px;
         min-height: 100vh;
         @media screen and (min-width: 992px) {
           padding: 25px;
@@ -31,7 +34,7 @@
       }
       &--left {
         @media screen and (min-width: 992px) {
-          max-width: 35%;
+          max-width: 30%;
         }
         .region {
           &__one {
@@ -56,14 +59,21 @@
                 }
               }
               &--list--row {
-                padding: 14px 8px 10px;
-                border-bottom: 1px solid #F6F6F6;
+                margin: 15px 0;
+                padding: 15px;
+                box-shadow: -4px 0px 10px 0px rgba(0,0,0,0.1);
+                border-radius: 10px;
                 cursor: pointer;
+                transition: all 1s ease-in-out;
+                position: relative;
                 &.active {
-                  background-color: $c3;
+                  left: 40px;
+                  background-color: #efefef;
                 }
                 &:hover {
-                  background-color: $c3;
+                  background-color: #efefef;
+                  left: 40px;
+                  transition: all 1s ease-in-out;
                 }
               }
               &--list--one {
@@ -90,7 +100,7 @@
               }
               &--list--two {
                 .quotation--title__quo {
-                  margin: .2rem 0 1rem;
+                  margin: .2rem 0 .5rem;
                 }
               }
               &--list--three {
@@ -103,7 +113,7 @@
       }
       &--right {
         @media screen and (min-width: 992px) {
-          max-width: 65%;
+          max-width: 70%;
         }
         .scenary {
           &--container__top {
@@ -181,7 +191,7 @@
               }
               &--three {
                 .quotation--title {
-                  margin: 30px 0 10px;
+                  margin: 15px 0 5px;
                   padding: 0;
                 }
               }
@@ -200,11 +210,10 @@
                     padding: 8px;
                     &.selected {
                       background-color: $c10;
-                      border: 1px solid $c9;
                     }
                     .quotation--title__quo {
-                      color: $c5;
-                      font-size: 14px;
+                      color: $white;
+                      font-size: 16px;
                       margin: 0;
                       padding: 0;
                     }
@@ -213,9 +222,10 @@
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
-                    border-right: 2px solid $c4;
-                    border-left: 2px solid $c4;
-                    border-bottom: 2px solid $c4;
+                    box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.08);
+                    background-color: #efefef;
+                    border-radius: 0 0 10px 10px;
+                    padding: 5px 5px 15px;
                     .quotation--title__quo {
                       color: $c5;
                       display: block;
@@ -223,7 +233,15 @@
                       padding: 8px;        
                     }
                     .quotation--info {
+                      font-size: 14px;
                       padding: 0 8px;
+                    }
+                    .quotation--detail {
+                      color: $white;
+                      background-color: $black;
+                      font-family: $FuturaLight;
+                      font-size: 12px;
+                      padding: 7px;
                     }
                   }
                   &__scenary {
@@ -266,8 +284,7 @@
           &--container__bottom {
             .scenary {
               &--created__body {
-                box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.08);
-                margin: 0 0 45px;
+                margin: 0 0 20px;
                 // margin: 35px 15px;
                 // padding: 15px;
               }
@@ -279,15 +296,41 @@
                 justify-content: space-between;
               }
               &__scenary {
+                box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.08);
+                border-radius: 10px;
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
                 gap: 10px;
                 padding: 15px;
+                &.selected {
+                  background-color: #efefef;
+                  #products,
+                  #unitPrices,
+                  #prices {
+                    .quotation--info {
+                      margin: 0;
+                      &:nth-child(even) {
+                        background-color: $white;
+                      }
+                    }
+                  }
+                }
                 .scenary--row {
                   @media screen and (min-width: 992px) {
                     width: 25%;
                     max-width: 50%;
+                  }
+                }
+                #products,
+                #unitPrices,
+                #prices {
+                  .quotation--info {
+                    margin: 0;
+                    padding: 4px 1px;
+                    &:nth-child(even) {
+                      background-color: #efefef;
+                    }
                   }
                 }
               }

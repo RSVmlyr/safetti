@@ -182,9 +182,9 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           juniorInput.value = 0
           sliderProductsRow.classList.remove('active')
         }, 1000);        
-        //nodeNotification('Agregado a la lista')
-        console.log(pro);
-        console.log(product);
+        nodeNotification('Agregando producto a la lista...')
+        // console.log(pro);
+        // console.log(product);
         const quotationCalculation = new QuotationCalculation(resQueryUser);
         // quotationCalculation.createRow(product);
         quotationCalculation.createArrayProducto(product);

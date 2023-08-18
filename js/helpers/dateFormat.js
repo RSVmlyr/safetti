@@ -1,22 +1,40 @@
-// Date: month day year
-const dateFormat = (date) => {
+const dateTimeFormat = (date) => {
   if (date) {
-    const data = new Date(date);
-    const day = data.getDate();
-    const month = data.getMonth(); 
-    const year = data.getFullYear();
-    const nameMonths = [
-      "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-      "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-    ];
-    const nameMonth = nameMonths[month];
-    return `${nameMonth}/${day}/${year}`
-  } else {
-    return `?`
-  }
-}
+    const options = {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    };
 
-export default dateFormat
+    const data = new Date(date);
+    const formattedDate = data.toLocaleDateString(undefined, options);
+    return formattedDate;
+  } else {
+    return `?`;
+  }
+};
+
+export default dateTimeFormat;
+
+// Date: month day year
+// const dateFormat = (date) => {
+//   if (date) {
+//     const data = new Date(date);
+//     const day = data.getDate();
+//     const month = data.getMonth(); 
+//     const year = data.getFullYear();
+//     const nameMonths = [
+//       "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+//       "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+//     ];
+//     const nameMonth = nameMonths[month];
+//     return `${nameMonth}/${day}/${year}`
+//   } else {
+//     return `?`
+//   }
+// }
+
+// export default dateFormat
 // Date: month day year
 
 // const dateFormat = (date) => {

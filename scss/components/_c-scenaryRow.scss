@@ -1,7 +1,6 @@
 .scenary--row {
   &__header {
-    background-color: $c4;
-    border: 1px solid $black;
+    background-color: $black;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -10,10 +9,9 @@
     position: relative;
     &.selected {
       background-color: $c10;
-      border: 1px solid $c9;
     }
     .quotation--title__quo {
-      font-family: $FuturaBold;
+      color: $white;
       font-size: 16px;
     }
   }
@@ -27,18 +25,35 @@
       height: 1.2rem;
       width: 1.2rem;
     }
+    .quotation--info {
+      color: $white;
+    }
   }
   &__table {
     display: flex;
     justify-content: space-between;
     gap: 15px;
+    &:nth-child(even) {
+      background-color: $white;
+    }
     .scenary--row {
+      display: flex;
+      align-items: center;
       position: relative;
-      display: block;
-      margin: 0 0 12px;
+      justify-content: flex-end;
+      font-family: $FuturaMedium;
+      font-size: 13px;
+      color: $c2;
+      padding: 10px;
       width: 16.6%;
       width: 25%;
-      gap: 5px;
+      &:first-child {
+        align-items: center;
+        justify-content: flex-start;
+      }
+      &:last-child {
+        justify-content: center;
+      }
       #products,
       #unitPrices,
       #prices {
@@ -100,7 +115,7 @@
       margin: 5px 0;
     }
     .quotation--info {
-      font-family: $FuturaLight;
+      color: $c2;
       margin: 0;
       padding: 4px 0px;
     }

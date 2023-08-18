@@ -46,7 +46,7 @@ const header = (node, infoQuotation) => {
   if (textQuo && status) {
     textQuo.textContent = `${infoQuotation.name}`
     status.innerHTML = `
-      <h3 class="region__status--code">Código ${id}</h3>
+      <h3 class="region__status--code">Nro. ${id}</h3>
       <h3 class="quotation--status ${liteStatusQuotation(statusid)}">${name}</h3>
     `
   }

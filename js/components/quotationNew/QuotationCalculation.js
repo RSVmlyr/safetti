@@ -59,8 +59,7 @@ class QuotationCalculation extends HTMLElement {
     let p = 0
     if(quo != null) {
       p = quo.value
-    } 
-
+    }
     let dataSetQuotation = ''
     const expiringLocalStorage = new ExpiringLocalStorage()
     const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
