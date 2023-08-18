@@ -9,6 +9,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
     const searchParams = new URLSearchParams(url.search);
     const uid = searchParams.get('uid');
     const resQueryUser = await getUser(uid);
+    const currency = quotation.currency
 
     console.log(quotation);
 
@@ -37,13 +38,13 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                 <td>${producto.productName}</td>
                 <td>${producto.selectedMoldeCode}</td>
                 <td>
-                    ${resQueryUser.currency === 'COP' ? 
+                    ${currency === 'COP' ? 
                         `$ ${producto.unitPrice.toLocaleString()}` : 
                         `$ ${producto.unitPrice.toFixed(2).toLocaleString()}`}
                     </td>
                 <td>${producto.quantity.toLocaleString()}</td>
                 <td>
-                    ${resQueryUser.currency === 'COP' ? 
+                    ${currency === 'COP' ? 
                         `$ ${producto.linePrice.toLocaleString()}` : 
                         `$ ${producto.linePrice.toFixed(2).toLocaleString()}`}
                     </td>
@@ -51,6 +52,8 @@ const quotationView = async (node, quotation ,infoQuotation) => {
             </tbody>
         `;
     });
+
+    const eSubtotalProducts = currencyFormatUSD(element.subtotalProducts ,currency)
 
     const discount = element.subtotalProducts - element.subtotalWithDiscount
     const discountValue = discount
@@ -77,9 +80,9 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                             <div>
                                 <span>$</span>
                                 <span>
-                                    ${resQueryUser.currency === 'COP' ? 
+                                    ${currency === 'COP' ? 
                                         `${element.subtotalProducts.toLocaleString()}` : 
-                                        `${element.subtotalProducts.toFixed(2).toLocaleString()}`}
+                                        `${eSubtotalProducts}`}
                                 </span>
                             </div>
                         </td>
@@ -94,7 +97,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                                 <span>$</span>
                                 <span>-</span>
                                 <span class="quotatioview__discountValueNumber">
-                                    ${resQueryUser.currency === 'COP' ? 
+                                    ${currency === 'COP' ? 
                                         `${discountValue.toLocaleString()}` : 
                                         `${discountValue.toFixed(2).toLocaleString()}`}
                                 </span>
@@ -107,7 +110,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                             <div>
                                 <span>$</span>
                                 <span class="quotatioview__withdiscount">
-                                    ${resQueryUser.currency === 'COP' ? 
+                                    ${currency === 'COP' ? 
                                     ` ${element.subtotalWithDiscount.toLocaleString()}` : 
                                     ` ${element.subtotalWithDiscount.toFixed(2).toLocaleString()}`}
                                 </span>
@@ -123,8 +126,9 @@ const quotationView = async (node, quotation ,infoQuotation) => {
             <thead>
                 <tr>
                     <th>
+                        <span>Total</span>
                         <div class="quotatioview__iva">
-                            <span>Total - IVA (19%)</span>
+                            <span>IVA (19%)</span>
                             ${element.taxIVA !== 0 ? 
                                 `<input type="checkbox" class="quotatioview--iva quotation-hide" checked>` : 
                                 `<input type="checkbox" class="quotatioview--iva quotation-hide">`}
@@ -133,7 +137,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                     <th>
                         <span>$ </span>
                         <span class="quotatioview__valueTotal">
-                            ${resQueryUser.currency === 'COP' ? 
+                            ${currency === 'COP' ? 
                                 ` ${element.subtotalWithTaxIVA.toLocaleString()}` : 
                                 ` ${element.subtotalWithTaxIVA.toFixed(2).toLocaleString()}`}
                         </span>
@@ -195,8 +199,6 @@ const quotationView = async (node, quotation ,infoQuotation) => {
 
                     const qncurrencyElement = document.getElementById('qncurrency');
                         const textContent = qncurrencyElement.textContent.trim();
-                        const currency = quotation.currency
-                        console.log(currency);
 
                     const mostrarEstadoCheckbox = (discountWithTotal) => {
 
@@ -210,7 +212,6 @@ const quotationView = async (node, quotation ,infoQuotation) => {
 
 
                         let dataValueDisTotal
-                        console.log(currency);
                         if (currency === 'USD') {
                             dataValueDisTotal = currencyFormatUSD(dN, currency)
                         }    
