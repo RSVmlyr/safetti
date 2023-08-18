@@ -297,20 +297,10 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   const quotationewCalculationDiscountValue = resQueryUser.rol !== 'advisors' ? resQueryUser.specialDiscount : false
   const quotationIva = quotationNew.querySelector('.quotation--iva')
 
-  // const nodeNotification = (text) => {
-  //   const notification = document.createElement('div');
-  //   notification.classList.add('notification');
-  //   notification.textContent = text;
-  //   const body = document.querySelector('body')
-  //   body.insertAdjacentElement('afterend', notification);
-  //   const notificationDiv = document.querySelector('.notification')
-  //   setTimeout(() => {
-  //     notificationDiv.remove()
-  //   }, 10000);
-  // }
-
   
   quotationBtnSave.addEventListener('click', () => {
+
+    console.log('click');
 
     const btnSave = () => {
       if (resQueryUser.rol !== 'advisors') {
@@ -331,7 +321,6 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       
       if (cotId && cotName) {
         // console.log('Cliente Nuevo Escenario: ', quotatioewScenary.value);
-        quotationCalculation.SendNewScenary(resQueryUser, cotId, quotatioewScenary.value)
         if (quotatioewScenary) {
           if (quotatioewScenary.value == '') {
             console.log(quotatioewScenaryNode);
@@ -339,6 +328,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
           } else {
             expiringLocalStorage.saveDataWithExpiration("NameScenary", JSON.stringify(quotatioewScenaryNode.value))
           }
+          quotationCalculation.SendNewScenary(resQueryUser, cotId, quotatioewScenary.value)
         }
       } else {
         quotationCalculation.SendNewQuotation(resQueryUser, quotationIva.checked, quotationewname.value, idQuotationComments.value );
