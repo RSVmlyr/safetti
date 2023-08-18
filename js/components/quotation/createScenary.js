@@ -191,12 +191,12 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
           // Scenary selected 
           if ( scen.selected === true ) {
             const scenaryDataBody = quotation.querySelector('.scenary--data__body')
-
+            const count =  parseInt(i) + 1
             let scenaryBody =
             `<div class="scenary--data__scenary">
               <table>
                 <tr>
-                  <td><span class="quotation--title__quo">#${i} - ${scen.name ? scen.name : ''}</span></td>
+                  <td><span class="quotation--title__quo">#${count} - ${scen.name ? scen.name : ''}</span></td>
                   <td><span class="quotation--title__quo">Precio Base</span></td>
                   <td><span class="quotation--title__quo">Costo Productos</span></td>
                   <td></td>
@@ -233,13 +233,14 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             linePrice.push(product.linePrice)
             unitPrice.push(product.unitPrice)
           });
-        
+          const count =  parseInt(i) + 1
+          
           let scenaryList = 
           `<div class="scenary--created__body">
             <div class="scenary--data__body">
               ${scenSelected === true ? '<div class="scenary--data__scenary selected">' : '<div class="scenary--data__scenary">'}
                 ${scenSelected === true ? '<div class="scenary--row__header selected">' : '<div class="scenary--row__header">'}
-                  <span class="quotation--title__quo">#${i} - ${scen.name ? scen.name : ''}</span>
+                  <span class="quotation--title__quo">#${count} - ${scen.name ? scen.name : ''}</span>
                   <div class="scenary--row__select">
                     <span class="quotation--info">Seleccionar</span>
                     <img src="../../img/icon/check.svg" loading="lazy" alt="Seleccionar" title="Seleccionar">
