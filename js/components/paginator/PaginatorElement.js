@@ -74,9 +74,8 @@ class PaginatorElement extends HTMLElement {
         paginator.appendChild(firstPageButton);
   
         if (rangeStart > ellipsisThreshold) {
-          const ellipsisStartButton = document.createElement('button');
+          const ellipsisStartButton = document.createElement('div');
           ellipsisStartButton.textContent = '...';
-          ellipsisStartButton.disabled = true;
           ellipsisStartButton.classList.add('item-pager');
           paginator.appendChild(ellipsisStartButton);
         }
@@ -92,9 +91,8 @@ class PaginatorElement extends HTMLElement {
         }
   
         if (rangeEnd < totalPages - ellipsisThreshold + 1) {
-          const ellipsisEndButton = document.createElement('button');
+          const ellipsisEndButton = document.createElement('div');
           ellipsisEndButton.textContent = '...';
-          ellipsisEndButton.disabled = true;
           ellipsisEndButton.classList.add('ellipsis');
           paginator.appendChild(ellipsisEndButton);
         }
