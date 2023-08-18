@@ -118,7 +118,7 @@ class QuotationCalculation extends HTMLElement {
       }
     }
     const createQuotation = async () => {
-      //const data = await setQuotation(dataSetQuotation)
+      const data = await setQuotation(dataSetQuotation)
     }
     createQuotation(dataSetQuotation)
   }
@@ -130,6 +130,10 @@ class QuotationCalculation extends HTMLElement {
     const scenary = retrievedData ? JSON.parse(retrievedData) : []
     let specialDiscount = data.specialDiscount; 
     specialDiscount = specialDiscount !== null && !isNaN(specialDiscount) ? specialDiscount : 0;
+    if(data.length <= 0){
+      nodeNotification('El escenario tiene un valor de cero.')
+      return null
+    }
     if(data) {
       dataSetScenario = {
         "quotationId": cotId,
