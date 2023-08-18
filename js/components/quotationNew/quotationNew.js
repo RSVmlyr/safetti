@@ -169,6 +169,13 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
           li.setAttribute('data-currency', client.currency ? client.currency : '')
           li.setAttribute('data-rol', client.rol ? client.rol : '')
           li.addEventListener('click', function() {
+            expiringLocalStorage.deleteDataWithExpiration('products')
+
+            const scenaryDeleteAll = quotationNew.querySelector('.scenary-delete__all')
+            if  (scenaryDeleteAll) {
+              scenaryDeleteAll.click()
+            }
+
             idQuotatioNewSearchClient.classList.remove('quotationewsearchclient')
             validateNewCleint()
             quotatioNewClient.value = client.fullName ? client.fullName : '';
