@@ -84,7 +84,7 @@ class PaginatorElement extends HTMLElement {
           const pageButton = document.createElement('button');
           pageButton.textContent = i;
           pageButton.value = i;
-          pageButton.classList.add('item-pager');
+          pageButton.classList.add('ellipsis');
           if (i === currentPage) {
             pageButton.classList.add('active');
           }
@@ -95,7 +95,7 @@ class PaginatorElement extends HTMLElement {
           const ellipsisEndButton = document.createElement('button');
           ellipsisEndButton.textContent = '...';
           ellipsisEndButton.disabled = true;
-          ellipsisEndButton.classList.add('item-pager');
+          ellipsisEndButton.classList.add('ellipsis');
           paginator.appendChild(ellipsisEndButton);
         }
 
