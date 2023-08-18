@@ -43,9 +43,8 @@ class PaginatorElement extends HTMLElement {
       loadingDivHtml.remove();
     }
     paginator.classList.add('pager');
-    
     const maxPagesToShow = 2; // Número máximo de botones a mostrar
-    const ellipsisThreshold = 2; // Cantidad de páginas antes de mostrar "..."
+    const ellipsisThreshold = 3; // Cantidad de páginas antes de mostrar "..."
     const currentPage = this.pageNumber;
   
     if (results && totalPages > 1) {
