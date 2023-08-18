@@ -68,6 +68,11 @@ class QuotationCalculation extends HTMLElement {
       if(data) {
         const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
         const products = retrievedData ? JSON.parse(retrievedData) : []
+        console.log(products);
+        if(products.length <= 0){
+          nodeNotification('La cotización tiene un valor de cero.')
+          return null
+        }
         dataSetQuotation = {
           currency: client['0'].currency,
           name: name,
@@ -125,6 +130,10 @@ class QuotationCalculation extends HTMLElement {
     const scenary = retrievedData ? JSON.parse(retrievedData) : []
     let specialDiscount = data.specialDiscount; 
     specialDiscount = specialDiscount !== null && !isNaN(specialDiscount) ? specialDiscount : 0;
+    if(data.length <= 0){
+      nodeNotification('El escenario tiene un valor de cero.')
+      return null
+    }
     if(data) {
       dataSetScenario = {
         "quotationId": cotId,
