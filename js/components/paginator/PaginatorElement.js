@@ -157,6 +157,10 @@ class PaginatorElement extends HTMLElement {
   }
 
   pageNumberCallback(quotation) {
+    const notResult = document.querySelector('.not-result')
+    if (notResult) {
+      notResult.remove();
+    }
     if (quotation) {
       const loadingDivHtml = document.querySelector('.loading-message')
       if (loadingDivHtml) {
@@ -168,11 +172,12 @@ class PaginatorElement extends HTMLElement {
         item.removeAttribute('disabled')
       })
       if(quotation.length === 0){
-        const loadingDiv = document.createElement('div');
-        const quotationContentListContainer = document.querySelector('#quotation--content--list');
-        loadingDiv.textContent = 'No hay resultados';
-        loadingDiv.classList.add('loading-message')
-        quotationContentListContainer.appendChild(loadingDiv);
+        console.log(quotation, 'debug');
+        const listContainer = document.querySelector('#quotation--content--list');
+        const notResult = document.createElement('div');
+        notResult.classList.add('not-result')
+        notResult.textContent = 'No hay resultados'
+        listContainer.appendChild(notResult);
       }
     }
     quotation.reverse();
