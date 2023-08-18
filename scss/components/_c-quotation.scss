@@ -206,8 +206,7 @@
                     background-color: $c4;
                     display: flex;
                     align-items: center;
-                    height: 32px;
-                    padding: 8px;
+                    padding: 12px;
                     &.selected {
                       background-color: $c10;
                     }
@@ -233,7 +232,7 @@
                       padding: 8px;        
                     }
                     .quotation--info {
-                      font-size: 14px;
+                      font-size: 13px;
                       padding: 0 8px;
                     }
                     .quotation--detail {
@@ -327,7 +326,7 @@
                 #prices {
                   .quotation--info {
                     margin: 0;
-                    padding: 4px 1px;
+                    padding: 7px 1px;
                     &:nth-child(even) {
                       background-color: #efefef;
                     }
