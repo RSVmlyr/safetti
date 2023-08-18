@@ -20,7 +20,6 @@ class PaginatorElement extends HTMLElement {
     this.selectAdvisor();
   }
 
-
   async renderPaginator() {
     const uid = localStorage.getItem('current')
     const data = await QuotationSearch(uid, this.pageNumber, this.pageSize, this.advisorId, this.clientName);
@@ -33,21 +32,25 @@ class PaginatorElement extends HTMLElement {
     this.totalPages = data.totalPages;
     this.results = data.results 
     this.pageNumberCallback(this.results);
-    this.paginatorNumber(this.results, this.totalPages)
+    this.paginatorNumber(this.totalPages, this.pageNumber)
   }
 
-  paginatorNumber(results, totalPages) {
+  paginatorNumber(totalPages, pageNumber) {
     const paginator = document.createElement('div');
     const loadingDivHtml = document.querySelector('.loading-message')
     if (loadingDivHtml) {
       loadingDivHtml.remove();
     }
+    const paginatorOld = document.querySelector('.pager');
+    if (paginatorOld) {
+      paginatorOld.remove();
+    }
     paginator.classList.add('pager');
-    const maxPagesToShow = 2; // Número máximo de botones a mostrar
-    const ellipsisThreshold = 3; // Cantidad de páginas antes de mostrar "..."
-    const currentPage = this.pageNumber;
+    const maxPagesToShow = 5; 
+    const ellipsisThreshold = 2;
+    const currentPage = parseInt(pageNumber);
   
-    if (results && totalPages > 1) {
+    if (totalPages > 1) {
       if (totalPages <= maxPagesToShow) {
         // Mostrar todos los botones
         for (let i = 1; i <= totalPages; i++) {
@@ -64,15 +67,12 @@ class PaginatorElement extends HTMLElement {
         // Mostrar el rango alrededor de la página actual
         let rangeStart = Math.max(currentPage - Math.floor(maxPagesToShow / 2), 1);
         let rangeEnd = Math.min(rangeStart + maxPagesToShow - 1, totalPages);
-  
-        // Mostrar el botón para ir a la primera página
         const firstPageButton = document.createElement('button');
         firstPageButton.textContent = '<<';
         firstPageButton.value = 1;
         firstPageButton.classList.add('item-pager');
         paginator.appendChild(firstPageButton);
   
-        // Agregar el botón "..." si es necesario
         if (rangeStart > ellipsisThreshold) {
           const ellipsisStartButton = document.createElement('button');
           ellipsisStartButton.textContent = '...';
@@ -80,11 +80,6 @@ class PaginatorElement extends HTMLElement {
           ellipsisStartButton.classList.add('item-pager');
           paginator.appendChild(ellipsisStartButton);
         }
-        
-        rangeStart =1
-        rangeEnd = 3
-  
-        // Mostrar los botones de página dentro del rango
         for (let i = rangeStart; i <= rangeEnd; i++) {
           const pageButton = document.createElement('button');
           pageButton.textContent = i;
@@ -96,7 +91,6 @@ class PaginatorElement extends HTMLElement {
           paginator.appendChild(pageButton);
         }
   
-        // Agregar el botón "..." si es necesario
         if (rangeEnd < totalPages - ellipsisThreshold + 1) {
           const ellipsisEndButton = document.createElement('button');
           ellipsisEndButton.textContent = '...';
@@ -104,8 +98,7 @@ class PaginatorElement extends HTMLElement {
           ellipsisEndButton.classList.add('item-pager');
           paginator.appendChild(ellipsisEndButton);
         }
-  
-        // Mostrar el botón para ir a la última página
+
         const lastPageButton = document.createElement('button');
         lastPageButton.textContent = '>>';
         lastPageButton.value = totalPages;
@@ -131,6 +124,7 @@ class PaginatorElement extends HTMLElement {
       try {
         const uid = localStorage.getItem('current')
         const data = await QuotationSearch(uid, e.target.value, this.pageSize, this.advisorId, this.clientName);
+        this.paginatorNumber(data.totalPages, e.target.value)
         this.pageNumberCallback(data.results);
       } catch (error) {
         console.log('QuotationSearch Error:', error);
@@ -199,8 +193,6 @@ class PaginatorElement extends HTMLElement {
     quotationContentListContainer.appendChild(loadingDiv);
   }
 }
-
-
 
 customElements.define('c-paginator', PaginatorElement);
 export default PaginatorElement;
