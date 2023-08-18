@@ -19,7 +19,7 @@ class App {
     document.addEventListener('DOMContentLoaded', async () => {
       const url = new URL(window.location.href);
       const searchParams = new URLSearchParams(url.search);
-      const uid = searchParams.get('uid') || '19';
+      const uid = searchParams.get('uid') || '4';
       const resQueryUser = await getUser(uid);
 
       localStorage.setItem('rol', resQueryUser.rol);
@@ -36,11 +36,11 @@ class App {
         const btn_ = document.querySelector('.quotation--btn__add');
         btn_.setAttribute('href', '/index-q.html?uid=' + resQueryUser.id);
       
-        let Quotation = '', totalPages = '', advisorId = 0, q = '';
+        /* let Quotation = '', totalPages = '', advisorId = 0, q = '';
         switch (resQueryUser.rol) {
           case 'advisors':
             q = await QuotationSearch(uid, 1, advisorId);
-            console.log('debug', q);
+            //console.log('debug', q);
             Quotation = q.results;
             totalPages = q.totalPages;
             break;
@@ -51,14 +51,12 @@ class App {
             Quotation = q.results;
             totalPages = q.totalPages;
             break;
-        }
+        } */
 
-        const paginatorElement = new PaginatorElement(uid, 1, Quotation, totalPages);
-        paginatorElement.renderPaginator();
-        paginatorElement.selectAdvisor();
+        const paginatorElement = new PaginatorElement(uid);
 
         const getAdvisor = () => {
-          if (resQueryAdvisors.length > 0) {
+          if (resQueryAdvisors) {
             selectAdvisors(resQueryAdvisors);
           }
         };

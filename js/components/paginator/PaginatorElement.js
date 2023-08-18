@@ -2,51 +2,53 @@ import quotationListRow from "../quotation/quotationListRow.js";
 import QuotationSearch from "../../services/quotation/QuotationSearch.js";
 
 class PaginatorElement extends HTMLElement {
-  constructor(uid, pageNumber, Quotation, totalPages) {
+  constructor() {
     super();
-    this.totalPages = totalPages;
-    this._uid = uid;
-    this._advisorId = 0;
-    this.pageNumber = pageNumber;
-    this.Quotation = Quotation;
-    this.renderPaginator = this.renderPaginator.bind(this);
-    this.selectAdvisor = this.selectAdvisor.bind(this);
-    this.clickPager = this.clickPager.bind(this);
-    this.pageNumberCallback = this.pageNumberCallback.bind(this);
-    this.handleAdvisorChange = this.handleAdvisorChange.bind(this);
-    this.handlePageButtonClick = this.handlePageButtonClick.bind(this);
+    this.totalPages = 0;
+    this.totalPages = 0
+    this.pageNumber = 1;
+    this.Quotation = 0;
+    this.results = '0'
+    this.advisorId = '0'
+    this.clientName = ' '
+    this.pageSize = '3'
   }
 
   connectedCallback() {
+    this.clickPager();
     this.renderPaginator();
     this.selectAdvisor();
-    this.clickPager();
-    this.handlePageButtonClick(); // Agregar esta línea para llamar a handlePageButtonClick
   }
 
-  get uid() {
-    return this._uid;
+
+  async renderPaginator() {
+    const uid = localStorage.getItem('current')
+    const data = await QuotationSearch(uid, this.pageNumber, this.pageSize, this.advisorId, this.clientName);
+    console.log(data);
+    const pagerItem = document.querySelectorAll('.pager .item-pager');
+    const buttons = this.querySelectorAll('button');
+
+    pagerItem.forEach(item =>{
+      item.classList.add('disabled');
+      item.setAttribute('disabled', true);
+    })
+    this.totalPages = data.totalPages;
+    this.results = data.results 
+    this.pageNumberCallback(this.results);
+    this.paginatorNumber(this.results, this.totalPages)
   }
 
-  set uid(value) {
-    this._uid = value;
-  }
-
-  get advisorId () {
-    return this._advisorId;
-  }
-
-  set advisorId(value) {
-    this._advisorId = value;
-  }
-
-  renderPaginator() {
-    this.pageNumberCallback(this.Quotation);
-    const Quotation = this.Quotation;
+  paginatorNumber(results, totalPages) {
+   
     const paginator = document.createElement('div');
+   /*  const pager = document.querySelector('.pager');
+    console.log(pager);
+    if(pager){
+      pager.remove()
+    } */
     paginator.classList.add('pager');
-    if (Quotation && this.totalPages > 1) {
-      for (let i = 1; i <= this.totalPages; i++) {
+    if (results && totalPages > 1) {
+      for (let i = 1; i <= totalPages; i++) {
         const pageButton = document.createElement('button');
         pageButton.textContent = i;
         pageButton.value = i;
@@ -61,21 +63,19 @@ class PaginatorElement extends HTMLElement {
   }
 
   async handlePageButtonClick(e) {
-    if (e && e.target.tagName === 'BUTTON') { // Agregar comprobación de existencia de e
-      const pageNumber = parseInt(e.target.value);
-      this.pageNumber = pageNumber;
-
-      const buttons = this.querySelectorAll('button');
-      buttons.forEach(btn => {
-        btn.classList.remove('active');
-      });
+    if (e && e.target.tagName === 'BUTTON') { 
+      const pagerItem = document.querySelectorAll('.pager .item-pager');
+      pagerItem.forEach(item =>{
+        item.classList.add('disabled');
+        item.setAttribute('disabled', true);
+        item.classList.remove('active');
+      })
+      this.loading();
       e.target.classList.add('active');
-      
-      console.log(3, e.target.value, this.advisorId);
-      const uid = localStorage.getItem('current')
       try {
-        const Q = await QuotationSearch(uid, e.target.value, this.advisorId);
-        this.pageNumberCallback(Q.results);
+        const uid = localStorage.getItem('current')
+        const data = await QuotationSearch(uid, e.target.value, this.pageSize, this.advisorId, this.clientName);
+        this.pageNumberCallback(data.results);
       } catch (error) {
         console.log('QuotationSearch Error:', error);
       }
@@ -83,11 +83,14 @@ class PaginatorElement extends HTMLElement {
   }
 
   async handleAdvisorChange(e) {
-    this.advisorId = e.target.value
+    const paginatorOld = document.querySelector('.pager');
+    if (paginatorOld) {
+      paginatorOld.remove();
+    }
     try {
-      const Q = await QuotationSearch(this.uid, 1, this.advisorId);
-      console.log('change', Q);
-      this.pageNumberCallback(Q.results);
+      this.advisorId = e.target.value
+      this.loading();
+      this.renderPaginator()
     } catch (error) {
       console.log('QuotationSearch Error:', error);
     }
@@ -104,20 +107,44 @@ class PaginatorElement extends HTMLElement {
   }
 
   pageNumberCallback(quotation) {
-    let quotationContentList = document.querySelectorAll('#quotation--content--list .quotation--list--row');
+    if (quotation) {
+      const loadingDivHtml = document.querySelector('.loading-message')
+      if (loadingDivHtml) {
+        loadingDivHtml.remove();
+      }
+      const pagerItem = document.querySelectorAll('.pager .item-pager');
+      pagerItem.forEach(item =>{
+        item.classList.remove('disabled')
+        item.removeAttribute('disabled')
+      })
+      if(quotation.length === 0){
+        const loadingDiv = document.createElement('div');
+        const quotationContentListContainer = document.querySelector('#quotation--content--list');
+        loadingDiv.textContent = 'No';
+        loadingDiv.classList.add('loading-message')
+        quotationContentListContainer.appendChild(loadingDiv);
+      }
+    }
+    quotation.reverse();
+    quotation.forEach(cot => {        
+      quotationListRow(cot);
+    });
+  }
+  
+  loading() {
+    const loadingDiv = document.createElement('div');
+    const quotationContentListContainer = document.querySelector('#quotation--content--list');
+    const quotationContentList = quotationContentListContainer.querySelectorAll('#quotation--content--list .quotation--list--row');
+    loadingDiv.textContent = 'Cargando...';
+    loadingDiv.classList.add('loading-message')
     quotationContentList.forEach(element => {
       element.remove();
     });
-    if (Array.isArray(quotation)) {
-      quotation.reverse();
-      quotation.forEach(cot => {        
-        quotationListRow(cot);
-      });
-    } else {
-      // console.log('Invalid Quotation data:', quotation);
-    }
+    quotationContentListContainer.appendChild(loadingDiv);
   }
 }
+
+
 
 customElements.define('c-paginator', PaginatorElement);
 export default PaginatorElement;
