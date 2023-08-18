@@ -35,27 +35,7 @@ class App {
         spinner.remove();
         const btn_ = document.querySelector('.quotation--btn__add');
         btn_.setAttribute('href', '/index-q.html?uid=' + resQueryUser.id);
-      
-        /* let Quotation = '', totalPages = '', advisorId = 0, q = '';
-        switch (resQueryUser.rol) {
-          case 'advisors':
-            q = await QuotationSearch(uid, 1, advisorId);
-            //console.log('debug', q);
-            // console.log('debug', q);
-            Quotation = q.results;
-            totalPages = q.totalPages;
-            break;
-
-          default:
-            document.querySelector('.quotation--container__action').remove();
-            q = await QuotationSearch(uid, 1, advisorId);
-            Quotation = q.results;
-            totalPages = q.totalPages;
-            break;
-        } */
-
         const paginatorElement = new PaginatorElement(uid);
-
         const getAdvisor = () => {
           if (resQueryAdvisors) {
             selectAdvisors(resQueryAdvisors);

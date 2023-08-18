@@ -168,9 +168,6 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
       // Delete Scenary Top
 
       const getScenary = () => {
-
-        console.log(cot);
-
         if(cot.scenarios.length > 0) {
           const scenaryData = quotation.querySelector('.scenary--data__body .quotation--notification')
           if (scenaryData) {

@@ -11,7 +11,7 @@ class PaginatorElement extends HTMLElement {
     this.results = '0'
     this.advisorId = '0'
     this.clientName = ' '
-    this.pageSize = '3'
+    this.pageSize = '1'
   }
 
   connectedCallback() {
@@ -24,10 +24,8 @@ class PaginatorElement extends HTMLElement {
   async renderPaginator() {
     const uid = localStorage.getItem('current')
     const data = await QuotationSearch(uid, this.pageNumber, this.pageSize, this.advisorId, this.clientName);
-    console.log(data);
+    //console.log(data);
     const pagerItem = document.querySelectorAll('.pager .item-pager');
-    const buttons = this.querySelectorAll('button');
-
     pagerItem.forEach(item =>{
       item.classList.add('disabled');
       item.setAttribute('disabled', true);
@@ -45,9 +43,9 @@ class PaginatorElement extends HTMLElement {
       loadingDivHtml.remove();
     }
     paginator.classList.add('pager');
-  
-    const maxPagesToShow = 5; // Número máximo de botones a mostrar
-    const ellipsisThreshold = 5; // Cantidad de páginas antes de mostrar "..."
+    
+    const maxPagesToShow = 2; // Número máximo de botones a mostrar
+    const ellipsisThreshold = 2; // Cantidad de páginas antes de mostrar "..."
     const currentPage = this.pageNumber;
   
     if (results && totalPages > 1) {
@@ -65,12 +63,12 @@ class PaginatorElement extends HTMLElement {
         }
       } else {
         // Mostrar el rango alrededor de la página actual
-        const rangeStart = Math.max(currentPage - Math.floor(maxPagesToShow / 2), 1);
-        const rangeEnd = Math.min(rangeStart + maxPagesToShow - 1, totalPages);
+        let rangeStart = Math.max(currentPage - Math.floor(maxPagesToShow / 2), 1);
+        let rangeEnd = Math.min(rangeStart + maxPagesToShow - 1, totalPages);
   
         // Mostrar el botón para ir a la primera página
         const firstPageButton = document.createElement('button');
-        firstPageButton.textContent = '1';
+        firstPageButton.textContent = '<<';
         firstPageButton.value = 1;
         firstPageButton.classList.add('item-pager');
         paginator.appendChild(firstPageButton);
@@ -80,9 +78,12 @@ class PaginatorElement extends HTMLElement {
           const ellipsisStartButton = document.createElement('button');
           ellipsisStartButton.textContent = '...';
           ellipsisStartButton.disabled = true;
-          ellipsisStartButton.classList.add('item-pager', 'hidden');
+          ellipsisStartButton.classList.add('item-pager');
           paginator.appendChild(ellipsisStartButton);
         }
+        
+        rangeStart =1
+        rangeEnd = 3
   
         // Mostrar los botones de página dentro del rango
         for (let i = rangeStart; i <= rangeEnd; i++) {
@@ -101,21 +102,22 @@ class PaginatorElement extends HTMLElement {
           const ellipsisEndButton = document.createElement('button');
           ellipsisEndButton.textContent = '...';
           ellipsisEndButton.disabled = true;
-          ellipsisEndButton.classList.add('item-pager', 'hidden');
+          ellipsisEndButton.classList.add('item-pager');
           paginator.appendChild(ellipsisEndButton);
         }
   
         // Mostrar el botón para ir a la última página
         const lastPageButton = document.createElement('button');
-        lastPageButton.textContent = totalPages;
+        lastPageButton.textContent = '>>';
         lastPageButton.value = totalPages;
         lastPageButton.classList.add('item-pager');
         paginator.appendChild(lastPageButton);
       }
     }
-  
+    
     document.querySelector('c-paginator').appendChild(paginator);
-  }  
+  }
+  
   
   async handlePageButtonClick(e) {
     if (e && e.target.tagName === 'BUTTON') { 
@@ -128,7 +130,6 @@ class PaginatorElement extends HTMLElement {
       this.loading();
       e.target.classList.add('active');
       try {
-        this.updatePaginator();
         const uid = localStorage.getItem('current')
         const data = await QuotationSearch(uid, e.target.value, this.pageSize, this.advisorId, this.clientName);
         this.pageNumberCallback(data.results);
@@ -152,17 +153,6 @@ class PaginatorElement extends HTMLElement {
     }
   }
   
-  updatePaginator() {
-    // Limpia el paginador actual
-    const paginatorElement = document.querySelector('c-paginator');
-    while (paginatorElement.firstChild) {
-      paginatorElement.removeChild(paginatorElement.firstChild);
-    }
-    console.log(this.results, this.totalPages);
-    // Vuelve a renderizar el paginador con el nuevo rango
-    this.paginatorNumber(this.results, this.totalPages);
-  }
-
   selectAdvisor() {
     const selectAdvisorId = document.querySelector('#advisors');
     if(selectAdvisorId){
