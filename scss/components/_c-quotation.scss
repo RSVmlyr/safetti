@@ -191,7 +191,7 @@
               }
               &--three {
                 .quotation--title {
-                  margin: 20px 0 5px;
+                  margin: 15px 0 5px;
                   padding: 0;
                 }
               }
@@ -240,6 +240,7 @@
                       color: $white;
                       background-color: $black;
                       font-family: $FuturaLight;
+                      font-size: 12px;
                       padding: 7px;
                     }
                   }
@@ -326,7 +327,7 @@
                 #prices {
                   .quotation--info {
                     margin: 0;
-                    padding: 4px;
+                    padding: 4px 1px;
                     &:nth-child(even) {
                       background-color: #efefef;
                     }

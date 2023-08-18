@@ -139,7 +139,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         quotationContainer.remove()
       }
 
-      if(currentRol !== 'advisors') {
+      if(currentRol !== 'advisors' && quotationBtnNe) {
         quotationBtnNe.remove()
       }
 
