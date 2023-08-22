@@ -11,7 +11,7 @@ class PaginatorElement extends HTMLElement {
     this.results = '0'
     this.advisorId = '0'
     this.clientName = ' '
-    this.pageSize = '1'
+    this.pageSize = '5'
   }
 
   connectedCallback() {

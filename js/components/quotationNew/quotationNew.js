@@ -306,15 +306,24 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       if (resQueryUser.rol !== 'advisors') {
         if (quotationewname) {
           if (quotationewname.value == '') {
+            quotationewname.classList.add('error')
             nodeNotification('Los campos marcados con * son obligatorios')
           }
         }
       } else {
         if (quotationewname && quotatioNewClient) {
-          if (quotationewname.value == '' || quotatioNewClientNode == '') {
-            nodeNotification('Los campos marcados con * son obligatorios')
+          if (quotationewname.value === '' || quotatioNewClient.value === '') {
+            if (quotationewname.value === '') {
+              quotationewname.classList.add('error');
+            }
+            if (quotatioNewClient.value === '') {
+              quotatioNewClient.classList.add('error');
+            }
+            nodeNotification('Los campos marcados con * son obligatorios');
           } else {
-            expiringLocalStorage.saveDataWithExpiration("NameQuotation", JSON.stringify(quotationewname.value))
+            quotationewname.classList.remove('error');
+            quotatioNewClient.classList.remove('error');
+            expiringLocalStorage.saveDataWithExpiration("NameQuotation", JSON.stringify(quotationewname.value));
           }
         }
       }
@@ -322,8 +331,9 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       if (cotId && cotName) {
         // console.log('Cliente Nuevo Escenario: ', quotatioewScenary.value);
         if (quotatioewScenary) {
-          if (quotatioewScenary.value == '') {
+          if (quotatioewScenary.value === '') {
             console.log(quotatioewScenaryNode);
+            quotatioewScenaryNode.classList.add('error');
             nodeNotification('Los campos marcados con * son obligatorios')
           } else {
             expiringLocalStorage.saveDataWithExpiration("NameScenary", JSON.stringify(quotatioewScenaryNode.value))
