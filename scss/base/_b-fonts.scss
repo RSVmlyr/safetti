@@ -38,3 +38,26 @@ $fonts: '../../fonts' !default;
   font-style: normal;
   font-display: swap;
 }
+
+$font-path-roboto-black: "../fonts/roboto/Roboto-Black.ttf";
+$font-path-roboto-medium: "../fonts/roboto/Roboto-Medium.ttf";
+$font-path-roboto-regular: "../fonts/roboto/Roboto-Regular.ttf";
+@font-face {
+  font-family: "Roboto bold";
+  src: url("#{$font-path-roboto-black}") format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roboto medium";
+  src: url("#{$font-path-roboto-medium}") format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Roboto regular";
+  src: url("#{$font-path-roboto-regular}") format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
