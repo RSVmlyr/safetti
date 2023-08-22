@@ -333,7 +333,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
         if (quotatioewScenary) {
           if (quotatioewScenary.value === '') {
             console.log(quotatioewScenaryNode);
-            quotatioewScenaryNode.classList.add('error');
+            quotatioewScenary.classList.add('error');
             nodeNotification('Los campos marcados con * son obligatorios')
           } else {
             expiringLocalStorage.saveDataWithExpiration("NameScenary", JSON.stringify(quotatioewScenaryNode.value))
