@@ -118,10 +118,10 @@
                 margin: 0;
                 padding: 10px 0;
                 width: 100%;
-                background-color: $white;
                 z-index: 1;
                 &.quotationewsearchclient {
                   box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.08);
+                  background-color: $white;
                   max-height: 300px;
                   overflow: auto;
                 }
@@ -175,7 +175,7 @@
                   bottom: -25px;
                 }
                 input {
-                  background-image: url('../img/icon/icon-search.svg');
+                  background-image: url('../img/icon/icon-search-black.svg');
                   background-position: center left 15px;
                   background-repeat: no-repeat;
                   padding: 0 20px 0 50px;

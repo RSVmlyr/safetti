@@ -155,7 +155,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       let searchTerm = e.target.value.trim().toLowerCase();
       idQuotatioNewSearchClient.innerHTML = '';
       if (searchTerm !== '') {
-        console.log(resQueryClients);
+        // console.log(resQueryClients);
         const filteredClients = resQueryClients.filter(client =>
           client.fullName.toLowerCase().includes(searchTerm),
         );

@@ -1,5 +1,6 @@
 import quotationListRow from "../quotation/quotationListRow.js";
 import QuotationSearch from "../../services/quotation/QuotationSearch.js";
+import loadingData from "../../helpers/loading.js";
 
 class PaginatorElement extends HTMLElement {
   constructor() {
@@ -17,6 +18,7 @@ class PaginatorElement extends HTMLElement {
   connectedCallback() {
     this.clickPager();
     this.renderPaginator();
+    this.searchClients();
     this.selectAdvisor();
   }
 
@@ -60,6 +62,7 @@ class PaginatorElement extends HTMLElement {
           pageButton.classList.add('item-pager');
           if (i === currentPage) {
             pageButton.classList.add('active');
+            pageButton.disabled = true;
           }
           paginator.appendChild(pageButton);
         }
@@ -74,9 +77,8 @@ class PaginatorElement extends HTMLElement {
         paginator.appendChild(firstPageButton);
   
         if (rangeStart > ellipsisThreshold) {
-          const ellipsisStartButton = document.createElement('button');
+          const ellipsisStartButton = document.createElement('div');
           ellipsisStartButton.textContent = '...';
-          ellipsisStartButton.disabled = true;
           ellipsisStartButton.classList.add('item-pager');
           paginator.appendChild(ellipsisStartButton);
         }
@@ -87,14 +89,14 @@ class PaginatorElement extends HTMLElement {
           pageButton.classList.add('ellipsis');
           if (i === currentPage) {
             pageButton.classList.add('active');
+            pageButton.disabled = true;
           }
           paginator.appendChild(pageButton);
         }
   
         if (rangeEnd < totalPages - ellipsisThreshold + 1) {
-          const ellipsisEndButton = document.createElement('button');
+          const ellipsisEndButton = document.createElement('div');
           ellipsisEndButton.textContent = '...';
-          ellipsisEndButton.disabled = true;
           ellipsisEndButton.classList.add('ellipsis');
           paginator.appendChild(ellipsisEndButton);
         }
@@ -115,12 +117,11 @@ class PaginatorElement extends HTMLElement {
     if (e && e.target.tagName === 'BUTTON') { 
       const pagerItem = document.querySelectorAll('.pager .item-pager');
       pagerItem.forEach(item =>{
-        item.classList.add('disabled');
-        item.setAttribute('disabled', true);
-        item.classList.remove('active');
+        // item.classList.add('disabled');
+        // item.setAttribute('disabled', true);
+        item.classList.contains('active') ? item.disabled = true : false;
       })
       this.loading();
-      e.target.classList.add('active');
       try {
         const uid = localStorage.getItem('current')
         const data = await QuotationSearch(uid, e.target.value, this.pageSize, this.advisorId, this.clientName);
@@ -172,7 +173,7 @@ class PaginatorElement extends HTMLElement {
         item.removeAttribute('disabled')
       })
       if(quotation.length === 0){
-        console.log(quotation, 'debug');
+        // console.log(quotation, 'debug');
         const listContainer = document.querySelector('#quotation--content--list');
         const notResult = document.createElement('div');
         notResult.classList.add('not-result')
@@ -187,15 +188,40 @@ class PaginatorElement extends HTMLElement {
   }
   
   loading() {
-    const loadingDiv = document.createElement('div');
     const quotationContentListContainer = document.querySelector('#quotation--content--list');
     const quotationContentList = quotationContentListContainer.querySelectorAll('#quotation--content--list .quotation--list--row');
-    loadingDiv.textContent = 'Cargando...';
-    loadingDiv.classList.add('loading-message')
+    
+    const loadingDiv = loadingData(quotationContentListContainer);
+    // const loadingDiv = document.createElement('div');
+    
+    
+    // loadingDiv.textContent = 'Cargando...';
+    // loadingDiv.classList.add('loading-message')
     quotationContentList.forEach(element => {
       element.remove();
     });
     quotationContentListContainer.appendChild(loadingDiv);
+  }
+
+  searchClients() {
+    const inputSearchClient = document.querySelector('.quotation--left .quotation--container__action #clients');
+    const formSearch = document.querySelector('.quotation--left .quotation--container__action #search-clients');
+    inputSearchClient.addEventListener("change", this.validateSearch.bind(this));
+    // console.log(formSearch);
+    
+    formSearch.addEventListener("submit", (e) => {
+      e.preventDefault();
+      this.loading();
+      this.renderPaginator()
+    })
+
+    // console.log(formSearch);
+  }
+
+  validateSearch(e) {
+    const value = e.target.value
+    this.clientName = value;
+    // console.log(this.clientName);
   }
 }
 

@@ -216,7 +216,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
                 <div class="modal--container__bodyRight">
                   <div class="modal--header">
                     <div class="modal--header__languages">
-                      <div class="es quotation--btn__new">ES</div>
+                      <div class="es quotation--btn__new" style="background-color: transparent; color: black;">ES</div>
                       <div class="en quotation--btn__new">EN</div>
                     </div>
                     <h3 class="quotation--title__quo">${pro.id ? pro.id : ''} / ${pro.name ? pro.name : ''}</h3>
@@ -226,14 +226,14 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
                       <h4 class="modal--title"><span>Deporte:</span> ${pro.cuento ? pro.cuento : ''}</h4>
                       <h4 class="modal--title"><span>Referencia:</span> ${pro.referencia ? pro.referencia : ''}</h4>
                       <h4 class="modal--title"><span>Clasificación:</span> ${pro.classification ? pro.classification : ''}</h4>
-                      <h4 class="modal--title"><span>Descripción:</span></h4>
+                      <h4 class="modal--title"><span class="des-es">Descripción:</span><span class="des-en quotation-hide">Description:</span></h4>
                       <div class="modal--des__es">
                         ${pro.description ? pro.description : '...'}
                       </div>
                       <div class="modal--des__en quotation-hide">
                         ${pro.descriptionEN ? pro.descriptionEN : '...'}
                       </div>
-                      <h4 class="modal--title"><span>Características:</span></h4>
+                      <h4 class="modal--title"><span class="car-es">Características:</span><span class="car-en quotation-hide">Features:</span></h4>
                       <div class="modal--features__es">
                         ${pro.features ? pro.features : '...'}
                       </div>
@@ -264,12 +264,20 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           const modalFeaturesEs = document.querySelector('.modal--features__es')
           const modalDesEn = document.querySelector('.modal--des__en')
           const modalFeaturesEn = document.querySelector('.modal--features__en')
+          const desEs = document.querySelector('.des-es')
+          const desEn = document.querySelector('.des-en')
+          const carEs = document.querySelector('.car-es')
+          const carEn = document.querySelector('.car-en')
           
           btnEs.addEventListener('click', () => {
             btnEs.style.backgroundColor = 'transparent';
             btnEs.style.color = 'black';
             btnEn.style.backgroundColor = 'black';
             btnEn.style.color = 'white';
+            desEs.classList.remove('quotation-hide')
+            desEn.classList.add('quotation-hide')
+            carEs.classList.remove('quotation-hide')
+            carEn.classList.add('quotation-hide')
             modalDesEn.classList.add('quotation-hide')
             modalFeaturesEn.classList.add('quotation-hide')
             modalDesEs.classList.remove('quotation-hide')
@@ -280,6 +288,10 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             btnEn.style.color = 'black';
             btnEs.style.backgroundColor = 'black';
             btnEs.style.color = 'white';
+            desEs.classList.add('quotation-hide')
+            desEn.classList.remove('quotation-hide')
+            carEs.classList.add('quotation-hide')
+            carEn.classList.remove('quotation-hide')
             modalDesEs.classList.add('quotation-hide')
             modalFeaturesEs.classList.add('quotation-hide')
             modalDesEn.classList.remove('quotation-hide')
