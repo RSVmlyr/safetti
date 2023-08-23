@@ -320,13 +320,20 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
             if (quotationewname.value === '') {
               quotationewInfoOne.classList.remove('quotation-hide')
               quotationewname.classList.add('error');
+            } else {
+              quotationewInfoOne.classList.add('quotation-hide')
             }
             if (quotatioNewClient.value === '') {
               quotationewSearchClient.classList.remove('quotation-hide')
               quotatioNewClient.classList.add('error');
+            } else {
+              quotationewSearchClient.classList.add('quotation-hide')
             }
             nodeNotification('Los campos marcados con * son obligatorios');
           } else {
+            quotationewSearchClient.classList.add('quotation-hide')
+            quotationewInfoOne.classList.add('quotation-hide')
+
             quotationewname.classList.remove('error');
             quotatioNewClient.classList.remove('error');
             expiringLocalStorage.saveDataWithExpiration("NameQuotation", JSON.stringify(quotationewname.value));
@@ -342,6 +349,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
             quotatioewScenaryError.classList.remove('quotation-hide')
             nodeNotification('Los campos marcados con * son obligatorios')
           } else {
+            quotatioewScenaryError.classList.add('quotation-hide')
             expiringLocalStorage.saveDataWithExpiration("NameScenary", JSON.stringify(quotatioewScenaryNode.value))
           }
           quotationCalculation.SendNewScenary(resQueryUser, cotId, quotatioewScenary.value)
