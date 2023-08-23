@@ -93,7 +93,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                 <div class="quotation--notification"><span class="quotation--title">No existen escenarios.</span></div>
               </div>
               <div class="scenary--data__actions">
-                <a href="./index-q.html?cotId=${cot.id}&cotName=${encodeURIComponent(cot.name)}&uid=${storedHash}" class="quotation--btn__new quotation--btn__Ne">Nuevo escenario +</a>
+                <a href="./index-q.html?cotId=${cot.id}&cotName=${encodeURIComponent(cot.name)}&uid=${storedHash}" class="quotation--btn__add quotation--btn__Ne">Nuevo escenario</a>
                 <div id="quotation--btn__approved" class="scenary--data__actionsDelete">
                   <span class="quotation--info">Aprobar cotización</span>
                   <img src='../../img/icon/check.svg' loading="lazy" alt="Aprobar" title="Aprobar">

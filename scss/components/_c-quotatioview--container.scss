@@ -47,7 +47,7 @@
       margin: 1rem;
       padding: 1rem 2rem;
       .quotatioview__title {
-        background-color: $black;
+        background-color: $c2;
         color: $white;
         font-size: 16px;
         font-weight: 500;
@@ -55,7 +55,21 @@
         margin: 5px 0 15px;
         padding: 12px;
         &.selected {
-          background-color: $c10;
+          background-color: $c15;
+          color: $black;
+          position: relative;
+          &::after {
+            content: "";
+            position: absolute;
+            display: block;
+            background-image: url('../img/icon/icon-check-transparent.png');
+            background-repeat: no-repeat;
+            background-size: contain;
+            top: 12px;
+            right: 12px;
+            height: 1.2rem;
+            width: 1.2rem;
+          }
         }
       }
       .quotatioview__table {

@@ -96,16 +96,16 @@ body {
   font-size: 10px;
   padding: 6px 12px;
   &--requested {
-    background-color: $c8;
-    color: $c7;  
+    background-color: $c7;
+    color: $black;  
   }
   &--confirmed {
     background-color: $c10;
-    color: $c9;
+    color: $black;
   }
   &--cancelled {
     background-color: $c12;
-    color: $c11;
+    color: $black;
   }
 }
 
@@ -120,6 +120,9 @@ select {
   -webkit-appearance: none; /* Para navegadores basados en WebKit (Chrome, Safari, etc.) */
   -moz-appearance: none; /* Para navegadores basados en Gecko (Firefox) */
   appearance: none; /* Estándar */
+  &#advisors {
+    font-size: 14px;
+  }
 }
 
 input {
