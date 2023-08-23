@@ -57,11 +57,11 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   localStorage()
 
   if(cotId && resQueryUser.rol === 'advisors'){
-    // console.log('cotId', cotId);
+
     //llamar servicio
     const getUserCurren = async (id) => {
       const user = await getUser(id) 
-      console.log(user);
+
       const dataClientStorage = [
         {
           id: user.id,
@@ -75,7 +75,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
 
     const getinfouser = async () => {
       const data = await GetIdQuotation(cotId)   
-      // console.log(data);
+
       idQnAdvisor.innerHTML = idQnLabelAdvisors + data.clientName
       idQnCurrency.innerHTML = 'Moneda: ' + data.currency
       getUserCurren(data.client); 
@@ -155,7 +155,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       let searchTerm = e.target.value.trim().toLowerCase();
       idQuotatioNewSearchClient.innerHTML = '';
       if (searchTerm !== '') {
-        // console.log(resQueryClients);
+
         const filteredClients = resQueryClients.filter(client =>
           client.fullName.toLowerCase().includes(searchTerm),
         );
@@ -193,7 +193,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
     const selectedValueSearchLi = (razon, client, currency, rol, id, specialDiscount) => {
       const qnClient = quotationNew.querySelector('#qnadvisor')
       const qnCurrency = quotationNew.querySelector('#qncurrency')
-      console.log('rol---', razon);
+
       if(razon) {
         qnClient.textContent = 'Contacto: ' + client
         qnbusinessname.classList.remove('quotation-hide')
@@ -221,9 +221,9 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
 
     const quotatioNewSearchClientLi = quotationNew.querySelectorAll('#quotationewsearchclient li')
       if (quotatioNewSearchClientLi.length > 0) {
-        console.log(quotatioNewSearchClientLi);
+
         quotatioNewSearchClientLi.addEventListener('click', (e) => {
-          console.log(e.target);
+    
         })
       }    
   } 
@@ -300,8 +300,6 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   
   quotationBtnSave.addEventListener('click', () => {
 
-    console.log('click');
-
     const btnSave = () => {
       if (resQueryUser.rol !== 'advisors') {
         if (quotationewname) {
@@ -329,10 +327,10 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       }
       
       if (cotId && cotName) {
-        // console.log('Cliente Nuevo Escenario: ', quotatioewScenary.value);
+
         if (quotatioewScenary) {
           if (quotatioewScenary.value === '') {
-            console.log(quotatioewScenaryNode);
+
             quotatioewScenary.classList.add('error');
             nodeNotification('Los campos marcados con * son obligatorios')
           } else {
@@ -341,7 +339,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
           quotationCalculation.SendNewScenary(resQueryUser, cotId, quotatioewScenary.value)
         }
       } else {
-        console.log(typeof idQuotationComments.value)
+
         quotationCalculation.SendNewQuotation(resQueryUser, quotationIva.checked, quotationewname.value, idQuotationComments.value );
       }
 

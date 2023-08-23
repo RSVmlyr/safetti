@@ -68,7 +68,6 @@ class QuotationCalculation extends HTMLElement {
       if(data) {
         const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
         const products = retrievedData ? JSON.parse(retrievedData) : []
-        console.log(products);
         if(products.length <= 0){
           nodeNotification('La cotización tiene un valor de cero.')
           return null

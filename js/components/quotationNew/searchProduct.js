@@ -1,8 +1,6 @@
 import createProductCards from "./createProductsCards.js";
 
 const searchProduct = (quotationNew, resQueryUser, resQueryProducts) => {
-
-  // console.log('Array para Filtrar: ', resQueryProducts.products);
   
   // Nombre / referencia
   const qnSearchProduct = quotationNew.querySelector('#qnsearchproduct')

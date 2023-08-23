@@ -11,8 +11,6 @@ const quotationView = async (node, quotation ,infoQuotation) => {
     const resQueryUser = await getUser(uid);
     const currency = quotation.currency
 
-    console.log(quotation);
-
     const container = document.createElement("div");
     container.classList.add("quotatioview--container");
     let elementDiscuount;
@@ -30,7 +28,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
 
   infoQuotation.forEach((element) => {
     let productos = "";
-    console.log(element);
+
     element.products.forEach((producto) => {
       productos += `
             <tbody>
@@ -208,35 +206,30 @@ const quotationView = async (node, quotation ,infoQuotation) => {
 
                     const dataValueDis = typeof discountWithTotal === 'string' ? discountWithTotal.replace(/,/g, '') : discountWithTotal
                     let dN = currency === 'COL' ? parseInt(dataValueDis) : parseFloat(dataValueDis)
-                    console.log('dn', dN);
-
 
                     let dataValueDisTotal
                     if (currency === 'USD') {
                         dataValueDisTotal = currencyFormatUSD(dN, currency)
                     }    
                     
-                    console.log('Two', dataValueDisTotal);
                     const withTaxIVA = currencyFormatUSD(infoQuotation[i].subtotalWithTaxIVA, currency) 
-                    // console.log(withTaxIVA);
+
 
 
                     if (quotatioviewIva.checked) {
-                        console.log('ckeck', typeof dN);
-                        console.log('ckeck', dN);
+
                         if(rangeInput.value == infoQuotation[i].discountPercent) {
                             quotatioviewValueTotal.innerHTML = currency === 'COP' ? infoQuotation[i].subtotalWithTaxIVA.toLocaleString() : withTaxIVA
                         } 
                         const calculateIva = (dN * 19) / 100
-                        console.log('Iva:', typeof calculateIva);
+
                         const calculateIvaTotal = parseInt(dN + calculateIva)
-                        console.log('Total con Iva', calculateIvaTotal);
+
                         const cIvaTotal = currencyFormatUSD(calculateIvaTotal , currency)
                         quotatioviewValueTotal.innerHTML = currency === 'COP' ? calculateIvaTotal.toLocaleString() : cIvaTotal
 
                     } else {
-                        console.log('no check', typeof dN);
-                        console.log('no check', dN);
+
                         if(rangeInput.value == infoQuotation[i].discountPercent) {
                             quotatioviewValueTotal.innerHTML = currency === 'COP' ? infoQuotation[i].subtotalWithDiscount.toLocaleString() : withTaxIVA
                         } else {
@@ -259,13 +252,9 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                         const calculateDiscout = infoQuotation[i].subtotalProducts * event.target.value / 100
                         const calculateDiscoutTotal = infoQuotation[i].subtotalProducts - calculateDiscout
                         const calculateDiscoutValue = infoQuotation[i].subtotalProducts - calculateDiscoutTotal
-                        // console.log('Descuento -', calculateDiscoutValue);
 
                         const calculateDT = currencyFormatUSD(calculateDiscoutTotal, currency)
                         const calculateDV = currencyFormatUSD(calculateDiscoutValue, currency)
-
-                        console.log(calculateDT);
-                        console.log(calculateDV);
 
                         quotatioviewWithdiscount.innerHTML = currency === 'COP' ? calculateDiscoutTotal.toLocaleString() : calculateDT
                         quotatioviewDiscountValueNumber.innerHTML = currency === 'COP' ? calculateDiscoutValue.toLocaleString() : calculateDV
@@ -289,7 +278,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                     "discountPercent": rangeInput.value,
                     "applyTaxIVA": quotatioviewIva.checked
                     }
-                console.log(putBodyScenary);
+
                 putScenario(putBodyScenary)
             })
         }

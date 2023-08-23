@@ -8,7 +8,7 @@ const getQuotation = async () => {
     // const urlQuery = 'https://safetticustom.azurewebsites.net/api/Quotation/4/1/0/%20'
     const urlQuery = `${API_DEV}/api/Quotation/4/1/0/%20`
 
-    console.log(API_DEV);
+
     const reqQuery = await fetch(urlQuery)
     const resQuery = await reqQuery.json()
     //console.log('Array Service Quotation', resQuery);

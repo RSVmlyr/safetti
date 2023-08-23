@@ -127,12 +127,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         const unisexInput = parentElement.querySelector('.qnUnisexInput');
         const juniorInput = parentElement.querySelector('.qnJuniorInput');
 
-        //console.log(countrySelect.value,resQueryProducts);
-        console.log(pro);
-
         const a = countrySelect.value
-        console.log(countrySelect.value); 
-        // console.log(pro);
 
         const product = [];
         if (manInput.value > 0) {
@@ -183,10 +178,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           sliderProductsRow.classList.remove('active')
         }, 1000);        
         nodeNotification('Agregando producto a la lista...')
-        // console.log(pro);
-        // console.log(product);
         const quotationCalculation = new QuotationCalculation(resQueryUser);
-        // quotationCalculation.createRow(product);
         quotationCalculation.createArrayProducto(product);
       });
   
@@ -313,7 +305,6 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
     
             if (resQueryImages.length > 0) {
               resQueryImages.forEach(e => {
-                // console.log(e.imageUrl);
 
                 // Get URL Image
                 let mainImage = e.imageUrl ? e.imageUrl : '../img/icon/image-product.jpg'

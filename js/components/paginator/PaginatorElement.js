@@ -25,7 +25,6 @@ class PaginatorElement extends HTMLElement {
   async renderPaginator() {
     const uid = localStorage.getItem('current')
     const data = await QuotationSearch(uid, this.pageNumber, this.pageSize, this.advisorId, this.clientName);
-    //console.log(data);
     const pagerItem = document.querySelectorAll('.pager .item-pager');
     pagerItem.forEach(item =>{
       item.classList.add('disabled');
@@ -173,7 +172,6 @@ class PaginatorElement extends HTMLElement {
         item.removeAttribute('disabled')
       })
       if(quotation.length === 0){
-        // console.log(quotation, 'debug');
         const listContainer = document.querySelector('#quotation--content--list');
         const notResult = document.createElement('div');
         notResult.classList.add('not-result')
@@ -207,7 +205,6 @@ class PaginatorElement extends HTMLElement {
     const inputSearchClient = document.querySelector('.quotation--left .quotation--container__action #clients');
     const formSearch = document.querySelector('.quotation--left .quotation--container__action #search-clients');
     inputSearchClient.addEventListener("change", this.validateSearch.bind(this));
-    // console.log(formSearch);
     
     formSearch.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -215,13 +212,11 @@ class PaginatorElement extends HTMLElement {
       this.renderPaginator()
     })
 
-    // console.log(formSearch);
   }
 
   validateSearch(e) {
     const value = e.target.value
     this.clientName = value;
-    // console.log(this.clientName);
   }
 }
 

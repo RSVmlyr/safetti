@@ -93,6 +93,7 @@
               height: 40px;
               margin: 10px 0 20px;
               padding: 0 10px;
+              font-size: 14px;
               &.error {
                 border: 1px solid $c12;
               }
@@ -179,12 +180,16 @@
                   background-position: center left 15px;
                   background-repeat: no-repeat;
                   padding: 0 20px 0 50px;
+                  font-size: 14px;
                 }
               }
               &__filter--selects {
                 display: flex;
                 flex-direction: column;
                 gap: 15px;
+                select {
+                  font-size: 14px;
+                }
               }
             }
           }

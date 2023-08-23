@@ -14,7 +14,7 @@ const statusQuotationS = async (Qid, status) => {
     const response = await fetch(urlQuerySQ, requestOptions);
     const data = await response.json();
 
-    console.log(data);
+
   } catch (error) {
     console.log('No se pudo cancelar la cotización', error);
   }

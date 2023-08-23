@@ -211,11 +211,6 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             </div>
             `
             scenaryDataBody.insertAdjacentHTML('afterbegin', `${scenaryBody}`)
-
-            // quotation.addEventListener('DOMContentLoaded', ()=> {
-            //   const btnViewQuotation = quotation.querySelector('quotation--btn__view')
-            //   console.log(btnViewQuotation);
-            // })
           }
           // Scenary selected
 
@@ -277,7 +272,6 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
           }
           if (scenaryRowSelect) {
             scenaryRowSelect.addEventListener('click', (e) => {
-              console.log(e.target);
               putQuotationScenario(scen.id)
             })
           }
