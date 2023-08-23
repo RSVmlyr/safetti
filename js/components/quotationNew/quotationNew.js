@@ -341,6 +341,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
           quotationCalculation.SendNewScenary(resQueryUser, cotId, quotatioewScenary.value)
         }
       } else {
+        console.log(typeof idQuotationComments.value)
         quotationCalculation.SendNewQuotation(resQueryUser, quotationIva.checked, quotationewname.value, idQuotationComments.value );
       }
 

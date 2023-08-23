@@ -216,8 +216,8 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
                 <div class="modal--container__bodyRight">
                   <div class="modal--header">
                     <div class="modal--header__languages">
-                      <div class="es quotation--btn__new" style="background-color: transparent; color: black;">ES</div>
-                      <div class="en quotation--btn__new">EN</div>
+                      <div class="es quotation--btn__new" style="background-color: black; color: white;">ES</div>
+                      <div class="en quotation--btn__add">EN</div>
                     </div>
                     <h3 class="quotation--title__quo">${pro.id ? pro.id : ''} / ${pro.name ? pro.name : ''}</h3>
                   </div>
@@ -270,10 +270,10 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           const carEn = document.querySelector('.car-en')
           
           btnEs.addEventListener('click', () => {
-            btnEs.style.backgroundColor = 'transparent';
-            btnEs.style.color = 'black';
-            btnEn.style.backgroundColor = 'black';
-            btnEn.style.color = 'white';
+            btnEs.style.backgroundColor = 'black';
+            btnEs.style.color = 'white';
+            btnEn.style.backgroundColor = 'transparent';
+            btnEn.style.color = 'black';
             desEs.classList.remove('quotation-hide')
             desEn.classList.add('quotation-hide')
             carEs.classList.remove('quotation-hide')
@@ -284,10 +284,10 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             modalFeaturesEs.classList.remove('quotation-hide')
           })
           btnEn.addEventListener('click', () => {
-            btnEn.style.backgroundColor = 'transparent';
-            btnEn.style.color = 'black';
-            btnEs.style.backgroundColor = 'black';
-            btnEs.style.color = 'white';
+            btnEn.style.backgroundColor = 'black';
+            btnEn.style.color = 'white';
+            btnEs.style.backgroundColor = 'white';
+            btnEs.style.color = 'black';
             desEs.classList.add('quotation-hide')
             desEn.classList.remove('quotation-hide')
             carEs.classList.add('quotation-hide')
