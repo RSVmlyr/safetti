@@ -18,6 +18,12 @@
   &--container__top {
     align-items: center;
     justify-content: space-between;
+    .region {
+      &__right {
+        display: flex;
+        gap: 20px;
+      }
+    }
     .quotation--btn__add {
       position: relative;
       padding: 10px 35px 10px 10px;
@@ -323,7 +329,7 @@
                       background-color: transparent;
                       border: 2px solid $black;
                       font-family: $FuturaLight;
-                      font-size: 13px;
+                      font-size: 12px;
                       padding: 8px 32px 8px 8px;
                       position: relative;
                       &::after {
