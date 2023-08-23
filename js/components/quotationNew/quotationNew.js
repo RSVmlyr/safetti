@@ -101,6 +101,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
     `<div class="quotationew__infoTwo">
       <label class="quotation--title__quo" for='quotationewscenary'>Nombre del Escenario: <span>*</span></label>
       <input id="quotationewscenary" type="text" placeholder="Nombre Escenario" required>
+      <span class="error-input quotation-hide">Este campo es obligatorio.</span>
     </div>
     `
     quotationewInfo.insertAdjacentHTML('beforeend', `${quotatioNewInfoTwo}`)
@@ -112,6 +113,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
     `<div class='quotationew__searchclient'>
       <label for='quotationewclient'>Buscar Cliente: <span>*</span></label>
       <input id="quotationewclient" type="text" placeholder="Escribe el Nombre del cliente" required>
+      <span class="error-input quotation-hide">Este campo es obligatorio.</span>
       <ul id="quotationewsearchclient"></ul>
      </div>
     `
@@ -260,6 +262,10 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   const quotatioNewClient = quotationNew.querySelector('#quotationewclient')
   const quotatioNewClientNode = quotatioNewClient ? quotatioNewClient.value : false
 
+  const quotationewInfoOne = quotationNew.querySelector('.quotationew__infoOne .error-input-name')
+  const quotatioewScenaryError = quotationNew.querySelector('#quotationewscenary + .error-input')
+  const quotationewSearchClient = quotationNew.querySelector('.quotationew__searchclient .error-input')
+
   // Name Scenary
   if (quotatioewScenary) {
     quotatioewScenary.addEventListener('input', (e) => {
@@ -312,9 +318,11 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
         if (quotationewname && quotatioNewClient) {
           if (quotationewname.value === '' || quotatioNewClient.value === '') {
             if (quotationewname.value === '') {
+              quotationewInfoOne.classList.remove('quotation-hide')
               quotationewname.classList.add('error');
             }
             if (quotatioNewClient.value === '') {
+              quotationewSearchClient.classList.remove('quotation-hide')
               quotatioNewClient.classList.add('error');
             }
             nodeNotification('Los campos marcados con * son obligatorios');
@@ -330,8 +338,8 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
 
         if (quotatioewScenary) {
           if (quotatioewScenary.value === '') {
-
             quotatioewScenary.classList.add('error');
+            quotatioewScenaryError.classList.remove('quotation-hide')
             nodeNotification('Los campos marcados con * son obligatorios')
           } else {
             expiringLocalStorage.saveDataWithExpiration("NameScenary", JSON.stringify(quotatioewScenaryNode.value))

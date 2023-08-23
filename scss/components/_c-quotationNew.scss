@@ -81,6 +81,9 @@
               width: 100%;
               max-width: 100%;
             }
+            .quotation--title {
+              margin: 0 0 1rem;
+            }
           }
           &__info {
             display: flex;
@@ -111,6 +114,10 @@
           &__infoOne {
             width: 100%;
             max-width: 35%;
+            .error-input-name {
+              position: absolute;
+              top: 74px;
+            }
             .quotationew__searchclient {
               display: flex;
               flex-direction: column;
@@ -135,11 +142,16 @@
                   cursor: pointer;
                 }
               }
+              .error-input {
+                position: absolute;
+                bottom: 5px;
+              }
             }
           }
           &__infoTwo {
             width: 100%;
             max-width: 65%;
+            position: relative;
             .quotation--title__quo {
               font-size: 16px;
               text-transform: initial;
