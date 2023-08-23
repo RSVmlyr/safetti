@@ -73,19 +73,21 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        flex-direction: column;
         .quotationew {
           &__title {
             @media screen and (min-width: 992px) {
-              width: 20%;
+              text-align: right;
+              width: 100%;
               max-width: 100%;
             }
           }
           &__info {
             display: flex;
             justify-content: space-between;
+            width: 100%;
             @media screen and (min-width: 992px) {
               gap: 30px;
-              width: 80%;
               max-width: 100%;
             }
             input {
