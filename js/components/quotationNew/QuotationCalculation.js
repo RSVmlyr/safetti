@@ -122,12 +122,12 @@ class QuotationCalculation extends HTMLElement {
     createQuotation(dataSetQuotation)
   }
 
-  SendNewScenary(data, cotId, nameScenary) {
+  SendNewScenary(data, iva, cotId, nameScenary) {
     let dataSetScenario = ''
     const expiringLocalStorage = new ExpiringLocalStorage()
     const retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
     const scenary = retrievedData ? JSON.parse(retrievedData) : []
-    let specialDiscount = data.specialDiscount; 
+    let specialDiscount = data.specialDiscount;
     specialDiscount = specialDiscount !== null && !isNaN(specialDiscount) ? specialDiscount : 0;
     if(data.length <= 0){
       nodeNotification('El escenario tiene un valor de cero.')
@@ -139,13 +139,13 @@ class QuotationCalculation extends HTMLElement {
         "name": nameScenary,
         "selected": false,
         "discountPercent": parseInt(specialDiscount),
-        "applyTaxIVA": true,
+        "applyTaxIVA": iva,
         "products": scenary,
       }
       const createScenario = async  () => {
         const data = await setScenario(dataSetScenario, cotId)
       }
-      createScenario(dataSetScenario)
+      //createScenario(dataSetScenario)
     }
   }
 
