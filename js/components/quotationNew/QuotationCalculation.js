@@ -145,7 +145,7 @@ class QuotationCalculation extends HTMLElement {
       const createScenario = async  () => {
         const data = await setScenario(dataSetScenario, cotId)
       }
-      //createScenario(dataSetScenario)
+      createScenario(dataSetScenario)
     }
   }
 
