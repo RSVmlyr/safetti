@@ -352,7 +352,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
             quotatioewScenaryError.classList.add('quotation-hide')
             expiringLocalStorage.saveDataWithExpiration("NameScenary", JSON.stringify(quotatioewScenaryNode.value))
           }
-          quotationCalculation.SendNewScenary(resQueryUser, cotId, quotatioewScenary.value)
+          quotationCalculation.SendNewScenary(resQueryUser, quotationIva.checked, cotId, quotatioewScenary.value)
         }
       } else {
 
