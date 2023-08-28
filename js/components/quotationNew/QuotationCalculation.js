@@ -273,6 +273,7 @@ class QuotationCalculation extends HTMLElement {
       let retrievedData = ''
       let numPrange = ''
       let price = ''
+      const totalQuantity = products.reduce((total, product) => total + parseInt(product.quantity) , 0); console.log('Total quantity:', totalQuantity);
       products.forEach(product => { 
         const productsDataAsync = async () => {
           if(cotId) {
@@ -288,9 +289,14 @@ class QuotationCalculation extends HTMLElement {
 
           if (this.resQueryUser.rol === 'advisors'){
             const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
-            const client = JSON.parse(c)
-            price = await getUnityPrices(product.id, client['0'].currency, client['0'].rol);    
-            const priceInRange = this.getPriceInRange(price, product.quantity)
+            // const client = JSON.parse(c)
+            // console.log(client);
+            // if(client['0']) {
+            //   price = await getUnityPrices(product.id, client['0'].currency, client['0'].rol);
+            // } else {
+            //   price = await getUnityPrices(product.id, client['0'].currency, 'final_consumer');
+            // }
+            const priceInRange = this.getPriceInRange(price, totalQuantity)
             if(priceInRange===undefined) {
               console.log('error this producto', product);
               nodeNotification('Error en la información del producto')
@@ -312,7 +318,7 @@ class QuotationCalculation extends HTMLElement {
               this.resQueryUser.currency,
               this.resQueryUser.rol
             )
-            const priceInRange = this.getPriceInRange(price, product.quantity)
+            const priceInRange = this.getPriceInRange(price, totalQuantity)
             if(priceInRange===undefined) {
               console.log('error this producto', product);
               nodeNotification('Error en la información del producto')
