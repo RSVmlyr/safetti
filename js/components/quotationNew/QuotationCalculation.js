@@ -8,7 +8,7 @@ import ExpiringLocalStorage from '../localStore/ExpiringLocalStorage.js'
 class QuotationCalculation extends HTMLElement {
   constructor(resQueryUser) {
     super()
-    //this.sumar()
+    this.currency = ''
     this.resQueryUser = resQueryUser
     this.innerHTML = `
       <div class="quotation-calculation">
@@ -194,11 +194,11 @@ class QuotationCalculation extends HTMLElement {
           const client = JSON.parse(c)
           prices = await getProductPrices(
             product.id,
-            client[0].currency,
+            this.currency,
             client[0].rol
           )
           const priceInRange = this.getPriceInRange(prices, product.quantity)
-          if(client[0].currency === 'COP') {
+          if(this.currency === 'COP') {
             const numPrange = priceInRange.replace(".", "")
             this.createArrayProducto(product, numPrange)
           } else {
@@ -236,7 +236,7 @@ class QuotationCalculation extends HTMLElement {
         const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
         if (c) {
           const client = JSON.parse(c)
-          subtotal = client['0'].currency === 'COP'
+          subtotal = this.currency === 'COP'
             ? Math.floor(product.unitPrice * product.quantity)
             : parseFloat((parseFloat(product.unitPrice) * product.quantity).toFixed(2))
         } else {
@@ -273,7 +273,7 @@ class QuotationCalculation extends HTMLElement {
       let retrievedData = ''
       let numPrange = ''
       let price = ''
-      const totalQuantity = products.reduce((total, product) => total + parseInt(product.quantity) , 0); console.log('Total quantity:', totalQuantity);
+      const totalQuantity = products.reduce((total, product) => total + parseInt(product.quantity) , 0);
       products.forEach(product => { 
         const productsDataAsync = async () => {
           if(cotId) {
@@ -289,26 +289,38 @@ class QuotationCalculation extends HTMLElement {
 
           if (this.resQueryUser.rol === 'advisors'){
             const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
-            // const client = JSON.parse(c)
-            // console.log(client);
-            // if(client['0']) {
-            //   price = await getUnityPrices(product.id, client['0'].currency, client['0'].rol);
-            // } else {
-            //   price = await getUnityPrices(product.id, client['0'].currency, 'final_consumer');
-            // }
+            const client = JSON.parse(c)
+
+            function objetoEstaVacio(objeto) {
+              return Object.keys(objeto).length === 0;
+            }
+            const contieneObjetosVacios = client.some(objeto => objetoEstaVacio(objeto));
+
+            if(!contieneObjetosVacios) {
+              this.currency = client['0'].currency
+              price = await getUnityPrices(product.id, client['0'].currency, client['0'].rol);
+            } else {
+              const qncurrencyElement = document.getElementById('qncurrency');
+              const textContent = qncurrencyElement.textContent.trim();
+              const currency = textContent.replace(/Moneda: /g, "");
+              this.currency = currency
+              price = await getUnityPrices(product.id, currency, '_final_consumer');
+              // console.log(price);
+            }
             const priceInRange = this.getPriceInRange(price, totalQuantity)
             if(priceInRange===undefined) {
               console.log('error this producto', product);
               nodeNotification('Error en la información del producto')
               return null
             }
-            if(client['0'].currency === 'COP') {
+
+            if(this.currency === 'COP') {
               numPrange = priceInRange.replace(".", "")
             } else {
               numPrange = priceInRange.replace(",", ".")
             }
             if (c) {
-              unitPrice = client['0'].currency === 'COP' ? parseInt(numPrange) : parseFloat(numPrange).toFixed(2)
+              unitPrice = this.currency === 'COP' ? parseInt(numPrange) : parseFloat(numPrange).toFixed(2)
             } else {
               unitPrice = parseFloat(numPrange).toFixed(2)
             }
@@ -350,12 +362,12 @@ class QuotationCalculation extends HTMLElement {
               const client = JSON.parse(c)
 
               if (c) {
-                if(client['0'].currency === 'COP') {
+                if(this.currency === 'COP') {
                   numPrange = priceInRange.replace(".", "")
                 } else {
                   numPrange = priceInRange.replace(",", ".")
                 }
-                unitPrice = client['0'].currency === 'COP' ? parseInt(numPrange) : parseFloat(numPrange).toFixed(2)
+                unitPrice = this.currency === 'COP' ? parseInt(numPrange) : parseFloat(numPrange).toFixed(2)
               } else {
                 // Validar cuando es dolar
                 if(this.resQueryUser.currency === 'COP') {
@@ -427,14 +439,15 @@ class QuotationCalculation extends HTMLElement {
     const btniva = document.querySelector('.quotation--iva')
 
     if(client){
-      const total = this.btnivaChecked(client['0'].currency, quo, btniva)
+      const total = this.btnivaChecked(this.currency, quo, btniva)
+      // console.log(total);
       quotationSave.textContent = total.toLocaleString()
       quo.addEventListener('input', (event) => {
         const maxValue = 10;
         if (event.target.value > maxValue) {
           event.target.value = maxValue;
         }
-        const total = this.btnivaChecked(client['0'].currency, quo, btniva)
+        const total = this.btnivaChecked(this.currency, quo, btniva)
         quotationSave.textContent = total.toLocaleString();
       });
     } else {
@@ -504,7 +517,7 @@ class QuotationCalculation extends HTMLElement {
       if (clientename) {
         valor = parseInt(e.textContent)
         const client = JSON.parse(clientename)
-        count += client['0'].currency === 'COP' ?parseInt(e.unitPrice * e.quantity) :parseFloat(e.unitPrice * e.quantity)
+        count += this.currency === 'COP' ?parseInt(e.unitPrice * e.quantity) :parseFloat(e.unitPrice * e.quantity)
       } else {
         valor = parseFloat(e.unitPrice * e.quantity)
         count += parseFloat(valor)

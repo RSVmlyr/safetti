@@ -138,20 +138,23 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
     validateNewCleint()
 
     const ClientFullName = expiringLocalStorage.getDataWithExpiration('ClientFullName')
-    if(ClientFullName){
+
+    if (ClientFullName) {
       const cFulName = JSON.parse(ClientFullName)
-      quotatioNewClient.value = cFulName[0].client
-      idQnCurrency.innerHTML = 'Moneda: ' + cFulName[0].currency
-      if(cFulName[0].razon) {
-        qnbusinessname.classList.remove('quotation-hide')
-        qnbusinessname.innerHTML = 'Razón social: ' + cFulName[0].razon
-        idQnAdvisor.innerHTML = 'Cliente: ' + cFulName[0].client
-      } else {
-        idQnAdvisor.innerHTML = 'Cliente: ' + cFulName[0].client
+      if(cFulName[0].length > 0){
+        quotatioNewClient.value = cFulName[0].client
+        idQnCurrency.innerHTML = 'Moneda: ' + cFulName[0].currency
+        if(cFulName[0].razon) {
+          qnbusinessname.classList.remove('quotation-hide')
+          qnbusinessname.innerHTML = 'Razón social: ' + cFulName[0].razon
+          idQnAdvisor.innerHTML = 'Cliente: ' + cFulName[0].client
+        } else {
+          idQnAdvisor.innerHTML = 'Cliente: ' + cFulName[0].client
+        }
+        qnrol.innerHTML = 'Cliente: ' + cFulName[0].rol.replace(/_/g, ' ');
+        validateNewCleint()
       }
-      qnrol.innerHTML = 'Cliente: ' + cFulName[0].rol.replace(/_/g, ' ');
-      validateNewCleint()
-    }
+    } 
 
     quotatioNewClient.addEventListener('input', (e) => {
       let searchTerm = e.target.value.trim().toLowerCase();
