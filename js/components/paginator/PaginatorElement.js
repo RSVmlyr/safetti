@@ -16,6 +16,8 @@ class PaginatorElement extends HTMLElement {
   }
 
   connectedCallback() {
+    const lastClickPager = localStorage.getItem('lastClickPager')
+    this.pageNumber = lastClickPager != null ? lastClickPager : 1;
     this.clickPager();
     this.renderPaginator();
     this.searchClients();
@@ -116,14 +118,14 @@ class PaginatorElement extends HTMLElement {
     if (e && e.target.tagName === 'BUTTON') { 
       const pagerItem = document.querySelectorAll('.pager .item-pager');
       pagerItem.forEach(item =>{
-        // item.classList.add('disabled');
-        // item.setAttribute('disabled', true);
         item.classList.contains('active') ? item.disabled = true : false;
       })
       this.loading();
       try {
         const uid = localStorage.getItem('current')
         const data = await QuotationSearch(uid, e.target.value, this.pageSize, this.advisorId, this.clientName);
+        localStorage.setItem('lastClickPager', e.target.value);
+        localStorage.setItem('lastClickedIndex', 0);
         this.paginatorNumber(data.totalPages, e.target.value)
         this.pageNumberCallback(data.results);
       } catch (error) {
@@ -188,13 +190,7 @@ class PaginatorElement extends HTMLElement {
   loading() {
     const quotationContentListContainer = document.querySelector('#quotation--content--list');
     const quotationContentList = quotationContentListContainer.querySelectorAll('#quotation--content--list .quotation--list--row');
-    
     const loadingDiv = loadingData(quotationContentListContainer);
-    // const loadingDiv = document.createElement('div');
-    
-    
-    // loadingDiv.textContent = 'Cargando...';
-    // loadingDiv.classList.add('loading-message')
     quotationContentList.forEach(element => {
       element.remove();
     });

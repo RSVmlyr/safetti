@@ -28,4 +28,12 @@
       }
     }
   }
+  &__body {
+    .loading-message {
+      position: absolute;
+      left: 0;
+      right: 0;
+      margin: auto;
+    }
+  }
 }

@@ -5,6 +5,7 @@ import setQuotation from '../../services/quotation/setQuotation.js'
 import setScenario from '../../services/quotation/setScenario.js'
 import getUser from "../../services/user/getUser.js";
 import ExpiringLocalStorage from '../localStore/ExpiringLocalStorage.js'
+import loadingData from "../../helpers/loading.js";
 class QuotationCalculation extends HTMLElement {
   constructor(resQueryUser) {
     super()
@@ -259,20 +260,83 @@ class QuotationCalculation extends HTMLElement {
     
   }
 
+  loading() {
+    const quotationContentListContainer = document.querySelector('.quotationew--calculation__body');
+    const loadingDiv = loadingData(quotationContentListContainer);
+    quotationContentListContainer.appendChild(loadingDiv);
+  }
+
+  procesarResult = async(result) =>  {
+    this.removeList()
+    this.loading();
+    const expiringLocalStorage = new ExpiringLocalStorage()
+    for (const item of result) {
+      try {
+        let price;
+        let unitPrice;
+        let numPrange;
+        const rol =  localStorage.getItem('rol')
+  
+        if (rol === 'advisors') {
+          const c = expiringLocalStorage.getDataWithExpiration('ClientFullName');
+          const client = JSON.parse(c);
+          price = await getUnityPrices(item.product, client['0'].currency, client['0'].rol);          
+          const priceInRange = this.getPriceInRange(price, item.qt);
+  
+          if (priceInRange === undefined) {
+            console.log('Error en este producto:', item);
+            nodeNotification('Error en la información del producto');
+            continue;
+          }
+  
+          if (client['0'].currency === 'COP') {
+            numPrange = priceInRange.replace(".", "");
+          } else {
+            numPrange = priceInRange.replace(",", ".");
+          }
+  
+          if (c) {
+            unitPrice = client['0'].currency === 'COP' ? parseInt(numPrange) : parseFloat(numPrange).toFixed(2);
+          } else {
+            unitPrice = parseFloat(numPrange).toFixed(2);
+          }
+        } else {
+          price = await getProductPrices(item.product, this.resQueryUser.currency, this.resQueryUser.rol);
+  
+          const priceInRange = this.getPriceInRange(price, item.qt);
+  
+          if (priceInRange === undefined) {
+            console.log('Error en este producto:', item);
+            nodeNotification('Error en la información del producto');
+            continue;
+          }
+  
+          if (this.resQueryUser.currency === 'COP') {
+            numPrange = priceInRange.replace(".", "");
+            unitPrice = parseInt(numPrange);
+          } else {
+            numPrange = priceInRange.replace(",", ".");
+            unitPrice = parseFloat(numPrange).toFixed(2);
+          }
+        }
+  
+        item.unitPrice = unitPrice;
+      } catch (error) {
+        console.error('Error al procesar el producto:', error);
+      }
+    }
+  }
+
   createArrayProducto(products) {
     const expiringLocalStorage = new ExpiringLocalStorage()
     const url = new URL(window.location.href);
     const searchParams = new URLSearchParams(url.search);
     const cotId = searchParams.get('cotId')
-
-    let result = ''
     let productForSave = []
 
     if(products) {
       let unitPrice = 0
       let retrievedData = ''
-      let numPrange = ''
-      let price = ''
       products.forEach(product => { 
         const productsDataAsync = async () => {
           if(cotId) {
@@ -286,47 +350,6 @@ class QuotationCalculation extends HTMLElement {
             productForSave = productsLocalStores
           }
 
-          if (this.resQueryUser.rol === 'advisors'){
-            const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
-            const client = JSON.parse(c)
-            price = await getUnityPrices(product.id, client['0'].currency, client['0'].rol);    
-            const priceInRange = this.getPriceInRange(price, product.quantity)
-            if(priceInRange===undefined) {
-              console.log('error this producto', product);
-              nodeNotification('Error en la información del producto')
-              return null
-            }
-            if(client['0'].currency === 'COP') {
-              numPrange = priceInRange.replace(".", "")
-            } else {
-              numPrange = priceInRange.replace(",", ".")
-            }
-            if (c) {
-              unitPrice = client['0'].currency === 'COP' ? parseInt(numPrange) : parseFloat(numPrange).toFixed(2)
-            } else {
-              unitPrice = parseFloat(numPrange).toFixed(2)
-            }
-          } else {
-            price = await getProductPrices(
-              product.id,
-              this.resQueryUser.currency,
-              this.resQueryUser.rol
-            )
-            const priceInRange = this.getPriceInRange(price, product.quantity)
-            if(priceInRange===undefined) {
-              console.log('error this producto', product);
-              nodeNotification('Error en la información del producto')
-              return null
-            }
-            if(this.resQueryUser.currency === 'COP') {
-              numPrange = priceInRange.replace(".", "")
-              unitPrice = parseInt(numPrange)
-            } else {
-              numPrange = priceInRange.replace(",", ".")
-              unitPrice = parseFloat(numPrange).toFixed(2)
-            }
-          }
-        
           productForSave.push({
             product: product.id,
             productName: product.productName,
@@ -334,51 +357,76 @@ class QuotationCalculation extends HTMLElement {
             quantity: parseInt(product.quantity),
             unitPrice: unitPrice
           })
+          let productQuantities = {}
 
-          result = Object.values(productForSave.reduce((acc, item) => {
-            const id = item.selectedMoldeCode;
-            if (acc[id]) {
-              acc[id].quantity += parseInt(item.quantity);
-              const priceInRange = this.getPriceInRange(price, acc[id].quantity)
-              const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
-              const client = JSON.parse(c)
-
-              if (c) {
-                if(client['0'].currency === 'COP') {
-                  numPrange = priceInRange.replace(".", "")
-                } else {
-                  numPrange = priceInRange.replace(",", ".")
-                }
-                unitPrice = client['0'].currency === 'COP' ? parseInt(numPrange) : parseFloat(numPrange).toFixed(2)
-              } else {
-                // Validar cuando es dolar
-                if(this.resQueryUser.currency === 'COP') {
-                  numPrange = priceInRange.replace(".", "")
-                } else {
-                  numPrange = priceInRange.replace(",", ".")
-                }
-                unitPrice = parseFloat(numPrange).toFixed(2)
-              }
-              acc[id].unitPrice = unitPrice
+          productForSave.forEach(item => {
+            const productNumber = item.product;
+            const quantity = item.quantity;          
+            if (productQuantities[productNumber]) {
+              productQuantities[productNumber] += quantity;
             } else {
-              acc[id] = { ...item };
+              productQuantities[productNumber] = quantity;
             }
-            return acc;
-          }, {}));
+          });
 
+          productForSave.forEach(item => {
+            item.qt = productQuantities[item.product];
+          });
           if(cotId) {
-            expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(result))
+            expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(productForSave))
           } else{
-            expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(result))
+            expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(productForSave))
           }
+          this.showData()
 
-          this.removeList()
-          this.insertList()
-          this.sumar()
         }
         productsDataAsync();
       });
     }
+  }
+
+  showData() {
+    const expiringLocalStorage = new ExpiringLocalStorage()
+    const url = new URL(window.location.href);
+    const searchParams = new URLSearchParams(url.search);
+    const cotId = searchParams.get('cotId')
+    let retrievedData = ''
+    let productForSave = {}
+
+    if(cotId) {
+        retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
+      } else{
+        retrievedData = expiringLocalStorage.getDataWithExpiration("products")
+      }
+    
+      if (retrievedData) {
+        const productsLocalStores = retrievedData ? JSON.parse(retrievedData) : []
+        productForSave = productsLocalStores
+      }
+      const result = Object.values(productForSave.reduce((acc, item) => {
+        const id = item.selectedMoldeCode;
+        if (acc[id]) {
+          acc[id].quantity += parseInt(item.quantity);
+        } else {
+          acc[id] = { ...item };
+        }
+        return acc;
+      }, {}));
+      
+      this.procesarResult(result).then(() => {
+        const loadingDivHtml = document.querySelector('.loading-message')
+        if (loadingDivHtml) {
+          loadingDivHtml.remove();
+        }
+        if(cotId) {
+          expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(result))
+        } else{
+          expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(result))
+        }
+  
+        this.insertList()
+        this.sumar()
+      });
   }
 
   removeList() {
@@ -400,14 +448,41 @@ class QuotationCalculation extends HTMLElement {
         const retrievedDataParse = this.retrievedData()
         //const retrievedDataParse = JSON.parse(retrievedData)
         const newArray = retrievedDataParse.filter(item => item.selectedMoldeCode !== getDataProduct);
+        let productQuantities = {}
+        newArray.forEach(item => {
+          const productNumber = item.product;
+          const quantity = item.quantity;          
+          if (productQuantities[productNumber]) {
+            productQuantities[productNumber] += quantity;
+          } else {
+            productQuantities[productNumber] = quantity;
+          }
+        });
+
+        newArray.forEach(item => {
+          item.qt = productQuantities[item.product];
+        });
         if(cotId) {
           expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(newArray))
         } else{
           expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(newArray))
         }
-        this.removeList()
-        this.insertList()
-        this.sumar()
+        this.procesarResult(newArray).then(() => {
+          console.log('loading');
+          const loadingDivHtml = document.querySelector('.loading-message')
+          if (loadingDivHtml) {
+            loadingDivHtml.remove();
+          }
+          if(cotId) {
+            expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(newArray))
+          } else{
+            expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(newArray))
+          }
+          this.removeList()
+          this.insertList()
+          this.sumar()
+        });
+        
       })
     });
   }
