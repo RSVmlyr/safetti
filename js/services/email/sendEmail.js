@@ -10,9 +10,18 @@ const sendEmail = async (nodo, url, not) => {
       checkemail.src = '../../img/icon/icon-check.png';
       nodo.insertAdjacentElement('afterbegin', checkemail);
       const quotationEmailSend = document.querySelector('.quotation--email__send')
+      not.nextElementSibling.style.display = "none";
       setTimeout(() => {
+        let src = '../../img/icon/icon-email.svg'
         not.textContent = 'Enviar correo'
+        not.classList.remove('loading')
         quotationEmailSend.remove()
+        if(not.classList.contains('quotation--info__white')) {
+          src = '../../img/icon/icon-email-white.svg'
+        }
+        not.nextElementSibling.src = src;
+        not.nextElementSibling.style.display = "block";
+
       }, 4000);
     }
     

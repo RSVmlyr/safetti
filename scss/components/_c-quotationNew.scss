@@ -27,6 +27,13 @@
             gap: 10px;
             text-decoration: none;
           }
+
+          &--email {
+            img {
+              width: 16px;
+              height: 16px;
+            }
+          }
         }
       }
     }

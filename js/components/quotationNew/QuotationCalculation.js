@@ -423,7 +423,7 @@ class QuotationCalculation extends HTMLElement {
         } else{
           expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(result))
         }
-  
+        this.removeList()
         this.insertList()
         this.sumar()
       });
@@ -469,10 +469,10 @@ class QuotationCalculation extends HTMLElement {
         }
         this.procesarResult(newArray).then(() => {
           console.log('loading');
-          const loadingDivHtml = document.querySelector('.loading-message')
-          if (loadingDivHtml) {
-            loadingDivHtml.remove();
-          }
+           const loadingDivHtml = document.querySelector('.loading-message')
+        if (loadingDivHtml) {
+          loadingDivHtml.remove();
+        }
           if(cotId) {
             expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(newArray))
           } else{
