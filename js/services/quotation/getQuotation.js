@@ -3,9 +3,6 @@ import { config } from "../../../config.js"
 const API_DEV = config.API_KEY_DEV;
 const getQuotation = async () => {
   try {
-    // const urlQuery = `${API_DEV}/api/Quotation/client/${id}`
-    // const urlQuery = 'https://safetticustom.azurewebsites.net/api/Quotation/client/' + id
-    // const urlQuery = 'https://safetticustom.azurewebsites.net/api/Quotation/4/1/0/%20'
     const urlQuery = `${API_DEV}/api/Quotation/4/1/0/%20`
 
 

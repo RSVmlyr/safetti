@@ -468,7 +468,6 @@ class QuotationCalculation extends HTMLElement {
           expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(newArray))
         }
         this.procesarResult(newArray).then(() => {
-          console.log('loading');
            const loadingDivHtml = document.querySelector('.loading-message')
         if (loadingDivHtml) {
           loadingDivHtml.remove();
@@ -496,8 +495,14 @@ class QuotationCalculation extends HTMLElement {
     const btniva = document.querySelector('.quotation--iva')
 
     if(client){
+      const idiomaPredeterminado = 'es-CO'; // Español de España
+      const opcionesRegionales = { 
+        style: 'currency', 
+        currency: client['0'].currency
+      };
+      console.log(idiomaPredeterminado, opcionesRegionales );
       const total = this.btnivaChecked(client['0'].currency, quo, btniva)
-      quotationSave.textContent = total.toLocaleString()
+      quotationSave.textContent = total.toLocaleString(idiomaPredeterminado, opcionesRegionales)
       quo.addEventListener('input', (event) => {
         const maxValue = 10;
         if (event.target.value > maxValue) {

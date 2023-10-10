@@ -9,8 +9,10 @@ import quotationNewPage from "../quotationNew/quotationNew.js"
 import getUser from "../../services/user/getUser.js"
 import putQuotationScenario from "../../services/quotation/putQuotationScenario.js"
 import currencyFormatUSD from "../../helpers/currencyFormatUSD.js"
+import { config } from "../../../config.js"
 
 const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
+    const API_DEV = config.API_KEY_DEV;
     const quotationCreatescenary = quotation.querySelector('#quotation--content--list .quotation--list--row')
     const quotationCreatescenarys = quotation.querySelectorAll('#quotation--content--list .quotation--list--row')
     const scenaryContainerTop = quotation.querySelector('#scenary--container__top')
@@ -62,11 +64,11 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               <span class="quotation--status">${cotStatus.statusName}</span>
             </div>
             <div class="region region__two">
-              <a class="quotation--email" href="https://safetticustom.azurewebsites.net/api/Quotation/email/${currentUser}/${cot.id}">
+              <a class="quotation--email" href="${API_DEV}/api/Quotation/email/${currentUser}/${cot.id}">
                 <span class="quotation--send--data quotation--info">Enviar correo</span>
                 <img class="quotation--email__img" src='../../img/icon/icon-email.svg' loading="lazy" alt="Email" title="Email">
               </a>
-              <a class="quotation--download" href="https://safetticustom.azurewebsites.net/api/Quotation/pdf/${cot.id}">
+              <a class="quotation--download" href="${API_DEV}/api/Quotation/pdf/${cot.id}">
                 <span class="quotation--info">Generar PDF</span>
                 <img class="quotation--download__img" src='../../img/icon/icon-download.svg' loading="lazy" alt="Descargar" title="Descargar">
               </a>

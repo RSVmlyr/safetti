@@ -4,11 +4,8 @@ const API_DEV = config.API_KEY_DEV;
 const getIamages = async (id) => {
   try {
     const urlQueryImages= `${API_DEV}/api/Product/images/${id}`
-    // const urlQueryImages= `https://safetticustom.azurewebsites.net/api/Product/images/${id}`
     const reqQueryImages= await fetch(urlQueryImages)
-    // console.log('Status Service Images', reqQueryImages);
     const resQueryImages= await reqQueryImages.json()
-    // console.log('Array Service Images', resQueryImages);
     
     if (reqQueryImages.status == 403) {
       console.log('Error 403');

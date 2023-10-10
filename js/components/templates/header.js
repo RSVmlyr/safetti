@@ -1,7 +1,7 @@
 import dateFormat from "../../helpers/dateFormat.js";
 import liteStatusQuotation from "../../helpers/liteStatusQuotation.js";
 import sendEmailHelper from "../../helpers/sendEmailHelper.js";
-
+import { config } from "../../../config.js"
 const header = (node, infoQuotation) => {
   const {
     advisorName,
@@ -9,14 +9,15 @@ const header = (node, infoQuotation) => {
     createdAt,
     currency,
     updatedAt,
+    leadClient,
     id,
     status: { name, id : statusid },
   } = infoQuotation;
+  const API_DEV = config.API_KEY_DEV;
   const dateCreat = dateFormat(createdAt);
   const dateUpdate = dateFormat(createdAt);
   const header = document.createElement("header");
   const currentUser = localStorage.getItem('current')
-
   header.classList.add("quotationew--header");
   header.innerHTML = `
     <div class="region region--left">
@@ -25,14 +26,22 @@ const header = (node, infoQuotation) => {
         <span id="qnclient" class="quotation--info__white">Cliente: ${clientName}</span>
         <span id="qnadvisor" class="quotation--info__white">Asesor: ${advisorName} </span>
         <span id="qncurrency" class="quotation--info__white">Moneda: ${currency}</span>
+        ${
+          leadClient ?
+            `<span id="qndate" class="quotation--info__white">Email: ${leadClient.email} </span>
+            <span id="qndate" class="quotation--info__white">Nombre: ${leadClient.fullName} </span>
+            <span id="qnclient" class="quotation--info__white">Télefono: ${leadClient.phone}</span>`
+          :
+          ''
+        }
     </div>
     <div class="region region--right">
-        <a class="quotation--email" href="https://safetticustom.azurewebsites.net/api/Quotation/email/${currentUser}/${id}">
+        <a class="quotation--email" href="${API_DEV}/api/Quotation/email/${currentUser}/${id}">
             <span id="qnemail" class="quotation--send--data quotation--info__white">Enviar correo</span>
             <img class="quotation--email__img" src="../../img/icon/icon-email-white.svg" loading="lazy"
                 alt="Email" title="Email">
         </a>
-        <a href="https://safetticustom.azurewebsites.net/api/Quotation/pdf/${id}" class="quotation--download">
+        <a href="${API_DEV}/api/Quotation/pdf/${id}" class="quotation--download">
             <span class="quotation--info__white">Generar PDF</span>
             <img class="quotation--download__img" src="../../img/icon/icon-download-white.svg" loading="lazy"
                 alt="Descargar" title="Descargar">

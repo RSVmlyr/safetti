@@ -13,10 +13,8 @@ const setQuotation = async dataSetQuotation => {
       body: JSON.stringify(dataSetQuotation)
     };
     const urlQueryS = `${API_DEV}/api/Quotation`
-    // const urlQueryS = 'https://safetticustom.azurewebsites.net/api/Quotation'
     const reqQueryS = await fetch(urlQueryS, requestOptions)
     const resQueryS = await reqQueryS.json()
-    // console.log(reqQueryS);
     
     if(reqQueryS.status === 200) {
       nodeNotification('Guardando cotización...')

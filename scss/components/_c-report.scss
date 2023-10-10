@@ -1,0 +1,186 @@
+.reportQuotationsView,
+.reportProductsView {
+    padding: 25px;
+
+    .tabs {
+        list-style: none;
+        display: flex;
+        padding: 0;
+    }
+
+    .tab {
+        cursor: pointer;
+        padding: 10px 20px;
+        background-color: $c4;
+        margin-right: 10px;
+        color: $white;
+    
+    }
+    .tab-body {
+        display: flex;
+        justify-content: center; 
+        padding: 10px 10px 40px;
+    }
+
+    .tab.active {
+        color: $white;
+        background-color: $black;
+    }
+    .tab:hover {
+        color: $white;
+        background-color: $black;
+
+    }
+
+    .tab-pane {
+        display: none;
+        .quotation--title__quo{
+            //text-align: center
+        }
+        .tab-item {
+            flex: 1 0 33%;
+            max-width: 33%;
+            .canvas {
+                width: 80% !important;
+                height: auto !important;
+            }
+        }
+    }  
+
+    .tab-pane.active {
+        display: block;
+    }
+    .d-flex{
+        display: flex;
+    }
+    .report-table {
+        .datatable-header {
+            background-color: #d4ca9f;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            position: relative;
+            margin: 0 0 10px;
+        P {
+            font-family: "Roboto medium";
+            font-size: 16px;
+            text-transform: capitalize;
+            color: $white;
+            margin: 0;
+        }
+       }
+    }
+    .report-row {
+        display: flex;
+        .col-first {
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-end;
+            flex: 1 0 40%;
+        }
+        .col-second {
+            display: flex;
+            align-items: flex-end;
+        }
+        .form-control {
+            margin-right: 10px;
+        }
+        
+    }
+    .quotation--btn__add {
+        height: 35px;
+        padding: 0 20px;
+        img {
+            width: 17px;
+            margin-right: 10px;
+        }
+    }
+    .search-submit-date {
+        position: relative;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        border: 1px solid #d9d8d6;
+        box-shadow: 0px 0px 24px rgba(0,0,0,.08);
+        background-color: #000;
+        cursor: pointer;
+        color: white;
+        padding: 0 10px;
+    }
+
+    .card-after-event {
+        background-color: #fff;
+        box-shadow: 0px 0px 15px 0px rgba(0,0,0,.05);
+        border-radius: 14px;
+        min-height: 100vh;
+        padding: 25px;
+        margin: 20px 0;
+    }
+    .datatable {
+        thead {
+            tr th {
+                text-align: left;
+                color: #000;
+                font-family: "Roboto medium";
+                font-size: 13px;
+                margin: 5px 0;
+                width: 100%;
+                height: inherit;
+            }
+
+        }
+        tbody {
+            tr td {
+                color: #727272;
+                font-family: "Roboto medium";
+                font-size: 13px;
+                height: inherit;
+                margin: 0;
+                padding: 7px 1px;
+            }
+        }
+    }
+    .dataTables_info{
+        margin: 10px 0;
+        text-align: right;
+        color: #727272;
+        font-family: "Roboto medium";
+        font-size: 13px;
+        text-decoration: none;
+    }
+    .paginate_button {
+        color: #fff;
+        background-color: #000;
+        border: 2px solid #000;
+        font-size: 12px;
+        padding: 4px 7px;
+        font-size: 12px;
+        cursor: pointer;
+        margin: 2px;
+        &.current {
+            color: #000;
+            font-family: "Roboto bold";
+            border: 2px solid #000;
+            background-color: rgba(0,0,0,0);
+            cursor: auto;
+        }
+        .previous {
+            .disabled{
+
+            }
+        }
+
+        .next {
+
+        }
+    }
+    .card-body {
+        .loading-message {
+            display: block;
+            margin: 10rem;
+            margin-left: auto;
+            margin-right: auto;  
+        }
+    }
+}

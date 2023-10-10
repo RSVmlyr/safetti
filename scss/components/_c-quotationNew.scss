@@ -12,7 +12,9 @@
     .region {
       &--left {
         display: flex;
-        gap: 35px;
+        gap: 15px 30px;
+        flex: 1 0 75%;
+        flex-wrap: wrap;
       }
       &--right {
         display: flex;

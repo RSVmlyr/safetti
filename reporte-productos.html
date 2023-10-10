@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./css/normalize.css">
+</head>
+<body>
+    <main id="reportProductsView" class="reportProductsView">
+
+        <h3 class="quotation--title">
+            Reporte de productos por fechas
+        </h3>
+        <div class="card-body report-container">
+            <div class="report-row">
+                <div class="col-first">
+                    <div class="control-input">
+                        <label for="fromReport" class="col-md-1 col-form-label">Desde</label>
+                        <div class="col-md-3 px-2">
+                            <input class="form-control" type="date" id="fromReport" />
+                        </div>
+                    </div>
+                    <div class="control-input">
+                        <label for="toReport" class="col-md-1 col-form-label">Hasta</label>
+                        <div class="col-md-3 px-2">
+                            <input class="form-control" type="date" id="toReport" />
+                        </div>
+                    </div>
+                    <div class="col-md-2 ms-2">
+                        <button type="button" class="search-submit-date btn-generar">Generar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-after-event">
+            <div class="container-fluid px-4">
+                <div class="card-products">
+                    <div class="body tab-body">
+                        <div class="tab-item">
+                            <canvas class="canvas" id="reportSolicitadas"></canvas>
+                        </div>
+                        <div class="tab-item">
+                            <canvas class="canvas" id="reportConfirmadas"></canvas>
+                        </div>
+                        <div class="tab-item">
+                            <canvas class="canvas" id="reportCanceladas"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="report-table">
+                    <div class="datatable-header">
+                        <p>Tabla de Transacciones de Clientes</p>
+                        <div class="col-second">
+                            <a class="quotation--btn__add float-end btn-exportar" href="javascript:void(0)">
+                                <img class="" src="/img/icon/excel-logo.png" >
+                                <span> Exportar</span>
+                            </a>
+                        </div>
+                    </div>
+                    <table id="datatable" class="datatable" style="display:none;">
+                        <thead>
+                            <tr>
+                                <th>Molde</th>
+                                <th>Nombre</th>
+                                <th>Cuento</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="./lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+    <script type="module" src="./js/components/pages/reportProductsViewPage.js"></script>
+</body>
+</html>

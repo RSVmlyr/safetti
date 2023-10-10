@@ -1,0 +1,24 @@
+/* Estilos de las pestañas y el contenido */
+.tabs {
+    list-style: none;
+    display: flex;
+}
+
+.tab {
+    cursor: pointer;
+    padding: 10px 20px;
+    background-color: #eee;
+    margin-right: 10px;
+}
+
+.tab:hover {
+    background-color: #ddd;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}

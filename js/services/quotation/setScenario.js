@@ -13,10 +13,8 @@ const setScenario = async (dataSetScenario, cotId) => {
       body: JSON.stringify(dataSetScenario)
     };
     const urlQueryS = `${API_DEV}/api/Scenario`
-    // const urlQueryS = 'https://safetticustom.azurewebsites.net/api/Scenario'
     const reqQueryS = await fetch(urlQueryS, requestOptions)
     const resQueryS = await reqQueryS.json()
-    // console.log(reqQueryS);
 
     if(reqQueryS.status === 200) {
       nodeNotification('Guardando escenario...')
