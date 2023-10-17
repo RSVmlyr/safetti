@@ -6,6 +6,8 @@ import setScenario from '../../services/quotation/setScenario.js'
 import getUser from "../../services/user/getUser.js";
 import ExpiringLocalStorage from '../localStore/ExpiringLocalStorage.js'
 import loadingData from "../../helpers/loading.js";
+import getConfigCurrency from "../../helpers/getConfigCurrency.js";
+
 class QuotationCalculation extends HTMLElement {
   constructor(resQueryUser) {
     super()
@@ -165,6 +167,9 @@ class QuotationCalculation extends HTMLElement {
     if(retrievedData) {
       const productsList = retrievedData ? JSON.parse(retrievedData) : []
       productsList.forEach(product => {
+        const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
+        const client = JSON.parse(c)
+        const configCurrency = getConfigCurrency(client['0'].currency)
         const subtotal = parseFloat((parseFloat(product.unitPrice) * product.quantity).toFixed(2))
         const row = document.createElement('div')
         row.classList.add('scenary--row__table')
@@ -174,7 +179,7 @@ class QuotationCalculation extends HTMLElement {
           <div class="scenary--row">${product.selectedMoldeCode}</div>
           <div class="scenary--row">$ ${product.unitPrice.toLocaleString()}</div>
           <div class="scenary--row">${product.quantity}</div>
-          <div class="scenary--row subtotal">$ ${subtotal.toLocaleString()}</div>
+          <div class="scenary--row subtotal">${subtotal.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)}</div>
           <div class="scenary--row cancel" data-product='${product.selectedMoldeCode}'></div>
         `
         document.querySelector('.quotationew--calculation__body').appendChild(row)
@@ -235,8 +240,8 @@ class QuotationCalculation extends HTMLElement {
       let subtotal = 0
       productsList.forEach(product => {
         const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
+        const client = JSON.parse(c)
         if (c) {
-          const client = JSON.parse(c)
           subtotal = client['0'].currency === 'COP'
             ? Math.floor(product.unitPrice * product.quantity)
             : parseFloat((parseFloat(product.unitPrice) * product.quantity).toFixed(2))
@@ -244,6 +249,7 @@ class QuotationCalculation extends HTMLElement {
           subtotal =  this.resQueryUser.currency === 'COP' ? product.unitPrice * product.quantity : parseFloat((parseFloat(product.unitPrice) * product.quantity).toFixed(2))
         }
         const row = document.createElement('div')
+        const configCurrency = getConfigCurrency(client['0'].currency)
         row.classList.add('scenary--row__table')
         row.classList.add('scenary--row__data')
         row.innerHTML = `
@@ -251,7 +257,7 @@ class QuotationCalculation extends HTMLElement {
           <div class="scenary--row">${product.selectedMoldeCode}</div>
           <div class="scenary--row">${product.unitPrice.toLocaleString()}</div>
           <div class="scenary--row">${product.quantity}</div>
-          <div class="scenary--row subtotal">${subtotal.toLocaleString()}</div>
+          <div class="scenary--row subtotal">${subtotal.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)}</div>
         `
         document.querySelector('.quotationew--calculation__body').appendChild(row)
 
@@ -495,14 +501,9 @@ class QuotationCalculation extends HTMLElement {
     const btniva = document.querySelector('.quotation--iva')
 
     if(client){
-      const idiomaPredeterminado = 'es-CO'; // Español de España
-      const opcionesRegionales = { 
-        style: 'currency', 
-        currency: client['0'].currency
-      };
-      console.log(idiomaPredeterminado, opcionesRegionales );
+      const configCurrency = getConfigCurrency(client[0].currency);
       const total = this.btnivaChecked(client['0'].currency, quo, btniva)
-      quotationSave.textContent = total.toLocaleString(idiomaPredeterminado, opcionesRegionales)
+      quotationSave.textContent = total.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)
       quo.addEventListener('input', (event) => {
         const maxValue = 10;
         if (event.target.value > maxValue) {

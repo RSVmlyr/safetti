@@ -5,9 +5,10 @@ import inputNumber from "./inputNumber.js";
 import localStorage from "./localStorage.js";
 import QuotationCalculation from './QuotationCalculation.js';
 import nodeNotification from '../../helpers/nodeNotification.js'
+import qnaddproduct from "../../helpers/qnaddproduct.js"
 
 const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
-
+  qnaddproduct()
   const bodyDom = document.querySelector('body')
 
   dataSetQuotation(resQueryUser)
@@ -104,6 +105,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
       const sliderProducts = quotationNew.querySelector('.slider--productos .slider--content')
   
       sliderProducts.insertAdjacentHTML('afterbegin', `${sliderRow}`)
+      qnaddproduct()
 
       // Card button Agregar +
       const cardAddProducts = quotationNew.querySelector('.card .qnaddproducts')

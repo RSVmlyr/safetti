@@ -11,6 +11,7 @@ import ExpiringLocalStorage from "../localStore/ExpiringLocalStorage.js";
 import getUser from "../../services/user/getUser.js"
 import nodeNotification from "../../helpers/nodeNotification.js";
 import setQuotation from "../../services/quotation/setQuotation.js";
+import qnaddproduct from "../../helpers/qnaddproduct.js"
 import { config } from "../../../config.js"
 
 const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQueryClients) => {
@@ -224,6 +225,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
         }
       ]
       expiringLocalStorage.saveDataWithExpiration("ClientFullName", JSON.stringify(dataClientStorage))
+      qnaddproduct()
     }
 
     const quotatioNewSearchClientLi = quotationNew.querySelectorAll('#quotationewsearchclient li')

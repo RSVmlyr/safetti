@@ -5,13 +5,11 @@ const searchProduct = (quotationNew, resQueryUser, resQueryProducts) => {
   // Nombre / referencia
   const qnSearchProduct = quotationNew.querySelector('#qnsearchproduct')
   qnSearchProduct.addEventListener('input', (e) => {
-
+    qnsearchproduct()
     const sliderProductsRows = quotationNew.querySelectorAll('.slider--productos .slider--content .slider--row')
     const searchTerm = e.target.value.toLowerCase();
     const removerTildes = texto => texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
     let names = resQueryProducts.products.filter(element => removerTildes(element.name).toLowerCase().includes(removerTildes(searchTerm)) || element.referencia.toLowerCase().includes(searchTerm))
-
     let dataNames = [{products:names}]
     sliderProductsRows.forEach(row => {
       row.remove()

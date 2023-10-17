@@ -2,6 +2,8 @@ import currencyFormatUSD from "../../helpers/currencyFormatUSD.js";
 import nodeNotification from "../../helpers/nodeNotification.js";
 import putScenario from "../../services/quotation/putScenario.js";
 import getUser from "../../services/user/getUser.js";
+import getConfigCurrency from "../../helpers/getConfigCurrency.js";
+import ExpiringLocalStorage from '../localStore/ExpiringLocalStorage.js'
 
 const quotationView = async (node, quotation ,infoQuotation) => {
 
@@ -55,7 +57,9 @@ const quotationView = async (node, quotation ,infoQuotation) => {
 
     const discount = element.subtotalProducts - element.subtotalWithDiscount
     const discountValue = discount
-    
+    const expiringLocalStorage = new ExpiringLocalStorage()
+
+    const configCurrency = getConfigCurrency(currency);
     
     container.innerHTML += `
             <div class="quotatioview__section">
@@ -107,7 +111,6 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                         <td class="quotatioview__title--table">Subtotal con descuento</td>
                         <td>
                             <div>
-                                <span>$</span>
                                 <span class="quotatioview__withdiscount">
                                     ${currency === 'COP' ? 
                                     ` ${element.subtotalWithDiscount.toLocaleString()}` : 
@@ -134,11 +137,10 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                         </div>
                     </th>
                     <th>
-                        <span>$ </span>
                         <span class="quotatioview__valueTotal">
                             ${currency === 'COP' ? 
-                                ` ${element.subtotalWithTaxIVA.toLocaleString()}` : 
-                                ` ${element.subtotalWithTaxIVA.toFixed(2).toLocaleString()}`}
+                                ` ${element.subtotalWithTaxIVA.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)}` : 
+                                ` ${element.subtotalWithTaxIVA.toFixed(2).toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)}`}
                         </span>
                     </th>
                     <td></td>
