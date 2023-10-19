@@ -1,11 +1,12 @@
 import createProductCards from "./createProductsCards.js";
+import qnaddproduct from "../../helpers/qnaddproduct.js"
 
 const searchProduct = (quotationNew, resQueryUser, resQueryProducts) => {
   
   // Nombre / referencia
   const qnSearchProduct = quotationNew.querySelector('#qnsearchproduct')
   qnSearchProduct.addEventListener('input', (e) => {
-    qnsearchproduct()
+    qnaddproduct()
     const sliderProductsRows = quotationNew.querySelectorAll('.slider--productos .slider--content .slider--row')
     const searchTerm = e.target.value.toLowerCase();
     const removerTildes = texto => texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");

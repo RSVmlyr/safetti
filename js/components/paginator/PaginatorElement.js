@@ -129,7 +129,7 @@ class PaginatorElement extends HTMLElement {
         this.paginatorNumber(data.totalPages, e.target.value)
         this.pageNumberCallback(data.results);
       } catch (error) {
-        console.log('QuotationSearch Error:', error);
+        console.error('QuotationSearch Error:', error);
       }
     }
   }
@@ -140,11 +140,13 @@ class PaginatorElement extends HTMLElement {
       paginatorOld.remove();
     }
     try {
+      const inputSearchClient = document.querySelector('.quotation--left .quotation--container__action #clients');
+      this.clientName = inputSearchClient.value
       this.advisorId = e.target.value
       this.loading();
       this.renderPaginator()
     } catch (error) {
-      console.log('QuotationSearch Error:', error);
+      console.error('QuotationSearch Error:', error);
     }
   }
   
@@ -200,10 +202,9 @@ class PaginatorElement extends HTMLElement {
   searchClients() {
     const inputSearchClient = document.querySelector('.quotation--left .quotation--container__action #clients');
     const formSearch = document.querySelector('.quotation--left .quotation--container__action #search-clients');
-    inputSearchClient.addEventListener("change", this.validateSearch.bind(this));
-    
     formSearch.addEventListener("submit", (e) => {
       e.preventDefault();
+      this.clientName = inputSearchClient.value;
       this.loading();
       this.renderPaginator()
     })
@@ -213,6 +214,9 @@ class PaginatorElement extends HTMLElement {
   validateSearch(e) {
     const value = e.target.value
     this.clientName = value;
+    this.loading();
+    this.renderPaginator()
+    
   }
 }
 
