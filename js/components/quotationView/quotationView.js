@@ -204,71 +204,41 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                     const textContent = qncurrencyElement.textContent.trim();
 
                 const mostrarEstadoCheckbox = (discountWithTotal) => {
-                    console.log("discountWithTotal", discountWithTotal);
                     const dataValueDis = typeof discountWithTotal === 'string' ? discountWithTotal.replace(/,/g, '') : discountWithTotal
-                    //console.log(dataValueDis);
-                    let dN = currency === 'COL' ? parseInt(dataValueDis) : parseFloat(dataValueDis)
-                    //console.log('dn', dN);
-
-
+                    let dN = 0;
                     let dataValueDisTotal
-                    if (currency === 'USD') {
-                        dataValueDisTotal = currencyFormatUSD(dN, currency)
-                    }    
+                    if (currency === 'COP') {
+                        dN = parseInt(discountWithTotal)
+                    } else {
+                        dN = parseFloat(discountWithTotal)
+                    }   
                     
-                    //console.log('Two', dataValueDisTotal);
                     const withTaxIVA = currencyFormatUSD(infoQuotation[i].subtotalWithTaxIVA, currency) 
-                    // console.log(withTaxIVA);
                     const configCurrency = getConfigCurrency(currency);
 
                     if (quotatioviewIva.checked) {
-                        console.log('ckeck', typeof dN);
-                        console.log('ckeck Dn', dN);
-                        if(rangeInput.value == infoQuotation[i].discountPercent) {
+                        console.log('debug');
+                       /*  if(rangeInput.value == infoQuotation[i].discountPercent) {
                             quotatioviewValueTotal.innerHTML = currency === 'COP' ? infoQuotation[i].subtotalWithTaxIVA.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales) : infoQuotation[i].subtotalWithTaxIVA.toFixed(2).toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)
-                        } 
-                        const calculateIva = (dN * 19) / 100
-                        //console.log('Iva:', typeof calculateIva);
-                        const calculateIvaTotal = parseInt(dN + calculateIva)
-                        console.log('Total con Iva', calculateIvaTotal);
-                        const cIvaTotal = currencyFormatUSD(calculateIvaTotal , currency)
-
-                        
-                        quotatioviewValueTotal.innerHTML = currency === 'COP' ? calculateIvaTotal.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales) : calculateIvaTotal.toFixed(2).toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)
-                        //console.log(quotatioviewValueTotal.innerHTML);
+                        } else { */
+                          
+                        const calculateIva = (dN * 19) / 100                        
+                        const calculateIvaTotal = (dN + calculateIva)
+                        console.log(calculateIvaTotal);
+                        quotatioviewValueTotal.innerHTML = currency === 'COP' ? calculateIvaTotal.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales) : calculateIvaTotal.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)
+                        //}
                     } else {
-                        console.log('no check', typeof dN);
-                        console.log('no check', dN);
                         if(rangeInput.value == infoQuotation[i].discountPercent) {
-                            quotatioviewValueTotal.innerHTML = currency === 'COP' ? infoQuotation[i].subtotalWithDiscount.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales) : withTaxIVA
-                            console.log('debug if', quotatioviewValueTotal.innerHTML );
-                            
+                            quotatioviewValueTotal.innerHTML = currency === 'COP' ? infoQuotation[i].subtotalWithDiscount.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales) : dN.toFixed(2).toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)
                         } else {
-                            console.log("else", infoQuotation[i].subtotalWithDiscount);
-                            quotatioviewValueTotal.innerHTML = currency === 'COP' ?  infoQuotation[i].subtotalWithDiscount.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales) : dataValueDisTotal
-                            console.log('debug else', quotatioviewValueTotal.innerHTML );
-
+                            quotatioviewValueTotal.innerHTML = currency === 'COP' ?  dN.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales) : dN
                         }
                     }
                 };
                 quotatioviewIva.addEventListener('change', () => {
-                   /*  const configCurrency = getConfigCurrency(currency);
-
                     const text = quotatioviewWithdiscount.textContent
-
-
                     const numeroFormateado = text.replace(/[^0-9,.]/g, '');
-
-                    console.log(numeroFormateado);
-
-
-                    console.log('....', quotatioviewWithdiscount.textContent);
-                   
-                    console.log("zebra", numeroFormateado);
-                    mostrarEstadoCheckbox(numeroFormateado) */
-                    resQueryUser.currency === 'COP' ?
-                    mostrarEstadoCheckbox(quotatioviewWithdiscount.textContent) :
-                    mostrarEstadoCheckbox(quotatioviewWithdiscount.textContent)
+                    mostrarEstadoCheckbox(currency === 'COP' ?  numeroFormateado.replace(/[.,]/g, '') : numeroFormateado); 
                 });
 
                 rangeInput.addEventListener('input', (event) => {
@@ -280,18 +250,12 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                         const calculateDiscout = infoQuotation[i].subtotalProducts * event.target.value / 100
                         const calculateDiscoutTotal = infoQuotation[i].subtotalProducts - calculateDiscout
                         const calculateDiscoutValue = infoQuotation[i].subtotalProducts - calculateDiscoutTotal
-                        // console.log('Descuento -', calculateDiscoutValue);
-
                         const calculateDT = currencyFormatUSD(calculateDiscoutTotal, currency)
                         const calculateDV = currencyFormatUSD(calculateDiscoutValue, currency)
-
-                        //console.log(calculateDT);
-                        //console.log(calculateDV);
                         const configCurrency = getConfigCurrency(currency);
-
                         quotatioviewWithdiscount.innerHTML = currency === 'COP' ? calculateDiscoutTotal.toLocaleString() : calculateDiscoutTotal.toFixed(2).toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)
                         quotatioviewDiscountValueNumber.innerHTML = currency === 'COP' ? calculateDiscoutValue.toLocaleString() : calculateDV
-                        mostrarEstadoCheckbox(currency === 'COP' ? calculateDiscoutTotal.toLocaleString() : calculateDT);
+                        mostrarEstadoCheckbox(currency === 'COP' ? calculateDiscoutTotal : calculateDT);
                     }
                 });
                 inputInserted = true;
@@ -311,7 +275,6 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                     "discountPercent": rangeInput.value,
                     "applyTaxIVA": quotatioviewIva.checked
                     }
-                //console.log(putBodyScenary);
                 putScenario(putBodyScenary)
             })
         }
