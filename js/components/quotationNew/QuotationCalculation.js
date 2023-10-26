@@ -167,10 +167,17 @@ class QuotationCalculation extends HTMLElement {
     if(retrievedData) {
       const productsList = retrievedData ? JSON.parse(retrievedData) : []
       productsList.forEach(product => {
-        const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
-        const client = JSON.parse(c)
-        const configCurrency = getConfigCurrency(client['0'].currency)
+        let valueSubtotal = ''
         const subtotal = parseFloat((parseFloat(product.unitPrice) * product.quantity).toFixed(2))
+        const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
+        if(c) {
+          const client = JSON.parse(c)
+          const configCurrency = getConfigCurrency(client['0'].currency)
+          valueSubtotal = subtotal.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)
+        } else {
+          valueSubtotal = subtotal.toLocaleString()
+        }
+     
         const row = document.createElement('div')
         row.classList.add('scenary--row__table')
         row.classList.add('scenary--row__data')
@@ -179,7 +186,7 @@ class QuotationCalculation extends HTMLElement {
           <div class="scenary--row">${product.selectedMoldeCode}</div>
           <div class="scenary--row">$ ${product.unitPrice.toLocaleString()}</div>
           <div class="scenary--row">${product.quantity}</div>
-          <div class="scenary--row subtotal">${subtotal.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)}</div>
+          <div class="scenary--row subtotal">${valueSubtotal}</div>
           <div class="scenary--row cancel" data-product='${product.selectedMoldeCode}'></div>
         `
         document.querySelector('.quotationew--calculation__body').appendChild(row)
@@ -611,7 +618,7 @@ class QuotationCalculation extends HTMLElement {
       fieldValor.textContent = '0'
       this.removeList()
     })
-    this.insertList()
+    //this.insertList()
     const scenaryRowTable = document.querySelectorAll('.scenary--row__table .cancel')
     this.removeItem(scenaryRowTable)
   }

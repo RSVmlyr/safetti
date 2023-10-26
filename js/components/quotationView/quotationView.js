@@ -1,4 +1,5 @@
 import currencyFormatUSD from "../../helpers/currencyFormatUSD.js";
+import inputQuantity from "../../helpers/inputQuantity.js";
 import nodeNotification from "../../helpers/nodeNotification.js";
 import putScenario from "../../services/quotation/putScenario.js";
 import getUser from "../../services/user/getUser.js";
@@ -31,9 +32,10 @@ const quotationView = async (node, quotation ,infoQuotation) => {
   infoQuotation.forEach((element) => {
     let productos = "";
     element.products.forEach((producto) => {
+        console.log(producto);
       productos += `
             <tbody>
-                <tr>
+                <tr class="info-name" data-product-id="${producto.id}">
                 <td>${producto.productName}</td>
                 <td>${producto.selectedMoldeCode}</td>
                 <td>
@@ -41,7 +43,9 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                         `$ ${producto.unitPrice.toLocaleString()}` : 
                         `$ ${producto.unitPrice.toFixed(2).toLocaleString()}`}
                     </td>
-                <td>${producto.quantity.toLocaleString()}</td>
+                <td>
+                    <input type="number" value="${producto.quantity.toLocaleString()}"  class="quotatioview--quantity" readonly />
+                </td>
                 <td>
                     ${currency === 'COP' ? 
                         `$ ${producto.linePrice.toLocaleString()}` : 
@@ -179,6 +183,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
         let inputInserted = false;
         quotatioviewEdit.addEventListener('click', () => {
             if (!inputInserted) {
+                inputQuantity(currency)
 
                 const newNode = document.createElement('div');
                 newNode.classList.add('quotatioview__title')
@@ -217,11 +222,6 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                     const configCurrency = getConfigCurrency(currency);
 
                     if (quotatioviewIva.checked) {
-                        console.log('debug');
-                       /*  if(rangeInput.value == infoQuotation[i].discountPercent) {
-                            quotatioviewValueTotal.innerHTML = currency === 'COP' ? infoQuotation[i].subtotalWithTaxIVA.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales) : infoQuotation[i].subtotalWithTaxIVA.toFixed(2).toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)
-                        } else { */
-                          
                         const calculateIva = (dN * 19) / 100                        
                         const calculateIvaTotal = (dN + calculateIva)
                         console.log(calculateIvaTotal);

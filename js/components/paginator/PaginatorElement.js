@@ -142,6 +142,7 @@ class PaginatorElement extends HTMLElement {
     try {
       const inputSearchClient = document.querySelector('.quotation--left .quotation--container__action #clients');
       this.clientName = inputSearchClient.value
+      this.pageNumber = 1
       this.advisorId = e.target.value
       this.loading();
       this.renderPaginator()
@@ -205,6 +206,7 @@ class PaginatorElement extends HTMLElement {
     formSearch.addEventListener("submit", (e) => {
       e.preventDefault();
       this.clientName = inputSearchClient.value;
+      this.pageNumber = 1;
       this.loading();
       this.renderPaginator()
     })

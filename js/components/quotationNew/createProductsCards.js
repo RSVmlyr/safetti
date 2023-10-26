@@ -6,9 +6,12 @@ import localStorage from "./localStorage.js";
 import QuotationCalculation from './QuotationCalculation.js';
 import nodeNotification from '../../helpers/nodeNotification.js'
 import qnaddproduct from "../../helpers/qnaddproduct.js"
+import Login from "../../login/login.js";
 
 const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
-  qnaddproduct()
+  if(resQueryUser.rol != "advisors") {
+    qnaddproduct()
+  }
   const bodyDom = document.querySelector('body')
 
   dataSetQuotation(resQueryUser)
@@ -105,7 +108,10 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
       const sliderProducts = quotationNew.querySelector('.slider--productos .slider--content')
   
       sliderProducts.insertAdjacentHTML('afterbegin', `${sliderRow}`)
-      qnaddproduct()
+      console.log(resQueryUser);
+      if(resQueryUser.rol ==="advisors") {
+        qnaddproduct()
+      }
 
       // Card button Agregar +
       const cardAddProducts = quotationNew.querySelector('.card .qnaddproducts')
