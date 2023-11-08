@@ -35,7 +35,14 @@ class App {
         spinner.remove();
         const btn_ = document.querySelector('.quotation--btn__add');
         btn_.setAttribute('href', '/index-q.html?uid=' + resQueryUser.id);
-        const paginatorElement = new PaginatorElement(uid);
+        if(resQueryUser.rol === "advisors"){
+          const paginatorElement = new PaginatorElement(' ')
+        } else {
+          const quotationLeft = document.querySelector(".quotation .quotation--container__action");
+          quotationLeft.classList.add("d-none");
+          const paginatorElement = new PaginatorElement(resQueryUser.firstName);
+        }
+
         const getAdvisor = () => {
           if (resQueryAdvisors) {
             selectAdvisors(resQueryAdvisors);
@@ -53,6 +60,8 @@ class App {
 
         const resQueryProducts = await getProduct();
         const resQueryClients = await getClients();
+
+        console.log(resQueryClients);
 
         const spinnerP = this.quotationNew.querySelector('.slider--productos .quotation--loading');
         spinnerP.remove();

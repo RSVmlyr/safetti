@@ -3,7 +3,7 @@ import QuotationSearch from "../../services/quotation/QuotationSearch.js";
 import loadingData from "../../helpers/loading.js";
 
 class PaginatorElement extends HTMLElement {
-  constructor() {
+  constructor(clientName) {
     super();
     this.totalPages = 0;
     this.totalPages = 0
@@ -11,7 +11,7 @@ class PaginatorElement extends HTMLElement {
     this.Quotation = 0;
     this.results = '0'
     this.advisorId = '0'
-    this.clientName = ' '
+    this.clientName = clientName === undefined ? ' ': clientName
     this.pageSize = '5'
   }
 
@@ -218,7 +218,6 @@ class PaginatorElement extends HTMLElement {
     this.clientName = value;
     this.loading();
     this.renderPaginator()
-    
   }
 }
 

@@ -20,7 +20,7 @@ const getUser = async (uid) => {
   }
   
   catch(error) {
-    console.log('No se pudo traer los asesores', error);
+    console.log('No se pudo traer los data', error.errors);
   }
 }
 

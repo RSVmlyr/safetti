@@ -151,5 +151,9 @@ input[type="number"] {
   font-size: 10px;
 }
 .d-none {
-  display: none;
+  display: none !important;
+}
+.quotatioview--quantity {
+  max-width: 30px;
+  text-align: center;
 }

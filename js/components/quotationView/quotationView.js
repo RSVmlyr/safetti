@@ -4,6 +4,7 @@ import nodeNotification from "../../helpers/nodeNotification.js";
 import putScenario from "../../services/quotation/putScenario.js";
 import getUser from "../../services/user/getUser.js";
 import getConfigCurrency from "../../helpers/getConfigCurrency.js";
+import ExpiringLocalStorage from '../localStore/ExpiringLocalStorage.js'
 
 const quotationView = async (node, quotation ,infoQuotation) => {
 
@@ -12,7 +13,6 @@ const quotationView = async (node, quotation ,infoQuotation) => {
     const uid = searchParams.get('uid');
     const resQueryUser = await getUser(uid);
     const currency = quotation.currency
-
 
     const container = document.createElement("div");
     container.classList.add("quotatioview--container");
@@ -32,24 +32,23 @@ const quotationView = async (node, quotation ,infoQuotation) => {
   infoQuotation.forEach((element) => {
     let productos = "";
     element.products.forEach((producto) => {
-        console.log(producto);
       productos += `
             <tbody>
-                <tr class="info-name" data-product-id="${producto.id}">
-                <td>${producto.productName}</td>
-                <td>${producto.selectedMoldeCode}</td>
-                <td>
-                    ${currency === 'COP' ? 
-                        `$ ${producto.unitPrice.toLocaleString()}` : 
-                        `$ ${producto.unitPrice.toFixed(2).toLocaleString()}`}
+                <tr class="info-name" data-product-id="${producto.product}">
+                    <td>${producto.productName}</td>
+                    <td>${producto.selectedMoldeCode}</td>
+                    <td class="unit-value">
+                        ${currency === 'COP' ? 
+                            `$ ${producto.unitPrice.toLocaleString()}` : 
+                            `$ ${producto.unitPrice.toFixed(2).toLocaleString()}`}
                     </td>
-                <td>
-                    <input type="number" value="${producto.quantity.toLocaleString()}"  class="quotatioview--quantity" readonly />
-                </td>
-                <td>
-                    ${currency === 'COP' ? 
-                        `$ ${producto.linePrice.toLocaleString()}` : 
-                        `$ ${producto.linePrice.toFixed(2).toLocaleString()}`}
+                    <td>
+                        <input type="number" value="${producto.quantity.toLocaleString()}"  class="quotatioview--quantity" readonly />
+                    </td>
+                    <td class="sub-total">
+                        ${currency === 'COP' ? 
+                            `$ ${producto.linePrice.toLocaleString()}` : 
+                            `$ ${producto.linePrice.toFixed(2).toLocaleString()}`}
                     </td>
                 </tr>
             </tbody>
@@ -84,7 +83,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                         <td>
                             <div>
                                 <span>$</span>
-                                <span>
+                                <span class="subtotal-products">
                                     ${currency === 'COP' ? 
                                         `${element.subtotalProducts.toLocaleString()}` : 
                                         `${eSubtotalProducts}`}
@@ -183,7 +182,8 @@ const quotationView = async (node, quotation ,infoQuotation) => {
         let inputInserted = false;
         quotatioviewEdit.addEventListener('click', () => {
             if (!inputInserted) {
-                inputQuantity(currency)
+
+                inputQuantity(quotation.client) 
 
                 const newNode = document.createElement('div');
                 newNode.classList.add('quotatioview__title')
@@ -224,7 +224,6 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                     if (quotatioviewIva.checked) {
                         const calculateIva = (dN * 19) / 100                        
                         const calculateIvaTotal = (dN + calculateIva)
-                        console.log(calculateIvaTotal);
                         quotatioviewValueTotal.innerHTML = currency === 'COP' ? calculateIvaTotal.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales) : calculateIvaTotal.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)
                         //}
                     } else {
@@ -247,9 +246,17 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                         event.target.value = maxValue;
                     }
                     if (event.target.value >= 0) {
-                        const calculateDiscout = infoQuotation[i].subtotalProducts * event.target.value / 100
-                        const calculateDiscoutTotal = infoQuotation[i].subtotalProducts - calculateDiscout
-                        const calculateDiscoutValue = infoQuotation[i].subtotalProducts - calculateDiscoutTotal
+                        const subtotalProductsElement = document.querySelector('.subtotal-products');
+                        let price
+                        if(currency === "COP") {
+                            price = parseInt(subtotalProductsElement.textContent.replace(/,/g, ''))
+                        } else {
+                            price = subtotalProductsElement.textContent.replace(",", ".")
+                        }
+                        const value = price
+                        const calculateDiscout = value * event.target.value / 100
+                        const calculateDiscoutTotal = value - calculateDiscout
+                        const calculateDiscoutValue = value - calculateDiscoutTotal
                         const calculateDT = currencyFormatUSD(calculateDiscoutTotal, currency)
                         const calculateDV = currencyFormatUSD(calculateDiscoutValue, currency)
                         const configCurrency = getConfigCurrency(currency);
@@ -269,17 +276,50 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                 } else if (rangeInput.value === '') {
                     nodeNotification('El campo DESCUENTO del escenario es obligatorio.')
                 }
+                const expiringLocalStorage = new ExpiringLocalStorage()
+                const client = expiringLocalStorage.getDataWithExpiration('client')
+                const productData = getProductData();
+                console.log(productData.products);
                 const putBodyScenary = {
                     "id": infoQuotation[i].id,
                     "name": nameInput.value,
                     "discountPercent": rangeInput.value,
-                    "applyTaxIVA": quotatioviewIva.checked
-                    }
+                    "applyTaxIVA": quotatioviewIva.checked,
+                    "currency": currency, 
+                    "rol": client.rol,
+                    "products": productData.products
+                }
+                console.log(putBodyScenary);
                 putScenario(putBodyScenary)
             })
         }
     });
 
 };
+
+
+const getProductData = () => {
+    const products = [];
+    const table = document.querySelector('.quotatioview__table');
+  
+    if (table) {
+      const rows = table.querySelectorAll('.info-name');
+      rows.forEach((row) => {
+        const productId = row.getAttribute('data-product-id');
+        const parentInfoName = row.closest('.info-name');
+        const quantityInput = parentInfoName.querySelector('.quotatioview--quantity');
+        const quantity = quantityInput ? quantityInput.value : '';
+        if (productId && quantity) {
+          products.push({
+            molde: productId,
+            quantity: parseInt(quantity, 10),
+          });
+        }
+      });
+    }
+  
+    return { products };
+}
+  
 
 export default quotationView;

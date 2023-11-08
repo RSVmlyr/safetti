@@ -108,7 +108,6 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
       const sliderProducts = quotationNew.querySelector('.slider--productos .slider--content')
   
       sliderProducts.insertAdjacentHTML('afterbegin', `${sliderRow}`)
-      console.log(resQueryUser);
       if(resQueryUser.rol ==="advisors") {
         qnaddproduct()
       }
