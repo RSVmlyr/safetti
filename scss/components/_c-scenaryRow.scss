@@ -8,6 +8,7 @@
     position: relative;
     &.selected {
       background-color: $c15;
+      padding: 12px 42px 12px 12px;
       position: relative;
       &::after {
         content: "";
@@ -22,11 +23,25 @@
       }
       .quotation--title__quo {
         color: $black;
-      }  
+      }
+      .quotation--download {
+        .quotation--info {
+          color: $black;
+        }
+      }
     }
     .quotation--title__quo {
       color: $white;
       font-size: 16px;
+    }
+    .quotation--download {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      text-decoration: none;
+      .quotation--info {
+        color: $white;
+      }
     }
   }
   &__select {

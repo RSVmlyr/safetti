@@ -237,11 +237,16 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               ${scen.selected === true ? '<div class="scenary--data__scenary selected">' : '<div class="scenary--data__scenary">'}
                 ${scen.selected === true ? '<div class="scenary--row__header selected">' : '<div class="scenary--row__header">'}
                   <span class="quotation--title__quo">#${count} - ${scen.name ? scen.name : ''}</span>
+                  <a class="quotation--download" href="${API_DEV}/api/Quotation/scenariopdf/${scen.id}">
+                    <span class="quotation--info">Generar PDF</span>
+                    <img class="quotation--download__img" src='${scen.selected === true ? '../../img/icon/icon-download.svg' : '../../img/icon/icon-download-white.svg'}' loading="lazy" alt="Descargar" title="Descargar">
+                  </a>
                   <div class="scenary--row__select">
                     <span class="quotation--info">Seleccionar</span>
                     <img src="../../img/icon/check.svg" loading="lazy" alt="Seleccionar" title="Seleccionar">
                   </div>
                 </div>
+
                 <div class="scenary--row__body">
                   <div class="scenary--row__table">
                     <table>
