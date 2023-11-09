@@ -237,10 +237,16 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               ${scen.selected === true ? '<div class="scenary--data__scenary selected">' : '<div class="scenary--data__scenary">'}
                 ${scen.selected === true ? '<div class="scenary--row__header selected">' : '<div class="scenary--row__header">'}
                   <span class="quotation--title__quo">#${count} - ${scen.name ? scen.name : ''}</span>
-                  <a class="quotation--download" href="${API_DEV}/api/Quotation/scenariopdf/${scen.id}">
-                    <span class="quotation--info">Generar PDF</span>
-                    <img class="quotation--download__img" src='${scen.selected === true ? '../../img/icon/icon-download.svg' : '../../img/icon/icon-download-white.svg'}' loading="lazy" alt="Descargar" title="Descargar">
-                  </a>
+                  <div class="scenary--row__actions">
+                    <a id="email-${i}" class="scenary--quotation--email" href="${API_DEV}/api/Quotation/emailscenario/${cot.client}/${scen.id}">
+                      <span class="scenary--quotation--send--data quotation--info">Enviar correo</span>
+                      <img class="quotation--email__img" src='${scen.selected === true ? '../../img/icon/icon-email.svg' : '../../img/icon/icon-email-white.svg'}' loading="lazy" alt="Email" title="Email">
+                    </a>
+                    <a class="quotation--download" href="${API_DEV}/api/Quotation/scenariopdf/${scen.id}">
+                      <span class="quotation--info">Generar PDF</span>
+                      <img class="quotation--download__img" src='${scen.selected === true ? '../../img/icon/icon-download.svg' : '../../img/icon/icon-download-white.svg'}' loading="lazy" alt="Descargar" title="Descargar">
+                    </a>
+                  </div>  
                   <div class="scenary--row__select">
                     <span class="quotation--info">Seleccionar</span>
                     <img src="../../img/icon/check.svg" loading="lazy" alt="Seleccionar" title="Seleccionar">
@@ -271,7 +277,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               </div>
             </div>
           </div>`
-
+          
           scenaryContainerBottom.insertAdjacentHTML('afterbegin', `${scenaryList}`)
           const scenaryRowSelect = quotation.querySelector('.scenary--row__select')
           if(currentRol !== 'advisors' || scen.selected) {
@@ -309,6 +315,17 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
       }
 
       getScenary()
+
+      const emailSendNodes = () => {
+        const idEmail = quotation.querySelectorAll('.scenary--quotation--email')
+        idEmail.forEach(email => {
+          console.log(email);
+          const scenaryQuotationSendData = email.querySelector('.scenary--quotation--send--data')
+            sendEmailHelper(email, scenaryQuotationSendData)
+        });
+      }
+
+      emailSendNodes()
 
     })
 

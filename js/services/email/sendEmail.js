@@ -1,7 +1,10 @@
+import nodeNotification from "../../helpers/nodeNotification.js";
+
 const sendEmail = async (nodo, url, not) => {
   try {
     const urlQuerySendEmail = url
     const reqQuerySendEmail = await fetch(urlQuerySendEmail)
+    console.log('R', reqQuerySendEmail);
 
     if (reqQuerySendEmail.status === 200) {
       not.textContent = 'Enviado'
@@ -23,6 +26,7 @@ const sendEmail = async (nodo, url, not) => {
         not.nextElementSibling.style.display = "block";
 
       }, 4000);
+      nodeNotification('Correo enviado con éxito')
     }
     
   }

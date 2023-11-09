@@ -24,6 +24,11 @@
       .quotation--title__quo {
         color: $black;
       }
+      .scenary--quotation--email{
+        .quotation--info {
+          color: $black;
+        }
+      }
       .quotation--download {
         .quotation--info {
           color: $black;
@@ -34,6 +39,15 @@
       color: $white;
       font-size: 16px;
     }
+    .scenary--quotation--email {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      text-decoration: none;
+      .quotation--info {
+        color: $white;
+      }
+    }
     .quotation--download {
       display: flex;
       align-items: center;
@@ -43,6 +57,10 @@
         color: $white;
       }
     }
+  }
+  &__actions {
+    display: flex;
+    gap: 20px;
   }
   &__select {
     display: flex;
