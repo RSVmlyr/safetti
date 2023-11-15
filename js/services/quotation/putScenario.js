@@ -16,7 +16,6 @@ const putScenario = async (dataSetScenario, cotId) => {
     const urlQueryS = `${API_DEV}/api/Scenario`
     const reqQueryS = await fetch(urlQueryS, requestOptions)
     const resQueryS = await reqQueryS.json()
-    // console.log(reqQueryS);
 
     if(reqQueryS.status === 200) {
       nodeNotification('Guardando escenario...')
@@ -25,20 +24,17 @@ const putScenario = async (dataSetScenario, cotId) => {
       expiringLocalStorage.deleteDataWithExpiration('scenario-' + cotId)
       setTimeout(() => {
         const quotationewBack = document.querySelector('#quotationew--back')
-        quotationewBack.click()
+        //quotationewBack.click()
       }, 2000);
     } else if (reqQueryS.status === 400) {
     //  nodeNotification('Valida que los campos estén correctos')
     } else if (reqQueryS.status == 500) {
       nodeNotification('Error 500, Error interno del servidor')
     }
-
-    return resQueryS
-    
+    return resQueryS 
   }
-  
   catch(error) {
-    console.log('No se pudo crear las cotizaciones', error);
+    console.error('No se pudo crear las cotizaciones', error);
   }
 }
 

@@ -37,7 +37,7 @@ const setQuotation = async dataSetQuotation => {
   }
   
   catch(error) {
-    console.log('No se pudo crear las cotizaciones', error);
+    console.error('No se pudo crear las cotizaciones', error);
     const quotationContentList = document.querySelector('#quotation--content--list')
     quotationContentList.insertAdjacentHTML('afterbegin', '<div class="quotation--loading"><span>No existen Cotizaciones...</span></div>')
   }

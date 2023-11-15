@@ -1,9 +1,9 @@
 import { config } from "../../../config.js"
 
 const API_DEV = config.API_KEY_DEV;
-const statusQuotationS = async (Qid, status) => {
+const statusQuotationS = async (Qid, status, userId) => {
   try {
-    const urlQuerySQ = `${API_DEV}/api/Quotation/${Qid}/${status}`;
+    const urlQuerySQ = `${API_DEV}/api/Quotation/${Qid}/${userId}/${status}`;
     const requestOptions = {
       method: 'PUT',
       headers: {

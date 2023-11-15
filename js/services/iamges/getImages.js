@@ -8,9 +8,9 @@ const getIamages = async (id) => {
     const resQueryImages= await reqQueryImages.json()
     
     if (reqQueryImages.status == 403) {
-      console.log('Error 403');
+      console.error('Error 403');
     } else if (reqQueryImages.status == 500) {
-      console.log('Error 500. Ocurrió un error al procesar su solicitud.');
+      console.error('Error 500. Ocurrió un error al procesar su solicitud.');
     }
 
     return resQueryImages
@@ -18,7 +18,7 @@ const getIamages = async (id) => {
   }
   
   catch(error) {
-    console.log('No se pudo traer las imágenes', error);
+    console.error('No se pudo traer las imágenes', error);
   }
 }
 

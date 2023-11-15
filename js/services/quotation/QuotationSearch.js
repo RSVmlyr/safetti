@@ -9,15 +9,15 @@ const QuotationSearch = async (uid, pageNumber, pageSize, advisorId, clientName)
     const resQueryAdvisors = await reqQueryAdvisors.json()
 
     if (reqQueryAdvisors.status == 403) {
-      console.log('Error 403');
+      console.error('Error 403');
     } else if (reqQueryAdvisors.status == 500) {
-      console.log('Error 500. Ocurrió un error al procesar su solicitud.');
+      console.error('Error 500. Ocurrió un error al procesar su solicitud.');
     }
     return resQueryAdvisors  
   }
   
   catch(error) {
-    console.log('No se pudo traer los asesores', error);
+    console.error('No se pudo traer los asesores', error);
   }
 }
 export default QuotationSearch

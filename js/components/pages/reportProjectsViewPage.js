@@ -89,7 +89,6 @@ const reportProjectsViewPage = async () => {
                     }
 
                     datatable.clear().draw();
-                    console.log(reportProjects);
                     reportProjects.reportProjects.forEach(project => {
                         datatable.row.add([
                             project.id,

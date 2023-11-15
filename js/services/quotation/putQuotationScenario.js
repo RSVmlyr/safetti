@@ -13,11 +13,6 @@ const putQuotationScenario = async (id) => {
     };
 
     const response = await fetch(urlQuerySQ, requestOptions);
-    const data = await response.json();
-
-    // console.log('r', response);
-    // console.log('d', data);
-
     if(response.status === 200) {
       nodeNotification('Seleccionando escenario...')
       setTimeout(() => {
@@ -28,7 +23,7 @@ const putQuotationScenario = async (id) => {
     }
 
   } catch (error) {
-    console.log('No se pudo cancelar la cotización', error);
+    console.error('No se pudo cancelar la cotización', error);
   }
 };
 

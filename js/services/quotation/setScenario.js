@@ -32,11 +32,11 @@ const setScenario = async (dataSetScenario, cotId) => {
     }
 
     return resQueryS
-    
+ 
   }
   
   catch(error) {
-    console.log('No se pudo crear las cotizaciones', error);
+    console.error('No se pudo crear las cotizaciones', error);
   }
 }
 

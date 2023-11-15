@@ -9,14 +9,14 @@ const getReportQuotations = async (startDate, endDate) => {
         const resQuery = await reqQuery.json();
 
         if (reqQuery.status == 403) {
-            console.log('Error 403');
+            console.error('Error 403');
         } else if (reqQuery.status == 500) {
-            console.log('Error 500. Ocurrió un error al procesar su solicitud.');
+            console.error('Error 500. Ocurrió un error al procesar su solicitud.');
         }
         return resQuery;
     }
     catch(error) {
-        console.log('Error al consultar el reporte', error);
+        console.error('Error al consultar el reporte', error);
     }
 }
 

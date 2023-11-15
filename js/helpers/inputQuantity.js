@@ -4,8 +4,8 @@ import getPriceInRange from "./getPriceInRange.js"
 import getConfigCurrency from "./getConfigCurrency.js"
 import ExpiringLocalStorage from "../components/localStore/ExpiringLocalStorage.js"
 
-const inputQuantity = async (clienteID) => {
-  const quotatioviewQuantity = document.querySelectorAll(".quotatioview--quantity")
+const inputQuantity = async (section, clienteID) => {
+  const quotatioviewQuantity = section.querySelectorAll(".quotatioview--quantity")
   const client = await getInfoUser(clienteID); 
 
   quotatioviewQuantity.forEach(async (item) => { 
@@ -24,8 +24,8 @@ const inputQuantity = async (clienteID) => {
             const prices = await getServicePrices(productId, client)
             const priceUni = getPriceInRange(prices, inputValue);
             const configCurrency = getConfigCurrency(client.currency)
-            const subtotalProductsElement = document.querySelector('.subtotal-products');
-            const rangeInput = document.querySelector('#rangeInput');
+            const subtotalProductsElement = section.querySelector('.subtotal-products');
+            const rangeInput = section.querySelector('#rangeInput');
             let price
             if(client.currency === "COP") {
               price = priceUni.replace(".", "")
@@ -48,7 +48,7 @@ const inputQuantity = async (clienteID) => {
             if (subTotalElement) {
               subTotalElement.textContent = SubTotal.toLocaleString();
             }
-            const totalSum = sumSubTotalValues(client.currency);
+            const totalSum = sumSubTotalValues(section, client.currency);
             if (subtotalProductsElement) {
               subtotalProductsElement.textContent = totalSum.toLocaleString();
             } 
@@ -104,8 +104,8 @@ const getNumberFromTextFloat = (text) => {
 }
 
 
-const sumSubTotalValues = (currency) => {
-  const subTotalElements = document.querySelectorAll('.sub-total');
+const sumSubTotalValues = (section, currency) => {
+  const subTotalElements = section.querySelectorAll('.sub-total');
   let totalSum = 0;
   let value = 0;
   subTotalElements.forEach((element) => {

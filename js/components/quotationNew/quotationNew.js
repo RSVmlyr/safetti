@@ -257,7 +257,6 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   //-edwin  
   //-edwin quotationewCalculationDiscount.textContent = resQueryUser.specialDiscount ? resQueryUser.specialDiscount + '%' : '0%'
   // Special Discount
-  console.log("..debug", resQueryUser);
   const quotationCalculation = new QuotationCalculation(resQueryUser);
 
   const quotationBtnSave =  quotationNew.querySelector('#quotation--btn__save')

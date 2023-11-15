@@ -210,7 +210,6 @@ const reportQuotationsViewPage = async () => {
         }
 
         const generateQuotationReportFile = async (el,) => {
-            console.log(el);
             const fromInput = document.getElementById("fromReport");
             const toInput = document.getElementById("toReport");
             const urlQuery = `/api/report/quotationsfile/${fromInput.value}/${toInput.value}`;

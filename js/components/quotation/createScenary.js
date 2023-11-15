@@ -158,9 +158,9 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
           location.reload();
         }, 1000);
       })
-
+      const userId = localStorage.getItem("current")
       quotationBtnApproved.addEventListener('click', () => {
-        statusQuotationS(cot.id, 2)
+        statusQuotationS(cot.id, 2, userId)
         setTimeout(() => {
           location.reload();
         }, 1000);
@@ -319,7 +319,6 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
       const emailSendNodes = () => {
         const idEmail = quotation.querySelectorAll('.scenary--quotation--email')
         idEmail.forEach(email => {
-          console.log(email);
           const scenaryQuotationSendData = email.querySelector('.scenary--quotation--send--data')
             sendEmailHelper(email, scenaryQuotationSendData)
         });

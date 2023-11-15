@@ -54,15 +54,10 @@ class App {
       if (this.quotationNew) {
         const btnBack_ = document.querySelector('#quotationew--back')
         btnBack_.setAttribute('href', '/index.html?uid=' + resQueryUser.id);
-
         const sliderProducts = this.quotationNew.querySelector('.slider--productos .slider--content');
         sliderProducts.insertAdjacentHTML('afterbegin', '<img class="quotation--loading qnimage--auto" src="../img/icon/icon-spinner.gif">');
-
         const resQueryProducts = await getProduct();
         const resQueryClients = await getClients();
-
-        console.log(resQueryClients);
-
         const spinnerP = this.quotationNew.querySelector('.slider--productos .quotation--loading');
         spinnerP.remove();
 

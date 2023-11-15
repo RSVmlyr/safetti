@@ -4,7 +4,6 @@ const sendEmail = async (nodo, url, not) => {
   try {
     const urlQuerySendEmail = url
     const reqQuerySendEmail = await fetch(urlQuerySendEmail)
-    console.log('R', reqQuerySendEmail);
 
     if (reqQuerySendEmail.status === 200) {
       not.textContent = 'Enviado'
@@ -32,7 +31,7 @@ const sendEmail = async (nodo, url, not) => {
   }
   
   catch(error) {
-    console.log('No se pudo enviar el correo', error);
+    console.error('No se pudo enviar el correo', error);
   }
 }
 

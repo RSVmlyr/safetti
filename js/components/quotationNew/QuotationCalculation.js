@@ -297,7 +297,7 @@ class QuotationCalculation extends HTMLElement {
           const priceInRange = this.getPriceInRange(price, item.qt);
   
           if (priceInRange === undefined) {
-            console.log('Error en este producto:', item);
+            console.error('Error en este producto:', item);
             nodeNotification('Error en la información del producto');
             continue;
           }
@@ -319,7 +319,7 @@ class QuotationCalculation extends HTMLElement {
           const priceInRange = this.getPriceInRange(price, item.qt);
   
           if (priceInRange === undefined) {
-            console.log('Error en este producto:', item);
+            console.error('Error en este producto:', item);
             nodeNotification('Error en la información del producto');
             continue;
           }

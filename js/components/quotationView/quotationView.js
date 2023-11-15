@@ -36,7 +36,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
             <tbody>
                 <tr class="info-name" data-product-id="${producto.product}">
                     <td>${producto.productName}</td>
-                    <td>${producto.selectedMoldeCode}</td>
+                    <td id="product-molde">${producto.selectedMoldeCode}</td>
                     <td class="unit-value">
                         ${currency === 'COP' ? 
                             `$ ${producto.unitPrice.toLocaleString()}` : 
@@ -183,7 +183,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
         quotatioviewEdit.addEventListener('click', () => {
             if (!inputInserted) {
 
-                inputQuantity(quotation.client) 
+                inputQuantity(section, quotation.client) 
 
                 const newNode = document.createElement('div');
                 newNode.classList.add('quotatioview__title')
@@ -278,8 +278,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                 }
                 const expiringLocalStorage = new ExpiringLocalStorage()
                 const client = expiringLocalStorage.getDataWithExpiration('client')
-                const productData = getProductData();
-                console.log(productData.products);
+                const productData = getProductData(section);
                 const putBodyScenary = {
                     "id": infoQuotation[i].id,
                     "name": nameInput.value,
@@ -289,7 +288,6 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                     "rol": client.rol,
                     "products": productData.products
                 }
-                console.log(putBodyScenary);
                 putScenario(putBodyScenary)
             })
         }
@@ -298,20 +296,21 @@ const quotationView = async (node, quotation ,infoQuotation) => {
 };
 
 
-const getProductData = () => {
+const getProductData = (section) => {
     const products = [];
-    const table = document.querySelector('.quotatioview__table');
+    const table = section.querySelector('.quotatioview__table');
   
     if (table) {
       const rows = table.querySelectorAll('.info-name');
       rows.forEach((row) => {
         const productId = row.getAttribute('data-product-id');
+        const productMolde = row.querySelector("#product-molde")
         const parentInfoName = row.closest('.info-name');
         const quantityInput = parentInfoName.querySelector('.quotatioview--quantity');
         const quantity = quantityInput ? quantityInput.value : '';
         if (productId && quantity) {
           products.push({
-            molde: productId,
+            molde: productMolde.textContent,
             quantity: parseInt(quantity, 10),
           });
         }
