@@ -15,6 +15,7 @@ const inputQuantity = async (section, clienteID) => {
     let delayTimer;
     if (item.hasAttribute("readonly")) {
       item.removeAttribute("readonly");
+      item.classList.remove("none");
     }
     item.addEventListener('input', async (event) => {
       const inputValue = event.target.value;

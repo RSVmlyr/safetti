@@ -164,3 +164,14 @@ input[type="number"] {
   max-width: 30px;
   text-align: center;
 }
+.none{
+  appearance: none;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  color: #727272;
+}
+.none:focus{
+  border: none;
+  outline: none;
+}

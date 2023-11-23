@@ -43,7 +43,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                             `$ ${producto.unitPrice.toFixed(2).toLocaleString()}`}
                     </td>
                     <td>
-                        <input type="number" value="${producto.quantity.toLocaleString()}"  class="quotatioview--quantity" readonly />
+                        <input type="number" value="${producto.quantity.toLocaleString()}"  class="quotatioview--quantity none" readonly />
                     </td>
                     <td class="sub-total">
                         ${currency === 'COP' ? 
