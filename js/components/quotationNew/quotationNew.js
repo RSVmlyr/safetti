@@ -328,12 +328,16 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   }
 
   quotationBtnSave.addEventListener('click', () => {
+    quotationBtnSave.disabled = true
     const btnSave = () => {
       if (resQueryUser.rol !== 'advisors') {
         if (quotationewname) {
           if (quotationewname.value == '') {
             quotationewname.classList.add('error')
             nodeNotification('Los campos marcados con * son obligatorios')
+            setTimeout(() => {
+              quotationBtnSave.disabled = false
+            }, 2000);
           }
         }
       } else {
@@ -352,10 +356,12 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
               quotationewSearchClient.classList.add('quotation-hide')
             }
             nodeNotification('Los campos marcados con * son obligatorios');
+            setTimeout(() => {
+              quotationBtnSave.disabled = false
+            }, 2000);
           } else {
             quotationewSearchClient.classList.add('quotation-hide')
             quotationewInfoOne.classList.add('quotation-hide')
-
             quotationewname.classList.remove('error');
             quotatioNewClient.classList.remove('error');
             expiringLocalStorage.saveDataWithExpiration("NameQuotation", JSON.stringify(quotationewname.value));
@@ -370,6 +376,9 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
             quotatioewScenary.classList.add('error');
             quotatioewScenaryError.classList.remove('quotation-hide')
             nodeNotification('Los campos marcados con * son obligatorios')
+            setTimeout(() => {
+              quotationBtnSave.disabled = false
+            }, 2000);
           } else {
             quotatioewScenaryError.classList.add('quotation-hide')
             expiringLocalStorage.saveDataWithExpiration("NameScenary", JSON.stringify(quotatioewScenaryNode.value))
@@ -377,13 +386,11 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
           quotationCalculation.SendNewScenary(resQueryUser, quotationIva.checked, cotId, quotatioewScenary.value)
         }
       } else {
-
         quotationCalculation.SendNewQuotation(resQueryUser, quotationIva.checked, quotationewname.value, idQuotationComments.value );
       }
     }
     btnSave()
-  });
-  
+  });  
 }
 
 export default quotationNewPage

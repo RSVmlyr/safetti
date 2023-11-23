@@ -71,6 +71,13 @@ body {
     color: $white;
     background-color: $black;
     cursor: pointer;
+    &.disabled {
+      background-color: #ccc; 
+      color: #666; 
+      cursor: not-allowed; 
+      border: 1px solid #999; 
+      opacity: 0.6; 
+    }
   }
   &__add {
     background-color: $white;

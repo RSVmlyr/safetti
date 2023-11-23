@@ -289,10 +289,18 @@ const quotationView = async (node, quotation ,infoQuotation) => {
 
         if (quotationBtnSave) {
             quotationBtnSave.addEventListener('click', () => {
+                quotationBtnSave.classList.add("disabled")
+                console.log("debug...");
                 if (nameInput.value === '') {
                     nodeNotification('El campo NOMBRE DEL ESCENARIO es obligatorio.')
+                    setTimeout(() => {
+                        quotationBtnSave.disabled = false
+                    }, 2000);
                 } else if (rangeInput.value === '') {
                     nodeNotification('El campo DESCUENTO del escenario es obligatorio.')
+                    setTimeout(() => {
+                        quotationBtnSave.disabled = false
+                    }, 2000);
                 }
                 const expiringLocalStorage = new ExpiringLocalStorage()
                 const client = expiringLocalStorage.getDataWithExpiration('client')

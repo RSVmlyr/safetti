@@ -7,7 +7,6 @@ const qnaddproduct = () => {
     const ClientFullName = expiringLocalStorage.getDataWithExpiration('ClientFullName')
     const client = JSON.parse(ClientFullName)
     const quotationIva = document.querySelector('.quotation--iva')
-console.log(client);
     if(client) {
         if(client[0].currency === "COP") {
             quotationIva.checked = true
