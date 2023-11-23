@@ -39,7 +39,7 @@
         <span>Atrás</span>
       </a>
       <div class="quotationew__title">
-        <h2 class="quotation--title">Nuev...</h2>
+        <h2 class="quotation--title"></h2>
       </div>
     </div>
     <div class="region region__two">
@@ -47,11 +47,11 @@
         <div class="quotationew__infoOne">
           <label>Nombre del proyecto: <span>*</span></label>
           <span class="error-input-name quotation-hide">Este campo es obligatorio.</span>
-          <input id="quotationewname" type="text" placeholder="Nombre del proyecto" required>
+          <input id="quotationewname" type="text" placeholder="Escribe el nombre del proyecto" required>
         </div>
         <div class="quotationew__infoTwo quotationcomments quotation-hide">
           <label>Comentarios:</label>
-          <input id="quotationcomments" type="text" placeholder="...">
+          <input id="quotationcomments" type="text" placeholder="Escribe algún comentario que permita indentificar mejor tu proyecto.">
         </div>
       </div>
     </div>
@@ -59,7 +59,8 @@
       <div class="region region--left">
         <div class="quotationew__filter">
           <div class="quotationew__filter--input">
-            <input id="qnsearchproduct" type="text" placeholder="Nombre / referencia" >
+            <label for="qnsearchproduct">Busca por nombre o molde del producto:</label>
+            <input id="qnsearchproduct" type="text" placeholder="Nombre / Molde" >
           </div>
           <div class="quotationew__filter--selects">
             <label for="qncuentos">Deporte:</label>
@@ -83,6 +84,9 @@
         </div>
       </div>
       <div class="region region--right">
+        <h2 class="products--title">
+            Lista de productos para personalizar
+        </h2>
         <div class="slider--productos">
           <div class="slider--content"></div>
         </div>

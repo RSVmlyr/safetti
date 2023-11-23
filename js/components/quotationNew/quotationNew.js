@@ -110,8 +110,8 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   if (resQueryUser.rol === 'advisors' && cotId === null) {
     let quotatioNewSearchClient =
     `<div class='quotationew__searchclient'>
-      <label for='quotationewclient'>Buscar Cliente: <span>*</span></label>
-      <input id="quotationewclient" type="text" placeholder="Escribe el Nombre del cliente" required>
+      <label for='quotationewclient'>Nombre del cliente: <span>*</span></label>
+      <input id="quotationewclient" type="text" placeholder="Busca por el nombre del cliente" required>
       <span class="error-input quotation-hide">Este campo es obligatorio.</span>
       <ul id="quotationewsearchclient"></ul>
      </div>
