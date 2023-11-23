@@ -60,11 +60,8 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   localStorage()
 
   if(cotId && resQueryUser.rol === 'advisors'){
-
-    //llamar servicio
     const getUserCurren = async (id) => {
-      const user = await getUser(id) 
-
+      const user = await getUser(id)
       const dataClientStorage = [
         {
           id: user.id,
@@ -111,7 +108,6 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   }
 
   if (resQueryUser.rol === 'advisors' && cotId === null) {
-
     let quotatioNewSearchClient =
     `<div class='quotationew__searchclient'>
       <label for='quotationewclient'>Buscar Cliente: <span>*</span></label>
@@ -306,12 +302,32 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
     }
   }
 
-  const quotationewCalculationDiscountValue = resQueryUser.rol !== 'advisors' ? resQueryUser.specialDiscount : false
   const quotationIva = quotationNew.querySelector('.quotation--iva')
-
+  const ClientFullName = expiringLocalStorage.getDataWithExpiration('ClientFullName')
+  console.log(resQueryUser)
   
-  quotationBtnSave.addEventListener('click', () => {
+  if(resQueryUser.rol === "advisors") {
+    quotationIva.disabled = false
+  } else {
+    quotationIva.disabled = true
+  }
+  if(resQueryUser.currency === "COP") {
+    quotationIva.checked = true
+  } else {
+    quotationIva.checked = false
+  }
+  if (ClientFullName) {
+    const client = JSON.parse(ClientFullName)
+    if(client.length > 0){
+      if(client[0].currency === "COP") {
+        quotationIva.checked = true
+      } else {
+        quotationIva.checked = false
+      }
+    }
+  }
 
+  quotationBtnSave.addEventListener('click', () => {
     const btnSave = () => {
       if (resQueryUser.rol !== 'advisors') {
         if (quotationewname) {
@@ -364,11 +380,8 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
 
         quotationCalculation.SendNewQuotation(resQueryUser, quotationIva.checked, quotationewname.value, idQuotationComments.value );
       }
-
     }
-
     btnSave()
-
   });
   
 }

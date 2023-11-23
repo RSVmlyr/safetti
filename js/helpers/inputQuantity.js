@@ -7,6 +7,9 @@ import ExpiringLocalStorage from "../components/localStore/ExpiringLocalStorage.
 const inputQuantity = async (section, clienteID) => {
   const quotatioviewQuantity = section.querySelectorAll(".quotatioview--quantity")
   const client = await getInfoUser(clienteID); 
+  const quotatioviewValueTotal = section.querySelector(".quotatioview__valueTotal")
+  const quotatioview__withdiscount = section.querySelector(".quotatioview__withdiscount")
+  const ivaProductsValue = section.querySelector(".iva__products-value")
 
   quotatioviewQuantity.forEach(async (item) => { 
     let delayTimer;
@@ -56,6 +59,8 @@ const inputQuantity = async (section, clienteID) => {
               const event = new Event('input');
               rangeInput.dispatchEvent(event);
             }
+            const Total = getNumberFromText(quotatioview__withdiscount.textContent) + getNumberFromText(ivaProductsValue.textContent)
+            quotatioviewValueTotal.textContent = Total.toLocaleString()
 
           } catch (error) {
             console.error('Error al obtener información del usuario:', error);

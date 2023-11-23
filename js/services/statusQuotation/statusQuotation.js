@@ -16,7 +16,7 @@ const statusQuotationS = async (Qid, status, userId) => {
 
 
   } catch (error) {
-    console.log('No se pudo cancelar la cotización', error);
+    console.error('No se pudo cancelar la cotización', error);
   }
 };
 

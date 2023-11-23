@@ -494,7 +494,6 @@ class QuotationCalculation extends HTMLElement {
           this.insertList()
           this.sumar()
         });
-        
       })
     });
   }

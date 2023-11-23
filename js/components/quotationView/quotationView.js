@@ -121,6 +121,18 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                             </div>
                         </td>
                     </tr>
+                    <tr class="iva__products">
+                        <td class="quotatioview__title--table">IVA (19%)
+                            ${element.taxIVA !== 0 ? 
+                            `<input type="checkbox" class="quotatioview--iva quotation-hide" checked>` : 
+                            `<input type="checkbox" class="quotatioview--iva quotation-hide">`}
+                        </td>
+                        <td>
+                            <div>
+                                <span class="iva__products-value">${element.taxIVA.toLocaleString()}</span>
+                            </div>
+                        </td>
+                    </tr>
                     <!-- Puedes agregar más filas aquí -->
                 </tbody>
             </table>
@@ -129,7 +141,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
             <table class="quotatioview__table table__total">
             <thead>
                 <tr>
-                    <th>
+                    <th class="d-none">
                         <span>Total</span>
                         <div class="quotatioview__iva">
                             <span>IVA (19%)</span>
@@ -139,6 +151,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                         </div>
                     </th>
                     <th>
+                        <span>Total:</span>
                         <span class="quotatioview__valueTotal">
                             ${currency === 'COP' ? 
                                 ` ${element.subtotalWithTaxIVA.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)}` : 
@@ -210,6 +223,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
 
                 const mostrarEstadoCheckbox = (discountWithTotal) => {
                     const dataValueDis = typeof discountWithTotal === 'string' ? discountWithTotal.replace(/,/g, '') : discountWithTotal
+                    const ivaProductsValue = section.querySelector('.iva__products-value')
                     let dN = 0;
                     let dataValueDisTotal
                     if (currency === 'COP') {
@@ -224,9 +238,13 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                     if (quotatioviewIva.checked) {
                         const calculateIva = (dN * 19) / 100                        
                         const calculateIvaTotal = (dN + calculateIva)
+
+                        ivaProductsValue.innerHTML = currency === 'COP' ? calculateIva.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales) : calculateIva.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)
                         quotatioviewValueTotal.innerHTML = currency === 'COP' ? calculateIvaTotal.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales) : calculateIvaTotal.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)
                         //}
                     } else {
+                        const calculateIva = 0
+                        ivaProductsValue.innerHTML = currency === 'COP' ? calculateIva.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales) : calculateIva.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)
                         if(rangeInput.value == infoQuotation[i].discountPercent) {
                             quotatioviewValueTotal.innerHTML = currency === 'COP' ? infoQuotation[i].subtotalWithDiscount.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales) : dN.toFixed(2).toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)
                         } else {
