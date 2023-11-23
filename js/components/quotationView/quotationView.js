@@ -79,7 +79,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
             <hr>
                 <tbody>
                     <tr>
-                        <td class="quotatioview__title--table">Costo Productos</td>
+                        <td class="quotatioview__title--table">Subtotal</td>
                         <td>
                             <div>
                                 <span>$</span>
