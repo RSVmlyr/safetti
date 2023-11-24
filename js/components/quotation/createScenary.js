@@ -142,6 +142,8 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
       }
 
       if(currentRol !== 'advisors' && quotationBtnNe) {
+        const scenaryDataActions = quotation.querySelector('.scenary--data__actions')
+        scenaryDataActions.remove()
         quotationBtnNe.remove()
       }
 
