@@ -3,6 +3,12 @@
   height: auto;
   .region {
     &__one {
+      .quotationew__title--container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
       .region__status {
         display: flex;
         align-items: center;
@@ -14,16 +20,6 @@
           font-size: 12px;
           font-weight: 700;
         }
-      }
-    }
-    &__two {
-      max-width: 90%;
-      margin: auto;
-      .quotationew__title--container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 33px;
       }
     }
   }
