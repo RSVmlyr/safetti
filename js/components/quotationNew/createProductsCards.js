@@ -7,6 +7,7 @@ import QuotationCalculation from './QuotationCalculation.js';
 import nodeNotification from '../../helpers/nodeNotification.js'
 import qnaddproduct from "../../helpers/qnaddproduct.js"
 import Login from "../../login/login.js";
+import { config } from "../../../config.js"
 
 const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
   if(resQueryUser.rol != "advisors") {
@@ -32,8 +33,6 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
 
     resQueryProducts.products.forEach((pro, index) => {
       const firstNonNullKey = getFirstNonNullKey(pro);
-      console.log("firstNonNullKey", firstNonNullKey);
-
       // Short description
       let description = pro.description ? pro.description.substring(0, 40) : '';
       if (pro.description && pro.description.length > 40) {
@@ -42,7 +41,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
       // Short description+
       // Get URL Image
       let mainImage = pro.mainImage ? pro.mainImage : '../img/icon/image-product.jpg';
-      const originUrlPath = 'https://dev-co-safetti-b2b.pantheonsite.io/sites/default/files/';
+      const originUrlPath = config.API_DEV_IMAGE + '/sites/default/files/';
       let modifiedStringImage = mainImage.replace('public://', originUrlPath);
       modifiedStringImage = modifiedStringImage.replace(/ /g, '%20');   
             console.log(pro);
@@ -74,7 +73,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
               <span class="card--amount__title">Hombre</span>
               <div class="card--amount__input">
                 <button class="qnManDecrease">-</button>
-                <input class="qnManInput" type="number" name="qnManInput" value="${pro.minQuantity}" min="0">
+                <input class="qnManInput colombiaMan" type="number" name="qnManInput" value="${'colombiaMan' === firstNonNullKey ? pro.minQuantity : 0}" min="0">
                 <button class="qnManIncrease">+</button>
               </div>
             </div>
@@ -83,7 +82,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
               <span class="card--amount__title">Mujer</span>
               <div class="card--amount__input">
                 <button class="qnWomanDecrease">-</button>
-                <input class="qnWomanInput" type="number" name="qnWomanInput" value="${pro.minQuantity}" min="0">
+                <input class="qnWomanInput colombiaWoman" type="number" name="qnWomanInput" value="${'colombiaWoman' === firstNonNullKey ? pro.minQuantity : 0}" min="0">
                 <button class="qnWomanIncrease">+</button>
               </div>
             </div>
@@ -92,7 +91,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
               <span class="card--amount__title">Unisex</span>
               <div class="card--amount__input">
                 <button class="qnUnisexDecrease">-</button>
-                <input class="qnUnisexInput" type="number" name="qnUnisexInput" value="${pro.minQuantity}" min="0">
+                <input class="qnUnisexInput colombiaUnisex" type="number" name="qnUnisexInput" value="${'colombiaUnisex' === firstNonNullKey ? pro.minQuantity : 0}" min="0">
                 <button class="qnUnisexIncrease">+</button>
               </div>
             </div>
@@ -101,7 +100,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
               <span class="card--amount__title">Junior</span>
               <div class="card--amount__input">
                 <button class="qnJuniorDecrease">-</button>
-                <input class="qnJuniorInput" type="number" name="qnJuniorInput" value="${pro.minQuantity}" min="0">
+                <input class="qnJuniorInput colombiaJunior" type="number" name="qnJuniorInput" value="${'colombiaJunior' === firstNonNullKey ? pro.minQuantity : 0}" min="0">
                 <button class="qnJuniorIncrease">+</button>
               </div>
             </div>
@@ -342,7 +341,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
 
                 // Get URL Image
                 let mainImage = e.imageUrl ? e.imageUrl : '../img/icon/image-product.jpg'
-                const originUrlPath = 'https://dev-co-safetti-b2b.pantheonsite.io/sites/default/files/';
+                const originUrlPath = config.API_DEV_IMAGE + '/sites/default/files/';
                 let modifiedStringImage = mainImage.replace('public://', originUrlPath);
                 modifiedStringImage = modifiedStringImage.replace(/ /g, '%20');
                 const image = document.createElement('img')
