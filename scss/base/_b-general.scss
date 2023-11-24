@@ -175,3 +175,23 @@ input[type="number"] {
   border: none;
   outline: none;
 }
+
+.floating-button {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  background-color: $c1;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+  z-index: 2;
+  text-decoration: none;
+}
+
+.floating-button:hover {
+  background-color: $black;
+}

@@ -129,7 +129,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                         </td>
                         <td>
                             <div>
-                                <span class="iva__products-value">${element.taxIVA.toLocaleString()}</span>
+                                <span class="sign-remove">$ </span><span class="iva__products-value">${element.taxIVA.toLocaleString()}</span>
                             </div>
                         </td>
                     </tr>
@@ -194,6 +194,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
         let rangeInput
         let inputInserted = false;
         quotatioviewEdit.addEventListener('click', () => {
+            quotatioviewEdit.remove()
             if (!inputInserted) {
                 inputQuantity(section, quotation.client) 
                 const newNode = document.createElement('div');
@@ -220,6 +221,10 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                     const textContent = qncurrencyElement.textContent.trim();
 
                 const mostrarEstadoCheckbox = (discountWithTotal) => {
+                    const signRemove = section.querySelector(".sign-remove")
+                    if(signRemove) {
+                        signRemove.remove()
+                    }
                     const dataValueDis = typeof discountWithTotal === 'string' ? discountWithTotal.replace(/,/g, '') : discountWithTotal
                     const ivaProductsValue = section.querySelector('.iva__products-value')
                     let dN = 0;
