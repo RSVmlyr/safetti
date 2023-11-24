@@ -99,8 +99,8 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
     const quotationewInfo = quotationNew.querySelector('.quotationew__info')
     let quotatioNewInfoTwo =
     `<div class="quotationew__infoTwo">
-      <label class="quotation--title__quo" for='quotationewscenary'>Nombre del Escenario: <span>*</span></label>
-      <input id="quotationewscenary" type="text" placeholder="Nombre Escenario" required>
+      <label class="quotation--title__quo" for='quotationewscenary'>Nombre del escenario: <span>*</span></label>
+      <input id="quotationewscenary" type="text" placeholder="Escribe el nombre del escenario" required>
       <span class="error-input quotation-hide">Este campo es obligatorio.</span>
     </div>
     `
