@@ -451,7 +451,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
 
   } else {
     const sliderProducts = quotationNew.querySelector('.slider--productos .slider--content')
-    sliderProducts.insertAdjacentHTML('afterbegin', '<div class="quotation--loading"><span class="quotation--title">No hay Productos...</span></div>')  
+    sliderProducts.insertAdjacentHTML('afterbegin', '<div class="quotation--loading"><span class="quotation--title">No hay productos con los filtros ingresados</span></div>')  
   }
 
 }
