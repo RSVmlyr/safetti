@@ -37,7 +37,6 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   const qnbusinessname = quotationNew.querySelector('#qnbusinessname')
   const qnrol = quotationNew.querySelector('#qnrol')
   idQnDate.innerHTML = 'Creación: ' + dateFormat(dateCurrent)
-  console.log(resQueryProducts);
   if(resQueryUser.rol === 'advisors') {
     qnrol.classList.remove('quotation-hide')
   } 
@@ -304,7 +303,6 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
 
   const quotationIva = quotationNew.querySelector('.quotation--iva')
   const ClientFullName = expiringLocalStorage.getDataWithExpiration('ClientFullName')
-  console.log(resQueryUser)
   
   if(resQueryUser.rol === "advisors") {
     quotationIva.disabled = false

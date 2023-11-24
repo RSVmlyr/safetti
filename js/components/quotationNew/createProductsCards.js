@@ -44,7 +44,6 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
       const originUrlPath = config.API_DEV_IMAGE + '/sites/default/files/';
       let modifiedStringImage = mainImage.replace('public://', originUrlPath);
       modifiedStringImage = modifiedStringImage.replace(/ /g, '%20');   
-            console.log(pro);
       let sliderRow = 
       `<div class="slider--row">
         <div class="card">
@@ -194,16 +193,12 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           nodeNotification(`Las cantidad debe ser mayor o igual a ${minQuantity}`)
         }
         const sumaPorId = {};
-        console.log(sumaPorId);
         product.forEach(p => {
           const { id, quantity, minQuantity, productName } = p;
-          console.log(id);
           if (!sumaPorId[id]) {
             sumaPorId[id] = 0;
           }
           sumaPorId[id] += parseInt(quantity);
-          console.log(quantity);
-          console.log(sumaPorId[id]);
 
           if (sumaPorId[id] < minQuantity) {
             nodeNotification(`Las cantidad debe ser mayor o igual a ${minQuantity}`)

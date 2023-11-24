@@ -293,7 +293,6 @@ const quotationView = async (node, quotation ,infoQuotation) => {
         if (quotationBtnSave) {
             quotationBtnSave.addEventListener('click', () => {
                 quotationBtnSave.classList.add("disabled")
-                console.log("debug...");
                 if (nameInput.value === '') {
                     nodeNotification('El campo NOMBRE DEL ESCENARIO es obligatorio.')
                     setTimeout(() => {
