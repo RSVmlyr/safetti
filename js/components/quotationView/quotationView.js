@@ -195,9 +195,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
         let inputInserted = false;
         quotatioviewEdit.addEventListener('click', () => {
             if (!inputInserted) {
-
                 inputQuantity(section, quotation.client) 
-
                 const newNode = document.createElement('div');
                 newNode.classList.add('quotatioview__title')
                 newNode.innerHTML = inputNameScenary.trim();

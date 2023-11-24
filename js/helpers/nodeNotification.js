@@ -13,7 +13,7 @@ const nodeNotification = (text) => {
     if (notification) {
       notification.remove()
     }
-  }, 2000);
+  }, 3000);
 }
 
 export default nodeNotification

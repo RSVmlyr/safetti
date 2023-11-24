@@ -19,9 +19,20 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
   const loading = quotationNew.querySelector('.slider--productos .slider--content .quotation--loading')
   loading ? loading.remove() : false
 
+  function getFirstNonNullKey(obj) {
+    const keysToCheck = ["colombiaJunior", "colombiaMan", "colombiaWoman", "colombiaUnisex", "canadaMan", "canadaWoman", "vR7Man", "vR7Woman"];
+    for (const key of keysToCheck) {
+      if (obj[key] !== null) {
+        return key;
+      }
+    }
+    return null;
+  }
   if (resQueryProducts.products.length > 0) {
 
     resQueryProducts.products.forEach((pro, index) => {
+      const firstNonNullKey = getFirstNonNullKey(pro);
+      console.log("firstNonNullKey", firstNonNullKey);
 
       // Short description
       let description = pro.description ? pro.description.substring(0, 40) : '';
@@ -34,7 +45,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
       const originUrlPath = 'https://dev-co-safetti-b2b.pantheonsite.io/sites/default/files/';
       let modifiedStringImage = mainImage.replace('public://', originUrlPath);
       modifiedStringImage = modifiedStringImage.replace(/ /g, '%20');   
-  
+            console.log(pro);
       let sliderRow = 
       `<div class="slider--row">
         <div class="card">
@@ -63,7 +74,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
               <span class="card--amount__title">Hombre</span>
               <div class="card--amount__input">
                 <button class="qnManDecrease">-</button>
-                <input class="qnManInput" type="number" name="qnManInput" value="0" min="0">
+                <input class="qnManInput" type="number" name="qnManInput" value="${pro.minQuantity}" min="0">
                 <button class="qnManIncrease">+</button>
               </div>
             </div>
@@ -72,7 +83,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
               <span class="card--amount__title">Mujer</span>
               <div class="card--amount__input">
                 <button class="qnWomanDecrease">-</button>
-                <input class="qnWomanInput" type="number" name="qnWomanInput" value="0" min="0">
+                <input class="qnWomanInput" type="number" name="qnWomanInput" value="${pro.minQuantity}" min="0">
                 <button class="qnWomanIncrease">+</button>
               </div>
             </div>
@@ -81,7 +92,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
               <span class="card--amount__title">Unisex</span>
               <div class="card--amount__input">
                 <button class="qnUnisexDecrease">-</button>
-                <input class="qnUnisexInput" type="number" name="qnUnisexInput" value="0" min="0">
+                <input class="qnUnisexInput" type="number" name="qnUnisexInput" value="${pro.minQuantity}" min="0">
                 <button class="qnUnisexIncrease">+</button>
               </div>
             </div>
@@ -90,7 +101,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
               <span class="card--amount__title">Junior</span>
               <div class="card--amount__input">
                 <button class="qnJuniorDecrease">-</button>
-                <input class="qnJuniorInput" type="number" name="qnJuniorInput" value="0" min="0">
+                <input class="qnJuniorInput" type="number" name="qnJuniorInput" value="${pro.minQuantity}" min="0">
                 <button class="qnJuniorIncrease">+</button>
               </div>
             </div>
@@ -116,14 +127,8 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
       const cardAddProducts = quotationNew.querySelector('.card .qnaddproducts')
       const sliderProductsRow = quotationNew.querySelector('.slider--productos .slider--content .slider--row')
       cardAddProducts.addEventListener('click', (e) => {
-        // Delete other childs
-        // const sliderProductsRows = quotationNew.querySelectorAll('.slider--productos .slider--content .slider--row')
-        // sliderProductsRows.forEach(otherRow => {
-        //   otherRow.classList.remove('active') 
-        // });
         e.target ? sliderProductsRow.classList.add('active') : false
         localStorage()
-
       })
       const button = quotationNew.querySelector('.qnaceptproduct');     
       button.addEventListener('click', (e) => {
@@ -134,8 +139,6 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         const unisexInput = parentElement.querySelector('.qnUnisexInput');
         const juniorInput = parentElement.querySelector('.qnJuniorInput');
 
-        const a = countrySelect.value
-
         const product = [];
         if (manInput.value > 0) {
           product.push({
@@ -144,6 +147,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             productName: pro.name,
             selectedMoldeCode: pro[countrySelect.value + 'Man'],
             quantity: manInput.value,
+            minQuantity: pro.minQuantity
           });
         }
         
@@ -154,6 +158,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             productName: pro.name,
             selectedMoldeCode: pro[countrySelect.value + 'Woman'],
             quantity: womanInput.value,
+            minQuantity: pro.minQuantity
           });
         }
         
@@ -164,6 +169,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             productName: pro.name,
             selectedMoldeCode: pro[countrySelect.value + 'Unisex'],
             quantity: unisexInput.value,
+            minQuantity: pro.minQuantity
           });
         }
         
@@ -174,6 +180,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             productName: pro.name,
             selectedMoldeCode: pro[countrySelect.value + 'Junior'],
             quantity: juniorInput.value,
+            minQuantity: pro.minQuantity
           });
         }
 
@@ -184,9 +191,29 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           juniorInput.value = 0
           sliderProductsRow.classList.remove('active')
         }, 1000);        
-        nodeNotification('Agregando producto a la lista...')
-        const quotationCalculation = new QuotationCalculation(resQueryUser);
-        quotationCalculation.createArrayProducto(product);
+        if(product.length <= 0) {
+          nodeNotification(`Las cantidad debe ser mayor o igual a ${minQuantity}`)
+        }
+        const sumaPorId = {};
+        console.log(sumaPorId);
+        product.forEach(p => {
+          const { id, quantity, minQuantity, productName } = p;
+          console.log(id);
+          if (!sumaPorId[id]) {
+            sumaPorId[id] = 0;
+          }
+          sumaPorId[id] += parseInt(quantity);
+          console.log(quantity);
+          console.log(sumaPorId[id]);
+
+          if (sumaPorId[id] < minQuantity) {
+            nodeNotification(`Las cantidad debe ser mayor o igual a ${minQuantity}`)
+          } else {
+            const quotationCalculation = new QuotationCalculation(resQueryUser);
+            quotationCalculation.createArrayProducto(product);
+            nodeNotification('Agregando producto a la lista...')
+          }
+        });
       });
   
       // Card button Cancelar
@@ -341,10 +368,6 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
       const idQnCountry = quotationNew.querySelector('.qncountry')
       const countryName = ['colombia', 'canada', 'vR7']
       fillSelectProduct(idQnCountry, countryName)
-  
-      // countryValidate
-      // countryValidate
-      // countryValidate
 
       if (pro.colombiaMan === null && pro.colombiaWoman === null && pro.colombiaUnisex === null && pro.colombiaJunior === null) {
         const optionToRemove = 'colombia';
