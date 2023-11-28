@@ -9,6 +9,8 @@ const liteStatusQuotation = (id) => {
    return('quotation--status--cancelled')
   }  else if (id === 4) {
     return('quotation--status--toconfirm')
+  }  else if (id === 5) {
+    return('quotation--status--validateadvance')
   } else {
     return('quotation--status--none')
   }
