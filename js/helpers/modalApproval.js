@@ -81,6 +81,8 @@ const modalApproval = (quotation, modal, open ) => {
         msgerror.classList.remove("d-none")
         msgerror.textContent = validate.msg
       } else {
+        console.log(mymodal.id)
+
         msgerror.classList.add("d-none")
         msgerror.textContent = validate.value
         const advance = validate.numberValue
