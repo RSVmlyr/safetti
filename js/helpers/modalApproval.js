@@ -1,5 +1,6 @@
 import statusQuotationS from "../services/statusQuotation/statusQuotation.js"
 import nodeNotification from "../helpers/nodeNotification.js";
+import validationQuotation from "../services/validation/validationQuotation.js";
 
 const validarFormulario = (mymodal) => {
   switch (mymodal.id) {
@@ -75,6 +76,8 @@ const modalApproval = (quotation, modal, open ) => {
       })
     }
     modalButtonSend.addEventListener("click", function (e) {
+      e.preventDefault()
+      const valueImage = mymodal.querySelector('.modal__input').files[0]
       const validate = validarFormulario(mymodal)
       const msgerror = mymodal.querySelector(".modal__form--error")
       if(!validate.value) {
@@ -83,13 +86,18 @@ const modalApproval = (quotation, modal, open ) => {
       } else {
         msgerror.classList.add("d-none")
         msgerror.textContent = validate.value
-        const advance = validate.numberValue
-        const status = 4
-        modalButtonSend.disabled = true
-        openModal.classList.add("loading")
-        closeModal.click()
-        console.log(Qid, status, userId, advance);
-        sendSatus(Qid, status, userId, advance)
+        if (mymodal.id === 'modal-file') {
+          const status = 2
+          validationQuotation(Qid, status, userId, valueImage)
+          console.log(valueImage);
+        } else {
+          const advance = validate.numberValue
+          const status = 4
+          modalButtonSend.disabled = true
+          openModal.classList.add("loading")
+          closeModal.click()
+          sendSatus(Qid, status, userId, advance)
+        }
       }
     })
   }

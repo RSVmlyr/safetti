@@ -101,7 +101,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                 <span class="quotation--info">Enviar para aprobación</span>
                 <img src='../../img/icon/check.svg' loading="lazy" alt="Aprobar" title="Aprobar">
               </a>
-              <a id="quotation--btn__approved-tmp" class="quotation--btn__file scenary--data__actionsDelete" href="#">
+              <a id="quotation--btn__approved-tmp" class="quotation--btn__file scenary--data__actionsDelete" href="#" data-cotid="${cot.id}">
                 <span class="quotation--info">Validar Anticipo</span>
                 <img src='../../img/icon/check.svg' loading="lazy" alt="Aprobar" title="Aprobar">
               </a>
