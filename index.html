@@ -62,11 +62,13 @@
     <div class="modal--container">
       <form class="modal__form">
         <div class="modal__form--header">
-          <button id="closeModalBtn" class="modal__button" type="button">Cerrar</button>
+          <h3>Enviar Aprobación</h3>
+          <button id="closeModalBtn" class="modal__button" type="button">&#10005;</button>
         </div>
         <div class="modal__form--content">
           <label class="modal__label" for="number">Ingresa el procentaje de anticipo (0-100):</label>
-          <input class="modal__input" type="number" id="number" name="number" min="0" max="10" required>
+          <input class="modal__input" type="number" id="number" name="number" min="0" max="10" required> %
+
         </div>
         <div class="modal__form--action">
           <div class="modal__form--left">
@@ -88,14 +90,15 @@
     <div class="modal--container">
       <form class="modal__form">
         <div class="modal__form--header">
-          <button id="closeModalBtn" class="modal__button" type="button">Cerrar</button>
+          <h3>Validar Anticipo</h3>
+          <button id="closeModalBtn" class="modal__button" type="button">&#10005;</button>
         </div>
         <div class="modal__form--content">
-          <label class="modal__label" for="imagen">Subir imagen:</label>
+          <label class="modal__label" for="imagen">Subir archivo: (Imagen ó PDF)</label>
           <input class="modal__input" type="file" id="imagen" name="imagen" accept="image/*">
 
-          <label class="modal__label" for="detalle">Detalles:</label>
-          <textarea class="modal__textarea" id="details" name="detalle" rows="4" placeholder="Ingrese detalle..."></textarea>
+          <label class="modal__label d-none" for="detalle">Detalles:</label>
+          <textarea class="modal__textarea d-none" id="details" name="detalle" rows="4" placeholder="Ingrese detalle..."></textarea>
         </div>
         <div class="modal__form--action">
           <div class="modal__form--left">
