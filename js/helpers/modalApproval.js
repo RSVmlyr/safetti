@@ -77,16 +77,18 @@ const modalApproval = (quotation, modal, open ) => {
     }
     modalButtonSend.addEventListener("click", function (e) {
       e.preventDefault()
-      const valueImage = mymodal.querySelector('.modal__input').files[0]
       const validate = validarFormulario(mymodal)
       const msgerror = mymodal.querySelector(".modal__form--error")
       if(!validate.value) {
         msgerror.classList.remove("d-none")
         msgerror.textContent = validate.msg
       } else {
+        console.log(mymodal.id)
+
         msgerror.classList.add("d-none")
         msgerror.textContent = validate.value
         if (mymodal.id === 'modal-file') {
+          const valueImage = mymodal.querySelector('.modal__input').files[0]
           const status = 2
           validationQuotation(Qid, status, userId, valueImage)
           console.log(valueImage);

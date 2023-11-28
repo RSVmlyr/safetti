@@ -9,6 +9,8 @@ const statusQuotation = (id, node) => {
     node ? node.classList.add('quotation--status--cancelled') : node.classList.add('quotation--status--none')
   } else if (id === 4) {
     node ? node.classList.add('quotation--status--toconfirm') : node.classList.add('quotation--status--none')
+  } else if (id === 5) {
+    node ? node.classList.add('quotation--status--validateadvance') : node.classList.add('quotation--status--none')
   }
 }
 
