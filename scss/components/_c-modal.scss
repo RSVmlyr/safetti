@@ -22,7 +22,7 @@
     right: 0;
     margin: auto;
     max-width: 600px;
-    padding: 20px 20px;
+    padding: 1px 20px 20px 20px;
   }
   &--container__body {
     display: flex;
@@ -127,15 +127,7 @@
     color: $c2;
     font-family: $FuturaMedium;
   }
-  &__form--header{
-    color:$black;
-    display: flex;
-    justify-content: space-between;
-    .modal__button {
-      margin: 0;
-      height: 35px;
-    }
-  }
+  
   &__form--header,
   &__form--action {
     .modal__button {
@@ -148,6 +140,15 @@
       margin: 0 0 0 auto;
       cursor: pointer;
       border-radius: 10px;
+    }
+  }
+  &__form--header{
+    color:$black;
+    display: flex;
+    justify-content: space-between;
+    .modal__button {
+      color: black;
+      background: transparent;
     }
   }
   &__form--left {
