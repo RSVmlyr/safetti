@@ -177,10 +177,11 @@ input[type="number"] {
 }
 
 .floating-button {
+  background-image: url('../img/icon/shopping-cart.png');
   position: fixed;
   right: 20px;
-  bottom: 20px;
-  background-color: $c1;
+  top: 50%;
+  background-color: $white;
   color: #fff;
   padding: 10px 20px;
   border: none;
@@ -188,10 +189,29 @@ input[type="number"] {
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s ease;
-  z-index: 2;
+  z-index: 6;
   text-decoration: none;
+  font-size: 0;
+  background-size: 30px;
+  width: 60px;
+  height: 60px;
+  background-repeat: no-repeat;
+  padding: 1.2rem;
+  border-radius: 50%;
+  background-position: center;
+  border: 2px solid $white;
+  .number {
+    position: absolute;
+    background: black;
+    font-size: 11px;
+    border-radius: 50%;
+    padding: 0.5rem 0.3rem;
+    right: -14px;
+    top: -14px;
+    width: 20px;
+  }
 }
 
 .floating-button:hover {
-  background-color: $black;
+  border: 3px solid $black;
 }

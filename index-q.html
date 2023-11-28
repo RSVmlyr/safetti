@@ -12,7 +12,7 @@
 <body>
 
 <main id="quotationew" class="quotationew">
-  <a class="floating-button" href="#car-safetti">Cart</a>
+   <button class="floating-button" onclick="scrollToTable()">Ir a la Tabla<span class="number">0</span></button>
   <section class="quotationew--header">
     <div class="region region--left">
       <span id="qndate" class="quotation--info__white">Creación: </span>
@@ -128,5 +128,14 @@
  
 <!-- JS -->
 <script asycn type="module" src="./js/app.js"></script>
+<script>
+  function scrollToTable() {
+      // Obtiene el elemento de la tabla con el identificador "car-safetti"
+      const tablaElement = document.getElementById("car-safetti");
+
+      // Realiza el desplazamiento suave hacia la tabla
+      tablaElement.scrollIntoView({ behavior: "smooth" });
+  }
+</script>
 </body>
 </html>

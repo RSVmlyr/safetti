@@ -19,6 +19,7 @@ class QuotationCalculation extends HTMLElement {
         </div>
       </div>
     `
+    this.countCart = 0
   }
   getPriceInRange(prices, value) {
     if (prices != undefined) {
@@ -551,7 +552,9 @@ class QuotationCalculation extends HTMLElement {
 
   calcularDescuentoYTotal(porcentaje, currency) {
     const productForSave = this.retrievedData()
-    const count = this.count(productForSave)
+    const res = this.count(productForSave)
+    const count = res.count
+    document.querySelector(".floating-button .number").textContent = res.countCart
     const disc = (count * porcentaje / 100);
     const total = currency === 'COP' ? parseInt(count - disc) : parseFloat(count - disc).toFixed(2);
     return total
@@ -581,17 +584,20 @@ class QuotationCalculation extends HTMLElement {
     const clientename = expiringLocalStorage.getDataWithExpiration('ClientFullName')
     let count = 0
     let valor = 0
+    let countCart = 0
     productForSave.forEach(e => {
       if (clientename) {
         valor = parseInt(e.textContent)
         const client = JSON.parse(clientename)
         count += client['0'].currency === 'COP' ?parseInt(e.unitPrice * e.quantity) :parseFloat(e.unitPrice * e.quantity)
+        countCart += e.quantity
       } else {
         valor = parseFloat(e.unitPrice * e.quantity)
         count += parseFloat(valor)
+        countCart += e.quantity
       }
     })
-    return count 
+    return {count, countCart} 
   }
 
   connectedCallback() {
