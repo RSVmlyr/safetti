@@ -114,6 +114,9 @@ body {
     background-color: $c12;
     color: $black;
   }
+  &--toconfirm {
+    background-color: $c4;
+  }
 }
 
 select {

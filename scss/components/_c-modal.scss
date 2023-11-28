@@ -118,3 +118,57 @@
     top: 10px;
   }
 }
+
+.modal {
+  &--container {
+    border-radius: 15px;
+  }
+  &__form--header,
+  &__form--action {
+    .modal__button {
+      background-color: $black;
+      border: 0;
+      font-size: 13px;
+      padding: 10px;
+      color: $white;
+      display: block;
+      margin: 0 0 0 auto;
+      cursor: pointer;
+    }
+  }
+  &__form--left {
+    display: block;
+    margin: 20px 0 0;
+    .modal__label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      span {
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+#modal-file {
+ .modal {
+    &__form--content {
+      display: flex;
+      flex-direction: column;
+      input[type="file"].modal__input {
+        background-color: $black;
+        color: $white;
+        margin: 10px 0;
+        font-size: 14px;
+        padding: 0 10px 0 0;
+        height: auto;
+        width: max-content;
+      }
+      textarea.modal__textarea {
+        margin: 10px 0;
+        font-size: 14px;
+        padding: 10px;
+      }
+    }
+ }
+}
