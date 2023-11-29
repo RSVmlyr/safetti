@@ -117,6 +117,9 @@ body {
   &--toconfirm {
     background-color: $c4;
   }
+  &--validateadvance{
+    background-color: $c12;
+  }
 }
 
 select {
