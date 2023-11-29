@@ -97,11 +97,11 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             </div>
             <div class="scenary--data__actions">
               <a href="./index-q.html?cotId=${cot.id}&cotName=${encodeURIComponent(cot.name)}&uid=${storedHash}" class="quotation--btn__add quotation--btn__Ne">Nuevo escenario</a>
-              <a id="quotation--btn__approved-tmp" class="quotation--btn__modal scenary--data__actionsDelete ${/**cotStatus.statusId==1?'':'d-none'**/''}" href="#" data-cotid="${cot.id}">
+              <a id="quotation--btn__approved-tmp" class="quotation--btn__modal scenary--data__actionsDelete ${cotStatus.statusId==1?'':'d-none'}" href="#" data-cotid="${cot.id}">
                 <span class="quotation--info">Enviar para aprobación</span>
                 <img src='../../img/icon/check.svg' loading="lazy" alt="Aprobar" title="Aprobar">
               </a>
-              <a id="quotation--btn__approved-tmp" class="quotation--btn__file scenary--data__actionsDelete  ${/**cotStatus.statusId==4?'':'d-none'**/''}" href="#" data-cotid="${cot.id}">
+              <a id="quotation--btn__approved-tmp" class="quotation--btn__file scenary--data__actionsDelete  ${cotStatus.statusId==4?'':'d-none'}" href="#" data-cotid="${cot.id}">
                 <span class="quotation--info">Validar Anticipo</span>
                 <img src='../../img/icon/check.svg' loading="lazy" alt="Aprobar" title="Aprobar">
               </a>
