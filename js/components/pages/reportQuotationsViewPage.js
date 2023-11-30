@@ -24,13 +24,17 @@ const reportQuotationsViewPage = async () => {
 
         let datatable = null;
         let chartSolicCOP = null;
+        let chartPorConfirmarCOP = null;
+        let chartValidarAnticipoCOP = null;
         let chartConfirmCOP = null;
         let chartCancelCOP = null;
         let chartSolicUSD = null;
+        let chartPorConfirmarUSD = null;
+        let chartValidarAnticipoUSD = null;
         let chartConfirmUSD = null;
         let chartCancelUSD = null;
-        let chartArray = [chartSolicCOP, chartConfirmCOP, chartCancelCOP, chartSolicUSD, chartConfirmUSD, chartCancelUSD];
-        let datatableBody = document.querySelector('.report-container table tbody');
+        let chartArray = [chartSolicCOP, chartPorConfirmarCOP, chartValidarAnticipoCOP, chartConfirmCOP, chartCancelCOP,
+            chartSolicUSD, chartPorConfirmarUSD, chartValidarAnticipoUSD, chartConfirmUSD, chartCancelUSD];
 
          // Obtener todas las pestañas y el contenido de las pestañas
          const tabs = document.querySelectorAll('.tab');
@@ -85,6 +89,12 @@ const reportQuotationsViewPage = async () => {
                             "searching": false,
                             "lengthChange": false,
                             "order": [],
+                            columnDefs: [
+                                {
+                                    targets: 3,
+                                    className: 'dt-body-right'
+                                }
+                            ],
                             language: {
                                 info: 'P&aacute;gina _PAGE_ de _PAGES_',
                                 "emptyTable": "No se encontraron registros",
@@ -115,32 +125,17 @@ const reportQuotationsViewPage = async () => {
                     });
 
                     productsTable.style.display = "table";
-
-        
-    /* 
-                    if (!datatable) {
-                        datatable = new simpleDatatables.DataTable(
-                            datatableTable,
-                            {
-                                searchable: false,
-                                perPageSelect: false,
-                                labels: {
-                                    info: "{start} a {end} de {rows} cotizaciones",
-                                    noRows: "No se encontraron cotizaciones"
-                                }
-                            });
-                    }
-
-                    datatable.update();
-                    //datatable.refresh();
-                    datatableTable.style.display = "table"; */
                 }
 
                 const reportCOPSolic = reportQuotations.reportCOP.find(el => el.statusName == "Solicitada");
+                const reportCOPPorConfirmar = reportQuotations.reportCOP.find(el => el.statusName == "Por Confirmar");
+                const reportCOPValidarAnticipo = reportQuotations.reportCOP.find(el => el.statusName == "Validar Anticipo");
                 const reportCOPConfirm = reportQuotations.reportCOP.find(el => el.statusName == "Confirmada");
                 const reportCOPCancel = reportQuotations.reportCOP.find(el => el.statusName == "Cancelada");
 
                 const reportUSDSolic = reportQuotations.reportUSD.find(el => el.statusName == "Solicitada");
+                const reportUSDPorConfirmar = reportQuotations.reportUSD.find(el => el.statusName == "Por Confirmar");
+                const reportUSDValidarAnticipo = reportQuotations.reportUSD.find(el => el.statusName == "Validar Anticipo");
                 const reportUSDConfirm = reportQuotations.reportUSD.find(el => el.statusName == "Confirmada");
                 const reportUSDCancel = reportQuotations.reportUSD.find(el => el.statusName == "Cancelada");
 
@@ -176,7 +171,13 @@ const reportQuotationsViewPage = async () => {
                                     subtitle: {
                                         position: 'bottom',
                                         display: true,
-                                        text: 'Total: ' + data.statusTotal
+                                        text: 'Total: ' + data.statusTotal,
+                                        padding: {
+                                            top: 10
+                                        },
+                                        font: {
+                                            weight: 'bold'
+                                        }
                                     }
                                 }
                             },
@@ -188,28 +189,36 @@ const reportQuotationsViewPage = async () => {
                                 }]
                             }
                         });
+                        document.getElementById(canvasId).parentElement.style.display = 'block';
+                    }
+                    else {
+                        document.getElementById(canvasId).parentElement.style.display = 'none';
                     }
 
                     chartArray[chartIndex] = chartObject;
                 }
 
-                generatePieChart(reportCOPSolic, 'reportSolicitadasCOP', 0, 'Solicitadas');
-                generatePieChart(reportCOPConfirm, 'reportConfirmadasCOP', 1, 'Confirmadas');
-                generatePieChart(reportCOPCancel, 'reportCanceladasCOP', 2, 'Canceladas');
+                await generatePieChart(reportCOPSolic, 'reportSolicitadasCOP', 0, 'Solicitadas');
+                await generatePieChart(reportCOPPorConfirmar, 'reportPorConfirmarCOP', 1, 'Por confirmar');
+                await generatePieChart(reportCOPValidarAnticipo, 'reportValidarAnticipoCOP', 2, 'Validar anticipo');
+                await generatePieChart(reportCOPConfirm, 'reportConfirmadasCOP', 3, 'Confirmadas');
+                await generatePieChart(reportCOPCancel, 'reportCanceladasCOP', 4, 'Canceladas');
 
-                generatePieChart(reportUSDSolic, 'reportSolicitadasUSD', 3, 'Solicitadas');
-                generatePieChart(reportUSDConfirm, 'reportConfirmadasUSD', 4, 'Confirmadas');
-                generatePieChart(reportUSDCancel, 'reportCanceladasUSD', 5, 'Canceladas');
+                await generatePieChart(reportUSDSolic, 'reportSolicitadasUSD', 5, 'Solicitadas');
+                await generatePieChart(reportUSDPorConfirmar, 'reportPorConfirmarUSD', 6, 'Por confirmar');
+                await generatePieChart(reportUSDValidarAnticipo, 'reportValidarAnticipoUSD', 7, 'Validar anticipo');
+                await generatePieChart(reportUSDConfirm, 'reportConfirmadasUSD', 8, 'Confirmadas');
+                await generatePieChart(reportUSDCancel, 'reportCanceladasUSD', 9, 'Canceladas');
 
                 cardPesos.style.display = "block";
                 cardDolares.style.display = "block";
             } catch (error) {
                 console.error('Ocurrió un error al obtener el reporte de cotizaciones:', error);
-                nodeNotification('Ocurrió un error al obtener el reporte de cotizaciones:');                
+                nodeNotification('Ocurrió un error al obtener el reporte de cotizaciones:');
             }
         }
 
-        const generateQuotationReportFile = async (el,) => {
+        const generateQuotationReportFile = async (event) => {
             const fromInput = document.getElementById("fromReport");
             const toInput = document.getElementById("toReport");
             const urlQuery = `/api/report/quotationsfile/${fromInput.value}/${toInput.value}`;
@@ -236,7 +245,7 @@ const reportQuotationsViewPage = async () => {
 
         if (btnExportar) {
             btnExportar.addEventListener('click', () => {
-                generateQuotationReportFile(btnExportar);
+                generateQuotationReportFile();
             });
         }
     }

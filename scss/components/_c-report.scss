@@ -37,15 +37,15 @@
         .quotation--title__quo{
             //text-align: center
         }
-        .tab-item {
-            flex: 1 0 33%;
-            max-width: 33%;
-            .canvas {
-                width: 80% !important;
-                height: auto !important;
-            }
-        }
     }  
+    .tab-item {
+        flex: 1 0 20%;
+        max-width: 20%;
+        .canvas {
+            width: 100% !important;
+            height: auto !important;
+        }
+    }
 
     .tab-pane.active {
         display: block;
