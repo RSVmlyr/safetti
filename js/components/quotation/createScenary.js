@@ -200,7 +200,6 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         const subtotal = currencyFormatUSD(cot.scenarios["0"].subtotalProducts, scen.currency)
         const totalValue = currencyFormatUSD(scen.total, scen.currency)
 
-        console.log(subtotal);
         // Scenary selected 
         if ( scen.selected === true ) {
           const scenaryDataBody = quotation.querySelector('.scenary--data__body')
