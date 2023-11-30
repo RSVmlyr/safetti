@@ -55,7 +55,6 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
 
     const login = new Login();
     const storedHash = login.getStoredHash();
-    console.log(cot);
     let scenaryTop =
     `<div class="scenary--created">
       <div class="scenary--created__header">
@@ -189,7 +188,6 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
       sortedIndices.forEach(i => {
         const scen = cot.scenarios[i];
 
-        console.log("cot", cot);
         let totalProducts = 0;
         scen.products.forEach(product => {
           if (typeof product.unitPrice === 'number' && product.unitPrice !== '') {
