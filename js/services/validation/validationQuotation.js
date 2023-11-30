@@ -3,21 +3,27 @@ import nodeNotification from "../../helpers/nodeNotification.js";
 
 const API_DEV = config.API_KEY_DEV;
 const validationQuotation = async (Qid, status, userId, valueImage) => {
+
+  let formData = new FormData();
+  formData.append("file", valueImage);
+
+  console.log(formData);
+
   try {
     const urlQuerySQ = `${API_DEV}/api/Quotation/${Qid}/${userId}/${status}`;
 
     const requestOptions = {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(valueImage)
+      // headers: {
+      //   'Content-Type': 'multipart/form-data'
+      // },
+      body: formData
     };
 
     const response = await fetch(urlQuerySQ, requestOptions);
     console.log(response);
+    nodeNotification("Enviando validación...")
     if(response.status === 200) {
-      const data = await response.json();
       nodeNotification("Validación enviada")
       setTimeout(() => {
         location.reload();

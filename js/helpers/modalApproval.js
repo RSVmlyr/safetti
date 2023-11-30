@@ -63,6 +63,7 @@ const modalApproval = (quotation, modal, open ) => {
     closeModal.addEventListener("click", function () {
       mymodal.classList.add("hidden");
     });
+
     if(checkboxadvance) {
       checkboxadvance.addEventListener("input", function () {
         const number = mymodal.querySelector("#number");
@@ -84,21 +85,24 @@ const modalApproval = (quotation, modal, open ) => {
         msgerror.textContent = validate.msg
       } else {
         console.log(mymodal.id)
-
+        modalButtonSend.disabled = true
+        openModal.classList.add("loading")
+        closeModal.click()
         msgerror.classList.add("d-none")
         msgerror.textContent = validate.value
         if (mymodal.id === 'modal-file') {
           const valueImage = mymodal.querySelector('.modal__input').files[0]
           const status = 2
-          validationQuotation(Qid, status, userId, valueImage)
+          if (Qid !== '') {
+            validationQuotation(Qid, status, userId, valueImage)
+          }
           console.log(valueImage);
         } else {
           const advance = validate.numberValue
           const status = 4
-          modalButtonSend.disabled = true
-          openModal.classList.add("loading")
-          closeModal.click()
-          sendSatus(Qid, status, userId, advance)
+          if (Qid !== '') {
+            sendSatus(Qid, status, userId, advance)
+          }
         }
       }
     })
