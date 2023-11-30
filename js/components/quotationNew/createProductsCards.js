@@ -8,6 +8,24 @@ import nodeNotification from '../../helpers/nodeNotification.js'
 import qnaddproduct from "../../helpers/qnaddproduct.js"
 import Login from "../../login/login.js";
 import { config } from "../../../config.js"
+import ExpiringLocalStorage from '../localStore/ExpiringLocalStorage.js'
+
+const similarId = (id) => {
+  const expiringLocalStorage = new ExpiringLocalStorage()
+  const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
+  let value;
+  if(retrievedData == null) {
+    return false
+  }
+  if(retrievedData) {
+    const productsLoclaStores = retrievedData ? JSON.parse(retrievedData) : []
+    productsLoclaStores.forEach(pls => {
+      const { product } = pls;
+      value = product === id;
+    })
+  }
+  return value
+} 
 
 const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
   if(resQueryUser.rol != "advisors") {
@@ -103,12 +121,11 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
                 <button class="qnJuniorIncrease">+</button>
               </div>
             </div>
-  
+            <p class="small">La cantidad mínima es de 10.</p>
             <div class="card--amount__actions">
               <button class="qncancelproduct">Cancelar</button>
               <button class="qnaceptproduct quotation-hidden">Agregar +</button>
             </div>
-  
            </div>
           </div>
         </div>
@@ -188,19 +205,28 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           unisexInput.value = 0
           juniorInput.value = 0
           sliderProductsRow.classList.remove('active')
-        }, 1000);        
+        }, 1000);
+
         if(product.length <= 0) {
           nodeNotification(`Las cantidad debe ser mayor o igual a ${minQuantity}`)
         }
         const sumaPorId = {};
         product.forEach(p => {
-          const { id, quantity, minQuantity, productName } = p;
+          const { id, quantity, minQuantity } = p;
+          const exist = similarId(id)
+          let bolCant= ''
+          console.log(exist);
           if (!sumaPorId[id]) {
             sumaPorId[id] = 0;
           }
           sumaPorId[id] += parseInt(quantity);
-
-          if (sumaPorId[id] < minQuantity) {
+          if(exist) {
+            bolCant = 1
+          } else {
+            bolCant = minQuantity
+          }
+          console.log(bolCant);
+          if (sumaPorId[id] < bolCant) {
             nodeNotification(`Las cantidad debe ser mayor o igual a ${minQuantity}`)
           } else {
             const quotationCalculation = new QuotationCalculation(resQueryUser);
