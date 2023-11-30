@@ -18,9 +18,11 @@ const reportProductsViewPage = async () => {
         let productsTable = document.getElementById('datatable');
         productsTable.style.display = "none";
         let chartSolic = null;
+        let chartPorConfirmar = null;
+        let chartValidarAnticipo = null;
         let chartConfirm = null;
         let chartCancel = null;
-        let chartArray = [chartSolic, chartConfirm, chartCancel];
+        let chartArray = [chartSolic, chartPorConfirmar, chartValidarAnticipo, chartConfirm, chartCancel];
         let datatable = null;
 
         const cardAfterEvent = document.querySelector('.card-after-event')
@@ -53,6 +55,12 @@ const reportProductsViewPage = async () => {
                             "searching": false,
                             "lengthChange": false,
                             "order": [],
+                            columnDefs: [
+                                {
+                                    targets: 3,
+                                    className: 'dt-body-right'
+                                }
+                            ],
                             language: {
                                 info: 'P&aacute;gina _PAGE_ de _PAGES_',
                                 "emptyTable": "No se encontraron registros",
@@ -82,6 +90,8 @@ const reportProductsViewPage = async () => {
                 }
 
                 const reportSolic = reportProducts.statusProducts.find(el => el.statusName == "Solicitada");
+                const reportPorConfirmar = reportProducts.statusProducts.find(el => el.statusName == "Por Confirmar");
+                const reportValidarAnticipo = reportProducts.statusProducts.find(el => el.statusName == "Validar Anticipo");
                 const reportConfirm = reportProducts.statusProducts.find(el => el.statusName == "Confirmada");
                 const reportCancel = reportProducts.statusProducts.find(el => el.statusName == "Cancelada");
 
@@ -124,20 +134,26 @@ const reportProductsViewPage = async () => {
                                 }]
                             }
                         });
+                        document.getElementById(canvasId).parentElement.style.display = 'block';
+                    }
+                    else {
+                        document.getElementById(canvasId).parentElement.style.display = 'none';
                     }
 
                     chartArray[chartIndex] = chartObject;
                 }
 
-                generatePieChart(reportSolic, 'reportSolicitadas', 0, 'Solicitadas');
-                generatePieChart(reportConfirm, 'reportConfirmadas', 1, 'Confirmadas');
-                generatePieChart(reportCancel, 'reportCanceladas', 2, 'Canceladas');
+                await generatePieChart(reportSolic, 'reportSolicitadas', 0, 'Solicitadas');
+                await generatePieChart(reportPorConfirmar, 'reportPorConfirmar', 1, 'Por confirmar');
+                await generatePieChart(reportValidarAnticipo, 'reportValidarAnticipo', 2, 'Validar anticipo');
+                await generatePieChart(reportConfirm, 'reportConfirmadas', 3, 'Confirmadas');
+                await generatePieChart(reportCancel, 'reportCanceladas', 4, 'Canceladas');
 
                 cardProducts.style.display = "block";
 
             } catch (error) {
                 console.error('Ocurrió un error al obtener el reporte de productos:', error);
-                nodeNotification('Ocurrió un error al obtener el reporte de productos:');                
+                nodeNotification('Ocurrió un error al obtener el reporte de productos:');
             }
             
         }
