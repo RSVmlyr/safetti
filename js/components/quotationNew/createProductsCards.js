@@ -103,12 +103,11 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
                 <button class="qnJuniorIncrease">+</button>
               </div>
             </div>
-  
+            <p class="small">La cantidad mínima es de 10.</p>
             <div class="card--amount__actions">
               <button class="qncancelproduct">Cancelar</button>
               <button class="qnaceptproduct quotation-hidden">Agregar +</button>
             </div>
-  
            </div>
           </div>
         </div>

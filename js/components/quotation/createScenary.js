@@ -55,6 +55,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
 
     const login = new Login();
     const storedHash = login.getStoredHash();
+    console.log(cot);
     let scenaryTop =
     `<div class="scenary--created">
       <div class="scenary--created__header">
@@ -187,6 +188,8 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
       const sortedIndices = Object.keys(cot.scenarios).sort((a, b) => b - a);
       sortedIndices.forEach(i => {
         const scen = cot.scenarios[i];
+
+        console.log("cot", cot);
         let totalProducts = 0;
         scen.products.forEach(product => {
           if (typeof product.unitPrice === 'number' && product.unitPrice !== '') {
@@ -195,9 +198,11 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         });
         let totalPro = totalProducts
 
-        const totalpValue = currencyFormatUSD(totalPro, scen.currency) 
+        const totalpValue = currencyFormatUSD(totalPro, scen.currency)
+        const subtotal = currencyFormatUSD(cot.scenarios["0"].subtotalProducts, scen.currency)
         const totalValue = currencyFormatUSD(scen.total, scen.currency)
 
+        console.log(subtotal);
         // Scenary selected 
         if ( scen.selected === true ) {
           const scenaryDataBody = quotation.querySelector('.scenary--data__body')
@@ -207,14 +212,14 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             <table>
               <tr>
                 <td><span class="quotation--title__quo">#${count} - ${scen.name ? scen.name : ''}</span></td>
-                <td><span class="quotation--title__quo">Precio Base</span></td>
-                <td><span class="quotation--title__quo">Costo Productos hola</span></td>
+                <td><span class="quotation--title__quo">Subtotal/span></td>
+                <td><span class="quotation--title__quo">Costo Productos</span></td>
                 <td></td>
               </tr>
               <tr>
                 <td></td>
-                <td><p class="quotation--info">$ ${cot.currency === 'COP' ? totalPro.toLocaleString() : totalpValue}</p></td>
-                <td><p class="quotation--info">$ ${cot.currency === 'COP' ? scen.total.toLocaleString() : totalValue}</p></td>
+                <td><p class="quotation--info">$ ${cot.currency === 'COP' ? subtotal.toLocaleString() : subtotal}</p></td>
+                <td><p class="quotation--info">$ ${cot.currency === 'COP' ? totalValue.toLocaleString() : totalValue} </p></td>
                 <td><span class="quotation--btn__view"><a  class="quotation--info quotation--detail" href="./Cotizacion.html?id=${cot.id}&uid=${storedHash}">Ver detalle</a></span></td>
               </tr>
             </table>
