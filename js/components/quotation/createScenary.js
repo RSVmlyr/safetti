@@ -158,8 +158,9 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     // Send Email
 
     // Delete Scenary Top
+    const uid = localStorage.getItem('current')
     quotationBtnDelete.addEventListener('click', () => {
-      statusQuotationS(cot.id, 3)
+      statusQuotationS(cot.id, 3, uid)
       setTimeout(() => {
         location.reload();
       }, 1000);
@@ -209,7 +210,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             <table>
               <tr>
                 <td><span class="quotation--title__quo">#${count} - ${scen.name ? scen.name : ''}</span></td>
-                <td><span class="quotation--title__quo">Subtotal/span></td>
+                <td><span class="quotation--title__quo">Subtotal</span></td>
                 <td><span class="quotation--title__quo">Costo Productos</span></td>
                 <td></td>
               </tr>
@@ -269,7 +270,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                     <tr>
                       <td><span class="quotation--title__quo">Producto</span></td>
                       <td><span class="quotation--title__quo">Precio Base</span></td>
-                      <td><span class="quotation--title__quo">Costo Productos hola</span></td>
+                      <td><span class="quotation--title__quo">Costo Productos</span></td>
                     </tr>
                     <tr>
                       <td><div id="products"></div></td>
