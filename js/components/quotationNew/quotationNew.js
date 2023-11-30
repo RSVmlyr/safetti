@@ -47,7 +47,11 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   }
   idQnClient.innerHTML = idQnLabelCliente + resQueryUser.fullName;
   qnbusinessname.innerHTML ='Razon Social: '  + resQueryUser.razonSocial
-  idQnAdvisor.innerHTML = idQnLabelAdvisors + resQueryUserAdvisorName
+  console.log(resQueryUser);
+  console.log(resQueryUser.advisorName);
+  // idQnAdvisor.innerHTML = idQnLabelAdvisors + resQueryUserAdvisorName
+  idQnAdvisor.innerHTML = resQueryUser.rol === "advisors" ? idQnLabelAdvisors : idQnLabelAdvisors + resQueryUserAdvisorName
+  // idQnAdvisor.innerHTML = 'Asesor: ' + resQueryUserAdvisorName
   idQnCurrency.innerHTML = 'Moneda: ' + resQueryUserCurrency
  
   fillSelectProduct(idQnCuentos, resQueryProducts.cuentos)
