@@ -180,7 +180,7 @@ class PaginatorElement extends HTMLElement {
         const listContainer = document.querySelector('#quotation--content--list');
         const notResult = document.createElement('div');
         notResult.classList.add('not-result')
-        notResult.textContent = 'No hay resultados'
+        notResult.textContent = 'No hay cotizaciones, puedes crear una en el botón Nueva cotización.'
         listContainer.appendChild(notResult);
       }
     }

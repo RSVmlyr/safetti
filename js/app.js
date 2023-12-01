@@ -19,7 +19,7 @@ class App {
     document.addEventListener('DOMContentLoaded', async () => {
       const url = new URL(window.location.href);
       const searchParams = new URLSearchParams(url.search);
-      const uid = searchParams.get('uid') || '4';
+      const uid = searchParams.get('uid') || '23';
       const resQueryUser = await getUser(uid);
 
       localStorage.setItem('rol', resQueryUser.rol);
