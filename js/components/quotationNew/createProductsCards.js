@@ -121,7 +121,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
                 <button class="qnJuniorIncrease">+</button>
               </div>
             </div>
-            <p class="small">La cantidad mínima es de 10.</p>
+            <p class="small">La cantidad mínima es de ${pro.minQuantity}</p>
             <div class="card--amount__actions">
               <button class="qncancelproduct">Cancelar</button>
               <button class="qnaceptproduct quotation-hidden">Agregar +</button>
@@ -215,7 +215,6 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           const { id, quantity, minQuantity } = p;
           const exist = similarId(id)
           let bolCant= ''
-          console.log(exist);
           if (!sumaPorId[id]) {
             sumaPorId[id] = 0;
           }
@@ -225,7 +224,6 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           } else {
             bolCant = minQuantity
           }
-          console.log(bolCant);
           if (sumaPorId[id] < bolCant) {
             nodeNotification(`Las cantidad debe ser mayor o igual a ${minQuantity}`)
           } else {

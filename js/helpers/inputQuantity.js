@@ -3,6 +3,7 @@ import getProductPrices from "../services/product/getProductPrices.js"
 import getPriceInRange from "./getPriceInRange.js"
 import getConfigCurrency from "./getConfigCurrency.js"
 import ExpiringLocalStorage from "../components/localStore/ExpiringLocalStorage.js"
+import nodeNotification from "../helpers/nodeNotification.js";
 
 const inputQuantity = async (section, clienteID) => {
   const quotatioviewQuantity = section.querySelectorAll(".quotatioview--quantity")
@@ -10,7 +11,6 @@ const inputQuantity = async (section, clienteID) => {
   const quotatioviewValueTotal = section.querySelector(".quotatioview__valueTotal")
   const quotatioview__withdiscount = section.querySelector(".quotatioview__withdiscount")
   const ivaProductsValue = section.querySelector(".iva__products-value")
-
   quotatioviewQuantity.forEach(async (item) => { 
     let delayTimer;
     if (item.hasAttribute("readonly")) {
@@ -24,6 +24,15 @@ const inputQuantity = async (section, clienteID) => {
       if (parentInfoName) {
         const productId = parentInfoName.getAttribute('data-product-id');
         delayTimer = setTimeout(async () => {
+          const minQuantity = section.querySelector(".info-name").dataset.minQuantity;
+          const quotationBtnSave = section.querySelector(".quotation--btn__save")
+          if(inputValue != '' && inputValue < parseInt(minQuantity)) {
+            quotationBtnSave.disabled = true
+            nodeNotification(`Las cantidad debe ser mayor o igual a ${minQuantity}`)
+            return
+          } else {
+            quotationBtnSave.disabled = false
+          }
           try {
             const prices = await getServicePrices(productId, client)
             const priceUni = getPriceInRange(prices, inputValue);
@@ -102,13 +111,11 @@ const getNumberFromText = (text) => {
   return 0; 
 }
 
-
 const getNumberFromTextFloat = (text) => {
-  const cleanedText = text.replace(/[^0-9,.]/g, ''); // Elimina todos los caracteres excepto los números, comas y puntos
-  const number = parseFloat(cleanedText.replace(',', '.')); // Reemplaza las comas por puntos y analiza el número
-  return isNaN(number) ? 0 : number; // Si no se puede analizar como número, devuelve 0
+  const cleanedText = text.replace(/[^0-9,.]/g, '');
+  const number = parseFloat(cleanedText.replace(',', '.'));
+  return isNaN(number) ? 0 : number;
 }
-
 
 const sumSubTotalValues = (section, currency) => {
   const subTotalElements = section.querySelectorAll('.sub-total');

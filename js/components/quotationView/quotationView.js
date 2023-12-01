@@ -34,7 +34,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
     element.products.forEach((producto) => {
       productos += `
             <tbody>
-                <tr class="info-name" data-product-id="${producto.product}">
+                <tr class="info-name" data-product-id="${producto.product}" data-min-quantity="${producto.minQuantity}">
                     <td>${producto.productName}</td>
                     <td id="product-molde">${producto.selectedMoldeCode}</td>
                     <td class="unit-value">
@@ -66,7 +66,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
             <div class="quotatioview__section">
             <div class="quotatioview__actions">
                 <div class="quotatioview__edit quotation--btn__new">Editar</div>
-                <div class="quotation--btn__save quotation--btn__new quotation-hide">Guardar</div>
+                <button class="quotation--btn__save quotation--btn__new quotation-hide">Guardar</button>
             </div>
             <span>Escenario:</span>
             <h2 class="quotatioview__title quotatioview__title--scenary">${element.name}</h2>
