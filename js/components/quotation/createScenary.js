@@ -196,9 +196,9 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
           }
         });
         let totalPro = totalProducts
-
+        const subtotalProductsSeleccionado = obtenerSubtotalProductsSeleccionado(cot.scenarios);
         const totalpValue = currencyFormatUSD(totalPro, scen.currency)
-        const subtotal = currencyFormatUSD(cot.scenarios["0"].subtotalProducts, scen.currency)
+        const subtotal = currencyFormatUSD(subtotalProductsSeleccionado, scen.currency)
         const totalValue = currencyFormatUSD(scen.total, scen.currency)
 
         // Scenary selected 
@@ -327,6 +327,15 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     }
 
     getScenary()
+
+    function obtenerSubtotalProductsSeleccionado(array) {
+      for (var i = 0; i < array.length; i++) {
+          if (array[i].selected === true) {
+              return array[i].subtotalProducts;
+          }
+      }
+      return null;
+    }
 
     const emailSendNodes = () => {
       const idEmail = quotation.querySelectorAll('.scenary--quotation--email')

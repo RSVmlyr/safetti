@@ -62,6 +62,7 @@ const inputQuantity = async (section, clienteID) => {
               subTotalElement.textContent = SubTotal.toLocaleString();
             }
             const totalSum = sumSubTotalValues(section, client.currency);
+            console.log(totalSum);
             if (subtotalProductsElement) {
               subtotalProductsElement.textContent = totalSum.toLocaleString();
             } 
