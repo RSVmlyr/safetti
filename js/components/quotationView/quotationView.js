@@ -34,7 +34,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
     element.products.forEach((producto) => {
       productos += `
             <tbody>
-                <tr class="info-name" data-product-id="${producto.product}" data-min-quantity="${producto.minQuantity}">
+                <tr class="info-name" data-product-id="${producto.product}">
                     <td>${producto.productName}</td>
                     <td id="product-molde">${producto.selectedMoldeCode}</td>
                     <td class="unit-value">
@@ -43,7 +43,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                             `$ ${producto.unitPrice.toFixed(2).toLocaleString()}`}
                     </td>
                     <td>
-                        <input type="number" value="${producto.quantity.toLocaleString()}"  class="quotatioview--quantity none" readonly />
+                        <input type="number" value="${producto.quantity.toLocaleString()}" data-min-quantity="${producto.minQuantity}" class="quotatioview--quantity none" readonly />
                     </td>
                     <td class="sub-total">
                         ${currency === 'COP' ? 
@@ -56,12 +56,9 @@ const quotationView = async (node, quotation ,infoQuotation) => {
     });
 
     const eSubtotalProducts = currencyFormatUSD(element.subtotalProducts ,currency)
-
     const discount = element.subtotalProducts - element.subtotalWithDiscount
     const discountValue = discount
-    
     const configCurrency = getConfigCurrency(currency);
-    
     container.innerHTML += `
             <div class="quotatioview__section">
             <div class="quotatioview__actions">
@@ -154,7 +151,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                         <span>Total:</span>
                         <span class="quotatioview__valueTotal">
                             ${currency === 'COP' ? 
-                                ` ${element.subtotalWithTaxIVA.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)}` : 
+                                ` ${element.subtotalWithTaxIVA.toLocaleString()}` : 
                                 ` ${element.subtotalWithTaxIVA.toFixed(2).toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)}`}
                         </span>
                     </th>
@@ -241,16 +238,20 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                         const calculateIva = (dN * 19) / 100                        
                         const calculateIvaTotal = (dN + calculateIva)
 
-                        ivaProductsValue.innerHTML = currency === 'COP' ? calculateIva.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales) : calculateIva.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)
-                        quotatioviewValueTotal.innerHTML = currency === 'COP' ? calculateIvaTotal.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales) : calculateIvaTotal.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)
+                        ivaProductsValue.innerHTML = currency === 'COP' ? calculateIva.toLocaleString() : calculateIva.toLocaleString()
+                        quotatioviewValueTotal.innerHTML = currency === 'COP' ? calculateIvaTotal.toLocaleString() : calculateIvaTotal.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)
                         //}
                     } else {
+                        console.log(dN);
                         const calculateIva = 0
                         ivaProductsValue.innerHTML = currency === 'COP' ? calculateIva.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales) : calculateIva.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)
                         if(rangeInput.value == infoQuotation[i].discountPercent) {
-                            quotatioviewValueTotal.innerHTML = currency === 'COP' ? infoQuotation[i].subtotalWithDiscount.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales) : dN.toFixed(2).toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)
+                            
+                            console.log("debug", infoQuotation[i].subtotalWithDiscount.toLocaleString());
+                            
+                            quotatioviewValueTotal.innerHTML = currency === 'COP' ? dN.toLocaleString() : dN.toFixed(2).toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)
                         } else {
-                            quotatioviewValueTotal.innerHTML = currency === 'COP' ?  dN.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales) : dN
+                            quotatioviewValueTotal.innerHTML = currency === 'COP' ?  dN.toLocaleString() : dN.toLocaleString()
                         }
                     }
                 };
@@ -261,12 +262,14 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                 });
 
                 rangeInput.addEventListener('input', (event) => {
+                    console.log("....");
                     const maxValue = 10;
                     if (event.target.value > maxValue) {
                         event.target.value = maxValue;
                     }
                     if (event.target.value >= 0) {
-                        const subtotalProductsElement = document.querySelector('.subtotal-products');
+                        const quotatioviewTable = rangeInput.closest('.quotatioview__table');
+                        const subtotalProductsElement = quotatioviewTable.querySelector('.subtotal-products');
                         let price
                         if(currency === "COP") {
                             price = parseInt(subtotalProductsElement.textContent.replace(/,/g, ''))
@@ -281,6 +284,7 @@ const quotationView = async (node, quotation ,infoQuotation) => {
                         const calculateDV = currencyFormatUSD(calculateDiscoutValue, currency)
                         const configCurrency = getConfigCurrency(currency);
                         quotatioviewWithdiscount.innerHTML = currency === 'COP' ? calculateDiscoutTotal.toLocaleString() : calculateDiscoutTotal.toFixed(2).toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)
+                        
                         quotatioviewDiscountValueNumber.innerHTML = currency === 'COP' ? calculateDiscoutValue.toLocaleString() : calculateDV
                         mostrarEstadoCheckbox(currency === 'COP' ? calculateDiscoutTotal : calculateDT);
                     }

@@ -6,6 +6,7 @@ import ExpiringLocalStorage from "../components/localStore/ExpiringLocalStorage.
 import nodeNotification from "../helpers/nodeNotification.js";
 
 const inputQuantity = async (section, clienteID) => {
+  console.log(section);
   const quotatioviewQuantity = section.querySelectorAll(".quotatioview--quantity")
   const client = await getInfoUser(clienteID); 
   const quotatioviewValueTotal = section.querySelector(".quotatioview__valueTotal")
@@ -23,8 +24,12 @@ const inputQuantity = async (section, clienteID) => {
       clearTimeout(delayTimer);
       if (parentInfoName) {
         const productId = parentInfoName.getAttribute('data-product-id');
+
+        
         delayTimer = setTimeout(async () => {
-          const minQuantity = section.querySelector(".info-name").dataset.minQuantity;
+          console.log(item);
+          const minQuantity = item.dataset.minQuantity;
+          console.log(minQuantity);
           const quotationBtnSave = section.querySelector(".quotation--btn__save")
           if(inputValue != '' && inputValue < parseInt(minQuantity)) {
             quotationBtnSave.disabled = true
@@ -69,7 +74,7 @@ const inputQuantity = async (section, clienteID) => {
             if(rangeInput){
               const event = new Event('input');
               rangeInput.dispatchEvent(event);
-            }
+            }            
             const Total = getNumberFromText(quotatioview__withdiscount.textContent) + getNumberFromText(ivaProductsValue.textContent)
             quotatioviewValueTotal.textContent = Total.toLocaleString()
 
