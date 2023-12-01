@@ -47,8 +47,6 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   }
   idQnClient.innerHTML = idQnLabelCliente + resQueryUser.fullName;
   qnbusinessname.innerHTML ='Razon Social: '  + resQueryUser.razonSocial
-  console.log(resQueryUser);
-  console.log(resQueryUser.advisorName);
   // idQnAdvisor.innerHTML = idQnLabelAdvisors + resQueryUserAdvisorName
   idQnAdvisor.innerHTML = resQueryUser.rol === "advisors" ? idQnLabelAdvisors : idQnLabelAdvisors + resQueryUserAdvisorName
   // idQnAdvisor.innerHTML = 'Asesor: ' + resQueryUserAdvisorName

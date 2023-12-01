@@ -215,7 +215,6 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           const { id, quantity, minQuantity } = p;
           const exist = similarId(id)
           let bolCant= ''
-          console.log(exist);
           if (!sumaPorId[id]) {
             sumaPorId[id] = 0;
           }
@@ -225,7 +224,6 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           } else {
             bolCant = minQuantity
           }
-          console.log(bolCant);
           if (sumaPorId[id] < bolCant) {
             nodeNotification(`Las cantidad debe ser mayor o igual a ${minQuantity}`)
           } else {
