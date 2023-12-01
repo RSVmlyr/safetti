@@ -258,7 +258,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                     <img class="quotation--download__img" src='${scen.selected === true ? '../../img/icon/icon-download.svg' : '../../img/icon/icon-download-white.svg'}' loading="lazy" alt="Descargar" title="Descargar">
                   </a>
                 </div>  
-                <div class="scenary--row__select ${cotStatus.statusName === 'Por Confirmar' ? 'd-none' : ''}">
+                <div class="scenary--row__select ${cotStatus.statusName === 'Por Confirmar' ||  cotStatus.statusName === 'Validar Anticipo' ? 'd-none' : ''}">
                   <span class="quotation--info">Seleccionar</span>
                   <img src="../../img/icon/check.svg" loading="lazy" alt="Seleccionar" title="Seleccionar">
                 </div>
