@@ -3,7 +3,6 @@ import quotationNewPage from "./components/quotationNew/quotationNew.js";
 import getAdvisors from "./services/advisors/getAdvisors.js";
 import getProduct from "./services/product/getProduct.js";
 import getUser from "./services/user/getUser.js";
-import QuotationSearch from "./services/quotation/QuotationSearch.js";
 import PaginatorElement from './components/paginator/PaginatorElement.js';
 import getClients from "./services/clients/getClients.js";
 import Login from "./login/login.js";
@@ -21,12 +20,9 @@ class App {
       const searchParams = new URLSearchParams(url.search);
       const uid = searchParams.get('uid') || '23';
       const resQueryUser = await getUser(uid);
-
       localStorage.setItem('rol', resQueryUser.rol);
-
       const login = new Login();
       login.setHash(uid);
-      const storedHash = login.getStoredHash();
       if (this.quotation) {
         const quotationContentList = this.quotation.querySelector('#quotation--content--list');
         quotationContentList.insertAdjacentHTML('afterbegin', '<img class="quotation--loading qnimage--auto" src="../img/icon/icon-spinner.gif">');
@@ -35,12 +31,15 @@ class App {
         spinner.remove();
         const btn_ = document.querySelector('.quotation--btn__add');
         btn_.setAttribute('href', '/index-q.html?uid=' + resQueryUser.id);
-        if(resQueryUser.rol === "advisors"){
+
+        if(resQueryUser.rol === "advisors") {
           const paginatorElement = new PaginatorElement(' ')
+          paginatorElement.renderPaginator()
         } else {
           const quotationLeft = document.querySelector(".quotation .quotation--container__action");
           quotationLeft.classList.add("d-none");
           const paginatorElement = new PaginatorElement(resQueryUser.firstName);
+          paginatorElement.renderPaginator()
         }
 
         const getAdvisor = () => {

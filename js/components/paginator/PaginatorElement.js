@@ -19,7 +19,7 @@ class PaginatorElement extends HTMLElement {
     const lastClickPager = localStorage.getItem('lastClickPager')
     this.pageNumber = lastClickPager != null ? lastClickPager : 1;
     this.clickPager();
-    this.renderPaginator();
+    //this.renderPaginator();
     this.searchClients();
     this.selectAdvisor();
   }
