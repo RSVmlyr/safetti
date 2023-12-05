@@ -245,7 +245,8 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
       })
 
       const cardViewDetailProducts = quotationNew.querySelector('.card .qnviewdetailproducts')
-      cardViewDetailProducts.addEventListener('click', (e) => {
+      const cardViewDetailProductsImage = quotationNew.querySelector('.card .card--image img')
+      cardViewDetailProductsImage.addEventListener('click', (e) => {
         window.scrollTo({
           top: 0,
           behavior: 'smooth' // Agrega un desplazamiento suave

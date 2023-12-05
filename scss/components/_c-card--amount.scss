@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 0 0 10px;
+  margin: 0 0 5px;
   &__title {
     font-size: 14px;
   }
@@ -30,11 +30,11 @@
     justify-content: space-between;
     button {
       background-color: rgba(0,0,0,0);
-      border: 0;
+      border: 1px solid $black;
       margin: 0;
-      padding: 0;
+      padding: 6px 12px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 13px;
       &.qnaceptproduct {
         color: $white;
         background-color: $black;
