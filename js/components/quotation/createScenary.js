@@ -99,11 +99,11 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               <a href="./index-q.html?cotId=${cot.id}&cotName=${encodeURIComponent(cot.name)}&uid=${storedHash}" class="quotation--btn__add quotation--btn__Ne">Nuevo escenario</a>
               <a id="quotation--btn__approved-tmp" class="quotation--btn__modal scenary--data__actionsDelete ${cotStatus.statusId==1?'':'d-none'}" href="#" data-cotid="${cot.id}">
                 <span class="quotation--info">Enviar para aprobación</span>
-                <img src='../../img/icon/check.svg' loading="lazy" alt="Aprobar" title="Aprobar">
+                <img src='../../img/icon/icon-send.png' loading="lazy" alt="Aprobar" title="Aprobar">
               </a>
               <a id="quotation--btn__approved-tmp" class="quotation--btn__file scenary--data__actionsDelete  ${cotStatus.statusId==5?'':'d-none'}" href="#" data-cotid="${cot.id}">
                 <span class="quotation--info">Validar Anticipo</span>
-                <img src='../../img/icon/check.svg' loading="lazy" alt="Aprobar" title="Aprobar">
+                <img src='../../img/icon/icon-validate.png' loading="lazy" alt="Aprobar" title="Aprobar">
               </a>
               <div id="quotation--btn__delete" class="scenary--data__actionsDelete">
                 <span class="quotation--info">Cancelar cotización</span>
