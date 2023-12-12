@@ -8,11 +8,12 @@ class Login {
       return localStorage.getItem(this.localStorageKey);
     }
   
-    setHash(hash) {
+    setHash(hash,rol) {
       if (this.currentHash !== hash) {
         this.currentHash = hash;
         localStorage.clear();
         localStorage.setItem(this.localStorageKey, hash);
+        localStorage.setItem('rol', rol);
       }
     }
   

@@ -10,7 +10,7 @@ import getConfigCurrency from "../../helpers/getConfigCurrency.js";
 
 class QuotationCalculation extends HTMLElement {
   constructor(resQueryUser) {
-    super()
+    super();
     //this.sumar()
     this.resQueryUser = resQueryUser
     this.innerHTML = `
@@ -19,7 +19,7 @@ class QuotationCalculation extends HTMLElement {
         </div>
       </div>
     `
-    this.countCart = 0
+    this.countCart = 0;
   }
   getPriceInRange(prices, value) {
     if (prices != undefined) {
@@ -69,6 +69,10 @@ class QuotationCalculation extends HTMLElement {
     const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
     if(c) {
       const client = JSON.parse(c)
+      if(client['0'].currency === undefined && client['0'].rol === undefined){
+        client['0'].currency = 'COP';
+        client['0'].rol = '_final_consumer';
+      }
       if(data) {
         const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
         const products = retrievedData ? JSON.parse(retrievedData) : []
@@ -170,11 +174,16 @@ class QuotationCalculation extends HTMLElement {
       productsList.forEach(product => {
         let valueSubtotal = ''
         const subtotal = parseFloat((parseFloat(product.unitPrice) * product.quantity).toFixed(2))
-        const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
+        const c = expiringLocalStorage.getDataWithExpiration('ClientFullName');
         if(c) {
-          const client = JSON.parse(c)
-          const configCurrency = getConfigCurrency(client['0'].currency)
-          valueSubtotal = subtotal.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)
+          const client = JSON.parse(c);
+          if(client['0'].currency === undefined && client['0'].rol === undefined){
+            client['0'].currency = 'COP';
+            client['0'].rol = '_final_consumer';
+          }
+          
+          const configCurrency = getConfigCurrency(client['0'].currency);
+          valueSubtotal = subtotal.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales);
         } else {
           valueSubtotal = subtotal.toLocaleString()
         }
@@ -205,7 +214,7 @@ class QuotationCalculation extends HTMLElement {
       const getPrices = async () => {
         if (this.resQueryUser.rol === 'advisors'){
           const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
-          const client = JSON.parse(c)
+          const client = JSON.parse(c);
           prices = await getProductPrices(
             product.id,
             client[0].currency,
@@ -248,7 +257,11 @@ class QuotationCalculation extends HTMLElement {
       let subtotal = 0
       productsList.forEach(product => {
         const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
-        const client = JSON.parse(c)
+        const client = JSON.parse(c);
+        if(client['0'].currency === undefined && client['0'].rol === undefined){
+          client['0'].currency = 'COP';
+          client['0'].rol = '_final_consumer';
+        }
         if (c) {
           subtotal = client['0'].currency === 'COP'
             ? Math.floor(product.unitPrice * product.quantity)
@@ -294,9 +307,14 @@ class QuotationCalculation extends HTMLElement {
         if (rol === 'advisors') {
           const c = expiringLocalStorage.getDataWithExpiration('ClientFullName');
           const client = JSON.parse(c);
+          if(client['0'].currency === undefined && client['0'].rol === undefined){
+            client['0'].currency = 'COP';
+            client['0'].rol = '_final_consumer';
+          }
+  
           price = await getUnityPrices(item.product, client['0'].currency, client['0'].rol);          
           const priceInRange = this.getPriceInRange(price, item.qt);
-  
+
           if (priceInRange === undefined) {
             console.error('Error en este producto:', item);
             nodeNotification('Error en la información del producto');
@@ -304,6 +322,7 @@ class QuotationCalculation extends HTMLElement {
           }
   
           if (client['0'].currency === 'COP') {
+        
             numPrange = priceInRange.replace(".", "");
           } else {
             numPrange = priceInRange.replace(",", ".");
@@ -505,7 +524,7 @@ class QuotationCalculation extends HTMLElement {
     const expiringLocalStorage = new ExpiringLocalStorage()
     const clientename = expiringLocalStorage.getDataWithExpiration('ClientFullName')
     const client = JSON.parse(clientename)
-    const btniva = document.querySelector('.quotation--iva')
+    const btniva = document.querySelector('.quotation--iva');
 
     if(client){
       const configCurrency = getConfigCurrency(client[0].currency);
@@ -547,13 +566,13 @@ class QuotationCalculation extends HTMLElement {
       const parsetotal = this.calcularDescuentoYTotal(porcentaje, currency);
       total = currency === 'COP' ? parseInt(parsetotal) : parseFloat(parsetotal)
     }
-    return total
+    return total;
   }
 
   calcularDescuentoYTotal(porcentaje, currency) {
     const productForSave = this.retrievedData()
     const res = this.count(productForSave)
-    const count = res.count
+    const count = res.count;
     document.querySelector(".floating-button .number").textContent = res.countCart
     const disc = (count * porcentaje / 100);
     const total = currency === 'COP' ? parseInt(count - disc) : parseFloat(count - disc).toFixed(2);
@@ -576,7 +595,7 @@ class QuotationCalculation extends HTMLElement {
       const productsLocalStores = retrievedData ? JSON.parse(retrievedData) : []
       productForSave = productsLocalStores
     }
-    return productForSave
+    return productForSave;
   }
 
   count (productForSave){
@@ -588,7 +607,7 @@ class QuotationCalculation extends HTMLElement {
     productForSave.forEach(e => {
       if (clientename) {
         valor = parseInt(e.textContent)
-        const client = JSON.parse(clientename)
+        const client = JSON.parse(clientename);
         count += client['0'].currency === 'COP' ?parseInt(e.unitPrice * e.quantity) :parseFloat(e.unitPrice * e.quantity)
         countCart += e.quantity
       } else {

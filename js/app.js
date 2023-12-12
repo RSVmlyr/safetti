@@ -20,9 +20,9 @@ class App {
       const searchParams = new URLSearchParams(url.search);
       const uid = searchParams.get('uid') || '23';
       const resQueryUser = await getUser(uid);
-      localStorage.setItem('rol', resQueryUser.rol);
+      //localStorage.setItem('rol', resQueryUser.rol);
       const login = new Login();
-      login.setHash(uid);
+      login.setHash(uid,resQueryUser.rol);
       if (this.quotation) {
         const quotationContentList = this.quotation.querySelector('#quotation--content--list');
         quotationContentList.insertAdjacentHTML('afterbegin', '<img class="quotation--loading qnimage--auto" src="../img/icon/icon-spinner.gif">');
