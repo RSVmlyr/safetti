@@ -12,7 +12,20 @@ const validarFormulario = (mymodal) => {
           value: false,
           msg: 'Por favor, completa el campo imagen antes de enviar el formulario.'
         };
+      }else{
+        const file = document.getElementById('imagen');
+        const fileSize = file.files[0].size; // Tamaño en bytes
+        const maxSizeInBytes = 2 * 1024 * 1024;
+
+        if(fileSize> maxSizeInBytes){
+          return {
+            value: false,
+            msg: 'El archivo supera el tamaño permitido (2MB).'
+          };
+        }
       }
+
+     
       return {value: true};
 
     default:
@@ -94,7 +107,7 @@ const modalApproval = (quotation, modal, open ) => {
           const valueImage = mymodal.querySelector('.modal__input').files[0]
           const status = 2
           if (Qid !== '') {
-            validationQuotation(Qid, status, userId, valueImage)
+            //validationQuotation(Qid, status, userId, valueImage)
           }
           console.log(valueImage);
         } else {
