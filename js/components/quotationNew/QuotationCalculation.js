@@ -525,10 +525,15 @@ class QuotationCalculation extends HTMLElement {
     const clientename = expiringLocalStorage.getDataWithExpiration('ClientFullName')
     const client = JSON.parse(clientename)
     const btniva = document.querySelector('.quotation--iva');
+    
 
     if(client){
+      if(client['0'].currency === undefined && client['0'].rol === undefined){
+        client['0'].currency = 'COP';
+        client['0'].rol = '_final_consumer';
+      }
       const configCurrency = getConfigCurrency(client[0].currency);
-      const total = this.btnivaChecked(client['0'].currency, quo, btniva)
+      const total = this.btnivaChecked(client['0'].currency, quo, btniva);
       quotationSave.textContent = total.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)
       quo.addEventListener('input', (event) => {
         const maxValue = 10;
