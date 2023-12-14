@@ -5,9 +5,18 @@ const qnaddproduct = () => {
     const qnaddproducts = document.querySelectorAll(".qnaddproducts.add");
     const exist = localStorage.getItem('ClientFullName');
     const ClientFullName = expiringLocalStorage.getDataWithExpiration('ClientFullName')
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const cotNameValue = urlParams.get('cotName');
+    let existcot = false
+    if (cotNameValue) {
+        existcot = true
+    } else {
+        existcot = false
+    }
     const client = JSON.parse(ClientFullName)
     const quotationIva = document.querySelector('.quotation--iva')
-    if(client) {
+    if(client ) {
         if(client[0].currency === "COP") {
             quotationIva.checked = true
         } else {
@@ -20,6 +29,10 @@ const qnaddproduct = () => {
         } else {
             item.classList.remove('d-none');
         }
+        if (existcot) {
+            item.classList.remove('d-none');
+        }
+       
     });
 }
 
