@@ -3,6 +3,11 @@ const fillSelectProduct = (nodeSelectId, arr) => {
     const optionElement = document.createElement('option');
     optionElement.value = item;
     optionElement.textContent = item;
+
+    if (nodeSelectId.id != "qncuentos") {
+        optionElement.hidden = true;
+    }
+
     nodeSelectId.appendChild(optionElement);
   });
 }
