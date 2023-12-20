@@ -386,7 +386,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
   
       const idQnCountry = quotationNew.querySelector('.qncountry')
       const countryName = ['colombia', 'canada', 'vR7']
-      fillSelectProduct(idQnCountry, countryName)
+      fillSelectProduct(idQnCountry, countryName, false)
 
       if (pro.colombiaMan === null && pro.colombiaWoman === null && pro.colombiaUnisex === null && pro.colombiaJunior === null) {
         const optionToRemove = 'colombia';
