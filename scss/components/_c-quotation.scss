@@ -71,7 +71,6 @@
             }
             
             #advisors {
-              
               @media screen and (max-width: 1370px) {
                 width: 100%;
               }
@@ -373,6 +372,9 @@
                     display: flex;
                     justify-content: space-between;
                     margin: 35px 0 0;
+                    .text-help {
+                      margin: 0 auto;
+                    }
                     .quotation--btn__add {
                       padding: 10px 35px 10px 10px;
                       position: relative;

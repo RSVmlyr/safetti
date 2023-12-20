@@ -14,9 +14,6 @@ const validationQuotation = async (Qid, status, userId, valueImage) => {
 
     const requestOptions = {
       method: 'PUT',
-      // headers: {
-      //   'Content-Type': 'multipart/form-data'
-      // },
       body: formData
     };
 

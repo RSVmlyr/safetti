@@ -105,6 +105,10 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                 <span class="quotation--info">Validar Anticipo</span>
                 <img src='../../img/icon/icon-validate.png' loading="lazy" alt="Aprobar" title="Aprobar">
               </a>
+              <a id="quotation--btn__approved-tmp" class="quotation--btn__file-approve scenary--data__actionsDelete ${cotStatus.statusId==5?'':'d-none'}" href="#" data-cotid="${cot.id}" data-url="${cot.paymentSupportFilePath}" data-ispdf="${cot.isPaymentSupportPDF}">
+                <span class="quotation--info">Valida soporte del anticipo</span>
+                <img src='../../img/icon/icon-validate.png' loading="lazy" alt="Aprobar" title="Aprobar">
+              </a>
               <div id="quotation--btn__delete" class="scenary--data__actionsDelete">
                 <span class="quotation--info">Cancelar cotización</span>
                 <img src='../../img/icon/icon-delete.svg' loading="lazy" alt="Eliminar" title="Eliminar">
@@ -144,18 +148,51 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     if (cotStatus.statusId === 3 && scenaryCreated) {
       quotationContainer.remove()
     }
-
-    if(currentRol !== 'advisors' && quotationBtnNe) {
-      const scenaryDataActions = quotation.querySelector('.scenary--data__actions')
-      scenaryDataActions.remove()
-      quotationBtnNe.remove()
+    if(cot.paymentSupportFilePath && currentRol != 'advisors' ) {
+      const quotationBtnFileApprove = quotation.querySelector(".quotation--btn__file-approve")
+      if(quotationBtnFileApprove) {
+        quotationBtnFileApprove.remove()
+      }
     }
 
+    if(cot.paymentSupportFilePath && currentRol != "advisors") {
+      const quotationBtnApproved = quotation.querySelector('.scenary--data__actions');
+      const messageHtml = '<p class="text-help">Tu soporte está en revisión</p>';
+      quotationBtnApproved.insertAdjacentHTML('beforeend', messageHtml);
+    }
+    if(cot.paymentSupportFilePath == null && currentRol == "advisors") {
+      const quotationBtnFileApprove = quotation.querySelector(".quotation--btn__file-approve")
+      if(quotationBtnFileApprove) {
+        quotationBtnFileApprove.remove()
+      }
+    }
+    
+    if(cot.paymentSupportFilePath) {
+      const quotationBtnFile = quotation.querySelector('.quotation--btn__file')
+      if(quotationBtnFile) {
+        quotationBtnFile.remove()
+      }
+    }
+
+    if(currentRol !== 'advisors' && quotationBtnNe) {
+      const quotationBtnDelete = quotation.querySelector('#quotation--btn__delete')
+      quotationBtnDelete.remove()
+      quotationBtnNe.remove()
+    }
+      
+    if(currentRol != 'advisors') {
+      const quotationBtnFileApprove = quotation.querySelector(".quotation--btn__file-approve")
+      if(quotationBtnFileApprove) {
+        quotationBtnFileApprove.remove()
+      }
+      const quotationBtnModal = quotation.querySelector('.quotation--btn__modal')
+      quotationBtnModal.remove()
+    }
+    
     // Send Email
     const quotationEmail = quotation.querySelector('.quotation--email')
     const quotationSendData = quotation.querySelector('.quotation--send--data')
     sendEmailHelper(quotationEmail, quotationSendData)
-    // Send Email
 
     // Delete Scenary Top
     const uid = localStorage.getItem('current')
@@ -174,9 +211,6 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         }, 1000);
       })  
     }
-
-    // deleteScenary(quotationBtnDelete, scenaryCreated)
-    // Delete Scenary Top
 
     const getScenary = () => {
       if(cot.scenarios.length > 0) {
@@ -307,32 +341,23 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         const idProducts = quotation.querySelector('#products');
         const idPrices = quotation.querySelector('#prices');
         const idUnitPrices = quotation.querySelector('#unitPrices');
-
-        // Create data for scenary
         nodeListPrice(productName, idProducts)
         nodeListPrice(unitPrice, idUnitPrices)
         nodeListPrice(linePrice, idPrices)
-        // Create data for scenary
-
-        // Delete Scenary Bottom
-        const scenaryCreatedBody = quotation.querySelector('.scenary--created__body')
-        // deleteScenary(quotationBtnDelete, scenaryCreatedBody)
-        // Delete Scenary Bottom
-
-        // Scenary List
-
+        //const scenaryCreatedBody = quotation.querySelector('.scenary--created__body')
       });
       modalApproval(quotation, "#modal-approval", ".quotation--btn__modal")
       modalApproval(quotation, "#modal-file", ".quotation--btn__file")
+      modalApproval(quotation, "#modal-approve-support", ".quotation--btn__file-approve")
     }
 
     getScenary()
 
     function obtenerSubtotalProductsSeleccionado(array) {
       for (var i = 0; i < array.length; i++) {
-          if (array[i].selected === true) {
-              return array[i].subtotalProducts;
-          }
+        if (array[i].selected === true) {
+          return array[i].subtotalProducts;
+        }
       }
       return null;
     }
