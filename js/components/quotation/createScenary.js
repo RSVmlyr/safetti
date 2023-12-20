@@ -102,7 +102,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                 <img src='../../img/icon/icon-send.png' loading="lazy" alt="Aprobar" title="Aprobar">
               </a>
               <a id="quotation--btn__approved-tmp" class="quotation--btn__file scenary--data__actionsDelete  ${cotStatus.statusId==5?'':'d-none'}" href="#" data-cotid="${cot.id}">
-                <span class="quotation--info">Validar Anticipo</span>
+                <span class="quotation--info">Carga tu soporte de pago</span>
                 <img src='../../img/icon/icon-validate.png' loading="lazy" alt="Aprobar" title="Aprobar">
               </a>
               <a id="quotation--btn__approved-tmp" class="quotation--btn__file-approve scenary--data__actionsDelete ${cotStatus.statusId==5?'':'d-none'}" href="#" data-cotid="${cot.id}" data-url="${cot.paymentSupportFilePath}" data-ispdf="${cot.isPaymentSupportPDF}">
