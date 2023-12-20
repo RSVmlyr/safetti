@@ -1,11 +1,11 @@
-const fillSelectProduct = (nodeSelectId, arr) => {
+const fillSelectProduct = (nodeSelectId, arr, hideItemsByDefault) => {
   arr.forEach((item) => {
     const optionElement = document.createElement('option');
     optionElement.value = item;
     optionElement.textContent = item;
 
-    if (nodeSelectId.id != "qncuentos") {
-        optionElement.hidden = true;
+    if (hideItemsByDefault === true) {
+      optionElement.hidden = true;
     }
 
     nodeSelectId.appendChild(optionElement);

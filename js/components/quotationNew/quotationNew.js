@@ -52,11 +52,11 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   // idQnAdvisor.innerHTML = 'Asesor: ' + resQueryUserAdvisorName
   idQnCurrency.innerHTML = 'Moneda: ' + resQueryUserCurrency
  
-  fillSelectProduct(idQnCuentos, resQueryProducts.cuentos)
-  fillSelectProduct(idQnTiposPrenda, resQueryProducts.tiposPrenda)
-  fillSelectProduct(idQnClasificaciones, resQueryProducts.clasificaciones)
-  fillSelectProduct(idQnFitPrenda, resQueryProducts.fitPrenda)
-  createProductCards(quotationNew, resQueryUser, resQueryProducts)
+  fillSelectProduct(idQnCuentos, resQueryProducts.cuentos, false)
+  fillSelectProduct(idQnTiposPrenda, resQueryProducts.tiposPrenda, true)
+  fillSelectProduct(idQnClasificaciones, resQueryProducts.clasificaciones, true)
+  fillSelectProduct(idQnFitPrenda, resQueryProducts.fitPrenda, true)
+  createProductCards(quotationNew, resQueryUser, resQueryProducts, true)
   searchProduct(quotationNew, resQueryUser, resQueryProducts)
   localStorage()
 
