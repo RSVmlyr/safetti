@@ -157,8 +157,11 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
 
     if(cot.paymentSupportFilePath && currentRol != "advisors") {
       const quotationBtnApproved = quotation.querySelector('.scenary--data__actions');
-      const messageHtml = '<p class="text-help">Tu soporte está en revisión</p>';
-      quotationBtnApproved.insertAdjacentHTML('beforeend', messageHtml);
+      console.log(quotationBtnApproved);
+      if(quotationBtnApproved) {
+        const messageHtml = '<p class="text-help">Tu soporte está en revisión</p>';
+        quotationBtnApproved.insertAdjacentHTML('beforeend', messageHtml);
+      }
     }
     if(cot.paymentSupportFilePath == null && currentRol == "advisors") {
       const quotationBtnFileApprove = quotation.querySelector(".quotation--btn__file-approve")
@@ -186,7 +189,9 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         quotationBtnFileApprove.remove()
       }
       const quotationBtnModal = quotation.querySelector('.quotation--btn__modal')
-      quotationBtnModal.remove()
+      if(quotationBtnModal) {
+        quotationBtnModal.remove()
+      }
     }
     
     // Send Email
