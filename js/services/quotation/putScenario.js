@@ -24,6 +24,7 @@ const putScenario = async (dataSetScenario, cotId) => {
       expiringLocalStorage.deleteDataWithExpiration('scenario-' + cotId)
       setTimeout(() => {
         const quotationewBack = document.querySelector('#quotationew--back')
+        console.log("here");
         quotationewBack.click()
       }, 2000);
     } else if (reqQueryS.status === 400) {

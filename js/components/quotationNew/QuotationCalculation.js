@@ -501,10 +501,10 @@ class QuotationCalculation extends HTMLElement {
           expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(newArray))
         }
         this.procesarResult(newArray).then(() => {
-           const loadingDivHtml = document.querySelector('.loading-message')
-        if (loadingDivHtml) {
-          loadingDivHtml.remove();
-        }
+          const loadingDivHtml = document.querySelector('.loading-message')
+          if (loadingDivHtml) {
+            loadingDivHtml.remove();
+          }
           if(cotId) {
             expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(newArray))
           } else{

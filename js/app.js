@@ -24,6 +24,12 @@ class App {
       const login = new Login();
       login.setHash(uid,resQueryUser.rol);
       if (this.quotation) {
+        const scenarioPattern = /scenario-\d+/;
+        for (const key of Object.keys(localStorage)) {
+          if (scenarioPattern.test(key)) {
+            localStorage.removeItem(key);
+          }
+        }
         const quotationContentList = this.quotation.querySelector('#quotation--content--list');
         quotationContentList.insertAdjacentHTML('afterbegin', '<img class="quotation--loading qnimage--auto" src="../img/icon/icon-spinner.gif">');
         const resQueryAdvisors = await getAdvisors();
