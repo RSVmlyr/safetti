@@ -4,9 +4,9 @@ import getPriceInRange from "./getPriceInRange.js"
 import getConfigCurrency from "./getConfigCurrency.js"
 import ExpiringLocalStorage from "../components/localStore/ExpiringLocalStorage.js"
 import nodeNotification from "../helpers/nodeNotification.js";
+import formatNumberWithPoints from "./formatNumberWithPoints.js"
 
 const inputQuantity = async (section, clienteID) => {
-  console.log(section);
   const quotatioviewQuantity = section.querySelectorAll(".quotatioview--quantity")
   const client = await getInfoUser(clienteID); 
   const quotatioviewValueTotal = section.querySelector(".quotatioview__valueTotal")
@@ -27,9 +27,7 @@ const inputQuantity = async (section, clienteID) => {
 
         
         delayTimer = setTimeout(async () => {
-          console.log(item);
           const minQuantity = item.dataset.minQuantity;
-          console.log(minQuantity);
           const quotationBtnSave = section.querySelector(".quotation--btn__save")
           if(inputValue != '' && inputValue < parseInt(minQuantity)) {
             quotationBtnSave.disabled = true
@@ -43,40 +41,50 @@ const inputQuantity = async (section, clienteID) => {
             const priceUni = getPriceInRange(prices, inputValue);
             const configCurrency = getConfigCurrency(client.currency)
             const subtotalProductsElement = section.querySelector('.subtotal-products');
+            const quotatioviewDiscountValueNumber = section.querySelector('.quotatioview__discountValueNumber');
             const rangeInput = section.querySelector('#rangeInput');
-            let price
-            if(client.currency === "COP") {
-              price = priceUni.replace(".", "")
-            } else {
-              price = parseFloat(priceUni.replace(",", "."))
-            }
-            const SubTotal = price * inputValue
+
+            const SubTotal = parseInt(priceUni.replace(/\./g, '')) * inputValue
             const row = parentInfoName;
             const unitValueElement = row.querySelector('.unit-value');
+
             if (unitValueElement) {
-              //remove $ 
-              //input es 1 esta ma el servicio
-              unitValueElement.textContent = "$" + priceUni.toLocaleString(
-                configCurrency.idiomaPredeterminado,
-                configCurrency.opcionesRegionales
-              );
+              unitValueElement.value = formatNumberWithPoints(priceUni)
             }
 
-            const subTotalElement = row.querySelector('.sub-total');
+            const subTotalElement = row.querySelector('.sub-total input');
             if (subTotalElement) {
-              subTotalElement.textContent = SubTotal.toLocaleString();
+              subTotalElement.value = formatNumberWithPoints(SubTotal)
             }
             const totalSum = sumSubTotalValues(section, client.currency);
-            console.log(totalSum);
             if (subtotalProductsElement) {
-              subtotalProductsElement.textContent = totalSum.toLocaleString();
-            } 
+              subtotalProductsElement.value = formatNumberWithPoints(totalSum);
+            }
             if(rangeInput){
               const event = new Event('input');
               rangeInput.dispatchEvent(event);
-            }            
-            const Total = getNumberFromText(quotatioview__withdiscount.textContent) + getNumberFromText(ivaProductsValue.textContent)
-            quotatioviewValueTotal.textContent = Total.toLocaleString()
+            } 
+
+            // Subtotal con descuento
+              if(quotatioview__withdiscount) {
+                const subTotalValue = parseInt(subtotalProductsElement.value.replace(/\./g, '')) - parseInt(quotatioviewDiscountValueNumber.value.replace(/\./g, ''))
+                console.log(subTotalValue);
+                quotatioview__withdiscount.value = formatNumberWithPoints(subTotalValue);
+              }
+            // Subtotal con descuento
+            
+            // IVA
+            if(ivaProductsValue) {
+              const ivaProductsValueFormat = quotatioview__withdiscount.value.replace(/\./g, '')
+              const ivaProductsValueCalc = Math.floor((ivaProductsValueFormat * 19) / 100)
+              ivaProductsValue.value = formatNumberWithPoints(ivaProductsValueCalc)
+            }
+            // IVA
+
+            // Total
+            const Total = parseInt(quotatioview__withdiscount.value.replace(/\./g, '')) + parseInt(ivaProductsValue.value.replace(/\./g, ''))
+            quotatioviewValueTotal.value = formatNumberWithPoints(Total)
+            // Total
 
           } catch (error) {
             console.error('Error al obtener información del usuario:', error);
@@ -109,31 +117,11 @@ const getInfoUser = async (clienteID) => {
   }
 }
 
-const getNumberFromText = (text) => {
-  const matches = text.match(/\d|,/g);
-  if (matches) {
-    return parseInt(matches.join('').replace(/,/g, ''), 10);
-  }
-  return 0; 
-}
-
-const getNumberFromTextFloat = (text) => {
-  const cleanedText = text.replace(/[^0-9,.]/g, '');
-  const number = parseFloat(cleanedText.replace(',', '.'));
-  return isNaN(number) ? 0 : number;
-}
-
-const sumSubTotalValues = (section, currency) => {
-  const subTotalElements = section.querySelectorAll('.sub-total');
+const sumSubTotalValues = (section) => {
+  const subTotalElements = section.querySelectorAll('.sub-total input');
   let totalSum = 0;
-  let value = 0;
   subTotalElements.forEach((element) => {
-    const text = element.textContent;
-    if(currency === "COP"){
-      value = getNumberFromText(text);
-    } else {
-      value = getNumberFromTextFloat(text);
-    }
+    let value = parseInt(element.value.replace(/\./g, ''))
     totalSum += value;
   });
 

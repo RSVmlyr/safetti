@@ -103,7 +103,7 @@
         tbody {
           td {
             color: $c2;
-            padding: 10px;
+            padding: 5px 10px;
             font-size: 13px;
             font-family: $FuturaMedium;
             &:nth-child(4),
@@ -122,7 +122,7 @@
       }
       .table__descuento {
         margin: 0 0 0 auto;
-        max-width: 350px;
+        max-width: 480px;
         thead {
           th {
             &:nth-child(3) {
@@ -157,8 +157,8 @@
           position: relative;
           .quotatioview--iva {
             position: absolute;
-            left: 6rem;
-            top: -2px;
+            left: 85px;
+            top: 5px;
           }
         }
       }
