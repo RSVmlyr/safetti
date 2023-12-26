@@ -28,8 +28,10 @@ const inputQuantity = async (section, clienteID) => {
         
         delayTimer = setTimeout(async () => {
           const minQuantity = item.dataset.minQuantity;
-          const quotationBtnSave = section.querySelector(".quotation--btn__save")
-          if(inputValue != '' && inputValue < parseInt(minQuantity)) {
+          const quotationBtnSave = section.querySelector(".quotation--btn__save")          
+          const res = ValidarVariosProd(section, item, minQuantity);
+          console.log(res);
+          if(inputValue != '' && inputValue < parseInt(minQuantity) && res != true ) {
             quotationBtnSave.disabled = true
             nodeNotification(`Las cantidad debe ser mayor o igual a ${minQuantity}`)
             return
@@ -116,6 +118,24 @@ const getInfoUser = async (clienteID) => {
     console.error('Error al obtener información del usuario:', error);
   }
 }
+
+const ValidarVariosProd = (section, item, minQuantity) => {
+  const parentInfoName = item.closest(".info-name");
+  const itemMolde = parentInfoName.querySelector(".product-molde").dataset.molde.substring(0, 3);
+  const allProductMolde = section.querySelectorAll(".product-molde");
+  let totalQuantity = 0;
+  Array.from(allProductMolde).forEach((element, index) => {
+    const referencia = element.dataset.molde;
+    const parentInfoName = element.closest(".info-name");
+    if (referencia && referencia.startsWith(itemMolde)) {
+      const quantityElement = parentInfoName.querySelector('.quotatioview--quantity');
+      const quantity = quantityElement ? parseInt(quantityElement.value, 10) : 0;
+      totalQuantity += quantity;
+    }
+  });
+
+  return totalQuantity >= minQuantity;
+}; 
 
 const sumSubTotalValues = (section) => {
   const subTotalElements = section.querySelectorAll('.sub-total input');
