@@ -1,16 +1,13 @@
 import deleteChilds from "../../helpers/deleChilds.js"
 import nodeListPrice from "../../helpers/nodeListPrice.js"
 import statusQuotation from "../../helpers/statusQuotation.js"
-import deleteScenary from "./deleteSecenary.js"
 import sendEmailHelper from "../../helpers/sendEmailHelper.js"
 import Login from "../../login/login.js"
 import statusQuotationS from "../../services/statusQuotation/statusQuotation.js"
-import quotationNewPage from "../quotationNew/quotationNew.js"
-import getUser from "../../services/user/getUser.js"
 import putQuotationScenario from "../../services/quotation/putQuotationScenario.js"
-import currencyFormatUSD from "../../helpers/currencyFormatUSD.js"
 import { config } from "../../../config.js"
 import modalApproval from "../../helpers/modalApproval.js"
+import formatCurrency from "../../helpers/formatCurrency.js"
 
 const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
   const API_DEV = config.API_KEY_DEV;
@@ -157,7 +154,6 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
 
     if(cot.paymentSupportFilePath && currentRol != "advisors") {
       const quotationBtnApproved = quotation.querySelector('.scenary--data__actions');
-      console.log(quotationBtnApproved);
       if(quotationBtnApproved) {
         const messageHtml = '<p class="text-help">Tu soporte está en revisión</p>';
         quotationBtnApproved.insertAdjacentHTML('beforeend', messageHtml);
@@ -234,11 +230,8 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             totalProducts += product.unitPrice;
           }
         });
-        let totalPro = totalProducts
-        const subtotalProductsSeleccionado = obtenerSubtotalProductsSeleccionado(cot.scenarios);
-        const totalpValue = currencyFormatUSD(totalPro, scen.currency)
-        const subtotal = currencyFormatUSD(subtotalProductsSeleccionado, scen.currency)
-        const totalValue = currencyFormatUSD(scen.total, scen.currency)
+
+        const subtotalProductsSeleccionado = cot.scenarios.find(x => x.selected).subtotalProducts;
 
         // Scenary selected 
         if ( scen.selected === true ) {
@@ -255,8 +248,8 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               </tr>
               <tr>
                 <td></td>
-                <td><p class="quotation--info">$ ${cot.currency === 'COP' ? subtotal.toLocaleString() : subtotal}</p></td>
-                <td><p class="quotation--info">$ ${cot.currency === 'COP' ? totalValue.toLocaleString() : totalValue} </p></td>
+                <td><p class="quotation--info">$ ${formatCurrency(subtotalProductsSeleccionado, cot.currency)}</p></td>
+                <td><p class="quotation--info">$ ${formatCurrency(scen.total, cot.currency)} </p></td>
                 <td><span class="quotation--btn__view"><a  class="quotation--info quotation--detail" href="./Cotizacion.html?id=${cot.id}&uid=${storedHash}">Ver detalle</a></span></td>
               </tr>
             </table>
@@ -277,8 +270,8 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         scen.products.forEach(product => {
           scenSelected = scen.selected
           productName.push(product.productName)
-          linePrice.push(product.linePrice)
-          unitPrice.push(product.unitPrice)
+          linePrice.push("$ " + formatCurrency(product.linePrice, cot.currency))
+          unitPrice.push("$ " + formatCurrency(product.unitPrice, cot.currency))
         });
         const count =  parseInt(i) + 1
         let scenaryList = 
@@ -319,7 +312,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                     <tr>
                       <td><span class="quotation--title__quo">Total</span></td>
                       <td></td>
-                      <td><p class="quotation--title__quo">$ ${cot.currency === 'COP' ? scen.total.toLocaleString() : totalValue}</p></td>
+                      <td><p class="quotation--title__quo">$ ${formatCurrency(scen.total, cot.currency)}</p></td>
                     </tr>
                   </table>
                 </div>  
@@ -357,15 +350,6 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     }
 
     getScenary()
-
-    function obtenerSubtotalProductsSeleccionado(array) {
-      for (var i = 0; i < array.length; i++) {
-        if (array[i].selected === true) {
-          return array[i].subtotalProducts;
-        }
-      }
-      return null;
-    }
 
     const emailSendNodes = () => {
       const idEmail = quotation.querySelectorAll('.scenary--quotation--email')
