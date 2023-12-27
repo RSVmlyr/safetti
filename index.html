@@ -67,7 +67,7 @@
         </div>
         <div class="modal__form--content">
           <label class="modal__label" for="number">Ingresa el procentaje de anticipo (0-100):</label>
-          <input class="modal__input" type="number" id="number" name="number" min="0" max="10" required> %
+          <input class="modal__input" type="number" id="number" name="number" required> %
 
         </div>
         <div class="modal__form--action">
@@ -97,7 +97,7 @@
           <label class="modal__label" for="imagen">Subir archivo: (Imagen ó PDF)</label>
           <input class="modal__input" type="file" id="imagen" name="imagen"  accept="image/*,application/pdf">
 
-          <label class="modal__label d-none" for="detalle">Detalles:</label>
+          <label class="modal__label d-none" for="details">Detalles:</label>
           <textarea class="modal__textarea d-none" id="details" name="detalle" rows="4" placeholder="Ingrese detalle..."></textarea>
         </div>
         <div class="modal__form--action">
@@ -137,6 +137,7 @@
 </main> 
 
 <!-- JS -->
-<script asycn type="module" src="./js/app.js"></script>
+<script src="./js/lib/currency.min.js"></script> 
+<script async type="module" src="./js/app.js"></script>
 </body>
 </html>

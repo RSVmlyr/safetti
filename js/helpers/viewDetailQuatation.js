@@ -1,19 +1,17 @@
-// viewDetailQuatation
-
 import ExpiringLocalStorage from "../components/localStore/ExpiringLocalStorage.js";
 import putScenario from "../services/quotation/putScenario.js";
-import formatNumberWithPoints from "./formatNumberWithPoints.js";
 import inputDiscount from "./inputDiscount.js";
 import inputQuantity from "./inputQuantity.js";
 
 const viewDetailQuatation = (quotation) => {
-  console.log(quotation);
+  const COP = value => currency(value, { symbol: "$ ", separator: ".", decimal:",", precision: 0 });
+  const USD = value => currency(value, { symbol: "$ ", separator: ",", decimal:".", precision: 2 });
+  const curr = value => quotation.currency === "COP" ? COP(value) : USD(value);
 
   const localStRol = localStorage.getItem('rol')
 
   const quotatioviewContainerScenary = document.querySelectorAll('.quotatioview__section')
   const nodeListScenary = Array.from(quotatioviewContainerScenary)
-  const currency = quotation.currency
 
   nodeListScenary.forEach((section, i) => {
 
@@ -67,31 +65,24 @@ const viewDetailQuatation = (quotation) => {
             const quotatioviewValueTotal = section.querySelector('.quotatioview__valueTotal')
             quotatioviewIva.classList.remove('quotation-hide')
 
-            const qncurrencyElement = document.getElementById('qncurrency');
-            const textContent = qncurrencyElement.textContent.trim();
-
             inputInserted = true;
             inputQuantity(section, quotation.client)
-            inputDiscount(section)
+            inputDiscount(section, quotation.currency)
 
             quotatioviewIva.addEventListener('change', (e) => {
               if (e.target.checked) {
-                console.log('Checkbox marcado');
                 // IVA
                 if(ivaProductsValue) {
-                  const ivaProductsValueFormat = quotatioviewWithdiscount.value.replace(/\./g, '')
-                  console.log(ivaProductsValueFormat);
-                  const ivaProductsValueCalc = Math.floor((ivaProductsValueFormat * 19) / 100)
-                  console.log(ivaProductsValueCalc);
-                  const totalIva = parseInt(ivaProductsValueFormat) + ivaProductsValueCalc
-                  ivaProductsValue.value = formatNumberWithPoints(ivaProductsValueCalc)
-                  quotatioviewValueTotal.value = formatNumberWithPoints(totalIva)
+                  const ivaProductsValueFormat = curr(quotatioviewWithdiscount.value);
+                  const ivaProductsValueCalc = ivaProductsValueFormat.multiply(0.19);
+                  const totalIva = ivaProductsValueFormat.add(ivaProductsValueCalc);
+                  ivaProductsValue.value = ivaProductsValueCalc.format();
+                  quotatioviewValueTotal.value = totalIva.format();
                 }
                 // IVA
               } else {
-                console.log('Checkbox Desmarcado');
-                ivaProductsValue.value = 0
-                quotatioviewValueTotal.value = quotatioviewWithdiscount.value
+                ivaProductsValue.value = curr(0).format();
+                quotatioviewValueTotal.value = quotatioviewWithdiscount.value;
               }
             });
 
@@ -121,12 +112,11 @@ const viewDetailQuatation = (quotation) => {
                 "name": nameInput.value,
                 "discountPercent": rangeInput.value,
                 "applyTaxIVA": quotatioviewIva.checked,
-                "currency": currency, 
+                "currency": quotation.currency, 
                 "rol": client.rol,
                 "products": productData.products
             }
-            console.log(putBodyScenary);
-            putScenario(putBodyScenary)
+            putScenario(putBodyScenary);
         })
       }
 
@@ -176,7 +166,7 @@ const viewDetailQuatation = (quotation) => {
       //             "name": nameInput.value,
       //             "discountPercent": rangeInput.value,
       //             "applyTaxIVA": quotatioviewIva.checked,
-      //             "currency": currency, 
+      //             "currency": quotation.currency, 
       //             "rol": client.rol,
       //             "products": productData.products
       //         }

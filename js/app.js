@@ -15,14 +15,13 @@ class App {
   }
 
   async initialize() {
-    document.addEventListener('DOMContentLoaded', async () => {
       const url = new URL(window.location.href);
       const searchParams = new URLSearchParams(url.search);
       const uid = searchParams.get('uid') || '4'; //27
       const resQueryUser = await getUser(uid);
-      //localStorage.setItem('rol', resQueryUser.rol);
       const login = new Login();
-      login.setHash(uid,resQueryUser.rol);
+      login.setHash(uid, resQueryUser.rol);
+
       if (this.quotation) {
         const scenarioPattern = /scenario-\d+/;
         for (const key of Object.keys(localStorage)) {
@@ -38,15 +37,13 @@ class App {
         const btn_ = document.querySelector('.quotation--btn__add');
         btn_.setAttribute('href', '/index-q.html?uid=' + resQueryUser.id);
 
-        if(resQueryUser.rol === "advisors") {
-          const paginatorElement = new PaginatorElement(' ')
-          paginatorElement.renderPaginator()
-        } else {
+        if(resQueryUser.rol != "advisors") {
           const quotationLeft = document.querySelector(".quotation .quotation--container__action");
           quotationLeft.classList.add("d-none");
-          const paginatorElement = new PaginatorElement(resQueryUser.firstName);
-          paginatorElement.renderPaginator()
         }
+
+        const paginatorElement = new PaginatorElement(' ');
+        paginatorElement.renderPaginator();
 
         const getAdvisor = () => {
           if (resQueryAdvisors) {
@@ -72,8 +69,7 @@ class App {
         getDataQuotationNew();
       }
 
-      await quotationView()
-    });
+      await quotationView();
   }
 }
 

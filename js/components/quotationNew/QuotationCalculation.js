@@ -1,61 +1,51 @@
 import getUnityPrices from '../../helpers/getUnityPrices.js'
 import nodeNotification from '../../helpers/nodeNotification.js'
+import getPriceInRange from "../../helpers/getPriceInRange.js"
 import getProductPrices from '../../services/product/getProductPrices.js'
 import setQuotation from '../../services/quotation/setQuotation.js'
 import setScenario from '../../services/quotation/setScenario.js'
-import getUser from "../../services/user/getUser.js";
 import ExpiringLocalStorage from '../localStore/ExpiringLocalStorage.js'
 import loadingData from "../../helpers/loading.js";
-import getConfigCurrency from "../../helpers/getConfigCurrency.js";
 
 class QuotationCalculation extends HTMLElement {
   constructor(resQueryUser) {
     super();
-    //this.sumar()
-    this.resQueryUser = resQueryUser
+    this.resQueryUser = resQueryUser;
+    this.countCart = 0;
     this.innerHTML = `
       <div class="quotation-calculation">
         <div class="quotationew--calculation__body">
         </div>
-      </div>
-    `
-    this.countCart = 0;
+      </div>`;
+
+    document.querySelector('.quotation--btn__add').textContent = "0";
+    document.querySelector(".floating-button .number").textContent = "0";
   }
-  getPriceInRange(prices, value) {
-    if (prices != undefined) {
-      if (value <= 5) {
-        return prices["p" + value]
-      }
 
-      if (value >= 5 && value < 10) {
-        return prices["p5"]
-      }
+  getCurrentSymbol(){
+    let symbol = 'COP';
+    const rol =  localStorage.getItem('rol');
 
-      if (value >= 10 && value < 15) {
-        return prices["p10"]
-      }
+    if (rol === 'advisors'){
+      const c = new ExpiringLocalStorage().getDataWithExpiration('ClientFullName');
 
-      if (value >= 15 && value < 20) {
-        return prices["p15"]
-      }
-
-      if (value >= 20 && value < 50) {
-        return prices["p20"]
-      }
-
-      if (value >= 50 && value < 100) {
-        return prices["p50"]
-      }
-
-      if (value >= 100 && value < 300) {
-        return prices["p100"]
-      }
-      
-      if (value >= 300) {
-        return prices["p300"]
+      if(c) {
+        const client = JSON.parse(c);
+        if(client['0'].currency != undefined && client['0'].currency != ""){
+          symbol = client['0'].currency;
+        }
       }
     }
+    else{
+      symbol = this.resQueryUser.currency;
+    }
+
+    return symbol;
   }
+
+  COP = value => currency(value, { symbol: "", separator: ".", decimal:",", precision: 0 });
+  USD = value => currency(value, { symbol: "", separator: ",", decimal:".", precision: 2 });
+  curr = value => this.getCurrentSymbol() === "COP" ? this.COP(value) : this.USD(value);
 
   SendNewQuotation(data, iva, name, comments ) {
     const comment = comments ? comments : ""
@@ -163,6 +153,7 @@ class QuotationCalculation extends HTMLElement {
     const cotId = searchParams.get('cotId')
     const expiringLocalStorage = new ExpiringLocalStorage()
     let retrievedData = ''
+
     if(cotId) {
       retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
 
@@ -170,121 +161,26 @@ class QuotationCalculation extends HTMLElement {
       retrievedData = expiringLocalStorage.getDataWithExpiration("products")
     }
     if(retrievedData) {
-      const productsList = retrievedData ? JSON.parse(retrievedData) : []
+      const productsList = retrievedData ? JSON.parse(retrievedData) : [];
       productsList.forEach(product => {
-        let valueSubtotal = ''
-        const subtotal = parseFloat((parseFloat(product.unitPrice) * product.quantity).toFixed(2))
-        const c = expiringLocalStorage.getDataWithExpiration('ClientFullName');
-        if(c) {
-          const client = JSON.parse(c);
-          if(client['0'].currency === undefined && client['0'].rol === undefined){
-            client['0'].currency = 'COP';
-            client['0'].rol = '_final_consumer';
-          }
-          
-          const configCurrency = getConfigCurrency(client['0'].currency);
-          valueSubtotal = subtotal.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales);
-        } else {
-          valueSubtotal = subtotal.toLocaleString()
-        }
-     
-        const row = document.createElement('div')
-        row.classList.add('scenary--row__table')
-        row.classList.add('scenary--row__data')
+        const unitPrice = this.curr(product.unitPrice);
+        const valueSubtotal = unitPrice.multiply(product.quantity).format();
+        const row = document.createElement('div');
+        row.classList.add('scenary--row__table');
+        row.classList.add('scenary--row__data');
         row.innerHTML = `
           <div class="scenary--row">${product.productName}</div>
           <div class="scenary--row">${product.selectedMoldeCode}</div>
-          <div class="scenary--row">$ ${product.unitPrice.toLocaleString()}</div>
+          <div class="scenary--row">$ ${unitPrice.format()}</div>
           <div class="scenary--row">${product.quantity}</div>
-          <div class="scenary--row subtotal">${valueSubtotal}</div>
+          <div class="scenary--row subtotal">$ ${valueSubtotal}</div>
           <div class="scenary--row cancel" data-product='${product.selectedMoldeCode}'></div>
-        `
-        document.querySelector('.quotationew--calculation__body').appendChild(row)
-
+        `;
+        document.querySelector('.quotationew--calculation__body').appendChild(row);
       })
     }
     const scenaryRowTable = document.querySelectorAll('.scenary--row__table .cancel')
     this.removeItem(scenaryRowTable)
-  }
-
-  createRow(products) {
-    const expiringLocalStorage = new ExpiringLocalStorage()
-    let prices = ''
-    products.forEach(product => {
-      const getPrices = async () => {
-        if (this.resQueryUser.rol === 'advisors'){
-          const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
-          const client = JSON.parse(c);
-          prices = await getProductPrices(
-            product.id,
-            client[0].currency,
-            client[0].rol
-          )
-          const priceInRange = this.getPriceInRange(prices, product.quantity)
-          if(client[0].currency === 'COP') {
-            const numPrange = priceInRange.replace(".", "")
-            this.createArrayProducto(product, numPrange)
-          } else {
-            const numPrange = priceInRange.replace(",", ".")
-            this.createArrayProducto(product, numPrange)
-          }
-        } else {
-          prices = await getProductPrices(
-            product.id,
-            this.resQueryUser.currency,
-            this.resQueryUser.rol
-          )
-          if(this.resQueryUser.currency === 'COP') {
-            const priceInRange = this.getPriceInRange(prices, product.quantity)
-            const numPrange = priceInRange.replace(".", "")
-            this.createArrayProducto(product, numPrange)
-          } else {
-            const priceInRange = this.getPriceInRange(prices, product.quantity)
-            const numPrange = priceInRange.replace(",", ".")
-            this.createArrayProducto(product, numPrange)
-          }
-        }
-       
-        this.sumar()
-      }
-      getPrices()
-    })
-
-    const storedProducts = localStorage.getItem('products')
-    if(storedProducts) {
-      const productsLocalStores = storedProducts ? JSON.parse(storedProducts) : []
-      const productsList = JSON.parse(productsLocalStores.value)
-      let subtotal = 0
-      productsList.forEach(product => {
-        const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
-        const client = JSON.parse(c);
-        if(client['0'].currency === undefined && client['0'].rol === undefined){
-          client['0'].currency = 'COP';
-          client['0'].rol = '_final_consumer';
-        }
-        if (c) {
-          subtotal = client['0'].currency === 'COP'
-            ? Math.floor(product.unitPrice * product.quantity)
-            : parseFloat((parseFloat(product.unitPrice) * product.quantity).toFixed(2))
-        } else {
-          subtotal =  this.resQueryUser.currency === 'COP' ? product.unitPrice * product.quantity : parseFloat((parseFloat(product.unitPrice) * product.quantity).toFixed(2))
-        }
-        const row = document.createElement('div')
-        const configCurrency = getConfigCurrency(client['0'].currency)
-        row.classList.add('scenary--row__table')
-        row.classList.add('scenary--row__data')
-        row.innerHTML = `
-          <div class="scenary--row">${product.productName}</div>
-          <div class="scenary--row">${product.selectedMoldeCode}</div>
-          <div class="scenary--row">${product.unitPrice.toLocaleString()}</div>
-          <div class="scenary--row">${product.quantity}</div>
-          <div class="scenary--row subtotal">${subtotal.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)}</div>
-        `
-        document.querySelector('.quotationew--calculation__body').appendChild(row)
-
-      })
-    }
-    
   }
 
   loading() {
@@ -294,14 +190,13 @@ class QuotationCalculation extends HTMLElement {
   }
 
   procesarResult = async(result) =>  {
-    this.removeList()
+    this.removeList();
     this.loading();
-    const expiringLocalStorage = new ExpiringLocalStorage()
+    const expiringLocalStorage = new ExpiringLocalStorage();
+
     for (const item of result) {
       try {
         let price;
-        let unitPrice;
-        let numPrange;
         const rol =  localStorage.getItem('rol')
   
         if (rol === 'advisors') {
@@ -312,48 +207,20 @@ class QuotationCalculation extends HTMLElement {
             client['0'].rol = '_final_consumer';
           }
   
-          price = await getUnityPrices(item.product, client['0'].currency, client['0'].rol);          
-          const priceInRange = this.getPriceInRange(price, item.qt);
-
-          if (priceInRange === undefined) {
-            console.error('Error en este producto:', item);
-            nodeNotification('Error en la información del producto');
-            continue;
-          }
-  
-          if (client['0'].currency === 'COP') {
-        
-            numPrange = priceInRange.replace(".", "");
-          } else {
-            numPrange = priceInRange.replace(",", ".");
-          }
-  
-          if (c) {
-            unitPrice = client['0'].currency === 'COP' ? parseInt(numPrange) : parseFloat(numPrange).toFixed(2);
-          } else {
-            unitPrice = parseFloat(numPrange).toFixed(2);
-          }
+          price = await getUnityPrices(item.product, client['0'].currency, client['0'].rol);
         } else {
-          price = await getProductPrices(item.product, this.resQueryUser.currency, this.resQueryUser.rol);
-  
-          const priceInRange = this.getPriceInRange(price, item.qt);
-  
-          if (priceInRange === undefined) {
-            console.error('Error en este producto:', item);
-            nodeNotification('Error en la información del producto');
-            continue;
-          }
-  
-          if (this.resQueryUser.currency === 'COP') {
-            numPrange = priceInRange.replace(".", "");
-            unitPrice = parseInt(numPrange);
-          } else {
-            numPrange = priceInRange.replace(",", ".");
-            unitPrice = parseFloat(numPrange).toFixed(2);
-          }
+          price = await getProductPrices(item.product, this.resQueryUser.currency, this.resQueryUser.rol);  
+        }
+
+        const priceInRange = getPriceInRange(price, item.qt);
+
+        if (priceInRange === undefined) {
+          console.error('Error en este producto:', item);
+          nodeNotification('Error en la configuración de precios del producto');
+          continue;
         }
   
-        item.unitPrice = unitPrice;
+        item.unitPrice = priceInRange.replace(".", "").replace(",",".");
       } catch (error) {
         console.error('Error al procesar el producto:', error);
       }
@@ -370,17 +237,15 @@ class QuotationCalculation extends HTMLElement {
     if(products) {
       let unitPrice = 0
       let retrievedData = ''
-      products.forEach(product => { 
-        const productsDataAsync = async () => {
+      products.forEach(product => {
           if(cotId) {
             retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
           } else{
             retrievedData = expiringLocalStorage.getDataWithExpiration("products")
           }
-        
+
           if (retrievedData) {
-            const productsLocalStores = retrievedData ? JSON.parse(retrievedData) : []
-            productForSave = productsLocalStores
+            productForSave = retrievedData ? JSON.parse(retrievedData) : [];
           }
 
           productForSave.push({
@@ -394,7 +259,7 @@ class QuotationCalculation extends HTMLElement {
 
           productForSave.forEach(item => {
             const productNumber = item.product;
-            const quantity = item.quantity;          
+            const quantity = item.quantity;
             if (productQuantities[productNumber]) {
               productQuantities[productNumber] += quantity;
             } else {
@@ -410,10 +275,7 @@ class QuotationCalculation extends HTMLElement {
           } else{
             expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(productForSave))
           }
-          this.showData()
-
-        }
-        productsDataAsync();
+          this.showData();
       });
     }
   }
@@ -433,10 +295,9 @@ class QuotationCalculation extends HTMLElement {
       }
     
       if (retrievedData) {
-        const productsLocalStores = retrievedData ? JSON.parse(retrievedData) : []
-        productForSave = productsLocalStores
+        productForSave = retrievedData ? JSON.parse(retrievedData) : [];
       }
-      const result = Object.values(productForSave.reduce((acc, item) => {
+      let result = Object.values(productForSave.reduce((acc, item) => {
         const id = item.selectedMoldeCode;
         if (acc[id]) {
           acc[id].quantity += parseInt(item.quantity);
@@ -445,24 +306,30 @@ class QuotationCalculation extends HTMLElement {
         }
         return acc;
       }, {}));
-      
+
       this.procesarResult(result).then(() => {
         const loadingDivHtml = document.querySelector('.loading-message')
         if (loadingDivHtml) {
           loadingDivHtml.remove();
         }
+
+        result = result.filter((value) => value.unitPrice != "" && value.unitPrice != "0");
+
         if(cotId) {
           expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(result))
-        } else{
+        }
+        else{
           expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(result))
         }
-        this.removeList()
-        this.insertList()
-        this.sumar()
+
+        this.removeList();
+        this.insertList();
+        this.sumar();
       });
   }
 
   removeList() {
+    document.querySelector(".floating-button .number").textContent = "0";
     const scenaryTableRow = document.querySelectorAll('.scenary--row__table .scenary--row')
     scenaryTableRow.forEach((e, i) => {
       e.remove()
@@ -479,12 +346,12 @@ class QuotationCalculation extends HTMLElement {
         const cotId = searchParams.get('cotId')
 
         const retrievedDataParse = this.retrievedData()
-        //const retrievedDataParse = JSON.parse(retrievedData)
         const newArray = retrievedDataParse.filter(item => item.selectedMoldeCode !== getDataProduct);
         let productQuantities = {}
+
         newArray.forEach(item => {
           const productNumber = item.product;
-          const quantity = item.quantity;          
+          const quantity = item.quantity;
           if (productQuantities[productNumber]) {
             productQuantities[productNumber] += quantity;
           } else {
@@ -495,11 +362,13 @@ class QuotationCalculation extends HTMLElement {
         newArray.forEach(item => {
           item.qt = productQuantities[item.product];
         });
+
         if(cotId) {
           expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(newArray))
         } else{
           expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(newArray))
         }
+
         this.procesarResult(newArray).then(() => {
           const loadingDivHtml = document.querySelector('.loading-message')
           if (loadingDivHtml) {
@@ -525,62 +394,49 @@ class QuotationCalculation extends HTMLElement {
     const clientename = expiringLocalStorage.getDataWithExpiration('ClientFullName')
     const client = JSON.parse(clientename)
     const btniva = document.querySelector('.quotation--iva');
-    
 
     if(client){
-      if(client['0'].currency === undefined && client['0'].rol === undefined){
-        client['0'].currency = 'COP';
-        client['0'].rol = '_final_consumer';
-      }
-      const configCurrency = getConfigCurrency(client[0].currency);
-      const total = this.btnivaChecked(client['0'].currency, quo, btniva);
-      quotationSave.textContent = total.toLocaleString(configCurrency.idiomaPredeterminado, configCurrency.opcionesRegionales)
+      const total = this.btnivaChecked(quo, btniva);
+      quotationSave.textContent = total.format();
+
       quo.addEventListener('input', (event) => {
         const maxValue = 10;
         if (event.target.value > maxValue) {
           event.target.value = maxValue;
         }
-        const total = this.btnivaChecked(client['0'].currency, quo, btniva)
-        quotationSave.textContent = total.toLocaleString();
+        const total = this.btnivaChecked(quo, btniva);
+        quotationSave.textContent = total.format();
       });
     } else {
-      const qncurrencyElement = document.getElementById('qncurrency');
-      const textContent = qncurrencyElement.textContent.trim();
-      const currency = textContent.replace(/Moneda: /g, "");
-      const total = this.btnivaChecked(currency, quo, btniva)
-      quotationSave.textContent = total.toLocaleString()
+      const total = this.btnivaChecked(quo, btniva);
+      quotationSave.textContent = total.format();
     }
   } 
 
-  btnivaChecked (currency, quo, btniva) {
+  btnivaChecked (quo, btniva) {
     let total = 0
     let porcentaje = 0
+    if(quo != null) {
+      porcentaje = quo.value
+    }
+
     if (btniva.checked) { 
-      if(quo != null) {
-        porcentaje = quo.value
-      }
-      const subtotal = this.calcularDescuentoYTotal(porcentaje, currency);
-      const numero = currency === 'COP' ? (parseInt(subtotal)) : (parseFloat(subtotal)).toFixed(2)
-      const iva = (numero * 19) / 100
-      const valuesIva = currency === 'COP' ? (parseInt(iva)) : parseFloat(iva)
-      total = currency === 'COP' ? (parseInt(numero) + valuesIva) : (parseFloat(numero) + valuesIva)
+      const subtotal = this.calcularDescuentoYTotal(porcentaje);
+      const iva = subtotal.multiply(0.19);
+      total = subtotal.add(iva);
     } else {
-      if(quo != null) {
-        porcentaje = quo.value
-      }
-      const parsetotal = this.calcularDescuentoYTotal(porcentaje, currency);
-      total = currency === 'COP' ? parseInt(parsetotal) : parseFloat(parsetotal)
+      total = this.calcularDescuentoYTotal(porcentaje);
     }
     return total;
   }
 
-  calcularDescuentoYTotal(porcentaje, currency) {
+  calcularDescuentoYTotal(porcentaje) {
     const productForSave = this.retrievedData()
     const res = this.count(productForSave)
     const count = res.count;
-    document.querySelector(".floating-button .number").textContent = res.countCart
-    const disc = (count * porcentaje / 100);
-    const total = currency === 'COP' ? parseInt(count - disc) : parseFloat(count - disc).toFixed(2);
+    document.querySelector(".floating-button .number").textContent = res.countCart;
+    const disc = count.multiply(porcentaje / 100);
+    const total = count.subtract(disc);
     return total
   }
 
@@ -604,22 +460,12 @@ class QuotationCalculation extends HTMLElement {
   }
 
   count (productForSave){
-    const expiringLocalStorage = new ExpiringLocalStorage()
-    const clientename = expiringLocalStorage.getDataWithExpiration('ClientFullName')
-    let count = 0
-    let valor = 0
-    let countCart = 0
+    let count = this.curr(0);
+    let countCart = 0;
     productForSave.forEach(e => {
-      if (clientename) {
-        valor = parseInt(e.textContent)
-        const client = JSON.parse(clientename);
-        count += client['0'].currency === 'COP' ?parseInt(e.unitPrice * e.quantity) :parseFloat(e.unitPrice * e.quantity)
-        countCart += e.quantity
-      } else {
-        valor = parseFloat(e.unitPrice * e.quantity)
-        count += parseFloat(valor)
-        countCart += e.quantity
-      }
+      const temp = this.curr(e.unitPrice).multiply(e.quantity);
+      count = count.add(temp);
+      countCart += e.quantity;
     })
     return {count, countCart} 
   }
@@ -653,5 +499,5 @@ class QuotationCalculation extends HTMLElement {
   }
 }
 
-customElements.define('quotation-calculation', QuotationCalculation)
-export default QuotationCalculation
+customElements.define('quotation-calculation', QuotationCalculation);
+export default QuotationCalculation;

@@ -1,80 +1,62 @@
-import formatNumberWithPoints from "./formatNumberWithPoints.js";
 
-const inputDiscount = async (section) => {
+const inputDiscount = async (section, symbol) => {
 
   const rangeInput = section.querySelector('#rangeInput');
-
-  // Descuento
+  const COP = value => currency(value, { symbol: "$ ", separator: ".", decimal:",", precision: 0 });
+  const USD = value => currency(value, { symbol: "$ ", separator: ",", decimal:".", precision: 2 });
+  const curr = value => symbol === "COP" ? COP(value) : USD(value);
 
   if(rangeInput) {
     rangeInput.addEventListener('input', (e) => {
+      let discountPercentage = 0;
 
-      if (e.target.value !== null) {
-        // Realizar cálculos con el valor 0 si e.target.value está vacío
-        let maxValue = 10
-        const discountPercentage = parseInt(e.target.value) > maxValue ? e.target.value = maxValue : parseInt(e.target.value);
-    
-        const subtotalProductsElement = section.querySelector('.subtotal-products');
-        const quotatioviewDiscountValueNumber = section.querySelector('.quotatioview__discountValueNumber');
-        const quotatioviewValueTotal = section.querySelector(".quotatioview__valueTotal")
-        const quotatioview__withdiscount = section.querySelector(".quotatioview__withdiscount");
-        const ivaProductsValue = section.querySelector(".iva__products-value")
-    
-        // Valor Descuento
-        const subtotalValue = parseInt(subtotalProductsElement.value.replace(/\./g, '')) || 0;
-        const discount = subtotalValue * discountPercentage / 100;
-        quotatioviewDiscountValueNumber.value = formatNumberWithPoints(discount);
-        // Valor Descuento
-    
-        // Subtotal con Descuento
-        const subDiscount = subtotalValue - discount;
-    
-        // Asignar el valor al input solo si e.target.value no está vacío
-        if (e.target.value.trim() !== '') {
-          
-          quotatioview__withdiscount.value = formatNumberWithPoints(subDiscount);
-          console.log('wd', subDiscount);
+      if (e.target.value != "") {
+        const maxValue = 10;
+        let targetValue = parseInt(e.target.value);
 
-        // IVA
-        if(ivaProductsValue) {
-          const ivaProductsValueFormat = quotatioview__withdiscount.value.replace(/\./g, '')
-          const ivaProductsValueCalc = Math.floor((ivaProductsValueFormat * 19) / 100)
-          console.log('a', ivaProductsValueCalc);
-          ivaProductsValue.value = formatNumberWithPoints(ivaProductsValueCalc)
+        if(targetValue > maxValue){
+          targetValue = maxValue;
+          e.target.value = maxValue;
         }
-        // IVA
-
-        // Total
-        const Total = parseInt(quotatioview__withdiscount.value.replace(/\./g, '')) + parseInt(ivaProductsValue.value.replace(/\./g, ''))
-        quotatioviewValueTotal.value = formatNumberWithPoints(Total)
-        // Total
-
-        } else {
-          quotatioviewDiscountValueNumber.value = 0
-          quotatioview__withdiscount.value = subtotalProductsElement.value
-
-          // IVA
-          if(ivaProductsValue) {
-            const ivaProductsValueFormat = quotatioview__withdiscount.value.replace(/\./g, '')
-            const ivaProductsValueCalc = Math.floor((ivaProductsValueFormat * 19) / 100)
-            ivaProductsValue.value = formatNumberWithPoints(ivaProductsValueCalc)
-          }
-          // IVA
-
-          // Total
-          const Total = parseInt(quotatioview__withdiscount.value.replace(/\./g, '')) + parseInt(ivaProductsValue.value.replace(/\./g, ''))
-          quotatioviewValueTotal.value = formatNumberWithPoints(Total)
-          // Total
+        else if(targetValue < 0){
+          targetValue = 0;
+          e.target.value = 0
         }
 
-        // Subtotal con Descuento
+        discountPercentage = targetValue;
       }
   
-    })
+      const subtotalProductsElement = section.querySelector('.subtotal-products');
+      const quotatioviewDiscountValueNumber = section.querySelector('.quotatioview__discountValueNumber');
+      const quotatioviewValueTotal = section.querySelector(".quotatioview__valueTotal")
+      const quotatioview__withdiscount = section.querySelector(".quotatioview__withdiscount");
+      const ivaProductsValue = section.querySelector(".iva__products-value")
+      const quotatioviewIva = section.querySelector('.quotatioview--iva');
+  
+      // Valor Descuento
+      const subtotalValue = curr(subtotalProductsElement.value) || curr(0);
+      const discount = subtotalValue.multiply(discountPercentage / 100);
+      quotatioviewDiscountValueNumber.value = discount.format();
+      // Valor Descuento
+  
+      // Subtotal con Descuento
+      let subDiscount = subtotalValue.subtract(discount);
+      quotatioview__withdiscount.value = subDiscount.format();
 
+      // IVA
+      if(quotatioviewIva.checked && ivaProductsValue) {
+        const calculatedIva = subDiscount.multiply(0.19);
+        ivaProductsValue.value = calculatedIva.format();
+        subDiscount = subDiscount.add(calculatedIva);
+      }
+      // IVA
+
+      // Total
+      quotatioviewValueTotal.value = subDiscount.format();
+      // Total
+    });
   }
-
   // Descuento
 }
 
-export default inputDiscount
+export default inputDiscount;
