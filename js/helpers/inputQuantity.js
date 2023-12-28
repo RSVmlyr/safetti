@@ -13,6 +13,7 @@ const inputQuantity = async (section, clienteID) => {
     const quotatioview__withdiscount = section.querySelector(".quotatioview__withdiscount");
     const ivaProductsValue = section.querySelector(".iva__products-value");
     const quotatioviewIva = section.querySelector('.quotatioview--iva');
+    let currentPrices = [];
 
     const COP = value => currency(value, { symbol: "$ ", separator: ".", decimal:",", precision: 0 });
     const USD = value => currency(value, { symbol: "$ ", separator: ",", decimal:".", precision: 2 });
@@ -38,7 +39,6 @@ const inputQuantity = async (section, clienteID) => {
                 delayTimer = setTimeout(async () => {
                     const minQuantity = item.dataset.minQuantity;
                     const quotationBtnSave = section.querySelector(".quotation--btn__save");
-                    const res = ValidarVariosProd(section, item, minQuantity);
 
                     if(inputValue == ''){
                         const moldeCode = parentInfoName.querySelector('.product-molde').getAttribute('data-molde');
@@ -46,20 +46,21 @@ const inputQuantity = async (section, clienteID) => {
                         quotationBtnSave.classList.add("disabled");
                         event.target.setAttribute("data-valid", "false");
                         nodeNotification(`Ingrese una cantidad para el producto ${moldeCode}`);
-                        return
-                    }
-
-                    if (inputValue != '' && inputValue < parseInt(minQuantity) && res != true) {
-                        quotationBtnSave.disabled = true;
-                        quotationBtnSave.classList.add("disabled");
-                        event.target.setAttribute("data-valid", "false");
-                        nodeNotification(`Las cantidad debe ser mayor o igual a ${minQuantity}`);
-                        return
+                        return;
                     }
 
                     try {
-                        const prices = await getServicePrices(productId, client);
-                        let rawPrice = getPriceInRange(prices, inputValue);
+                        const prices = await getServicePrices(productId, client, currentPrices);
+                        const validQuantity = ValidarVariosProd(section, prices, minQuantity);
+
+                        if(validQuantity == -1){
+                            quotationBtnSave.disabled = true;
+                            quotationBtnSave.classList.add("disabled");
+                            nodeNotification(`La cantidad total debe ser mayor o igual a ${minQuantity}`);
+                            return;
+                        }
+
+                        let rawPrice = getPriceInRange(prices, validQuantity);
 
                         // Los precios están creados en COP, si la moneda actual es USD debemos formatearlo a USD
                         if(client.currency === "USD"){
@@ -71,21 +72,30 @@ const inputQuantity = async (section, clienteID) => {
                         const quotatioviewDiscountValueNumber = section.querySelector('.quotatioview__discountValueNumber');
                         const rangeInput = section.querySelector('#rangeInput');
 
-                        const SubTotal = priceUni.multiply(inputValue);
-                        const row = parentInfoName;
-                        const unitValueElement = row.querySelector('.unit-value');
+                        //actualiza precio a productos del mismo grupo
+                        const allProductMolde = section.querySelectorAll(".product-molde");
+                        Array.from(allProductMolde).forEach(element => {
+                            const referencia = element.dataset.molde;
+                            const parentInfoName = element.closest(".info-name");
+                    
+                            if (prices.sku.includes(referencia)) {
+                                const unitValueElement = parentInfoName.querySelector('.unit-value');
+                                if (unitValueElement) {
+                                    unitValueElement.value = priceUni.format();
+                                }
 
-                        if (unitValueElement) {
-                            unitValueElement.value = priceUni.format();
-                        }
-                        const subTotalElement = row.querySelector('.sub-total input');
-                        if (subTotalElement) {
-                            subTotalElement.value = SubTotal.format();
-                        }
+                                const inputQuantity = parentInfoName.querySelector(".quotatioview--quantity")
+                                const subTotal = priceUni.multiply(inputQuantity.value);
+                                const subTotalElement = parentInfoName.querySelector('.sub-total input');
+                                if (subTotalElement) {
+                                    subTotalElement.value = subTotal.format();
+                                }
+                            }
+                        });
 
                         const subTotalElements = section.querySelectorAll('.sub-total input');
                         let totalSum = curr(0);
-                        
+
                         subTotalElements.forEach((element) => {
                             totalSum = totalSum.add(element.value);
                         });
@@ -93,6 +103,7 @@ const inputQuantity = async (section, clienteID) => {
                         if (subtotalProductsElement) {
                             subtotalProductsElement.value = totalSum.format();
                         }
+
                         if (rangeInput) {
                             const event = new Event('input');
                             rangeInput.dispatchEvent(event);
@@ -116,8 +127,6 @@ const inputQuantity = async (section, clienteID) => {
                         quotatioviewValueTotal.value = Total.format();
                         // Total
 
-                        event.target.setAttribute("data-valid", "true");
-
                         const firstInvalid = event.target.closest('.quotatioview__table')
                             .querySelector('.quotatioview--quantity[data-valid="false"]');
 
@@ -126,7 +135,7 @@ const inputQuantity = async (section, clienteID) => {
                             quotationBtnSave.disabled = false;
                         }
                     } catch (error) {
-                        console.error('Error al obtener información del usuario:', error);
+                        console.error('Error al obtener información de los productos:', error);
                     }
                 }, 500);
             }
@@ -136,13 +145,20 @@ const inputQuantity = async (section, clienteID) => {
     return { msg: 'Vmlyr' };
 }
 
-const getServicePrices = async (productId, client) => {
-    const prices = await getProductPrices(
-        productId,
-        client.currency,
-        client.rol
-    )
-    return prices
+const getServicePrices = async (productId, client, currentPrices) => {
+    const prices = currentPrices.find(element => {
+        return element.productId == productId &&
+        element.currency == client.currency &&
+        element.rol == client.rol});
+
+    if(prices) {
+        return prices;
+    }
+    else {
+        const prices = await getProductPrices(productId, client.currency, client.rol);
+        currentPrices.push(prices);
+        return prices;
+    }
 }
 
 const getInfoUser = async (clienteID) => {
@@ -156,22 +172,35 @@ const getInfoUser = async (clienteID) => {
     }
 }
 
-const ValidarVariosProd = (section, item, minQuantity) => {
-    const parentInfoName = item.closest(".info-name");
-    const itemMolde = parentInfoName.querySelector(".product-molde").dataset.molde.substring(0, 3);
+const ValidarVariosProd = (section, prices, minQuantity) => {
     const allProductMolde = section.querySelectorAll(".product-molde");
     let totalQuantity = 0;
-    Array.from(allProductMolde).forEach((element, index) => {
+    let quantityElements = [];
+
+    Array.from(allProductMolde).forEach(element => {
         const referencia = element.dataset.molde;
         const parentInfoName = element.closest(".info-name");
-        if (referencia && referencia.startsWith(itemMolde)) {
+
+        if (prices.sku.includes(referencia)) {
             const quantityElement = parentInfoName.querySelector('.quotatioview--quantity');
-            const quantity = quantityElement ? parseInt(quantityElement.value, 10) : 0;
-            totalQuantity += quantity;
+            quantityElements.push(quantityElement);
+            totalQuantity += parseInt(quantityElement.value);
         }
     });
 
-    return totalQuantity >= minQuantity;
+    if(quantityElements.length > 0 && totalQuantity < minQuantity){
+        quantityElements.forEach(element => {
+            element.setAttribute("data-valid", "false");
+        });
+        return -1;
+    }
+    else{
+        quantityElements.forEach(element => {
+            element.setAttribute("data-valid", "true");
+        });
+    }
+
+    return totalQuantity;
 };
 
 export default inputQuantity;

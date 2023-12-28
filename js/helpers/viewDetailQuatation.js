@@ -1,4 +1,5 @@
 import ExpiringLocalStorage from "../components/localStore/ExpiringLocalStorage.js";
+import nodeNotification from './nodeNotification.js';
 import putScenario from "../services/quotation/putScenario.js";
 import inputDiscount from "./inputDiscount.js";
 import inputQuantity from "./inputQuantity.js";
@@ -92,25 +93,19 @@ const viewDetailQuatation = (quotation) => {
 
       if (quotationBtnSave) {
         quotationBtnSave.addEventListener('click', () => {
-            quotationBtnSave.classList.add("disabled")
+
             if (nameInput.value === '') {
-                nodeNotification('El campo NOMBRE DEL ESCENARIO es obligatorio.')
-                setTimeout(() => {
-                    quotationBtnSave.disabled = false
-                }, 2000);
-            } else if (rangeInput.value === '') {
-                nodeNotification('El campo DESCUENTO del escenario es obligatorio.')
-                setTimeout(() => {
-                    quotationBtnSave.disabled = false
-                }, 2000);
+                nodeNotification('El campo NOMBRE DEL ESCENARIO es obligatorio.');
+                return;
             }
+
             const expiringLocalStorage = new ExpiringLocalStorage()
             const client = expiringLocalStorage.getDataWithExpiration('client')
             const productData = getProductData(section);
             const putBodyScenary = {
                 "id": quotation.scenarios[i].id,
                 "name": nameInput.value,
-                "discountPercent": rangeInput.value,
+                "discountPercent": rangeInput.value ? rangeInput.value : 0,
                 "applyTaxIVA": quotatioviewIva.checked,
                 "currency": quotation.currency, 
                 "rol": client.rol,
