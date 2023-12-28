@@ -1,3 +1,4 @@
+import onlyInputNumbers from "./onlyInputNumbers.js";
 
 const inputDiscount = async (section, symbol) => {
 
@@ -7,6 +8,8 @@ const inputDiscount = async (section, symbol) => {
   const curr = value => symbol === "COP" ? COP(value) : USD(value);
 
   if(rangeInput) {
+    rangeInput.onkeydown = onlyInputNumbers;
+
     rangeInput.addEventListener('input', (e) => {
       let discountPercentage = 0;
 

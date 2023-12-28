@@ -99,6 +99,9 @@
           }
           input {
             text-align: end;
+            &[data-valid="false"]{
+              border-color: red;
+            }
           }
           input[type=text] {
             padding-right: 0;
