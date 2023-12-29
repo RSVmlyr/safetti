@@ -10,24 +10,11 @@ import { config } from "../../../config.js";
 import ExpiringLocalStorage from '../localStore/ExpiringLocalStorage.js';
 import onlyInputNumbers from "../../helpers/onlyInputNumbers.js";
 
-const similarId = (id) => {
-  const expiringLocalStorage = new ExpiringLocalStorage()
-  const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
-  let value;
-  if(retrievedData == null) {
-    return false
-  }
-  if(retrievedData) {
-    const productsLoclaStores = retrievedData ? JSON.parse(retrievedData) : []
-    productsLoclaStores.forEach(pls => {
-      const { product } = pls;
-      value = product === id;
-    })
-  }
-  return value
-} 
-
 const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
+  const url = new URL(window.location.href);
+  const searchParams = new URLSearchParams(url.search);
+  const cotId = searchParams.get('cotId');
+
   if(resQueryUser.rol != "advisors") {
     qnaddproduct()
   }
@@ -47,7 +34,9 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
     }
     return null;
   }
+
   if (resQueryProducts.products.length > 0) {
+    const expiringLocalStorage = new ExpiringLocalStorage();
 
     resQueryProducts.products.forEach((pro, index) => {
       const firstNonNullKey = getFirstNonNullKey(pro);
@@ -169,7 +158,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             minQuantity: pro.minQuantity
           });
         }
-        
+
         if (womanInput.value > 0) {
           product.push({
             country: countrySelect.value,
@@ -180,7 +169,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             minQuantity: pro.minQuantity
           });
         }
-        
+
         if (unisexInput.value > 0) {
           product.push({
             country: countrySelect.value,
@@ -191,7 +180,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             minQuantity: pro.minQuantity
           });
         }
-        
+
         if (juniorInput.value > 0) {
           product.push({
             country: countrySelect.value,
@@ -212,30 +201,46 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         }, 1000);
 
         if(product.length <= 0) {
-          nodeNotification(`Las cantidad debe ser mayor o igual a ${minQuantity}`)
+          nodeNotification("Ingresa una cantidad para validar");
+          return;
         }
-        const sumaPorId = {};
-        product.forEach(p => {
-          const { id, quantity, minQuantity } = p;
-          const exist = similarId(id)
-          let bolCant= ''
-          if (!sumaPorId[id]) {
-            sumaPorId[id] = 0;
-          }
-          sumaPorId[id] += parseInt(quantity);
-          if(exist) {
-            bolCant = 1
-          } else {
-            bolCant = minQuantity
-          }
-          if (sumaPorId[id] < bolCant) {
-            nodeNotification(`Las cantidad debe ser mayor o igual a ${minQuantity}`)
-          } else {
-            const quotationCalculation = new QuotationCalculation(resQueryUser);
-            quotationCalculation.createArrayProducto(product);
-            nodeNotification('Agregando producto a la lista...')
-          }
-        });
+
+        const quantityToAdd = product.reduce((accumulator, currentValue) => {
+          return accumulator + parseInt(currentValue.quantity);
+        },0);
+
+        let totalQuantity = quantityToAdd;
+        let localProducts;
+        if(cotId) {
+          localProducts = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
+        }
+        else{
+          localProducts = expiringLocalStorage.getDataWithExpiration("products")
+        }
+
+        const codesToValidate = [pro.canadaMan, pro.canadaWoman, pro.colombiaJunior,
+                            pro.colombiaMan, pro.colombiaUnisex, pro.colombiaWoman,
+                            pro.vR7Man, pro.vR7Woman].join(",");
+
+        if(localProducts){
+          const localProductsObj = JSON.parse(localProducts);
+
+          localProductsObj.forEach(p => {
+            if(codesToValidate.includes(p.selectedMoldeCode)){
+              totalQuantity += p.quantity;
+            }
+          });
+        }
+
+        if(totalQuantity < pro.minQuantity){
+          nodeNotification(`La cantidad debe ser mayor o igual a ${pro.minQuantity}`);
+          return;
+        }
+
+        nodeNotification('Agregando producto a la lista...');
+        const quotationCalculation = new QuotationCalculation(resQueryUser);
+        console.log("llamando createArrayProducto")
+        quotationCalculation.createArrayProducto(product);
       });
   
       // Card button Cancelar

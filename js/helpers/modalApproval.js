@@ -48,12 +48,7 @@ const validarFormulario = (mymodal) => {
   }
 }
 
-const sendSatus = (Qid, status, userId, advance) => {
-  nodeNotification("Cambiando el estado de la cotización")
-  const data = statusQuotationS( Qid, status, userId, advance )
-}
-
-const modalApproval = (quotation, modal, open, paymentSupportFilePath, isPaymentSupportPDF ) => {
+const modalApproval = async (quotation, modal, open, paymentSupportFilePath, isPaymentSupportPDF ) => {
   const mymodal = quotation.querySelector(modal);
 
   if (mymodal) {
@@ -83,7 +78,7 @@ const modalApproval = (quotation, modal, open, paymentSupportFilePath, isPayment
           modalFormContent.classList.remove("true");
           modalFormContent.classList.remove("false");
         }
-        if (mymodal.id === "modal-approve-support"  ) { 
+        if (mymodal.id === "modal-approve-support") {
           const imageElement = document.createElement('img');
           modalFormContent.classList.add(ispdf);
           download.href = url;
@@ -109,41 +104,43 @@ const modalApproval = (quotation, modal, open, paymentSupportFilePath, isPayment
         }
       })
     }
-    modalButtonSend.addEventListener("click", function (e) {
+
+    modalButtonSend.addEventListener("click", async function (e) {
       e.preventDefault()
       if(mymodal.id === 'modal-approve-support') {
-        closeModal.click()
-        const status = 2
         if (Qid !== '') {
-          validationQuotation(Qid, status, userId, null)
+          await validationQuotation(Qid, 2, userId, null);
         }
+        closeModal.click();
         return
       }
+
       const validate = validarFormulario(mymodal)
       const msgerror = mymodal.querySelector(".modal__form--error")
+
       if(!validate.value) {
         msgerror.classList.remove("d-none")
         msgerror.textContent = validate.msg
-      } else {
+      }
+      else {
         modalButtonSend.disabled = true
-        openModal.classList.add("loading")
-        closeModal.click()
         msgerror.classList.add("d-none")
-        msgerror.textContent = validate.value
 
         if (mymodal.id === 'modal-file') {
           const valueImage = mymodal.querySelector('.modal__input').files[0]
-          const status = 2
           if (Qid !== '') {
-            validationQuotation(Qid, status, userId, valueImage)
-          }
-        } else {
-          const advance = validate.numberValue
-          const status = 4
-          if (Qid !== '') {
-            sendSatus(Qid, status, userId, advance)
+            await validationQuotation(Qid, 2, userId, valueImage)
           }
         }
+        else {
+          const advance = validate.numberValue
+          if (Qid !== '') {
+            nodeNotification("Cambiando el estado de la cotización")
+            await statusQuotationS( Qid, 4, userId, advance )
+          }
+        }
+
+        closeModal.click();
       }
     })
   }

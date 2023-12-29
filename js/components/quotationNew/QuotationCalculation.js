@@ -1,4 +1,3 @@
-import getUnityPrices from '../../helpers/getUnityPrices.js'
 import nodeNotification from '../../helpers/nodeNotification.js'
 import getPriceInRange from "../../helpers/getPriceInRange.js"
 import getProductPrices from '../../services/product/getProductPrices.js'
@@ -21,6 +20,7 @@ class QuotationCalculation extends HTMLElement {
 
     document.querySelector('.quotation--btn__add').textContent = "0";
     document.querySelector(".floating-button .number").textContent = "0";
+    this.currentPrices = [];
   }
 
   getCurrentSymbol(){
@@ -190,6 +190,22 @@ class QuotationCalculation extends HTMLElement {
     quotationContentListContainer.appendChild(loadingDiv);
   }
 
+  getServicePrices = async (productId, client) => {
+    const prices = this.currentPrices.find(element => {
+        return element.productId == productId &&
+        element.currency == client.currency &&
+        element.rol == client.rol});
+
+    if(prices) {
+      return prices;
+    }
+    else {
+      const prices = await getProductPrices(productId, client.currency, client.rol);
+      this.currentPrices.push(prices);
+      return prices;
+    }
+  }
+
   procesarResult = async(result) =>  {
     this.removeList();
     this.loading();
@@ -207,10 +223,10 @@ class QuotationCalculation extends HTMLElement {
             client['0'].currency = 'COP';
             client['0'].rol = '_final_consumer';
           }
-  
-          price = await getUnityPrices(item.product, client['0'].currency, client['0'].rol);
+
+          price = await this.getServicePrices(item.product, client['0']);
         } else {
-          price = await getProductPrices(item.product, this.resQueryUser.currency, this.resQueryUser.rol);  
+          price = await this.getServicePrices(item.product, this.resQueryUser);
         }
 
         const priceInRange = getPriceInRange(price, item.qt);
@@ -246,7 +262,7 @@ class QuotationCalculation extends HTMLElement {
           }
 
           if (retrievedData) {
-            productForSave = retrievedData ? JSON.parse(retrievedData) : [];
+            productForSave = JSON.parse(retrievedData);
           }
 
           productForSave.push({
@@ -271,13 +287,16 @@ class QuotationCalculation extends HTMLElement {
           productForSave.forEach(item => {
             item.qt = productQuantities[item.product];
           });
+
           if(cotId) {
             expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(productForSave))
           } else{
             expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(productForSave))
           }
-          this.showData();
       });
+
+      console.log("llamando showData")
+      this.showData();
     }
   }
 
@@ -290,43 +309,45 @@ class QuotationCalculation extends HTMLElement {
     let productForSave = {}
 
     if(cotId) {
-        retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
-      } else{
-        retrievedData = expiringLocalStorage.getDataWithExpiration("products")
+      retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
+    }
+    else{
+      retrievedData = expiringLocalStorage.getDataWithExpiration("products")
+    }
+
+    if (retrievedData) {
+      productForSave = JSON.parse(retrievedData);
+    }
+
+    let result = Object.values(productForSave.reduce((acc, item) => {
+      const id = item.selectedMoldeCode;
+      if (acc[id]) {
+        acc[id].quantity += parseInt(item.quantity);
+      } else {
+        acc[id] = { ...item };
       }
-    
-      if (retrievedData) {
-        productForSave = retrievedData ? JSON.parse(retrievedData) : [];
+      return acc;
+    }, {}));
+
+    this.procesarResult(result).then(() => {
+      const loadingDivHtml = document.querySelector('.loading-message')
+      if (loadingDivHtml) {
+        loadingDivHtml.remove();
       }
-      let result = Object.values(productForSave.reduce((acc, item) => {
-        const id = item.selectedMoldeCode;
-        if (acc[id]) {
-          acc[id].quantity += parseInt(item.quantity);
-        } else {
-          acc[id] = { ...item };
-        }
-        return acc;
-      }, {}));
 
-      this.procesarResult(result).then(() => {
-        const loadingDivHtml = document.querySelector('.loading-message')
-        if (loadingDivHtml) {
-          loadingDivHtml.remove();
-        }
+      result = result.filter((value) => value.unitPrice != "" && value.unitPrice != "0");
 
-        result = result.filter((value) => value.unitPrice != "" && value.unitPrice != "0");
+      if(cotId) {
+        expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(result))
+      }
+      else{
+        expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(result))
+      }
 
-        if(cotId) {
-          expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(result))
-        }
-        else{
-          expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(result))
-        }
-
-        this.removeList();
-        this.insertList();
-        this.sumar();
-      });
+      this.removeList();
+      this.insertList();
+      this.sumar();
+    });
   }
 
   removeList() {

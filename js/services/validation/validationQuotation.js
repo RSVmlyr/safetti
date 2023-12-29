@@ -7,8 +7,6 @@ const validationQuotation = async (Qid, status, userId, valueImage) => {
   let formData = new FormData();
   formData.append("file", valueImage);
 
-  console.log(formData);
-
   try {
     const urlQuerySQ = `${API_DEV}/api/Quotation/${Qid}/${userId}/${status}`;
 
@@ -18,20 +16,21 @@ const validationQuotation = async (Qid, status, userId, valueImage) => {
     };
 
     const response = await fetch(urlQuerySQ, requestOptions);
-    console.log(response);
     nodeNotification("Enviando validación...")
     if(response.status === 200) {
       nodeNotification("Validación enviada")
       setTimeout(() => {
         location.reload();
-      }, 1500);
+      }, 1000);
     } else if (response.status === 405) {
+      nodeNotification("Hubo un error inesperado, intenta mas tarde.")
       console.error("405")
     } else if (response.status == 500) {
+      nodeNotification("Hubo un error inesperado, intenta mas tarde.")
       console.error("500")
     }
   } catch (error) {
-    console.error('No se pudo cancelar la cotización', error);
+    console.error('Hubo un error al cambiar el estado de la cotización', error);
   }
 };
 
