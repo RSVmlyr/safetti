@@ -15,61 +15,64 @@ class App {
   }
 
   async initialize() {
-      const url = new URL(window.location.href);
-      const searchParams = new URLSearchParams(url.search);
-      const uid = searchParams.get('uid') || '4'; //27
-      const resQueryUser = await getUser(uid);
-      const login = new Login();
-      login.setHash(uid, resQueryUser.rol);
+    const loadingImage = '<img class="quotation--loading qnimage--auto" src="../img/icon/icon-spinner.gif">';
+    if (this.quotation){
+      const quotationContentList = this.quotation.querySelector('#quotation--content--list');
+      quotationContentList.insertAdjacentHTML('afterbegin', loadingImage);
+    }
+    if (this.quotationNew){
+      const sliderProducts = this.quotationNew.querySelector('.slider--productos .slider--content');
+      sliderProducts.insertAdjacentHTML('afterbegin', loadingImage);
+    }
 
-      if (this.quotation) {
-        const scenarioPattern = /scenario-\d+/;
-        for (const key of Object.keys(localStorage)) {
-          if (scenarioPattern.test(key)) {
-            localStorage.removeItem(key);
-          }
+    const url = new URL(window.location.href);
+    const searchParams = new URLSearchParams(url.search);
+    const uid = searchParams.get('uid') || '4'; //27
+    const resQueryUser = await getUser(uid);
+    const login = new Login();
+    login.setHash(uid, resQueryUser.rol);
+
+    if (this.quotation) {
+      const scenarioPattern = /scenario-\d+/;
+
+      for (const key of Object.keys(localStorage)) {
+        if (scenarioPattern.test(key)) {
+          localStorage.removeItem(key);
         }
-        const quotationContentList = this.quotation.querySelector('#quotation--content--list');
-        quotationContentList.insertAdjacentHTML('afterbegin', '<img class="quotation--loading qnimage--auto" src="../img/icon/icon-spinner.gif">');
-        const resQueryAdvisors = await getAdvisors();
-        const spinner = this.quotation.querySelector('#quotation--content--list .quotation--loading');
-        spinner.remove();
-        const btn_ = document.querySelector('.quotation--btn__add');
-        btn_.setAttribute('href', '/index-q.html?uid=' + resQueryUser.id);
-
-        if(resQueryUser.rol != "advisors") {
-          const quotationLeft = document.querySelector(".quotation .quotation--container__action");
-          quotationLeft.classList.add("d-none");
-        }
-
-        const paginatorElement = new PaginatorElement(' ');
-        paginatorElement.renderPaginator();
-
-        const getAdvisor = () => {
-          if (resQueryAdvisors) {
-            selectAdvisors(resQueryAdvisors);
-          }
-        };
-        getAdvisor();
       }
 
-      if (this.quotationNew) {
-        const btnBack_ = document.querySelector('#quotationew--back')
-        btnBack_.setAttribute('href', '/index.html?uid=' + resQueryUser.id);
-        const sliderProducts = this.quotationNew.querySelector('.slider--productos .slider--content');
-        sliderProducts.insertAdjacentHTML('afterbegin', '<img class="quotation--loading qnimage--auto" src="../img/icon/icon-spinner.gif">');
-        const resQueryProducts = await getProduct();
-        const resQueryClients = await getClients();
-        const spinnerP = this.quotationNew.querySelector('.slider--productos .quotation--loading');
+      const resQueryAdvisors = await getAdvisors();
+      const btn_ = document.querySelector('.quotation--btn__add');
+      btn_.setAttribute('href', '/index-q.html?uid=' + resQueryUser.id);
+
+      if(resQueryUser.rol != "advisors") {
+        const quotationLeft = document.querySelector(".quotation .quotation--container__action");
+        quotationLeft.classList.add("d-none");
+      }
+      
+      const paginatorElement = new PaginatorElement(' ');
+      await paginatorElement.renderPaginator();
+      
+      if (resQueryAdvisors) {
+        selectAdvisors(resQueryAdvisors);
+      }
+
+      const spinner = this.quotation.querySelector('#quotation--content--list .quotation--loading');
+      spinner.remove();
+    }
+
+    if (this.quotationNew) {
+      const btnBack_ = document.querySelector('#quotationew--back')
+      btnBack_.setAttribute('href', '/index.html?uid=' + resQueryUser.id);
+      const resQueryProducts = await getProduct();
+      const resQueryClients = await getClients();
+      quotationNewPage(this.quotationNew, resQueryUser, resQueryProducts, resQueryClients);
+      const spinnerP = this.quotationNew.querySelector('.slider--productos .quotation--loading');
+      if(spinnerP)
         spinnerP.remove();
+    }
 
-        const getDataQuotationNew = () => {
-          quotationNewPage(this.quotationNew, resQueryUser, resQueryProducts, resQueryClients);
-        };
-        getDataQuotationNew();
-      }
-
-      await quotationView();
+    await quotationView();
   }
 }
 

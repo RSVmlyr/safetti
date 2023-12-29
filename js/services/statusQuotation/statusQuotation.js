@@ -23,20 +23,21 @@ const statusQuotationS = async (Qid, status, userId, advance) => {
     };
 
     const response = await fetch(urlQuerySQ, requestOptions);
-    console.log(response);
+    
     if(response.status === 200) {
-      const data = await response.json();
       nodeNotification("Estado cambiado de la cotización")
       setTimeout(() => {
         location.reload();
-      }, 1500);
+      }, 1000);
     } else if (response.status === 405) {
+      nodeNotification("Hubo un error inesperado, intenta mas tarde.")
       console.error("405")
     } else if (response.status == 500) {
+      nodeNotification("Hubo un error inesperado, intenta mas tarde.")
       console.error("500")
     }
   } catch (error) {
-    console.error('No se pudo cancelar la cotización', error);
+    console.error('Hubo un error al cambiar el estado de la cotización', error);
   }
 };
 

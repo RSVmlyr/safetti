@@ -99,8 +99,8 @@ const viewDetailQuatation = (quotation) => {
                 return;
             }
 
-            const expiringLocalStorage = new ExpiringLocalStorage()
-            const client = expiringLocalStorage.getDataWithExpiration('client')
+            const expiringLocalStorage = new ExpiringLocalStorage();
+            const client = expiringLocalStorage.getDataWithExpiration('client');
             const productData = getProductData(section);
             const putBodyScenary = {
                 "id": quotation.scenarios[i].id,
@@ -112,7 +112,7 @@ const viewDetailQuatation = (quotation) => {
                 "products": productData.products
             }
             putScenario(putBodyScenary);
-        })
+        });
       }
 
       const getProductData = (section) => {
@@ -135,44 +135,10 @@ const viewDetailQuatation = (quotation) => {
             }
           });
         }
-      
+
         return { products };
     }
-
-      // if (quotationBtnSave) {
-      //     quotationBtnSave.addEventListener('click', () => {
-      //         quotationBtnSave.classList.add("disabled")
-      //         if (nameInput.value === '') {
-      //             nodeNotification('El campo NOMBRE DEL ESCENARIO es obligatorio.')
-      //             setTimeout(() => {
-      //                 quotationBtnSave.disabled = false
-      //             }, 2000);
-      //         } else if (rangeInput.value === '') {
-      //             nodeNotification('El campo DESCUENTO del escenario es obligatorio.')
-      //             setTimeout(() => {
-      //                 quotationBtnSave.disabled = false
-      //             }, 2000);
-      //         }
-      //         const expiringLocalStorage = new ExpiringLocalStorage()
-      //         const client = expiringLocalStorage.getDataWithExpiration('client')
-      //         const productData = getProductData(section);
-      //         const putBodyScenary = {
-      //             "id": infoQuotation[i].id,
-      //             "name": nameInput.value,
-      //             "discountPercent": rangeInput.value,
-      //             "applyTaxIVA": quotatioviewIva.checked,
-      //             "currency": quotation.currency, 
-      //             "rol": client.rol,
-      //             "products": productData.products
-      //         }
-      //         putScenario(putBodyScenary)
-      //     })
-      // }
-
   });
- 
 }
 
-export default viewDetailQuatation
-
-// viewDetailQuatation
+export default viewDetailQuatation;
