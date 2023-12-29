@@ -6,6 +6,7 @@ import setQuotation from '../../services/quotation/setQuotation.js'
 import setScenario from '../../services/quotation/setScenario.js'
 import ExpiringLocalStorage from '../localStore/ExpiringLocalStorage.js'
 import loadingData from "../../helpers/loading.js";
+import onlyInputNumbers from "../../helpers/onlyInputNumbers.js";
 
 class QuotationCalculation extends HTMLElement {
   constructor(resQueryUser) {
@@ -388,29 +389,21 @@ class QuotationCalculation extends HTMLElement {
   }
   
   sumar(){
-    const quotationSave = document.querySelector('.quotation--btn__add')
-    const quo = document.querySelector('.calculation__dis')
-    const expiringLocalStorage = new ExpiringLocalStorage()
-    const clientename = expiringLocalStorage.getDataWithExpiration('ClientFullName')
-    const client = JSON.parse(clientename)
+    const quotationSave = document.querySelector('.quotation--btn__add');
+    const quo = document.querySelector('.calculation__dis');
     const btniva = document.querySelector('.quotation--iva');
+    const total = this.btnivaChecked(quo, btniva);
+    quotationSave.textContent = total.format();
+    quo.onkeydown = onlyInputNumbers;
 
-    if(client){
+    quo.addEventListener('input', (event) => {
+      const maxValue = 10;
+      if (event.target.value > maxValue) {
+        event.target.value = maxValue;
+      }
       const total = this.btnivaChecked(quo, btniva);
       quotationSave.textContent = total.format();
-
-      quo.addEventListener('input', (event) => {
-        const maxValue = 10;
-        if (event.target.value > maxValue) {
-          event.target.value = maxValue;
-        }
-        const total = this.btnivaChecked(quo, btniva);
-        quotationSave.textContent = total.format();
-      });
-    } else {
-      const total = this.btnivaChecked(quo, btniva);
-      quotationSave.textContent = total.format();
-    }
+    });
   } 
 
   btnivaChecked (quo, btniva) {

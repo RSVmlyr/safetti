@@ -4,11 +4,11 @@ import dataSetQuotation from "./dataSetQuotation.js";
 import inputNumber from "./inputNumber.js";
 import localStorage from "./localStorage.js";
 import QuotationCalculation from './QuotationCalculation.js';
-import nodeNotification from '../../helpers/nodeNotification.js'
-import qnaddproduct from "../../helpers/qnaddproduct.js"
-import Login from "../../login/login.js";
-import { config } from "../../../config.js"
-import ExpiringLocalStorage from '../localStore/ExpiringLocalStorage.js'
+import nodeNotification from '../../helpers/nodeNotification.js';
+import qnaddproduct from "../../helpers/qnaddproduct.js";
+import { config } from "../../../config.js";
+import ExpiringLocalStorage from '../localStore/ExpiringLocalStorage.js';
+import onlyInputNumbers from "../../helpers/onlyInputNumbers.js";
 
 const similarId = (id) => {
   const expiringLocalStorage = new ExpiringLocalStorage()
@@ -61,7 +61,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
       let mainImage = pro.mainImage ? pro.mainImage : '../img/icon/image-product.jpg';
       const originUrlPath = config.API_DEV_IMAGE + '/sites/default/files/';
       let modifiedStringImage = mainImage.replace('public://', originUrlPath);
-      modifiedStringImage = modifiedStringImage.replace(/ /g, '%20');   
+      modifiedStringImage = modifiedStringImage.replace(/ /g, '%20');
       let sliderRow = 
       `<div class="slider--row">
         <div class="card">
@@ -129,23 +129,27 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
            </div>
           </div>
         </div>
-      </div>
-      `
-      const sliderProducts = quotationNew.querySelector('.slider--productos .slider--content')
+      </div>`;
+
+      const sliderProducts = quotationNew.querySelector('.slider--productos .slider--content');
   
-      sliderProducts.insertAdjacentHTML('afterbegin', `${sliderRow}`)
+      sliderProducts.insertAdjacentHTML('afterbegin', `${sliderRow}`);
       if(resQueryUser.rol ==="advisors") {
-        qnaddproduct()
+        qnaddproduct();
       }
 
+      sliderProducts.querySelectorAll("input[type=number]").forEach((input) => input.onkeydown = onlyInputNumbers);
+ 
       // Card button Agregar +
-      const cardAddProducts = quotationNew.querySelector('.card .qnaddproducts')
-      const sliderProductsRow = quotationNew.querySelector('.slider--productos .slider--content .slider--row')
+      const cardAddProducts = quotationNew.querySelector('.card .qnaddproducts');
+      const sliderProductsRow = quotationNew.querySelector('.slider--productos .slider--content .slider--row');
+
       cardAddProducts.addEventListener('click', (e) => {
         e.target ? sliderProductsRow.classList.add('active') : false
         localStorage()
-      })
-      const button = quotationNew.querySelector('.qnaceptproduct');     
+      });
+
+      const button = quotationNew.querySelector('.qnaceptproduct');
       button.addEventListener('click', (e) => {
         const parentElement = e.target.parentNode.parentNode;
         const countrySelect = parentElement.parentElement.querySelector('.card__back--country');
@@ -244,7 +248,6 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         }
       })
 
-      const cardViewDetailProducts = quotationNew.querySelector('.card .qnviewdetailproducts')
       const cardViewDetailProductsImage = quotationNew.querySelector('.card .card--image img')
       cardViewDetailProductsImage.addEventListener('click', (e) => {
         window.scrollTo({

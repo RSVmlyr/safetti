@@ -257,7 +257,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   const quotationCalculation = new QuotationCalculation(resQueryUser);
 
   const quotationBtnSave =  quotationNew.querySelector('#quotation--btn__save')
-  cotId && cotName ? quotationBtnSave.textContent = 'Guardar Escenario' : quotationBtnSave.textContent = 'Guardar Cotización'
+  cotId && cotName ? quotationBtnSave.textContent = 'Guardar escenario' : quotationBtnSave.textContent = 'Guardar cotización'
 
   const quotatioewScenary = quotationNew.querySelector('#quotationewscenary')
   const quotatioewScenaryNode = quotatioewScenary ? quotatioewScenary.value : false
