@@ -79,7 +79,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
               <span class="card--amount__title">Hombre</span>
               <div class="card--amount__input">
                 <button class="qnManDecrease">-</button>
-                <input class="qnManInput colombiaMan" type="number" name="qnManInput" value="${'colombiaMan' === firstNonNullKey ? pro.minQuantity : 0}" min="0">
+                <input class="qnManInput colombiaMan" type="number" name="qnManInput" value="0" min="0">
                 <button class="qnManIncrease">+</button>
               </div>
             </div>
@@ -88,7 +88,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
               <span class="card--amount__title">Mujer</span>
               <div class="card--amount__input">
                 <button class="qnWomanDecrease">-</button>
-                <input class="qnWomanInput colombiaWoman" type="number" name="qnWomanInput" value="${'colombiaWoman' === firstNonNullKey ? pro.minQuantity : 0}" min="0">
+                <input class="qnWomanInput colombiaWoman" type="number" name="qnWomanInput" value="0" min="0">
                 <button class="qnWomanIncrease">+</button>
               </div>
             </div>
@@ -97,7 +97,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
               <span class="card--amount__title">Unisex</span>
               <div class="card--amount__input">
                 <button class="qnUnisexDecrease">-</button>
-                <input class="qnUnisexInput colombiaUnisex" type="number" name="qnUnisexInput" value="${'colombiaUnisex' === firstNonNullKey ? pro.minQuantity : 0}" min="0">
+                <input class="qnUnisexInput colombiaUnisex" type="number" name="qnUnisexInput" value="0" min="0">
                 <button class="qnUnisexIncrease">+</button>
               </div>
             </div>
@@ -106,7 +106,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
               <span class="card--amount__title">Junior</span>
               <div class="card--amount__input">
                 <button class="qnJuniorDecrease">-</button>
-                <input class="qnJuniorInput colombiaJunior" type="number" name="qnJuniorInput" value="${'colombiaJunior' === firstNonNullKey ? pro.minQuantity : 0}" min="0">
+                <input class="qnJuniorInput colombiaJunior" type="number" name="qnJuniorInput" value="0" min="0">
                 <button class="qnJuniorIncrease">+</button>
               </div>
             </div>
