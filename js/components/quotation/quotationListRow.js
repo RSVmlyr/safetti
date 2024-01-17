@@ -3,7 +3,7 @@ import statusQuotation from "../../helpers/statusQuotation.js"
 import createScenary from "./createScenary.js"
 
 const quotationListRow = (cot) => {
-
+  // console.log("cot:", cot);
   const quotationContentList = quotation.querySelector('#quotation--content--list')
 
   if (quotationContentList) {

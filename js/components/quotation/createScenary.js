@@ -10,7 +10,9 @@ import modalApproval from "../../helpers/modalApproval.js"
 import formatCurrency from "../../helpers/formatCurrency.js"
 
 const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
+  
   const API_DEV = config.API_KEY_DEV;
+  const API_DEV_IMAGE = config.API_DEV_IMAGE;
   const quotationCreatescenary = quotation.querySelector('#quotation--content--list .quotation--list--row')
   const quotationCreatescenarys = quotation.querySelectorAll('#quotation--content--list .quotation--list--row')
   const scenaryContainerTop = quotation.querySelector('#scenary--container__top')
@@ -42,7 +44,6 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
   });
 
   quotationCreatescenary.addEventListener('click', (e) => {
-
     const quotationLoading = quotation.querySelector('.quotation--container__bottom  .quotation--right .quotation--loading')
     if (quotationLoading) {
       quotationLoading.remove()
@@ -52,6 +53,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
 
     const login = new Login();
     const storedHash = login.getStoredHash();
+    
     let scenaryTop =
     `<div class="scenary--created">
       <div class="scenary--created__header">
@@ -113,10 +115,20 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             </div>
           </div>
         </section>
+        ${
+          (cot.id && cotStatus.statusId === 2) ?  
+          `<div class="scenary--data__actions">
+            <a href="${API_DEV_IMAGE}/proyecto/${cot.id}" class="quotation--btn__add quotation--btn__Ne">Ver Proyecto</a>
+          </div>`: ``} 
       </div>
     </div>
     `
-
+    if(cot.id && cotStatus.statusId === 2) {
+      console.log("cot:", cot);
+      console.log("datecreatedAt:", datecreatedAt);
+      console.log("dateupdatedAt:", dateupdatedAt);
+      console.log("cotStatus:", cotStatus);
+    }
     scenaryContainerTop.insertAdjacentHTML('afterbegin', `${scenaryTop}`)
     // Origin quotation shopify
     const quotationOriginScenary = quotation.querySelector('.scenary--created .quotation--origin__shopify')

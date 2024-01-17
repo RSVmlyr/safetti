@@ -400,6 +400,12 @@
                   }
                 }
               }
+              &--data__actions {
+                display: flex;
+                
+                // background-color: gray;
+                margin: 35px 0 0;
+              }
             }
           }
           &--container__bottom {
