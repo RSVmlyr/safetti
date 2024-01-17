@@ -25,7 +25,7 @@ const header = (node, infoQuotation) => {
         <span id="qndate" class="quotation--info__white">Última modificación: ${dateUpdate} </span>
         <span id="qnclient" class="quotation--info__white">Cliente: ${clientName}</span>
         <span id="qnadvisor" class="quotation--info__white">Asesor: ${advisorName} </span>
-        <span id="qncurrency" class="quotation--info__white">Moneda: ${currency}</span>
+        <span id="qncurrency" class="quotation--info__white" data-currency="${currency}">Moneda: ${currency}</span>
         ${
           leadClient ?
             `<span id="qndate" class="quotation--info__white">Email: ${leadClient.email} </span>

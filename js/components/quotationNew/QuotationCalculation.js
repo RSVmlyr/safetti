@@ -23,36 +23,15 @@ class QuotationCalculation extends HTMLElement {
     this.currentPrices = [];
   }
 
-  getCurrentSymbol(){
-    let symbol = 'COP';
-    const rol =  localStorage.getItem('rol');
-
-    if (rol === 'advisors'){
-      const c = new ExpiringLocalStorage().getDataWithExpiration('ClientFullName');
-
-      if(c) {
-        const client = JSON.parse(c);
-        if(client['0'].currency != undefined && client['0'].currency != ""){
-          symbol = client['0'].currency;
-        }
-      }
-    }
-    else{
-      symbol = this.resQueryUser.currency;
-    }
-
-    return symbol;
-  }
-
   COP = value => currency(value, { symbol: "", separator: ".", decimal:",", precision: 0 });
   USD = value => currency(value, { symbol: "", separator: ",", decimal:".", precision: 2 });
-  curr = value => this.getCurrentSymbol() === "COP" ? this.COP(value) : this.USD(value);
+  curr = value => document.querySelector("#qncurrency").dataset.currency === "COP" ? this.COP(value) : this.USD(value);
 
   SendNewQuotation(data, iva, name, comments ) {
     const comment = comments ? comments : ""
     const quo = document.querySelector('.calculation__dis')
     let p = 0
-    if(quo != null) {
+    if(quo) {
       p = quo.value
     }
     let dataSetQuotation = ''
@@ -190,17 +169,17 @@ class QuotationCalculation extends HTMLElement {
     quotationContentListContainer.appendChild(loadingDiv);
   }
 
-  getServicePrices = async (productId, client) => {
+  getServicePrices = async (productId, currency, rol) => {
     const prices = this.currentPrices.find(element => {
         return element.productId == productId &&
-        element.currency == client.currency &&
-        element.rol == client.rol});
+        element.currency == currency &&
+        element.rol == rol});
 
     if(prices) {
       return prices;
     }
     else {
-      const prices = await getProductPrices(productId, client.currency, client.rol);
+      const prices = await getProductPrices(productId, currency, rol);
       this.currentPrices.push(prices);
       return prices;
     }
@@ -215,7 +194,8 @@ class QuotationCalculation extends HTMLElement {
       try {
         let price;
         const rol =  localStorage.getItem('rol')
-  
+        const currency = document.querySelector("#qncurrency").dataset.currency;
+
         if (rol === 'advisors') {
           const c = expiringLocalStorage.getDataWithExpiration('ClientFullName');
           const client = JSON.parse(c);
@@ -224,9 +204,9 @@ class QuotationCalculation extends HTMLElement {
             client['0'].rol = '_final_consumer';
           }
 
-          price = await this.getServicePrices(item.product, client['0']);
+          price = await this.getServicePrices(item.product, currency, client['0'].rol);
         } else {
-          price = await this.getServicePrices(item.product, this.resQueryUser);
+          price = await this.getServicePrices(item.product, currency, this.resQueryUser.rol);
         }
 
         const priceInRange = getPriceInRange(price, item.qt);
@@ -295,7 +275,6 @@ class QuotationCalculation extends HTMLElement {
           }
       });
 
-      console.log("llamando showData")
       this.showData();
     }
   }
@@ -415,22 +394,25 @@ class QuotationCalculation extends HTMLElement {
     const btniva = document.querySelector('.quotation--iva');
     const total = this.btnivaChecked(quo, btniva);
     quotationSave.textContent = total.format();
-    quo.onkeydown = onlyInputNumbers;
 
-    quo.addEventListener('input', (event) => {
-      const maxValue = 10;
-      if (event.target.value > maxValue) {
-        event.target.value = maxValue;
-      }
-      const total = this.btnivaChecked(quo, btniva);
-      quotationSave.textContent = total.format();
-    });
-  } 
+    if(quo){
+      quo.onkeydown = onlyInputNumbers;
+
+      quo.addEventListener('input', (event) => {
+        const maxValue = 10;
+        if (event.target.value > maxValue) {
+          event.target.value = maxValue;
+        }
+        const total = this.btnivaChecked(quo, btniva);
+        quotationSave.textContent = total.format();
+      });
+    }
+  }
 
   btnivaChecked (quo, btniva) {
     let total = 0
     let porcentaje = 0
-    if(quo != null) {
+    if(quo) {
       porcentaje = quo.value
     }
 

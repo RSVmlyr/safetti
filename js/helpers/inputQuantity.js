@@ -7,6 +7,7 @@ import formatCurrency from "./formatCurrency.js";
 import onlyInputNumbers from "./onlyInputNumbers.js";
 
 const inputQuantity = async (section, clienteID) => {
+    const qnCurrency = document.querySelector('#qncurrency');
     const quotatioviewQuantity = section.querySelectorAll(".quotatioview--quantity");
     const client = await getInfoUser(clienteID);
     const quotatioviewValueTotal = section.querySelector(".quotatioview__valueTotal");
@@ -17,7 +18,7 @@ const inputQuantity = async (section, clienteID) => {
 
     const COP = value => currency(value, { symbol: "$ ", separator: ".", decimal:",", precision: 0 });
     const USD = value => currency(value, { symbol: "$ ", separator: ",", decimal:".", precision: 2 });
-    const curr = value => client.currency === "COP" ? COP(value) : USD(value);
+    const curr = value => qnCurrency.dataset.currency === "COP" ? COP(value) : USD(value);
 
     quotatioviewQuantity.forEach(async (item) => {
         let delayTimer;
@@ -50,7 +51,7 @@ const inputQuantity = async (section, clienteID) => {
                     }
 
                     try {
-                        const prices = await getServicePrices(productId, client, currentPrices);
+                        const prices = await getServicePrices(productId, qnCurrency.dataset.currency, client.rol, currentPrices);
                         const validQuantity = ValidarVariosProd(section, prices, minQuantity);
 
                         if(validQuantity == -1){
@@ -63,7 +64,7 @@ const inputQuantity = async (section, clienteID) => {
                         let rawPrice = getPriceInRange(prices, validQuantity);
 
                         // Los precios están creados en COP, si la moneda actual es USD debemos formatearlo a USD
-                        if(client.currency === "USD"){
+                        if(qnCurrency.dataset.currency === "USD"){
                             rawPrice = formatCurrency(currency(rawPrice, {separator:".", decimal:","}), "USD");
                         }
 
@@ -145,17 +146,20 @@ const inputQuantity = async (section, clienteID) => {
     return { msg: 'Vmlyr' };
 }
 
-const getServicePrices = async (productId, client, currentPrices) => {
+const getServicePrices = async (productId, currency, rol, currentPrices) => {
+    if(!rol){
+        rol = "_final_consumer";
+    }
     const prices = currentPrices.find(element => {
         return element.productId == productId &&
-        element.currency == client.currency &&
-        element.rol == client.rol});
+        element.currency == currency &&
+        element.rol == rol});
 
     if(prices) {
         return prices;
     }
     else {
-        const prices = await getProductPrices(productId, client.currency, client.rol);
+        const prices = await getProductPrices(productId, currency, rol);
         currentPrices.push(prices);
         return prices;
     }

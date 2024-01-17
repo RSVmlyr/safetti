@@ -39,7 +39,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
     const expiringLocalStorage = new ExpiringLocalStorage();
 
     resQueryProducts.products.forEach((pro, index) => {
-      const firstNonNullKey = getFirstNonNullKey(pro);
+      //const firstNonNullKey = getFirstNonNullKey(pro);
       // Short description
       let description = pro.description ? pro.description.substring(0, 40) : '';
       if (pro.description && pro.description.length > 40) {
@@ -239,7 +239,6 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
 
         nodeNotification('Agregando producto a la lista...');
         const quotationCalculation = new QuotationCalculation(resQueryUser);
-        console.log("llamando createArrayProducto")
         quotationCalculation.createArrayProducto(product);
       });
   

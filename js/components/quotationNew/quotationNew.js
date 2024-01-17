@@ -10,7 +10,6 @@ import GetIdQuotation from "../../services/quotation/getIdQuotation.js";
 import ExpiringLocalStorage from "../localStore/ExpiringLocalStorage.js";
 import getUser from "../../services/user/getUser.js"
 import nodeNotification from "../../helpers/nodeNotification.js";
-import setQuotation from "../../services/quotation/setQuotation.js";
 import qnaddproduct from "../../helpers/qnaddproduct.js"
 import { config } from "../../../config.js"
 
@@ -51,6 +50,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   idQnAdvisor.innerHTML = resQueryUser.rol === "advisors" ? idQnLabelAdvisors : idQnLabelAdvisors + resQueryUserAdvisorName
   // idQnAdvisor.innerHTML = 'Asesor: ' + resQueryUserAdvisorName
   idQnCurrency.innerHTML = 'Moneda: ' + resQueryUserCurrency
+  idQnCurrency.dataset.currency = resQueryUserCurrency;
  
   fillSelectProduct(idQnCuentos, resQueryProducts.cuentos, false)
   fillSelectProduct(idQnTiposPrenda, resQueryProducts.tiposPrenda, true)
@@ -79,6 +79,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
 
       idQnAdvisor.innerHTML = idQnLabelAdvisors + data.clientName
       idQnCurrency.innerHTML = 'Moneda: ' + data.currency
+      idQnCurrency.dataset.currency = data.currency;
       getUserCurren(data.client); 
     }
     getinfouser()
@@ -144,6 +145,8 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       if(cFulName[0].length > 0){
         quotatioNewClient.value = cFulName[0].client
         idQnCurrency.innerHTML = 'Moneda: ' + cFulName[0].currency
+        idQnCurrency.dataset.currency = cFulName[0].currency;
+
         if(cFulName[0].razon) {
           qnbusinessname.classList.remove('quotation-hide')
           qnbusinessname.innerHTML = 'Razón social: ' + cFulName[0].razon
@@ -208,6 +211,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
         qnbusinessname.classList.add('quotation-hide')
       }
       qnCurrency.textContent = 'Moneda: ' + currency
+      qnCurrency.dataset.currency = currency;
       qnrol.textContent = 'Rol: ' + rol.replace(/_/g, ' ');
       const discount = specialDiscount === null ? 0 : parseInt(specialDiscount, 10)
 

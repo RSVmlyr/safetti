@@ -1,6 +1,7 @@
 import statusQuotationS from "../services/statusQuotation/statusQuotation.js"
 import nodeNotification from "../helpers/nodeNotification.js";
 import validationQuotation from "../services/validation/validationQuotation.js";
+import onlyInputNumbers from "../helpers/onlyInputNumbers.js";
 
 const validarFormulario = (mymodal) => {
   switch (mymodal.id) {
@@ -52,6 +53,12 @@ const modalApproval = async (quotation, modal, open, paymentSupportFilePath, isP
   const mymodal = quotation.querySelector(modal);
 
   if (mymodal) {
+    const percentageInput = mymodal.querySelector("#number");
+
+    if(percentageInput){
+      percentageInput.onkeydown = onlyInputNumbers
+    }
+
     const closeModal = mymodal.querySelector("#closeModalBtn");
     const openModal = quotation.querySelector(open);
     const modalButtonSend = mymodal.querySelector("#send-modal")

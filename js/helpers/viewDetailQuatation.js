@@ -108,7 +108,7 @@ const viewDetailQuatation = (quotation) => {
                 "discountPercent": rangeInput.value ? rangeInput.value : 0,
                 "applyTaxIVA": quotatioviewIva.checked,
                 "currency": quotation.currency, 
-                "rol": client.rol,
+                "rol": client.rol ?? "_final_consumer",
                 "products": productData.products
             }
             putScenario(putBodyScenary);

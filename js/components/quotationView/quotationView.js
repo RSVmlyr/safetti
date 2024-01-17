@@ -118,9 +118,9 @@ const quotationView = async (node, quotation, infoQuotation) => {
             </div>
         `;
     });
-    node.appendChild(container);
 
-    viewDetailQuatation(quotation, infoQuotation);
+    node.appendChild(container);
+    viewDetailQuatation(quotation);
 };
 
 export default quotationView;
