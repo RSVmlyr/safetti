@@ -16,6 +16,9 @@
     position: relative;
     img {
       width: 100%;
+      max-width: 200px;
+      display: flex;
+      margin: 0 auto;
     }
     .image-gallery__download {
       background-image: url(../img/icon/download.png);
