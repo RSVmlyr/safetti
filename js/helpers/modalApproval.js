@@ -93,7 +93,7 @@ const modalApproval = async (quotation, modal, open, paymentSupportFilePath, isP
           const download = mymodal.querySelector(".modal__form--content .image-gallery__download");
           download.href = url;
 
-          download.addEventListener("click", async function(e){
+          download.onclick = async function(e){
             e.preventDefault();
 
             const urlDownloadFile = `${API_DEV}/api/download`;
@@ -116,7 +116,7 @@ const modalApproval = async (quotation, modal, open, paymentSupportFilePath, isP
             a.href = fileBase64;
             a.click();
             a.remove();
-          });
+          };
 
           imageElement.src = url;
           imageElement.classList.add("image")
