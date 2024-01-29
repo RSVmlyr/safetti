@@ -187,7 +187,9 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
 
     if(currentRol !== 'advisors' && quotationBtnNe) {
       const quotationBtnDelete = quotation.querySelector('#quotation--btn__delete')
-      quotationBtnDelete.remove()
+      if(quotationBtnDelete) {
+        quotationBtnDelete.remove()
+      }
       quotationBtnNe.remove()
     }
       
