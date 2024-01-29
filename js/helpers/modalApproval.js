@@ -2,6 +2,9 @@ import statusQuotationS from "../services/statusQuotation/statusQuotation.js"
 import nodeNotification from "../helpers/nodeNotification.js";
 import validationQuotation from "../services/validation/validationQuotation.js";
 import onlyInputNumbers from "../helpers/onlyInputNumbers.js";
+import { config } from "../../../config.js"
+
+const API_DEV = config.API_KEY_DEV;
 
 const validarFormulario = (mymodal) => {
   switch (mymodal.id) {
@@ -77,9 +80,8 @@ const modalApproval = async (quotation, modal, open, paymentSupportFilePath, isP
         e.preventDefault();
         mymodal.classList.remove("hidden");
         const modalFormContentImg = mymodal.querySelector('.modal__form--content .image');
-        const download = mymodal.querySelector(".modal__form--content .image-gallery__download")
         const modalFormContent = mymodal.querySelector('.modal__form--content');
-
+        
         if(modalFormContentImg){
           modalFormContentImg.remove()
           modalFormContent.classList.remove("true");
@@ -88,7 +90,34 @@ const modalApproval = async (quotation, modal, open, paymentSupportFilePath, isP
         if (mymodal.id === "modal-approve-support") {
           const imageElement = document.createElement('img');
           modalFormContent.classList.add(ispdf);
+          const download = mymodal.querySelector(".modal__form--content .image-gallery__download");
           download.href = url;
+
+          download.onclick = async function(e){
+            e.preventDefault();
+
+            const urlDownloadFile = `${API_DEV}/api/download`;
+            const requestOptions = {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({"path": e.target.href})
+            };
+
+            const response = await fetch(urlDownloadFile, requestOptions);
+            const fileBlob = await response.blob();
+            const fileBase64 = URL.createObjectURL(fileBlob);
+
+            const a = document.createElement('a');
+            a.style.setProperty('display', 'none');
+            document.body.appendChild(a);
+            a.download = url.replace(/^.*[\\\/]/, '');
+            a.href = fileBase64;
+            a.click();
+            a.remove();
+          };
+
           imageElement.src = url;
           imageElement.classList.add("image")
           modalFormContent.appendChild(imageElement);

@@ -118,17 +118,12 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         ${
           (cot.id && cotStatus.statusId === 2) ?  
           `<div class="scenary--data__actions">
-            <a href="${API_DEV_IMAGE}/proyecto/${cot.id}" class="quotation--btn__add quotation--btn__Ne">Ver Proyecto</a>
+            <a href="${API_DEV_IMAGE}/proyecto/${cot.id}" target="_top" class="quotation--btn__add quotation--btn__Ne">Ver Proyecto</a>
           </div>`: ``} 
       </div>
     </div>
     `
-    if(cot.id && cotStatus.statusId === 2) {
-      console.log("cot:", cot);
-      console.log("datecreatedAt:", datecreatedAt);
-      console.log("dateupdatedAt:", dateupdatedAt);
-      console.log("cotStatus:", cotStatus);
-    }
+
     scenaryContainerTop.insertAdjacentHTML('afterbegin', `${scenaryTop}`)
     // Origin quotation shopify
     const quotationOriginScenary = quotation.querySelector('.scenary--created .quotation--origin__shopify')
