@@ -118,7 +118,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         ${
           (cot.id && cotStatus.statusId === 2) ?  
           `<div class="scenary--data__actions">
-            <a href="${API_DEV_IMAGE}/proyecto/${cot.id}" target="_top" class="quotation--btn__add quotation--btn__Ne">Ver Proyecto</a>
+            <a href="${API_DEV_IMAGE}/proyecto/${cot.id}" target="_top" class="quotation--btn__add">Ver Proyecto</a>
           </div>`: ``} 
       </div>
     </div>
@@ -159,7 +159,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
       }
     }
 
-    if(cot.paymentSupportFilePath && currentRol != "advisors") {
+    if(cot.status.id === 5 && cot.paymentSupportFilePath && currentRol != "advisors") {
       const quotationBtnApproved = quotation.querySelector('.scenary--data__actions');
       if(quotationBtnApproved) {
         const messageHtml = '<p class="text-help">Tu soporte está en revisión</p>';
