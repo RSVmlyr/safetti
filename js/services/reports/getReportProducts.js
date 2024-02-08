@@ -1,10 +1,6 @@
-
-import { config } from "../../../config.js"
-const API_DEV = config.API_KEY_DEV;
-
 const getReportProducts = async (startDate, endDate) => {
     try {
-        const urlQuery = `${API_DEV}/api/report/products/${startDate}/${endDate}`;
+        const urlQuery = `/api/report/products/${startDate}/${endDate}`;
         const reqQuery = await fetch(urlQuery);
         const resQuery = await reqQuery.json();
 
