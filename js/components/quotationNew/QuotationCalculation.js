@@ -31,7 +31,7 @@ class QuotationCalculation extends HTMLElement {
     const comment = comments ? comments : ""
     const quo = document.querySelector('.calculation__dis')
     let p = 0
-    if(quo) {
+    if(quo && quo.value != "") {
       p = quo.value
     }
     let dataSetQuotation = ''
@@ -101,12 +101,16 @@ class QuotationCalculation extends HTMLElement {
   }
 
   SendNewScenary(data, iva, cotId, nameScenary) {
-    let dataSetScenario = ''
-    const expiringLocalStorage = new ExpiringLocalStorage()
-    const retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
-    const scenary = retrievedData ? JSON.parse(retrievedData) : []
-    let specialDiscount = data.specialDiscount;
-    specialDiscount = specialDiscount !== null && !isNaN(specialDiscount) ? specialDiscount : 0;
+    let dataSetScenario = '';
+    const expiringLocalStorage = new ExpiringLocalStorage();
+    const retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId);
+    const scenary = retrievedData ? JSON.parse(retrievedData) : [];
+    const specialDiscountElement = document.querySelector('.calculation__dis');
+    let specialDiscount = 0;
+    if(specialDiscountElement && specialDiscountElement.value != "") {
+      specialDiscount = specialDiscountElement.value;
+    }
+
     if(data.length <= 0){
       nodeNotification('El escenario tiene un valor de cero.')
       return null
@@ -116,7 +120,7 @@ class QuotationCalculation extends HTMLElement {
         "quotationId": cotId,
         "name": nameScenary,
         "selected": false,
-        "discountPercent": parseInt(specialDiscount),
+        "discountPercent": specialDiscount,
         "applyTaxIVA": iva,
         "products": scenary,
       }
