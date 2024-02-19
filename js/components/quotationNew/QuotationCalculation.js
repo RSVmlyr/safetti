@@ -220,8 +220,15 @@ class QuotationCalculation extends HTMLElement {
           nodeNotification('Error en la configuración de precios del producto');
           continue;
         }
-  
-        item.unitPrice = priceInRange.replace(".", "").replace(",",".");
+
+        if(priceInRange && priceInRange > 0)
+        {
+          item.unitPrice = priceInRange.replace(".", "").replace(",",".");
+        }
+        else
+        {
+          nodeNotification('No existe un precio configurado para la cantidad ' + item.qt);
+        }
       } catch (error) {
         console.error('Error al procesar el producto:', error);
       }

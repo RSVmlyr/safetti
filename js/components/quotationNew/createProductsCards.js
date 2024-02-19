@@ -1,5 +1,4 @@
-import fillSelectProduct from "../../helpers/fillSelectProduct.js";
-import getIamages from "../../services/iamges/getImages.js";
+import getImages from "../../services/iamges/getImages.js";
 import dataSetQuotation from "./dataSetQuotation.js";
 import inputNumber from "./inputNumber.js";
 import localStorage from "./localStorage.js";
@@ -25,28 +24,15 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
   const loading = quotationNew.querySelector('.slider--productos .slider--content .quotation--loading')
   loading ? loading.remove() : false
 
-  function getFirstNonNullKey(obj) {
-    const keysToCheck = ["colombiaJunior", "colombiaMan", "colombiaWoman", "colombiaUnisex", "canadaMan", "canadaWoman", "vR7Man", "vR7Woman"];
-    for (const key of keysToCheck) {
-      if (obj[key] !== null) {
-        return key;
-      }
-    }
-    return null;
-  }
-
   if (resQueryProducts.products.length > 0) {
     const expiringLocalStorage = new ExpiringLocalStorage();
 
     resQueryProducts.products.forEach((pro, index) => {
-      //const firstNonNullKey = getFirstNonNullKey(pro);
-      // Short description
       let description = pro.description ? pro.description.substring(0, 40) : '';
       if (pro.description && pro.description.length > 40) {
         description += '...';
       }
-      // Short description+
-      // Get URL Image
+
       let mainImage = pro.mainImage ? pro.mainImage : '../img/icon/image-product.jpg';
       const originUrlPath = config.API_DEV_IMAGE + '/sites/default/files/';
       let modifiedStringImage = mainImage.replace('public://', originUrlPath);
@@ -69,7 +55,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             </div>
           </div>
           <div class="card__back">
-            <label for="">País:</label>
+            <label for="">Tipo de molde:</label>
             <select id="" class="qncountry card__back--country">
               <option value="" selected>-- Seleccionar --</option>
             </select>
@@ -110,10 +96,10 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
                 <button class="qnJuniorIncrease">+</button>
               </div>
             </div>
-            <p class="small">La cantidad mínima es de ${pro.minQuantity} ${pro.minQuantity > 2 ? 'unidades': 'unidad'}.</p>
             <div class="card--amount__actions">
+              <p class="small">La cantidad mínima es de ${pro.minQuantity} ${pro.minQuantity > 1 ? 'unidades': 'unidad'}.</p>
               <button class="qncancelproduct">Cancelar</button>
-              <button class="qnaceptproduct quotation-hidden">Agregar +</button>
+              <button class="qnaceptproduct quotation-hide">Agregar +</button>
             </div>
            </div>
           </div>
@@ -241,7 +227,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         const quotationCalculation = new QuotationCalculation(resQueryUser);
         quotationCalculation.createArrayProducto(product);
       });
-  
+
       // Card button Cancelar
       const cardCancelProducts = quotationNew.querySelector('.card .qncancelproduct')
       cardCancelProducts.addEventListener('click', (e) => {
@@ -360,7 +346,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             containerLeft.insertAdjacentElement('afterbegin', spinnerImages);
             // Get Images|
             let idProduct = pro.id
-            const resQueryImages = await getIamages(idProduct)
+            const resQueryImages = await getImages(idProduct)
             spinnerImages.remove()
     
             if (resQueryImages.length > 0) {
@@ -390,27 +376,33 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           imagesData()
         }
       })
-  
-      const idQnCountry = quotationNew.querySelector('.qncountry')
-      const countryName = ['colombia', 'canada', 'vR7']
-      fillSelectProduct(idQnCountry, countryName, false)
+
+      const idQnCountry = quotationNew.querySelector('.qncountry');
+      const countryName = [
+        {value:'colombia',text:'Estándar'},
+        {value:'canada',text:'Longer'},
+        {value:'vR7',text:'vR7'}];
+
+      countryName.forEach((item) => {
+        const optionElement = document.createElement('option');
+        optionElement.value = item.value;
+        optionElement.textContent = item.text;
+        idQnCountry.appendChild(optionElement);
+      });
 
       if (pro.colombiaMan === null && pro.colombiaWoman === null && pro.colombiaUnisex === null && pro.colombiaJunior === null) {
-        const optionToRemove = 'colombia';
-        const option = idQnCountry.querySelector(`option[value="${optionToRemove}"]`);
+        const option = idQnCountry.querySelector(`option[value="colombia"]`);
         option ? option.remove() : null
       }
       if (pro.canadaMan === null && pro.canadaWoman === null) {
-        const optionToRemove = 'canada';
-        const option = idQnCountry.querySelector(`option[value="${optionToRemove}"]`);
+        const option = idQnCountry.querySelector(`option[value="canada"]`);
         option ? option.remove() : null
       }
       if (pro.vR7Man === null && pro.vR7Woman === null) {
-        const optionToRemove = 'vR7';
-        const option = idQnCountry.querySelector(`option[value="${optionToRemove}"]`);
+        const option = idQnCountry.querySelector(`option[value="vR7"]`);
         option ? option.remove() : null
       }
-  
+
       const qnManInput = quotationNew.querySelector('.qnManInput')
       inputNumber(qnManInput, '.qnManIncrease', '.qnManDecrease')
       const qnWomanInput = quotationNew.querySelector('.qnWomanInput')
@@ -424,78 +416,76 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
       inputMan.id = `inputman--${index + 1}`;
       let idInputMan = quotationNew.querySelector(`#inputman--${index + 1}`);
       const amountM = idInputMan.querySelector('.card--amount__input')
-      amountM.classList.add('quotation-hidden')
+      amountM.classList.add('quotation-hide')
 
       const inputwoman = quotationNew.querySelector('.inputwoman')
       inputwoman.id = `inputwoman--${index + 1}`;
       let idInputwoman = quotationNew.querySelector(`#inputwoman--${index + 1}`);
       const amountW = idInputwoman.querySelector('.card--amount__input')
-      amountW.classList.add('quotation-hidden')
+      amountW.classList.add('quotation-hide')
 
       const inputUnisex = quotationNew.querySelector('.inputunisex')
       inputUnisex.id = `inputunisex--${index + 1}`;
       let idInputUnisex = quotationNew.querySelector(`#inputunisex--${index + 1}`);
       const amountU = idInputUnisex.querySelector('.card--amount__input')
-      amountU.classList.add('quotation-hidden')
+      amountU.classList.add('quotation-hide')
 
       const inputJunior = quotationNew.querySelector('.inputjunior')
       inputJunior.id = `inputjunior--${index + 1}`;
       let idInputJunior = quotationNew.querySelector(`#inputjunior--${index + 1}`);
       const amountJ = idInputJunior.querySelector('.card--amount__input')
-      amountJ.classList.add('quotation-hidden')
+      amountJ.classList.add('quotation-hide')
 
       const qnaceptProduct = quotationNew.querySelector('.qnaceptproduct')
 
       idQnCountry.addEventListener('change', (e) => {
-        amountM.classList.remove('quotation-hidden')
-        amountW.classList.remove('quotation-hidden')
-        amountU.classList.remove('quotation-hidden')
-        amountJ.classList.remove('quotation-hidden')
-        
-        if (idInputMan.classList.contains('quotation-hidden')) {
-          idInputMan.classList.remove('quotation-hidden')
-        }  
-        
-        if (idInputwoman.classList.contains('quotation-hidden')) {
-          idInputwoman.classList.remove('quotation-hidden')
-        }  
-        
-        if (idInputUnisex.classList.contains('quotation-hidden')) {
-          idInputUnisex.classList.remove('quotation-hidden')
-        }  
-        
-        if (idInputJunior.classList.contains('quotation-hidden')) {
-          idInputJunior.classList.remove('quotation-hidden')
+        amountM.classList.remove('quotation-hide')
+        amountW.classList.remove('quotation-hide')
+        amountU.classList.remove('quotation-hide')
+        amountJ.classList.remove('quotation-hide')
+
+        if (idInputMan.classList.contains('quotation-hide')) {
+          idInputMan.classList.remove('quotation-hide')
+        }
+
+        if (idInputwoman.classList.contains('quotation-hide')) {
+          idInputwoman.classList.remove('quotation-hide')
+        }
+
+        if (idInputUnisex.classList.contains('quotation-hide')) {
+          idInputUnisex.classList.remove('quotation-hide')
+        }
+
+        if (idInputJunior.classList.contains('quotation-hide')) {
+          idInputJunior.classList.remove('quotation-hide')
         }
 
         if (e.target.value === 'colombia') {
-          pro.colombiaMan === null ? idInputMan.classList.add('quotation-hidden') : idInputMan.classList.remove('quotation-hidden')
-          pro.colombiaWoman === null ? idInputwoman.classList.add('quotation-hidden') : idInputwoman.classList.remove('quotation-hidden')
-          pro.colombiaJunior === null ? idInputJunior.classList.add('quotation-hidden') : idInputJunior.classList.remove('quotation-hidden')
-          pro.colombiaUnisex === null ? idInputUnisex.classList.add('quotation-hidden') : idInputUnisex.classList.remove('quotation-hidden')
-          qnaceptProduct.classList.remove('quotation-hidden')
+          pro.colombiaMan === null ? idInputMan.classList.add('quotation-hide') : idInputMan.classList.remove('quotation-hide')
+          pro.colombiaWoman === null ? idInputwoman.classList.add('quotation-hide') : idInputwoman.classList.remove('quotation-hide')
+          pro.colombiaJunior === null ? idInputJunior.classList.add('quotation-hide') : idInputJunior.classList.remove('quotation-hide')
+          pro.colombiaUnisex === null ? idInputUnisex.classList.add('quotation-hide') : idInputUnisex.classList.remove('quotation-hide')
+          qnaceptProduct.classList.remove('quotation-hide')
         } else if (e.target.value === 'canada') {
-          pro.canadaMan === null ? idInputMan.classList.add('quotation-hidden') : idInputMan.classList.remove('quotation-hidden')
-          pro.canadaWoman === null ? idInputwoman.classList.add('quotation-hidden') : idInputwoman.classList.remove('quotation-hidden')
-          idInputJunior.classList.add('quotation-hidden')
-          idInputUnisex.classList.add('quotation-hidden')
-          qnaceptProduct.classList.remove('quotation-hidden') 
+          pro.canadaMan === null ? idInputMan.classList.add('quotation-hide') : idInputMan.classList.remove('quotation-hide')
+          pro.canadaWoman === null ? idInputwoman.classList.add('quotation-hide') : idInputwoman.classList.remove('quotation-hide')
+          idInputJunior.classList.add('quotation-hide')
+          idInputUnisex.classList.add('quotation-hide')
+          qnaceptProduct.classList.remove('quotation-hide') 
         } else if (e.target.value === 'vR7') {
-          pro.vR7Man === null ? idInputMan.classList.add('quotation-hidden') : idInputMan.classList.remove('quotation-hidden')
-          pro.vR7Woman === null ? idInputwoman.classList.add('quotation-hidden') : idInputwoman.classList.remove('quotation-hidden')
-          idInputJunior.classList.add('quotation-hidden')
-          idInputUnisex.classList.add('quotation-hidden')
-          qnaceptProduct.classList.remove('quotation-hidden')
+          pro.vR7Man === null ? idInputMan.classList.add('quotation-hide') : idInputMan.classList.remove('quotation-hide')
+          pro.vR7Woman === null ? idInputwoman.classList.add('quotation-hide') : idInputwoman.classList.remove('quotation-hide')
+          idInputJunior.classList.add('quotation-hide')
+          idInputUnisex.classList.add('quotation-hide')
+          qnaceptProduct.classList.remove('quotation-hide')
         } else {
-          amountM.classList.add('quotation-hidden')
-          amountW.classList.add('quotation-hidden')
-          amountU.classList.add('quotation-hidden')
-          amountJ.classList.add('quotation-hidden')
-          qnaceptProduct.classList.add('quotation-hidden')
+          amountM.classList.add('quotation-hide')
+          amountW.classList.add('quotation-hide')
+          amountU.classList.add('quotation-hide')
+          amountJ.classList.add('quotation-hide')
+          qnaceptProduct.classList.add('quotation-hide')
         }
-
-      })
-
+      });
     });
 
   } else {
