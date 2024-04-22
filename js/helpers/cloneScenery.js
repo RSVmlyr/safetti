@@ -4,7 +4,12 @@ import ExpiringLocalStorage from '../components/localStore/ExpiringLocalStorage.
 const cloneScenery = async (cotId) => {
     try {
         const quotation = await getQuotation(cotId);
-        const products = quotation.scenarios['7'].products;
+        const filterproducts = quotation.scenarios.filter(item => item.selected === true);
+        const products = filterproducts['0'].products
+        
+        console.log(filterproducts);
+        console.log(products);
+
         const moneda = quotation.currency;
         const filterData = [];
 
