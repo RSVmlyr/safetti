@@ -68,7 +68,7 @@ const quotationView = async (node, quotation, infoQuotation) => {
                         <tr>
                             <td>
                                 <span class="quotatioview__title--table">Descuento</span>
-                                <span class="quotatioview__discount"><input type="number" min="0" max="10" value='${element.discountPercent}' class="quotatioview__discount none">%</span>
+                                <span class="quotatioview__discount"><input type="number" min="0" max="100" value='${element.discountPercent}' class="quotatioview__discount none">%</span>
                             </td>
                             <td>
                                 <input type="text" value='$ ${formatCurrency(discount, quotation.currency)}' class="quotatioview__discountValueNumber none">

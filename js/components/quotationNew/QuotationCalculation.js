@@ -6,12 +6,17 @@ import setScenario from '../../services/quotation/setScenario.js'
 import ExpiringLocalStorage from '../localStore/ExpiringLocalStorage.js'
 import loadingData from "../../helpers/loading.js";
 import onlyInputNumbers from "../../helpers/onlyInputNumbers.js";
+import getUser from "../../services/user/getUser.js";
+import cloneScenery from "../../helpers/cloneScenery.js"
 
 class QuotationCalculation extends HTMLElement {
   constructor(resQueryUser) {
     super();
     this.resQueryUser = resQueryUser;
     this.countCart = 0;
+    this.moneda = '';
+    this.selectedSend = false;
+    this.clonesend = false
     this.innerHTML = `
       <div class="quotation-calculation">
         <div class="quotationew--calculation__body">
@@ -26,6 +31,51 @@ class QuotationCalculation extends HTMLElement {
   COP = value => currency(value, { symbol: "", separator: ".", decimal:",", precision: 0 });
   USD = value => currency(value, { symbol: "", separator: ",", decimal:".", precision: 2 });
   curr = value => document.querySelector("#qncurrency").dataset.currency === "COP" ? this.COP(value) : this.USD(value);
+
+  async clone () {
+    const url = new URL(window.location.href);
+    const searchParams = new URLSearchParams(url.search);
+    const clone = searchParams.get('clone')
+    const cotId = searchParams.get('cotId')
+    if ( this.resQueryUser  == undefined) {
+      const uid = searchParams.get('uid')
+      const resQueryUser = await getUser(uid);
+      this.resQueryUser = resQueryUser
+    }
+    const isCloned = clone === 'true';
+    if(isCloned) {
+      const clonedata = await cloneScenery(cotId)
+      if(clonedata) {
+        this.moneda = clonedata.moneda
+        const expiringLocalStorage = new ExpiringLocalStorage();
+        expiringLocalStorage.deleteDataWithExpiration("scenario-" + cotId)
+        this.setNameInputClone()
+        this.createArrayProducto(clonedata.data)
+      }
+    }
+  }
+
+  setNameInputClone() {
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0];
+    const newValue = "Cambios " + formattedDate;
+    setTimeout(() => {
+      const input = document.querySelector("#quotationewscenary")
+    /*   const quotationIva = document.querySelector(".quotation--iva")
+
+      console.dir("ini", quotationIva.checked);
+      
+      const initialState = quotationIva.checked;
+      quotationIva.click()
+      if (initialState === "checked") {
+        quotationIva.checked = true;
+      } else {
+        quotationIva.checked = false;
+      } */
+      
+      input.value = newValue      
+    }, 4000);
+  }
 
   SendNewQuotation(data, iva, name, comments ) {
     const comment = comments ? comments : ""
@@ -115,11 +165,21 @@ class QuotationCalculation extends HTMLElement {
       nodeNotification('El escenario tiene un valor de cero.')
       return null
     }
+    const url = new URL(window.location.href);
+    const searchParams = new URLSearchParams(url.search);
+    const clone = searchParams.get('clone')
+    const isCloned = clone === 'true';
+    if(isCloned) {
+      this.selectedSend = true
+      this.clonesend = true
+    }
+    
     if(data) {
       dataSetScenario = {
         "quotationId": cotId,
         "name": nameScenary,
-        "selected": false,
+        "selected": this.selectedSend,
+        "clone": this.clonesend,
         "discountPercent": specialDiscount,
         "applyTaxIVA": iva,
         "products": scenary,
@@ -178,7 +238,7 @@ class QuotationCalculation extends HTMLElement {
         return element.productId == productId &&
         element.currency == currency &&
         element.rol == rol});
-
+    
     if(prices) {
       return prices;
     }
@@ -193,13 +253,17 @@ class QuotationCalculation extends HTMLElement {
     this.removeList();
     this.loading();
     const expiringLocalStorage = new ExpiringLocalStorage();
-
     for (const item of result) {
       try {
         let price;
         const rol =  localStorage.getItem('rol')
-        const currency = document.querySelector("#qncurrency").dataset.currency;
-
+      
+        let currency = ''
+        if(this.moneda) {
+          currency = this.moneda
+        } else {
+            currency = document.querySelector("#qncurrency").dataset.currency;
+        }
         if (rol === 'advisors') {
           const c = expiringLocalStorage.getDataWithExpiration('ClientFullName');
           const client = JSON.parse(c);
@@ -207,7 +271,6 @@ class QuotationCalculation extends HTMLElement {
             client['0'].currency = 'COP';
             client['0'].rol = '_final_consumer';
           }
-
           price = await this.getServicePrices(item.product, currency, client['0'].rol);
         } else {
           price = await this.getServicePrices(item.product, currency, this.resQueryUser.rol);
@@ -392,11 +455,14 @@ class QuotationCalculation extends HTMLElement {
             expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(newArray))
           }
           this.removeList()
+       
           this.insertList()
           this.sumar()
+
         });
       })
     });
+  
   }
   
   sumar(){
@@ -410,12 +476,22 @@ class QuotationCalculation extends HTMLElement {
       quo.onkeydown = onlyInputNumbers;
 
       quo.addEventListener('input', (event) => {
-        const maxValue = 10;
-        if (event.target.value > maxValue) {
-          event.target.value = maxValue;
+        let maxValue = 10
+        const aUser = async() =>{
+          const url = new URL(window.location.href);
+          const searchParams = new URLSearchParams(url.search);
+          const uid = searchParams.get('uid') || '94'; //27      
+          const resQueryUser = await getUser(uid);
+          if(resQueryUser.rol == "advisors" && resQueryUser.allowCustomDiscounts === true) {
+            maxValue = 100;
+          } 
+          if (event.target.value > maxValue) {
+            event.target.value = maxValue;
+          }
+          const total = this.btnivaChecked(quo, btniva);
+          quotationSave.textContent = total.format();
         }
-        const total = this.btnivaChecked(quo, btniva);
-        quotationSave.textContent = total.format();
+        const au = aUser()
       });
     }
   }
@@ -503,6 +579,7 @@ class QuotationCalculation extends HTMLElement {
     //this.insertList()
     const scenaryRowTable = document.querySelectorAll('.scenary--row__table .cancel')
     this.removeItem(scenaryRowTable)
+    this.clone()
   }
 }
 

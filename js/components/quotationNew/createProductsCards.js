@@ -225,6 +225,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
 
         nodeNotification('Agregando producto a la lista...');
         const quotationCalculation = new QuotationCalculation(resQueryUser);
+        console.log(product);
         quotationCalculation.createArrayProducto(product);
       });
 

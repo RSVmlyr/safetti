@@ -99,6 +99,9 @@
           }
           input {
             text-align: end;
+            &.rangeInput {
+              width: 26px;
+            }
             &[data-valid="false"]{
               border-color: red;
             }

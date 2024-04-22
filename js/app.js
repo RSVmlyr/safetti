@@ -27,11 +27,11 @@ class App {
 
     const url = new URL(window.location.href);
     const searchParams = new URLSearchParams(url.search);
-    const uid = searchParams.get('uid') || '4'; //27
+    const uid = searchParams.get('uid') || '94'; //27
     const resQueryUser = await getUser(uid);
     const login = new Login();
     login.setHash(uid, resQueryUser.rol);
-
+    localStorage.setItem('rol', resQueryUser.rol);
     if (this.quotation) {
       const scenarioPattern = /scenario-\d+/;
 
