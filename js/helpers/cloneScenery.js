@@ -7,9 +7,6 @@ const cloneScenery = async (cotId) => {
         const filterproducts = quotation.scenarios.filter(item => item.selected === true);
         const products = filterproducts['0'].products
         
-        console.log(filterproducts);
-        console.log(products);
-
         const moneda = quotation.currency;
         const filterData = [];
 

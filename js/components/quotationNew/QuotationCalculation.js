@@ -60,7 +60,12 @@ class QuotationCalculation extends HTMLElement {
     const quotatioviewQuantity = document.querySelectorAll('.quotatioview--quantity')
     quotatioviewQuantity.forEach(element => {
       element.addEventListener("change", () => {
-        const numberValue = element.value
+        let numberValue = element.value
+        if(numberValue > element.dataset.minQuantity ) {
+          numberValue = element.dataset.minQuantity
+          element.value = element.dataset.minQuantity
+        }
+
         const url = new URL(window.location.href)
         const searchParams = new URLSearchParams(url.search)
         const cotId = searchParams.get('cotId')
@@ -89,11 +94,11 @@ class QuotationCalculation extends HTMLElement {
             product.quantity = parseInt(numberValue)
           }
         })
-    /*     if(cotId) {
+        if(cotId) {
           expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(products))
         } else{
           expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(products))
-        } */
+        }
         this.createArrayProducto(products) 
       })
     })
@@ -320,8 +325,7 @@ class QuotationCalculation extends HTMLElement {
         } else {
           price = await this.getServicePrices(item.product, currency, this.resQueryUser.rol)
         }
-
-        const priceInRange = getPriceInRange(price, item.qt)
+        const priceInRange = getPriceInRange(price, item.quantity)
 
         if (priceInRange === undefined) {
           console.error('Error en este producto:', item)
@@ -363,13 +367,13 @@ class QuotationCalculation extends HTMLElement {
           if (retrievedData) {
             productForSave = JSON.parse(retrievedData)
           }
-
           productForSave.push({
             product: product.id,
             productName: product.productName,
             selectedMoldeCode: product.selectedMoldeCode,
             quantity: parseInt(product.quantity),
-            unitPrice: unitPrice
+            unitPrice: unitPrice,
+            minQuantity: product.minQuantity
           })
 
           let productQuantities = {}
