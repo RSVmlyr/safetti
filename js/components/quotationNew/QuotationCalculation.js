@@ -61,7 +61,7 @@ class QuotationCalculation extends HTMLElement {
     quotatioviewQuantity.forEach(element => {
       element.addEventListener("change", () => {
         let numberValue = element.value
-        if(numberValue > element.dataset.minQuantity ) {
+        if(parseInt(numberValue) <= parseInt(element.dataset.minQuantity)) {
           numberValue = element.dataset.minQuantity
           element.value = element.dataset.minQuantity
         }
