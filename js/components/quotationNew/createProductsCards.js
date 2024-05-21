@@ -14,6 +14,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
   const searchParams = new URLSearchParams(url.search);
   const cotId = searchParams.get('cotId');
 
+
   if(resQueryUser.rol != "advisors") {
     qnaddproduct()
   }
@@ -29,6 +30,16 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
 
     resQueryProducts.products.forEach((pro, index) => {
       let description = pro.description ? pro.description.substring(0, 40) : '';
+
+      // For Partner
+      let pCuantity = pro.minQuantity
+      pCuantity = 5
+
+      const validateRol = () => {
+        // `<p class="small">La cantidad mínima es de ${pro.minQuantity} ${pro.minQuantity > 1 ? 'unidades': 'unidad'}.</p>`
+        // console.log('Tesr');
+      }
+
       if (pro.description && pro.description.length > 40) {
         description += '...';
       }
@@ -37,7 +48,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
       const originUrlPath = config.API_DEV_IMAGE + '/sites/default/files/';
       let modifiedStringImage = mainImage.replace('public://', originUrlPath);
       modifiedStringImage = modifiedStringImage.replace(/ /g, '%20');
-      let sliderRow = 
+      let sliderRow =
       `<div class="slider--row">
         <div class="card">
           <div class="card__front">
@@ -97,7 +108,9 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
               </div>
             </div>
             <div class="card--amount__actions">
-              <p class="small">La cantidad mínima es de ${pro.minQuantity} ${pro.minQuantity > 1 ? 'unidades': 'unidad'}.</p>
+             ${resQueryUser.rol === 'partner' ?
+              `<p class="small">La cantidad mínima es de ${pCuantity} ${pCuantity > 1 ? 'unidades': 'unidad'}.</p>` :
+              `<p class="small">La cantidad mínima es de ${pro.minQuantity} ${pro.minQuantity > 1 ? 'unidades': 'unidad'}.</p>`}
               <button class="qncancelproduct">Cancelar</button>
               <button class="qnaceptproduct quotation-hide">Agregar +</button>
             </div>
@@ -218,9 +231,21 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           });
         }
 
-        if(totalQuantity < pro.minQuantity){
-          nodeNotification(`La cantidad debe ser mayor o igual a ${pro.minQuantity}`);
-          return;
+        // console.log(resQueryUser.rol);
+        // console.log(pro.minQuantity);
+
+        if (resQueryUser.rol === 'partner') {
+          console.log(resQueryUser.rol);
+          if (totalQuantity < pCuantity) {
+            // console.log('Cinco', pCuantity);
+            nodeNotification(`La cantidad debe ser mayor o igual a ${pCuantity}`);
+            return;
+          }
+        } else {
+          if (totalQuantity < pro.minQuantity) {
+            nodeNotification(`La cantidad debe ser mayor o igual a ${pro.minQuantity}`);
+            return;
+          }
         }
 
         nodeNotification('Agregando producto a la lista...');

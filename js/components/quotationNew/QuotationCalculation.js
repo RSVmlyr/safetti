@@ -300,6 +300,7 @@ class QuotationCalculation extends HTMLElement {
   }
 
   procesarResult = async(result) =>  {
+    console.log('Proceso');
     this.removeList()
     this.loading()
     const expiringLocalStorage = new ExpiringLocalStorage()
@@ -312,7 +313,7 @@ class QuotationCalculation extends HTMLElement {
         if(this.moneda) {
           currency = this.moneda
         } else {
-            currency = document.querySelector("#qncurrency").dataset.currency
+          currency = document.querySelector("#qncurrency").dataset.currency
         }
         if (rol === 'advisors') {
           const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
@@ -325,6 +326,7 @@ class QuotationCalculation extends HTMLElement {
         } else {
           price = await this.getServicePrices(item.product, currency, this.resQueryUser.rol)
         }
+
         const priceInRange = getPriceInRange(price, item.quantity)
 
         if (priceInRange === undefined) {
@@ -333,12 +335,9 @@ class QuotationCalculation extends HTMLElement {
           continue
         }
 
-        if(priceInRange && priceInRange > 0)
-        {
+        if(priceInRange) {
           item.unitPrice = priceInRange.replace(".", "").replace(",",".")
-        }
-        else
-        {
+        } else {
           nodeNotification('No existe un precio configurado para la cantidad ' + item.qt)
         }
       } catch (error) {
