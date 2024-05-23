@@ -412,7 +412,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
 
             const initializeSlider = () => {
               const sliderElement = document.querySelector('.modal--container__bodyLeft .image-product');
-              console.log(sliderElement);
+              // console.log(sliderElement);
             
               if (sliderElement && sliderElement.children.length > 1) {
                 try {
