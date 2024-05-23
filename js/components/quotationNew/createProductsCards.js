@@ -275,7 +275,11 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           `<div class="modal">
             <div class="modal--container">
               <div class="modal--container__body">
-                <div class="modal--container__bodyLeft"></div>
+                <div class="modal--container__bodyLeft">
+                  <div class="image-product">
+                  
+                  </div>
+                </div>
                 <div class="modal--container__bodyRight">
                   <div class="modal--header">
                     <div class="modal--header__languages">
@@ -364,6 +368,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           const imagesData = async () => {
 
             const containerLeft = document.querySelector('.modal--container__bodyLeft')
+            const containerLeftImages = document.querySelector('.modal--container__bodyLeft .image-product')
 
             const spinnerImages = document.createElement('img')
             spinnerImages.classList.add('qnimage--auto')
@@ -374,29 +379,56 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             const resQueryImages = await getImages(idProduct)
             spinnerImages.remove()
     
-            if (resQueryImages.length > 0) {
+            if (resQueryImages.length > 1) {
               resQueryImages.forEach(e => {
-
                 // Get URL Image
                 let mainImage = e.imageUrl ? e.imageUrl : '../img/icon/image-product.jpg'
                 const originUrlPath = config.API_DEV_IMAGE + '/sites/default/files/';
                 let modifiedStringImage = mainImage.replace('public://', originUrlPath);
                 modifiedStringImage = modifiedStringImage.replace(/ /g, '%20');
-                const image = document.createElement('img')
-                image.src = modifiedStringImage
-                image.setAttribute('loading', 'lazy')
-                image.setAttribute('alt', 'Safetti')
-                image.setAttribute('title', 'Safetti')
-                containerLeft.insertAdjacentElement('afterbegin', image);
+                let img = `<div class="image-product-item">
+                  <img class="" src="${modifiedStringImage}" title="Safetti" alt="Safetti">
+                </div>`
+                containerLeftImages.insertAdjacentHTML('afterbegin', img);
               });
             } else {
-              const imageEmpty = document.createElement('img')
-              imageEmpty.classList.add('qnimage--auto')
-              imageEmpty.src = '../img/icon/image-product.jpg'
-              imageEmpty.setAttribute('alt', 'Safetti')
-              imageEmpty.setAttribute('title', 'Safetti')
-              containerLeft.insertAdjacentElement('afterbegin', imageEmpty);
+              let img = `<div class="image-product-item">
+                <img class="" src="../img/icon/image-product.jpg" title="Safetti" alt="Safetti">
+              </div>`
+              containerLeftImages.insertAdjacentHTML('afterbegin', img);
             }
+
+            const sliderOptions = {
+              cellAlign: "center",
+              pageDots: true,
+              prevNextButtons: true,
+              groupCells: 1,
+              wrapAround: true,
+              contain: true,
+              lazyLoad: true,
+              adaptiveHeight: true,
+              imagesLoaded: true,
+            };
+
+            const initializeSlider = () => {
+              const sliderElement = document.querySelector('.modal--container__bodyLeft .image-product');
+              console.log(sliderElement);
+            
+              if (sliderElement && sliderElement.children.length > 1) {
+                try {
+                  // Initialize Flickity on the element
+                  new Flickity(sliderElement, sliderOptions);
+                } catch (error) {
+                  console.error("Error initializing Flickity:", error);
+                }
+              }
+            };
+
+            initializeSlider()
+            
+            // Initialize the slider when the DOM content is fully loaded
+            document.addEventListener("DOMContentLoaded", initializeSlider);
+
           }
           imagesData()
         }

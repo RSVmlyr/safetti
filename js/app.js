@@ -7,6 +7,7 @@ import PaginatorElement from './components/paginator/PaginatorElement.js';
 import getClients from "./services/clients/getClients.js";
 import Login from "./login/login.js";
 import quotationView from "./components/pages/quotationViewPage.js";
+import "./components/slider/slider.js";
 
 class App {
   constructor() {
@@ -74,6 +75,7 @@ class App {
 
     await quotationView();
   }
+
 }
 
 const app = new App();
