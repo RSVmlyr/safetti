@@ -45,14 +45,17 @@ class QuotationCalculation extends HTMLElement {
     }
     const isCloned = clone === 'true'
     if(isCloned) {
-      const clonedata = await cloneScenery(cotId)
-      this.clonecot = true
-      if(clonedata) {
-        this.moneda = clonedata.moneda
-        const expiringLocalStorage = new ExpiringLocalStorage()
-        expiringLocalStorage.deleteDataWithExpiration("scenario-" + cotId)
-        this.setNameInputClone(clonedata.data)
-        this.createArrayProducto(clonedata.data)
+      const sliderProductos = document.querySelectorAll(".slider--productos .slider--row")
+      if(sliderProductos.length > 0) {
+        const clonedata = await cloneScenery(cotId)
+        this.clonecot = true
+        if(clonedata) {
+          this.moneda = clonedata.moneda
+          const expiringLocalStorage = new ExpiringLocalStorage()
+          expiringLocalStorage.deleteDataWithExpiration("scenario-" + cotId)
+          this.setNameInputClone(clonedata.data)
+          this.createArrayProducto(clonedata.data)
+        }
       }
     }
   }
@@ -61,45 +64,97 @@ class QuotationCalculation extends HTMLElement {
     quotatioviewQuantity.forEach(element => {
       element.addEventListener("change", () => {
         let numberValue = element.value
-        if(parseInt(numberValue) <= parseInt(element.dataset.minQuantity)) {
-          numberValue = element.dataset.minQuantity
-          element.value = element.dataset.minQuantity
-        }
+        const dataName = element.closest(".scenary--row__table").querySelector(".name-product").dataset.name;
+        const listanumbers = document.querySelectorAll(".scenary--row__data");
+        let acumm = 0;
 
-        const url = new URL(window.location.href)
-        const searchParams = new URLSearchParams(url.search)
-        const cotId = searchParams.get('cotId')
-        const expiringLocalStorage = new ExpiringLocalStorage()
-        const parentScenaryRow = element.closest('.scenary--row__table')
-        let retrievedData = ''
-        let selectedMoldeValue = ''
-    
-        if (parentScenaryRow) {
-          const selectedMoldeElement = parentScenaryRow.querySelector('.selected-molde')
-          if (selectedMoldeElement) {
-            selectedMoldeValue = selectedMoldeElement.textContent   
+
+        listanumbers.forEach(function(item) {
+          const molde = item.querySelector(".name-product")
+          if (molde) {
+            if (dataName === molde.dataset.name) {
+              const numbeQuantity = parseInt(item.querySelector(".quotatioview--quantity").value);
+              acumm += numbeQuantity;
+            } else {
+              acumm = numberValue
+            }
           }
-        }
-    
-        if(cotId) {
-          retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
+        });
+
+        if( acumm <= parseInt(element.dataset.minQuantity) ) {
+          nodeNotification(`La cantidad total debe ser mayor o igual a ${element.dataset.minQuantity}`);
+          return
         } else {
-          retrievedData = expiringLocalStorage.getDataWithExpiration("products")
-        }
+          const url = new URL(window.location.href)
+          const searchParams = new URLSearchParams(url.search)
+          const cotId = searchParams.get('cotId')
+          const expiringLocalStorage = new ExpiringLocalStorage()
+          
+          const parentScenaryRow = element.closest('.scenary--row__table')
+          const selectedMoldeElement = parentScenaryRow.querySelector('.selected-molde').textContent
 
-        const products = retrievedData ? JSON.parse(retrievedData) : []
-        products.forEach(product => {
-          product.id = product.product
-          if (product.selectedMoldeCode === selectedMoldeValue) {
-            product.quantity = parseInt(numberValue)
+          console.log(selectedMoldeElement);
+
+          let retrievedData = ''
+          if(cotId) {
+            retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
+          } else {
+            retrievedData = expiringLocalStorage.getDataWithExpiration("products")
           }
-        })
-        if(cotId) {
-          expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(products))
-        } else{
-          expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(products))
+          const products = retrievedData ? JSON.parse(retrievedData) : []
+          
+          products.forEach(product => {
+            if (product.selectedMoldeCode === selectedMoldeElement) {
+              console.log("if", numberValue);
+              product.quantity = parseInt(numberValue)
+            }
+          }) 
+
+          console.log("debug", products);
+
+     /*      if(cotId) {
+            expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(products))
+          } else{
+            expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(products))
+          } */
+
+          this.createArrayProducto(products) 
+
+
+
+          /* const parentScenaryRow = element.closest('.scenary--row__table')
+          let retrievedData = ''
+          let selectedMoldeValue = ''
+      
+          if (parentScenaryRow) {
+            const selectedMoldeElement = parentScenaryRow.querySelector('.selected-molde')
+            if (selectedMoldeElement) {
+              selectedMoldeValue = selectedMoldeElement.textContent   
+            }
+          }
+
+          console.log("selectedMoldeValue", selectedMoldeValue);
+      
+          if(cotId) {
+            retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
+          } else {
+            retrievedData = expiringLocalStorage.getDataWithExpiration("products")
+          }
+  
+          const products = retrievedData ? JSON.parse(retrievedData) : []
+
+          console.log(products);
+
+          console.log(numberValue);
+
+          products.forEach(product => {
+            product.id = product.product
+            if (product.selectedMoldeCode === selectedMoldeValue) {
+              console.log("if");
+              product.quantity = parseInt(numberValue)
+            }
+          }) */
         }
-        this.createArrayProducto(products) 
       })
     })
   }
@@ -245,6 +300,11 @@ class QuotationCalculation extends HTMLElement {
     const cotId = searchParams.get('cotId')
     const expiringLocalStorage = new ExpiringLocalStorage()
     let retrievedData = ''
+    const loadingDivHtml = document.querySelector('.loading-message')
+
+    if (loadingDivHtml) {
+      loadingDivHtml.remove()
+    }
 
     if(cotId) {
       retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
@@ -254,6 +314,7 @@ class QuotationCalculation extends HTMLElement {
     }
     if(retrievedData) {
       const productsList = retrievedData ? JSON.parse(retrievedData) : []
+
       productsList.forEach(product => {
         const unitPrice = this.curr(product.unitPrice)
         const valueSubtotal = unitPrice.multiply(product.quantity).format()
@@ -261,7 +322,7 @@ class QuotationCalculation extends HTMLElement {
         row.classList.add('scenary--row__table')
         row.classList.add('scenary--row__data')
         row.innerHTML = `
-          <div class="scenary--row">${product.productName}</div>
+          <div class="scenary--row name-product" data-name="${product.product}">${product.productName}</div>
           <div class="scenary--row selected-molde">${product.selectedMoldeCode}</div>
           <div class="scenary--row">$ ${unitPrice.format()}</div>
           <div class="scenary--row">
@@ -298,10 +359,36 @@ class QuotationCalculation extends HTMLElement {
       return prices
     }
   }
+  
+  addTotalQuantity = (items) => {
+    // Crear un objeto para almacenar las cantidades totales por id
+    const totalQuantities = items.reduce((acc, item) => {
+        const id = item.id;
+        const quantity = parseInt(item.quantity, 10);
+        
+        if (acc[id]) {
+            acc[id] += quantity;
+        } else {
+            acc[id] = quantity;
+        }
+        
+        return acc;
+    }, {});
+    
+    // Agregar la propiedad cantTotal a cada objeto en el array original
+    return items.map(item => ({
+        ...item,
+        cantTotal: totalQuantities[item.id]
+    }));
+};
 
   procesarResult = async(result) =>  {
     this.removeList()
     this.loading()
+    const url = new URL(window.location.href)
+    const searchParams = new URLSearchParams(url.search)
+    const cotId = searchParams.get('cotId')
+
     const expiringLocalStorage = new ExpiringLocalStorage()
     for (const item of result) {
       try {
@@ -312,7 +399,7 @@ class QuotationCalculation extends HTMLElement {
         if(this.moneda) {
           currency = this.moneda
         } else {
-            currency = document.querySelector("#qncurrency").dataset.currency
+          currency = document.querySelector("#qncurrency").dataset.currency
         }
         if (rol === 'advisors') {
           const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
@@ -324,16 +411,15 @@ class QuotationCalculation extends HTMLElement {
           price = await this.getServicePrices(item.product, currency, client['0'].rol)
         } else {
           price = await this.getServicePrices(item.product, currency, this.resQueryUser.rol)
-        }
-        const priceInRange = getPriceInRange(price, item.quantity)
-
+        }        
+        const priceInRange = getPriceInRange(price, item.qt)
         if (priceInRange === undefined) {
           console.error('Error en este producto:', item)
           nodeNotification('Error en la configuración de precios del producto')
           continue
         }
 
-        if(priceInRange && priceInRange > 0)
+        if(priceInRange)
         {
           item.unitPrice = priceInRange.replace(".", "").replace(",",".")
         }
@@ -345,6 +431,18 @@ class QuotationCalculation extends HTMLElement {
         console.error('Error al procesar el producto:', error)
       }
     }
+
+    if(cotId) {
+      expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(result))
+    }
+    else{
+      expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(result))
+    }
+    //this.showData()
+    this.removeList()
+    this.insertList()
+    this.sumar()
+    this.updateUnitValue()
   }
 
   createArrayProducto(products) {
@@ -358,47 +456,59 @@ class QuotationCalculation extends HTMLElement {
       let unitPrice = 0
       let retrievedData = ''      
       products.forEach(product => {
-          if(cotId) {
-            retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
-          } else{
-            retrievedData = expiringLocalStorage.getDataWithExpiration("products")
+        if(cotId) {
+          retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
+        } else{
+          retrievedData = expiringLocalStorage.getDataWithExpiration("products")
+        }
+
+        if (retrievedData) {
+          productForSave = JSON.parse(retrievedData)
+        }
+        productForSave.push({
+          product: product.id,
+          productName: product.productName,
+          selectedMoldeCode: product.selectedMoldeCode,
+          quantity: parseInt(product.quantity),
+          unitPrice: unitPrice,
+          minQuantity: product.minQuantity
+        })
+
+        let productQuantities = {}
+
+        productForSave.forEach(item => {
+          const productNumber = item.product
+          const quantity = item.quantity
+          if (productQuantities[productNumber]) {
+            productQuantities[productNumber] += quantity
+          } else {
+            productQuantities[productNumber] = quantity
           }
+        })
 
-          if (retrievedData) {
-            productForSave = JSON.parse(retrievedData)
-          }
-          productForSave.push({
-            product: product.id,
-            productName: product.productName,
-            selectedMoldeCode: product.selectedMoldeCode,
-            quantity: parseInt(product.quantity),
-            unitPrice: unitPrice,
-            minQuantity: product.minQuantity
-          })
-
-          let productQuantities = {}
-          productForSave.forEach(item => {
-            const productNumber = item.product
-            const quantity = item.quantity
-            if (productQuantities[productNumber]) {
-              productQuantities[productNumber] += quantity
-            } else {
-              productQuantities[productNumber] = quantity
-            }
-          })
-
-          productForSave.forEach(item => {
-            item.qt = productQuantities[item.product]
-          })
-
-          if(cotId) {
-            expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(productForSave))
-          } else{
-            expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(productForSave))
-          }
+        productForSave.forEach(item => {
+          item.qt = productQuantities[item.product]
+        })        
       })
 
-      this.showData()
+      let result = Object.values(productForSave.reduce((acc, item) => {
+        const id = item.selectedMoldeCode
+        if (acc[id]) {
+          acc[id].quantity += parseInt(item.quantity)
+        } else {
+          acc[id] = { ...item }
+        }
+        return acc
+      }, {}))
+  
+      console.log(result);
+      
+      if(cotId) {
+        expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(result))
+      } else{
+        expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(result))
+      }
+      this.procesarResult(result)
     }
   }
 
@@ -421,29 +531,43 @@ class QuotationCalculation extends HTMLElement {
       productForSave = JSON.parse(retrievedData)
     }
 
-    let result = Object.values(productForSave.reduce((acc, item) => {
-      const id = item.selectedMoldeCode
-      if (acc[id]) {
-        acc[id].quantity = parseInt(item.quantity)
-      } else {
-        acc[id] = { ...item }
-      }
-      return acc
-    }, {}))
+    
 
-    this.procesarResult(result).then(() => {
+    //const arrayCantTotal = this.addTotalQuantity(productForSave)
+
+   /*  const loadingDivHtml = document.querySelector('.loading-message')
+    if (loadingDivHtml) {
+      loadingDivHtml.remove()
+    }
+
+    //result = productForSave.filter((value) => value.unitPrice != "" && value.unitPrice != "0")
+
+    if(cotId) {
+      expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(result))
+    }
+    else{
+      expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(result))
+    } */
+
+    //console.log("here ", result);
+    this.removeList()
+    this.insertList()
+    this.sumar()
+    this.updateUnitValue()
+    
+   /*  this.procesarResult(arrayCantTotal).then(() => {
       const loadingDivHtml = document.querySelector('.loading-message')
       if (loadingDivHtml) {
         loadingDivHtml.remove()
       }
 
-      result = result.filter((value) => value.unitPrice != "" && value.unitPrice != "0")
+      //result = result.filter((value) => value.unitPrice != "" && value.unitPrice != "0")
 
       if(cotId) {
-        expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(result))
+        expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(arrayCantTotal))
       }
       else{
-        expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(result))
+        expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(arrayCantTotal))
       }
 
       this.removeList()
@@ -451,7 +575,7 @@ class QuotationCalculation extends HTMLElement {
       this.sumar()
       this.updateUnitValue()
 
-    })
+    }) */
   }
 
   removeList() {
