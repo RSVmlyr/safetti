@@ -383,6 +383,7 @@ class QuotationCalculation extends HTMLElement {
 };
 
   procesarResult = async(result) =>  {
+    console.log('Proceso');
     this.removeList()
     this.loading()
     const url = new URL(window.location.href)
@@ -411,20 +412,29 @@ class QuotationCalculation extends HTMLElement {
           price = await this.getServicePrices(item.product, currency, client['0'].rol)
         } else {
           price = await this.getServicePrices(item.product, currency, this.resQueryUser.rol)
+<<<<<<< HEAD
         }        
         const priceInRange = getPriceInRange(price, item.qt)
+=======
+        }
+
+        const priceInRange = getPriceInRange(price, item.quantity)
+
+>>>>>>> 3473dcdf7f176924c050b766f7e70f6c7e4e7090
         if (priceInRange === undefined) {
           console.error('Error en este producto:', item)
           nodeNotification('Error en la configuración de precios del producto')
           continue
         }
 
+<<<<<<< HEAD
         if(priceInRange)
         {
+=======
+        if(priceInRange) {
+>>>>>>> 3473dcdf7f176924c050b766f7e70f6c7e4e7090
           item.unitPrice = priceInRange.replace(".", "").replace(",",".")
-        }
-        else
-        {
+        } else {
           nodeNotification('No existe un precio configurado para la cantidad ' + item.qt)
         }
       } catch (error) {
