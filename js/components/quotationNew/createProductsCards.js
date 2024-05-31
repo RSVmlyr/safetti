@@ -387,13 +387,13 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
                 let modifiedStringImage = mainImage.replace('public://', originUrlPath);
                 modifiedStringImage = modifiedStringImage.replace(/ /g, '%20');
                 let img = `<div class="image-product-item">
-                  <img class="" src="${modifiedStringImage}" title="Safetti" alt="Safetti">
+                  <img class="" src="${modifiedStringImage}" title="Safetti" alt="Safetti" loading="lazy">
                 </div>`
                 containerLeftImages.insertAdjacentHTML('afterbegin', img);
               });
             } else {
               let img = `<div class="image-product-item">
-                <img class="" src="../img/icon/image-product.jpg" title="Safetti" alt="Safetti">
+                <img class="" src="../img/icon/image-product.jpg" title="Safetti" alt="Safetti" loading="lazy">
               </div>`
               containerLeftImages.insertAdjacentHTML('afterbegin', img);
             }
