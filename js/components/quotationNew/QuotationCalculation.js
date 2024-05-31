@@ -44,9 +44,14 @@ class QuotationCalculation extends HTMLElement {
       this.resQueryUser = resQueryUser
     }
     const isCloned = clone === 'true'
+    console.log(isCloned);
     if(isCloned) {
+      
+      
       const sliderProductos = document.querySelectorAll(".slider--productos .slider--row")
-      if(sliderProductos.length > 0) {
+
+      console.log(sliderProductos);
+      //if(sliderProductos.length > 0) {
         const clonedata = await cloneScenery(cotId)
         this.clonecot = true
         if(clonedata) {
@@ -56,7 +61,7 @@ class QuotationCalculation extends HTMLElement {
           this.setNameInputClone(clonedata.data)
           this.createArrayProducto(clonedata.data)
         }
-      }
+      //}
     }
   }
   updateUnitValue() {
@@ -72,9 +77,10 @@ class QuotationCalculation extends HTMLElement {
         listanumbers.forEach(function(item) {
           const molde = item.querySelector(".name-product")
           if (molde) {
+            console.log(dataName, molde.dataset.name, "..............dddddd");
             if (dataName === molde.dataset.name) {
               const numbeQuantity = parseInt(item.querySelector(".quotatioview--quantity").value);
-              acumm += numbeQuantity;
+              acumm = numbeQuantity;
             } else {
               acumm = numberValue
             }
@@ -89,12 +95,9 @@ class QuotationCalculation extends HTMLElement {
           const searchParams = new URLSearchParams(url.search)
           const cotId = searchParams.get('cotId')
           const expiringLocalStorage = new ExpiringLocalStorage()
-          
           const parentScenaryRow = element.closest('.scenary--row__table')
           const selectedMoldeElement = parentScenaryRow.querySelector('.selected-molde').textContent
 
-          console.log(selectedMoldeElement);
-
           let retrievedData = ''
           if(cotId) {
             retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
@@ -102,58 +105,20 @@ class QuotationCalculation extends HTMLElement {
             retrievedData = expiringLocalStorage.getDataWithExpiration("products")
           }
           const products = retrievedData ? JSON.parse(retrievedData) : []
-          
+
           products.forEach(product => {
             if (product.selectedMoldeCode === selectedMoldeElement) {
-              console.log("if", numberValue);
               product.quantity = parseInt(numberValue)
             }
-          }) 
-
-          console.log("debug", products);
-
-     /*      if(cotId) {
+          })
+          
+          if(cotId) {
             expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(products))
           } else{
             expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(products))
-          } */
+          } 
 
-          this.createArrayProducto(products) 
-
-
-
-          /* const parentScenaryRow = element.closest('.scenary--row__table')
-          let retrievedData = ''
-          let selectedMoldeValue = ''
-      
-          if (parentScenaryRow) {
-            const selectedMoldeElement = parentScenaryRow.querySelector('.selected-molde')
-            if (selectedMoldeElement) {
-              selectedMoldeValue = selectedMoldeElement.textContent   
-            }
-          }
-
-          console.log("selectedMoldeValue", selectedMoldeValue);
-      
-          if(cotId) {
-            retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
-          } else {
-            retrievedData = expiringLocalStorage.getDataWithExpiration("products")
-          }
-  
-          const products = retrievedData ? JSON.parse(retrievedData) : []
-
-          console.log(products);
-
-          console.log(numberValue);
-
-          products.forEach(product => {
-            product.id = product.product
-            if (product.selectedMoldeCode === selectedMoldeValue) {
-              console.log("if");
-              product.quantity = parseInt(numberValue)
-            }
-          }) */
+          this.createArrayProducto(products, true) 
         }
       })
     })
@@ -363,22 +328,21 @@ class QuotationCalculation extends HTMLElement {
   addTotalQuantity = (items) => {
     // Crear un objeto para almacenar las cantidades totales por id
     const totalQuantities = items.reduce((acc, item) => {
-        const id = item.id;
-        const quantity = parseInt(item.quantity, 10);
-        
-        if (acc[id]) {
-            acc[id] += quantity;
-        } else {
-            acc[id] = quantity;
-        }
-        
-        return acc;
+      const id = item.id;
+      const quantity = parseInt(item.quantity, 10);
+      
+      if (acc[id]) {
+          acc[id] += quantity;
+      } else {
+          acc[id] = quantity;
+      }
+      
+      return acc;
     }, {});
     
-    // Agregar la propiedad cantTotal a cada objeto en el array original
     return items.map(item => ({
-        ...item,
-        cantTotal: totalQuantities[item.id]
+      ...item,
+      cantTotal: totalQuantities[item.id]
     }));
 };
 
@@ -412,27 +376,16 @@ class QuotationCalculation extends HTMLElement {
           price = await this.getServicePrices(item.product, currency, client['0'].rol)
         } else {
           price = await this.getServicePrices(item.product, currency, this.resQueryUser.rol)
-<<<<<<< HEAD
         }        
         const priceInRange = getPriceInRange(price, item.qt)
-=======
-        }
-
-        const priceInRange = getPriceInRange(price, item.quantity)
-
->>>>>>> 3473dcdf7f176924c050b766f7e70f6c7e4e7090
         if (priceInRange === undefined) {
           console.error('Error en este producto:', item)
           nodeNotification('Error en la configuración de precios del producto')
           continue
         }
 
-<<<<<<< HEAD
         if(priceInRange)
         {
-=======
-        if(priceInRange) {
->>>>>>> 3473dcdf7f176924c050b766f7e70f6c7e4e7090
           item.unitPrice = priceInRange.replace(".", "").replace(",",".")
         } else {
           nodeNotification('No existe un precio configurado para la cantidad ' + item.qt)
@@ -455,70 +408,85 @@ class QuotationCalculation extends HTMLElement {
     this.updateUnitValue()
   }
 
-  createArrayProducto(products) {
+  createArrayProducto(products, is_update=false) {
     const expiringLocalStorage = new ExpiringLocalStorage()
     const url = new URL(window.location.href)
     const searchParams = new URLSearchParams(url.search)
     const cotId = searchParams.get('cotId')
     let productForSave = []
+    let unitPrice = 0
+    let retrievedData = ''   
+    let productQuantities = []
+
+    if(cotId) {
+      retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
+    } else{
+      retrievedData = expiringLocalStorage.getDataWithExpiration("products")
+    }
+    if (retrievedData) {
+      productForSave = JSON.parse(retrievedData)
+    }
 
     if(products) {
-      let unitPrice = 0
-      let retrievedData = ''      
+      products.forEach(item => {
+        item.quantity = Number(item.quantity);
+      });
+    
+      console.log(products);   
       products.forEach(product => {
-        if(cotId) {
-          retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
-        } else{
-          retrievedData = expiringLocalStorage.getDataWithExpiration("products")
+        
+        console.log("productForSave", productForSave);
+        
+        if(!is_update){
+          productForSave.push({
+            product: product.id,
+            productName: product.productName,
+            selectedMoldeCode: product.selectedMoldeCode,
+            quantity: parseInt(product.quantity),
+            unitPrice: unitPrice,
+            minQuantity: product.minQuantity
+          })
         }
-
-        if (retrievedData) {
-          productForSave = JSON.parse(retrievedData)
-        }
-        productForSave.push({
-          product: product.id,
-          productName: product.productName,
-          selectedMoldeCode: product.selectedMoldeCode,
-          quantity: parseInt(product.quantity),
-          unitPrice: unitPrice,
-          minQuantity: product.minQuantity
-        })
-
-        let productQuantities = {}
-
-        productForSave.forEach(item => {
-          const productNumber = item.product
-          const quantity = item.quantity
-          if (productQuantities[productNumber]) {
-            productQuantities[productNumber] += quantity
-          } else {
-            productQuantities[productNumber] = quantity
-          }
-        })
-
-        productForSave.forEach(item => {
-          item.qt = productQuantities[item.product]
-        })        
       })
 
-      let result = Object.values(productForSave.reduce((acc, item) => {
-        const id = item.selectedMoldeCode
-        if (acc[id]) {
-          acc[id].quantity += parseInt(item.quantity)
+
+      let mergedProducts = {};
+
+      productForSave.forEach(item => {
+        if (!mergedProducts[item.selectedMoldeCode]) {
+          mergedProducts[item.selectedMoldeCode] = { ...item, qt: item.quantity };
         } else {
-          acc[id] = { ...item }
+          mergedProducts[item.selectedMoldeCode].quantity += item.quantity;
+          mergedProducts[item.selectedMoldeCode].qt += item.quantity;
         }
-        return acc
-      }, {}))
-  
-      console.log(result);
+      });
+      let mergedArray = Object.values(mergedProducts);
+      //let totalQuantity = mergedArray.reduce((total, item) => total + item.quantity, 0);
+      let productQuantities = {};
+
+      // Primera pasada: acumular las cantidades por producto
+      mergedArray.forEach(item => {
+          const productNumber = item.product;
+          const quantity = item.quantity;
+
+          if (productQuantities[productNumber]) {
+              productQuantities[productNumber] += quantity;
+          } else {
+              productQuantities[productNumber] = quantity;
+          }
+      });
+
+      mergedArray.forEach(item => {
+        item.qt = productQuantities[item.product];
+      });
+
       
       if(cotId) {
-        expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(result))
+        expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(mergedArray))
       } else{
-        expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(result))
+        expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(mergedArray))
       }
-      this.procesarResult(result)
+      this.procesarResult(mergedArray)
     }
   }
 
@@ -541,51 +509,10 @@ class QuotationCalculation extends HTMLElement {
       productForSave = JSON.parse(retrievedData)
     }
 
-    
-
-    //const arrayCantTotal = this.addTotalQuantity(productForSave)
-
-   /*  const loadingDivHtml = document.querySelector('.loading-message')
-    if (loadingDivHtml) {
-      loadingDivHtml.remove()
-    }
-
-    //result = productForSave.filter((value) => value.unitPrice != "" && value.unitPrice != "0")
-
-    if(cotId) {
-      expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(result))
-    }
-    else{
-      expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(result))
-    } */
-
-    //console.log("here ", result);
     this.removeList()
     this.insertList()
     this.sumar()
     this.updateUnitValue()
-    
-   /*  this.procesarResult(arrayCantTotal).then(() => {
-      const loadingDivHtml = document.querySelector('.loading-message')
-      if (loadingDivHtml) {
-        loadingDivHtml.remove()
-      }
-
-      //result = result.filter((value) => value.unitPrice != "" && value.unitPrice != "0")
-
-      if(cotId) {
-        expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(arrayCantTotal))
-      }
-      else{
-        expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(arrayCantTotal))
-      }
-
-      this.removeList()
-      this.insertList()
-      this.sumar()
-      this.updateUnitValue()
-
-    }) */
   }
 
   removeList() {
@@ -639,8 +566,10 @@ class QuotationCalculation extends HTMLElement {
           } else{
             expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(newArray))
           }
+          const products = retrievedData ? JSON.parse(retrievedData) : []
+
           this.removeList()
-       
+          this.createArrayProducto(newArray)
           this.insertList()
           this.sumar()
 
