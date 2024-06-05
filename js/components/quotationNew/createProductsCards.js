@@ -412,6 +412,8 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
 
             const initializeSlider = () => {
               const sliderElement = document.querySelector('.modal--container__bodyLeft .image-product');
+              const images = sliderElement.querySelectorAll("img");
+              zoomImagesSlider(images);
               // console.log(sliderElement);
             
               if (sliderElement && sliderElement.children.length > 1) {
@@ -553,3 +555,46 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
 }
 
 export default createProductCards
+
+//@ts-check
+function throttle(func, delay) {
+  let isThrottled = false;
+  return function(...args) {
+      if (isThrottled) return;
+      isThrottled = true;
+      requestAnimationFrame(() => {
+          func(...args);
+          isThrottled = false;
+      });
+  };
+}
+function handleMouseMove(e) {
+  const rect = e.target.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const xPercent = (x / rect.width) * 100;
+  const yPercent = (y / rect.height) * 100;
+
+  e.target.style.transformOrigin = `${xPercent}% ${yPercent}%`;
+};
+const zoomImagesSlider = (images) => {
+  const image = images[0];
+  images.forEach(image => {
+    let zoom = false;
+    image.addEventListener("click", () => {
+      
+      if(zoom) {
+        image.style.transform = 'scale(1)';
+        zoom = false
+        return
+      }
+      
+      image.style.transform = 'scale(2.5)';
+      zoom = true
+  
+    })
+
+    const throttleMouseMove = throttle(handleMouseMove, 1);
+    image.addEventListener('mousemove', throttleMouseMove)
+  })
+}

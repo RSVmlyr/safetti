@@ -92,6 +92,7 @@
       object-fit: cover;
       opacity: 1;
       transition: all ease-in-out .5s;
+      cursor: url(../../img/icon/icon-lens.svg), auto !important;
     }
     .qnimage--auto {
       height: auto;
