@@ -87,7 +87,7 @@ class QuotationCalculation extends HTMLElement {
           }
         });
 
-        if( acumm <= parseInt(element.dataset.minQuantity) ) {
+        if( acumm < parseInt(element.dataset.minQuantity) ) {
           nodeNotification(`La cantidad total debe ser mayor o igual a ${element.dataset.minQuantity}`);
           return
         } else {
