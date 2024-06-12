@@ -80,12 +80,15 @@ class QuotationCalculation extends HTMLElement {
             console.log(dataName, molde.dataset.name, "..............dddddd");
             if (dataName === molde.dataset.name) {
               const numbeQuantity = parseInt(item.querySelector(".quotatioview--quantity").value);
-              acumm = numbeQuantity;
+              acumm += numbeQuantity;
             } else {
-              acumm = numberValue
+              //acumm = 0
+              acumm = parseInt(item.querySelector(".quotatioview--quantity").value)
             }
           }
         });
+
+        console.log(acumm);
 
         if( acumm < parseInt(element.dataset.minQuantity) ) {
           nodeNotification(`La cantidad total debe ser mayor o igual a ${element.dataset.minQuantity}`);
