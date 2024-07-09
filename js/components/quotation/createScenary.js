@@ -10,9 +10,6 @@ import modalApproval from "../../helpers/modalApproval.js"
 import formatCurrency from "../../helpers/formatCurrency.js"
 
 const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
-  
-  const API_DEV = config.API_KEY_DEV;
-  const API_DEV_IMAGE = config.API_DEV_IMAGE;
   const quotationCreatescenary = quotation.querySelector('#quotation--content--list .quotation--list--row')
   const quotationCreatescenarys = quotation.querySelectorAll('#quotation--content--list .quotation--list--row')
   const scenaryContainerTop = quotation.querySelector('#scenary--container__top')
@@ -64,11 +61,11 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             <span class="quotation--status">${cotStatus.statusName}</span>
           </div>
           <div class="region region__two">
-            <a class="quotation--email" href="${API_DEV}/api/Quotation/email/${currentUser}/${cot.id}">
+            <a class="quotation--email" href="/api/Quotation/email/${currentUser}/${cot.id}">
               <span class="quotation--send--data quotation--info">Enviar correo</span>
               <img class="quotation--email__img" src='../../img/icon/icon-email.svg' loading="lazy" alt="Email" title="Email">
             </a>
-            <a class="quotation--download" href="${API_DEV}/api/Quotation/pdf/${cot.id}">
+            <a class="quotation--download" href="${config.baseUrl}/api/Quotation/pdf/${cot.id}">
               <span class="quotation--info">Generar PDF</span>
               <img class="quotation--download__img" src='../../img/icon/icon-download.svg' loading="lazy" alt="Descargar" title="Descargar">
             </a>
@@ -118,7 +115,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         ${
           (cot.id && cotStatus.statusId === 2) ?  
           `<div class="scenary--data__actions">
-            <a href="${API_DEV_IMAGE}/proyecto/${cot.id}" target="_top" class="quotation--btn__add">Ver Proyecto</a>
+            <a href="${config.API_DEV_IMAGE}/proyecto/${cot.id}" target="_top" class="quotation--btn__add">Ver Proyecto</a>
           </div>`: ``} 
       </div>
     </div>
@@ -290,11 +287,11 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               ${scen.selected === true ? '<div class="scenary--row__header selected">' : '<div class="scenary--row__header">'}
                 <span class="quotation--title__quo">#${count} - ${scen.name ? scen.name : ''}</span>
                 <div class="scenary--row__actions">
-                  <a id="email-${i}" class="scenary--quotation--email" href="${API_DEV}/api/Quotation/emailscenario/${cot.client}/${scen.id}">
+                  <a id="email-${i}" class="scenary--quotation--email" href="/api/Quotation/emailscenario/${cot.client}/${scen.id}">
                     <span class="scenary--quotation--send--data quotation--info">Enviar correo</span>
                     <img class="quotation--email__img" src='${scen.selected === true ? '../../img/icon/icon-email.svg' : '../../img/icon/icon-email-white.svg'}' loading="lazy" alt="Email" title="Email">
                   </a>
-                  <a class="quotation--download" href="${API_DEV}/api/Quotation/scenariopdf/${scen.id}">
+                  <a class="quotation--download" href="${config.baseUrl}/api/Quotation/scenariopdf/${scen.id}">
                     <span class="quotation--info">Generar PDF</span>
                     <img class="quotation--download__img" src='${scen.selected === true ? '../../img/icon/icon-download.svg' : '../../img/icon/icon-download-white.svg'}' loading="lazy" alt="Descargar" title="Descargar">
                   </a>

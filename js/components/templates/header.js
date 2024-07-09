@@ -13,7 +13,6 @@ const header = (node, infoQuotation) => {
     id,
     status: { name, id : statusid },
   } = infoQuotation;
-  const API_DEV = config.API_KEY_DEV;
   const dateCreat = dateFormat(createdAt);
   const dateUpdate = dateFormat(createdAt);
   const header = document.createElement("header");
@@ -36,12 +35,12 @@ const header = (node, infoQuotation) => {
         }
     </div>
     <div class="region region--right">
-        <a class="quotation--email" href="${API_DEV}/api/Quotation/email/${currentUser}/${id}">
+        <a class="quotation--email" href="/api/Quotation/email/${currentUser}/${id}">
             <span id="qnemail" class="quotation--send--data quotation--info__white">Enviar correo</span>
             <img class="quotation--email__img" src="../../img/icon/icon-email-white.svg" loading="lazy"
                 alt="Email" title="Email">
         </a>
-        <a href="${API_DEV}/api/Quotation/pdf/${id}" class="quotation--download">
+        <a href="${config.baseUrl}/api/Quotation/pdf/${id}" class="quotation--download">
             <span class="quotation--info__white">Generar PDF</span>
             <img class="quotation--download__img" src="../../img/icon/icon-download-white.svg" loading="lazy"
                 alt="Descargar" title="Descargar">
