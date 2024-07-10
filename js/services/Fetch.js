@@ -1,12 +1,16 @@
 import { config } from "../../../config.js"
 
+const url = new URL(window.location.href);
+const searchParams = new URLSearchParams(url.search);
+const token = searchParams.get('token') || '';
+
 async function request(url, params, method = 'GET', stringifyParams = true, getBlob = false) {
 
   const options = {
     method,
     headers: {
       'Content-Type': 'application/json',
-      'auth': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTcxNTczODQ2MCwiZXhwIjoxNzE1NzUyODYwfQ.zrWo70zaQJr_DjrZArEoR8GLntdTilciYg8PPKNV4YY'
+      'auth': token
     }
   };
 
@@ -26,7 +30,7 @@ async function request(url, params, method = 'GET', stringifyParams = true, getB
   }
 
   const response = await fetch(config.baseUrl + url, options);
-  console.log(response);
+
   if (response.status !== 200) {
     return generateErrorResponse('The server responded with an unexpected status.');
   }

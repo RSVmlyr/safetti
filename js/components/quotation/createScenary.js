@@ -8,6 +8,7 @@ import putQuotationScenario from "../../services/quotation/putQuotationScenario.
 import { config } from "../../../config.js"
 import modalApproval from "../../helpers/modalApproval.js"
 import formatCurrency from "../../helpers/formatCurrency.js"
+import downloadPdfHelper from "../../helpers/downloadPdfHelper.js"
 
 const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
   const quotationCreatescenary = quotation.querySelector('#quotation--content--list .quotation--list--row')
@@ -17,6 +18,9 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
   const currentRol = localStorage.getItem('rol')
   const currentUser = localStorage.getItem('current')
   let lastClickedIndex = localStorage.getItem('lastClickedIndex');
+  const url = new URL(window.location.href);
+  const searchParams = new URLSearchParams(url.search);
+  const token = searchParams.get('token') || '';
 
   quotationCreatescenarys.forEach((other, index) => {
     other.classList.remove('active');
@@ -65,8 +69,8 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               <span class="quotation--send--data quotation--info">Enviar correo</span>
               <img class="quotation--email__img" src='../../img/icon/icon-email.svg' loading="lazy" alt="Email" title="Email">
             </a>
-            <a class="quotation--download" href="${config.baseUrl}/api/Quotation/pdf/${cot.id}">
-              <span class="quotation--info">Generar PDF</span>
+            <a class="quotation--download" href="/api/Quotation/pdf/${cot.id}">
+              <span class="quotation--generate--pdf quotation--info">Generar PDF</span>
               <img class="quotation--download__img" src='../../img/icon/icon-download.svg' loading="lazy" alt="Descargar" title="Descargar">
             </a>
           </div>
@@ -92,7 +96,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
               <div class="quotation--notification"><span class="quotation--title">No existen escenarios.</span></div>
             </div>
             <div class="scenary--data__actions">
-              <a href="./index-q.html?cotId=${cot.id}&cotName=${encodeURIComponent(cot.name)}&uid=${storedHash}" class="quotation--btn__add quotation--btn__Ne">Nuevo escenario</a>
+              <a href="./index-q.html?cotId=${cot.id}&cotName=${encodeURIComponent(cot.name)}&uid=${storedHash}&token=${token}" class="quotation--btn__add quotation--btn__Ne">Nuevo escenario</a>
               <a id="quotation--btn__approved-tmp" class="quotation--btn__modal scenary--data__actionsDelete ${cotStatus.statusId==1?'':'d-none'}" href="#" data-cotid="${cot.id}">
                 <span class="quotation--info">Enviar para aprobación</span>
                 <img src='../../img/icon/icon-send.png' loading="lazy" alt="Aprobar" title="Aprobar">
@@ -201,6 +205,10 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     const quotationSendData = quotation.querySelector('.quotation--send--data')
     sendEmailHelper(quotationEmail, quotationSendData)
 
+    const quotationDownload = quotation.querySelector('.quotation--download')
+    const quotationGeneratePdf = quotation.querySelector('.quotation--generate--pdf')
+    downloadPdfHelper(quotationDownload, quotationGeneratePdf)
+
     // Delete Scenary Top
     const uid = localStorage.getItem('current')
     quotationBtnDelete.addEventListener('click', () => {
@@ -256,7 +264,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                 <td></td>
                 <td><p class="quotation--info">$ ${formatCurrency(subtotalProductsSeleccionado, cot.currency)}</p></td>
                 <td><p class="quotation--info">$ ${formatCurrency(scen.total, cot.currency)} </p></td>
-                <td><span class="quotation--btn__view"><a  class="quotation--info quotation--detail" href="./Cotizacion.html?id=${cot.id}&uid=${storedHash}">Ver detalle</a></span></td>
+                <td><span class="quotation--btn__view"><a  class="quotation--info quotation--detail" href="./Cotizacion.html?id=${cot.id}&uid=${storedHash}&token=${token}">Ver detalle</a></span></td>
               </tr>
             </table>
           </div>
@@ -291,8 +299,8 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                     <span class="scenary--quotation--send--data quotation--info">Enviar correo</span>
                     <img class="quotation--email__img" src='${scen.selected === true ? '../../img/icon/icon-email.svg' : '../../img/icon/icon-email-white.svg'}' loading="lazy" alt="Email" title="Email">
                   </a>
-                  <a class="quotation--download" href="${config.baseUrl}/api/Quotation/scenariopdf/${scen.id}">
-                    <span class="quotation--info">Generar PDF</span>
+                  <a class="quotation--download" href="/api/Quotation/scenariopdf/${scen.id}">
+                    <span class="quotation--generate--pdf quotation--info">Generar PDF</span>
                     <img class="quotation--download__img" src='${scen.selected === true ? '../../img/icon/icon-download.svg' : '../../img/icon/icon-download-white.svg'}' loading="lazy" alt="Descargar" title="Descargar">
                   </a>
                 </div>  
@@ -367,6 +375,15 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
 
     emailSendNodes()
 
+    const generatePdfNodes = () => {
+      const quotationDownloadList = quotation.querySelectorAll('.quotation--download')
+      quotationDownloadList.forEach(link => {
+        const quotationGeneratePdf = link.querySelector('.quotation--generate--pdf')
+        downloadPdfHelper(link, quotationGeneratePdf)
+      });
+    }
+
+    generatePdfNodes()
   })
 }
 

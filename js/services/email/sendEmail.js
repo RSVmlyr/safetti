@@ -19,7 +19,9 @@ const sendEmail = async (nodo, url, not) => {
         not.textContent = 'Enviar correo'
         not.classList.remove('loading')
         quotationEmailSend.remove()
-        if(not.classList.contains('quotation--info__white')) {
+        const scenary = nodo.closest('.scenary--data__scenary');
+
+        if(not.classList.contains('quotation--info__white') || (scenary && !scenary.classList.contains('selected'))) {
           src = '../../img/icon/icon-email-white.svg'
         }
         not.nextElementSibling.src = src;

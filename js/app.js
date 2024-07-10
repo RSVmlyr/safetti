@@ -29,10 +29,12 @@ class App {
     const url = new URL(window.location.href);
     const searchParams = new URLSearchParams(url.search);
     const uid = searchParams.get('uid') || '94'; //27
+    const token = searchParams.get('token') || '';
     const resQueryUser = await getUser(uid);
     const login = new Login();
     login.setHash(uid, resQueryUser.rol);
     localStorage.setItem('rol', resQueryUser.rol);
+
     if (this.quotation) {
       const scenarioPattern = /scenario-\d+/;
 
@@ -44,7 +46,7 @@ class App {
 
       const resQueryAdvisors = await getAdvisors();
       const btn_ = document.querySelector('.quotation--btn__add');
-      btn_.setAttribute('href', '/index-q.html?uid=' + resQueryUser.id);
+      btn_.setAttribute('href', `/index-q.html?uid=${resQueryUser.id}&token=${token}`);
 
       if(resQueryUser.rol != "advisors") {
         const quotationLeft = document.querySelector(".quotation .quotation--container__action");
@@ -64,7 +66,7 @@ class App {
 
     if (this.quotationNew) {
       const btnBack_ = document.querySelector('#quotationew--back')
-      btnBack_.setAttribute('href', '/index.html?uid=' + resQueryUser.id);
+      btnBack_.setAttribute('href', `/index.html?uid=${resQueryUser.id}&token=${token}`);
       const resQueryProducts = await getProduct();
       const resQueryClients = await getClients();
       quotationNewPage(this.quotationNew, resQueryUser, resQueryProducts, resQueryClients);

@@ -1,7 +1,8 @@
 import dateFormat from "../../helpers/dateFormat.js";
+import downloadPdfHelper from "../../helpers/downloadPdfHelper.js";
 import liteStatusQuotation from "../../helpers/liteStatusQuotation.js";
 import sendEmailHelper from "../../helpers/sendEmailHelper.js";
-import { config } from "../../../config.js"
+
 const header = (node, infoQuotation) => {
   const {
     advisorName,
@@ -40,8 +41,8 @@ const header = (node, infoQuotation) => {
             <img class="quotation--email__img" src="../../img/icon/icon-email-white.svg" loading="lazy"
                 alt="Email" title="Email">
         </a>
-        <a href="${config.baseUrl}/api/Quotation/pdf/${id}" class="quotation--download">
-            <span class="quotation--info__white">Generar PDF</span>
+        <a href="/api/Quotation/pdf/${id}" class="quotation--download">
+            <span class="quotation--generate--pdf quotation--info__white">Generar PDF</span>
             <img class="quotation--download__img" src="../../img/icon/icon-download-white.svg" loading="lazy"
                 alt="Descargar" title="Descargar">
         </a>
@@ -65,8 +66,11 @@ const header = (node, infoQuotation) => {
   const quotationEmail = document.querySelector('.quotation--email')
   const quotationSendData = document.querySelector('.quotation--send--data')
   sendEmailHelper(quotationEmail, quotationSendData)
-  // Send Email  
+  // Send Email
 
+  const quotationDownload = document.querySelector('.quotation--download')
+  const quotationGeneratePdf = document.querySelector('.quotation--generate--pdf')
+  downloadPdfHelper(quotationDownload, quotationGeneratePdf)
 };
 
 export default header;

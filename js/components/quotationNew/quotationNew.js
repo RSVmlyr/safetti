@@ -239,11 +239,11 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
 
   const quotationDownload = quotationNew.querySelector('.quotation--download')
   if (quotationDownload) {
-    quotationDownload.setAttribute('href', `${config.baseUrl}/api/Quotation/pdf/${cotId}`);
+    quotationDownload.setAttribute('href', `/api/Quotation/pdf/${cotId}`);
   }
   const quotationEmail = quotationNew.querySelector('.quotation--email')
   if (quotationEmail) {
-    quotationEmail.setAttribute('href', `${config.baseUrl}/api/Quotation/email/${cotId}`);
+    quotationEmail.setAttribute('href', `/api/Quotation/email/${cotId}`);
     const quotationEmailSendData = quotationNew.querySelector('.quotation--send--data')
     sendEmailHelper(quotationEmail, quotationEmailSendData)
   }

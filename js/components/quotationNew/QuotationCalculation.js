@@ -593,7 +593,7 @@ class QuotationCalculation extends HTMLElement {
           const total = this.btnivaChecked(quo, btniva)
           quotationSave.textContent = total.format()
         }
-        const au = aUser()
+        aUser()
       })
     }
   }
