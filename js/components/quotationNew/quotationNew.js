@@ -15,7 +15,6 @@ import { config } from "../../../config.js"
 
 const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQueryClients) => {
   const expiringLocalStorage = new ExpiringLocalStorage()
-  const API_DEV = config.API_KEY_DEV;
   const url = new URL(window.location.href);
   const searchParams = new URLSearchParams(url.search);
   const cotId = searchParams.get('cotId');
@@ -240,11 +239,11 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
 
   const quotationDownload = quotationNew.querySelector('.quotation--download')
   if (quotationDownload) {
-    quotationDownload.setAttribute('href', `${API_DEV}/api/Quotation/pdf/${cotId}`);
+    quotationDownload.setAttribute('href', `/api/Quotation/pdf/${cotId}`);
   }
   const quotationEmail = quotationNew.querySelector('.quotation--email')
   if (quotationEmail) {
-    quotationEmail.setAttribute('href', `${API_DEV}/api/Quotation/email/${cotId}`);
+    quotationEmail.setAttribute('href', `/api/Quotation/email/${cotId}`);
     const quotationEmailSendData = quotationNew.querySelector('.quotation--send--data')
     sendEmailHelper(quotationEmail, quotationEmailSendData)
   }

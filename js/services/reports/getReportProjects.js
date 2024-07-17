@@ -1,15 +1,14 @@
+import Fetch from "../Fetch.js"
+
 const getReportProjects = async (startDate, endDate) => {
     try {
-        const urlQuery = `/api/report/projects/${startDate}/${endDate}`;
-        const reqQuery = await fetch(urlQuery);
-        const resQuery = await reqQuery.json();
+        const response = await Fetch.get(`/api/report/projects/${startDate}/${endDate}`);
 
-        if (reqQuery.status == 403) {
-            console.error('Error 403');
-        } else if (reqQuery.status == 500) {
-            console.error('Error 500. Ocurrió un error al procesar su solicitud.');
+        if (response.status === "error") {
+            console.error(response.message);
         }
-        return resQuery;
+
+        return response;
     }
     catch(error) {
         console.error('Error al consultar el reporte', error);

@@ -1,29 +1,20 @@
-import { config } from "../../../config.js"
+import Fetch from "../Fetch.js"
 import nodeNotification from "../../helpers/nodeNotification.js";
 
-const API_DEV = config.API_KEY_DEV;
 const putQuotationScenario = async (id) => {
   try {
-    const urlQuerySQ = `${API_DEV}/api/Quotation/activatescenario/${id}`;
-    const requestOptions = {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    };
+    const response = await Fetch.put(`/api/Quotation/activatescenario/${id}`);
 
-    const response = await fetch(urlQuerySQ, requestOptions);
-    if(response.status === 200) {
+    if(response.status !== "error") {
       nodeNotification('Seleccionando escenario...')
       setTimeout(() => {
         location.reload();
       }, 2000);
-    } else if (response.status == 500) {
-      nodeNotification('Error 500, Error interno del servidor')
+    } else {
+      nodeNotification('Error interno del servidor')
     }
-
   } catch (error) {
-    console.error('No se pudo cancelar la cotización', error);
+    console.error('No se pudo activar el escenario', error);
   }
 };
 

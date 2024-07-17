@@ -7,11 +7,10 @@ const sendEmailHelper = (event, nodo) => {
       nodo.textContent = 'Enviando...'
       nodo.nextElementSibling.src = '../../img/icon/icon-spinner.gif'
       nodo.classList.add('loading')
-      let urlEmail = event.getAttribute('href')
+      const urlEmail = event.getAttribute('href')
       sendEmail(event, urlEmail, nodo)
     }
   })
-  
 }
 
 export default sendEmailHelper

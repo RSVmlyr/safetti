@@ -1,22 +1,15 @@
-import { config } from "../../../config.js"
+import Fetch from "../Fetch.js"
 
-const API_DEV = config.API_KEY_DEV;
 const getAdvisors = async () => {
   try {
-    const urlQueryAdvisors = `${API_DEV}/api/User/advisors`
-    const reqQueryAdvisors = await fetch(urlQueryAdvisors)
-    const resQueryAdvisors = await reqQueryAdvisors.json()
-    
-    if (reqQueryAdvisors.status == 403) {
-      console.error('Error 403');
-    } else if (reqQueryAdvisors.status == 500) {
-      console.error('Error 500. Ocurrió un error al procesar su solicitud.');
+    const response = await Fetch.get(`/api/User/advisors`)
+
+    if (response.status === "error") {
+      console.error(response.message);
     }
 
-    return resQueryAdvisors
-    
+    return response
   }
-  
   catch(error) {
     console.error('No se pudo traer los asesores', error);
   }

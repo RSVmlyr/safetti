@@ -1,21 +1,17 @@
-import { config } from "../../../config.js"
+import Fetch from "../Fetch.js"
 
-const API_DEV = config.API_KEY_DEV;
 const getUser = async (uid) => {
   try {
-    const urlQueryUser = `${API_DEV}/api/User/${uid}`
-    const reqQueryUser = await fetch(urlQueryUser)
-    const resQueryUser = await reqQueryUser.json()
-    
-    if (reqQueryUser.status == 403) {
-      console.error('Error 403');
-    } else if (reqQueryUser.status == 500) {
-      console.error('Error 500. Ocurrió un error al procesar su solicitud.');
+    const response = await Fetch.get(`/api/User/${uid}`)
+
+    if (response.status === "error") {
+      console.error(response.message);
     }
-    return resQueryUser
+
+    return response
   }
   catch(error) {
-    console.error('No se pudo traer los data', error.errors);
+    console.error('No se pudo traer el usuario', error);
   }
 }
 

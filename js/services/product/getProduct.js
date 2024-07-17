@@ -1,20 +1,17 @@
-import { config } from "../../../config.js"
+import Fetch from "../Fetch.js"
 
-const API_DEV = config.API_KEY_DEV;
 const getProduct = async () => {
   try {
-    const urlQueryProducts = `${API_DEV}/api/Product`
-    const reqQueryProducts = await fetch(urlQueryProducts)
-    const resQueryProducts = await reqQueryProducts.json()
-    if (reqQueryProducts.status == 403) {
-      console.error('Error 403');
-    } else if (reqQueryProducts.status == 500) {
-      console.error('Error 500. Ocurrió un error al procesar su solicitud.');
+    const response = await Fetch.get('/api/Product')
+
+    if (response.status === "error") {
+      console.error(response.message);
     }
-    return resQueryProducts
+
+    return response
   }
   catch(error) {
-    console.error('No se pudo traer los asesores', error);
+    console.error('No se pudo traer los productos', error);
   }
 }
 

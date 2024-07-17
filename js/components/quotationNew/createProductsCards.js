@@ -1,4 +1,4 @@
-import getImages from "../../services/iamges/getImages.js";
+import getImages from "../../services/images/getImages.js";
 import dataSetQuotation from "./dataSetQuotation.js";
 import inputNumber from "./inputNumber.js";
 import localStorage from "./localStorage.js";
