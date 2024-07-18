@@ -1,11 +1,9 @@
-import { config } from "../../../config.js"
+import Fetch from "../Fetch.js"
 import nodeNotification from "../../helpers/nodeNotification.js";
 
-const API_DEV = config.API_KEY_DEV;
 const statusQuotationS = async (Qid, status, userId, advance) => {
   const a = advance !=null ? advance  : '' 
   try {
-    const urlQuerySQ = `${API_DEV}/api/Quotation/${Qid}/${userId}/${status}/${a}`;
     // api/Quotation/{quotationId}/{userId}/4/{advance} si necesita anticipo
     // api/Quotation/{quotationId}/{userId}/4/0 si no necesita anticipo 
     
@@ -15,26 +13,15 @@ const statusQuotationS = async (Qid, status, userId, advance) => {
 
     // api/Quotation/{quotationId}/{userId}/2/ para subir con el file
 
-    const requestOptions = {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    };
+    const response = await Fetch.put(`/api/Quotation/${Qid}/${userId}/${status}/${a}`);
 
-    const response = await fetch(urlQuerySQ, requestOptions);
-    
-    if(response.status === 200) {
+    if(response.status !== "error") {
       nodeNotification("Estado cambiado de la cotización")
       setTimeout(() => {
         location.reload();
       }, 1000);
-    } else if (response.status === 405) {
+    } else {
       nodeNotification("Hubo un error inesperado, intenta mas tarde.")
-      console.error("405")
-    } else if (response.status == 500) {
-      nodeNotification("Hubo un error inesperado, intenta mas tarde.")
-      console.error("500")
     }
   } catch (error) {
     console.error('Hubo un error al cambiar el estado de la cotización', error);
