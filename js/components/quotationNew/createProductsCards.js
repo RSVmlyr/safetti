@@ -439,7 +439,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
       const idQnCountry = quotationNew.querySelector('.qncountry');
       const countryName = [
         {value:'colombia',text:'Estándar'},
-        {value:'canada',text:'Longer'},
+        {value:'canada',text:'Extended'},
         {value:'vR7',text:'vR7'}];
 
       countryName.forEach((item) => {
