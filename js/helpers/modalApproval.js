@@ -2,9 +2,7 @@ import statusQuotationS from "../services/statusQuotation/statusQuotation.js"
 import nodeNotification from "../helpers/nodeNotification.js";
 import validationQuotation from "../services/validation/validationQuotation.js";
 import onlyInputNumbers from "../helpers/onlyInputNumbers.js";
-import { config } from "../../../config.js"
-
-const API_DEV = config.API_KEY_DEV;
+import Fetch from "../services/Fetch.js"
 
 const validarFormulario = (mymodal) => {
   switch (mymodal.id) {
@@ -95,20 +93,8 @@ const modalApproval = async (quotation, modal, open, paymentSupportFilePath, isP
 
           download.onclick = async function(e){
             e.preventDefault();
-
-            const urlDownloadFile = `${API_DEV}/api/download`;
-            const requestOptions = {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({"path": e.target.href})
-            };
-
-            const response = await fetch(urlDownloadFile, requestOptions);
-            const fileBlob = await response.blob();
+            const fileBlob = await Fetch.postBlob("/api/download", {"path": e.target.href});
             const fileBase64 = URL.createObjectURL(fileBlob);
-
             const a = document.createElement('a');
             a.style.setProperty('display', 'none');
             document.body.appendChild(a);

@@ -1,6 +1,7 @@
 import getReportProducts from "../../services/reports/getReportProducts.js";
 import nodeNotification from "../../helpers/nodeNotification.js"
 import loadingData from "../../helpers/loading.js";
+import Fetch from "../Fetch.js"
 
 const loading = () =>  {
     const quotationContentListContainer = document.querySelector('.card-body.report-container');
@@ -161,9 +162,7 @@ const reportProductsViewPage = async () => {
         const generateProductsReportFile = async (event) => {
             const fromInput = document.getElementById("fromReport");
             const toInput = document.getElementById("toReport");
-            const urlQuery = `/api/report/productsfile/${fromInput.value}/${toInput.value}`;
-            const reqQuery = await fetch(urlQuery);
-            const myBlob = await reqQuery.blob();
+            const myBlob = await Fetch.getBlob(`/api/report/productsfile/${fromInput.value}/${toInput.value}`);
             const aElement = document.createElement("a");
             aElement.setAttribute("download", "ReporteProductos.xlsx");
             const href = URL.createObjectURL(myBlob);

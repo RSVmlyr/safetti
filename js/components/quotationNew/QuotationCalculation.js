@@ -44,24 +44,17 @@ class QuotationCalculation extends HTMLElement {
       this.resQueryUser = resQueryUser
     }
     const isCloned = clone === 'true'
-    console.log(isCloned);
-    if(isCloned) {
-      
-      
+    if(isCloned) {      
       const sliderProductos = document.querySelectorAll(".slider--productos .slider--row")
-
-      console.log(sliderProductos);
-      //if(sliderProductos.length > 0) {
-        const clonedata = await cloneScenery(cotId)
-        this.clonecot = true
-        if(clonedata) {
-          this.moneda = clonedata.moneda
-          const expiringLocalStorage = new ExpiringLocalStorage()
-          expiringLocalStorage.deleteDataWithExpiration("scenario-" + cotId)
-          this.setNameInputClone(clonedata.data)
-          this.createArrayProducto(clonedata.data)
-        }
-      //}
+      const clonedata = await cloneScenery(cotId)
+      this.clonecot = true
+      if(clonedata) {
+        this.moneda = clonedata.moneda
+        const expiringLocalStorage = new ExpiringLocalStorage()
+        expiringLocalStorage.deleteDataWithExpiration("scenario-" + cotId)
+        this.setNameInputClone(clonedata.data)
+        this.createArrayProducto(clonedata.data)
+      }
     }
   }
   updateUnitValue() {
@@ -77,17 +70,17 @@ class QuotationCalculation extends HTMLElement {
         listanumbers.forEach(function(item) {
           const molde = item.querySelector(".name-product")
           if (molde) {
-            console.log(dataName, molde.dataset.name, "..............dddddd");
             if (dataName === molde.dataset.name) {
               const numbeQuantity = parseInt(item.querySelector(".quotatioview--quantity").value);
-              acumm = numbeQuantity;
+              acumm += numbeQuantity;
             } else {
-              acumm = numberValue
+              //acumm = 0
+              acumm = parseInt(item.querySelector(".quotatioview--quantity").value)
             }
           }
         });
 
-        if( acumm <= parseInt(element.dataset.minQuantity) ) {
+        if( acumm < parseInt(element.dataset.minQuantity) ) {
           nodeNotification(`La cantidad total debe ser mayor o igual a ${element.dataset.minQuantity}`);
           return
         } else {
@@ -347,7 +340,6 @@ class QuotationCalculation extends HTMLElement {
 };
 
   procesarResult = async(result) =>  {
-    console.log('Proceso');
     this.removeList()
     this.loading()
     const url = new URL(window.location.href)
@@ -432,11 +424,7 @@ class QuotationCalculation extends HTMLElement {
         item.quantity = Number(item.quantity);
       });
     
-      console.log(products);   
-      products.forEach(product => {
-        
-        console.log("productForSave", productForSave);
-        
+      products.forEach(product => {        
         if(!is_update){
           productForSave.push({
             product: product.id,
@@ -605,7 +593,7 @@ class QuotationCalculation extends HTMLElement {
           const total = this.btnivaChecked(quo, btniva)
           quotationSave.textContent = total.format()
         }
-        const au = aUser()
+        aUser()
       })
     }
   }

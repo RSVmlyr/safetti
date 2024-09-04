@@ -1,17 +1,12 @@
-import { config } from "../../../config.js"
+import Fetch from "../Fetch.js"
 
-const API_DEV = config.API_KEY_DEV;
-
-const getClients = async (resQueryClients) => {
+const getClients = async () => {
   try {
-    const urlQueryClients = `${API_DEV}/api/User/clients`;
-    const reqQueryClients = await fetch(urlQueryClients);
-    const resQueryClients = await reqQueryClients.json();
-    return resQueryClients
+    const response = await Fetch.get(`/api/User/clients`);
+    return response
   }
-  
   catch(error) {
-    console.error('No se pudo traer los asesores', error);
+    console.error('No se pudo traer los clientes', error);
   }
 }
 

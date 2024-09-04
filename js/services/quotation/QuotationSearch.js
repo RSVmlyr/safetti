@@ -1,24 +1,17 @@
-import { config } from "../../../config.js"
-
-const API_DEV = config.API_KEY_DEV;
+import Fetch from "../Fetch.js"
 
 const QuotationSearch = async (uid, pageNumber, pageSize, advisorId, clientName) => {
   try {
-    const urlQueryAdvisors = `${API_DEV}/api/Quotation/search/${uid}/${pageNumber}/${pageSize}/${advisorId}/${clientName}`
-    const reqQueryAdvisors = await fetch(urlQueryAdvisors)
-    const resQueryAdvisors = await reqQueryAdvisors.json()
+    const response = await Fetch.get(`/api/Quotation/search/${uid}/${pageNumber}/${pageSize}/${advisorId}/${clientName}`)
 
-    if (reqQueryAdvisors.status == 403) {
-      console.error('Error 403');
-    } else if (reqQueryAdvisors.status == 500) {
-      console.error('Error 500. Ocurrió un error al procesar su solicitud.');
+    if (response.status === "error") {
+      console.error(response.message);
     }
-    return resQueryAdvisors  
+
+    return response
   }
-  
   catch(error) {
-    console.error('No se pudo traer los asesores', error);
+    console.error('No se pudo realizar la búsqueda', error);
   }
 }
 export default QuotationSearch
-  
