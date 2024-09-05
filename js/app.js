@@ -44,21 +44,31 @@ class App {
         }
       }
 
-      const resQueryAdvisors = await getAdvisors();
       const btn_ = document.querySelector('.quotation--btn__add');
       btn_.setAttribute('href', `/index-q.html?uid=${resQueryUser.id}&token=${token}`);
 
-      if(resQueryUser.rol != "advisors") {
+      if(resQueryUser.rol === "advisors" || resQueryUser.isAdminSafetti === true) {
+
+        const resQueryAdvisors = await getAdvisors();
+        if (resQueryAdvisors) {
+          selectAdvisors(resQueryAdvisors);
+        }
+
+        const advisorSelect = document.querySelector(".quotation .quotation--container__action #advisors");
+        if(resQueryUser.rol === "advisors" && resQueryUser.isAdminSafetti === false) {
+          advisorSelect.value = resQueryUser.id;
+        }
+
         const quotationLeft = document.querySelector(".quotation .quotation--container__action");
-        quotationLeft.classList.add("d-none");
+        quotationLeft.classList.remove("d-none");
+
+        if(resQueryUser.isAdminSafetti === true){
+          advisorSelect.classList.remove("d-none");
+        }
       }
-      
+
       const paginatorElement = new PaginatorElement(' ');
       await paginatorElement.renderPaginator();
-      
-      if (resQueryAdvisors) {
-        selectAdvisors(resQueryAdvisors);
-      }
 
       const spinner = this.quotation.querySelector('#quotation--content--list .quotation--loading');
       spinner.remove();
