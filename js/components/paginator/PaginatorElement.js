@@ -13,6 +13,11 @@ class PaginatorElement extends HTMLElement {
     this.advisorId = '0'
     this.clientName = clientName === undefined ? ' ': clientName
     this.pageSize = '5'
+
+    const selectAdvisorId = document.querySelector('#advisors');
+    if(selectAdvisorId){
+      this.advisorId = selectAdvisorId.value;
+    }
   }
 
   connectedCallback() {
@@ -130,6 +135,10 @@ class PaginatorElement extends HTMLElement {
       })
       this.loading();
       try {
+        const selectAdvisorId = document.querySelector('#advisors');
+        if(selectAdvisorId){
+          this.advisorId = selectAdvisorId.value;
+        }
         const uid = localStorage.getItem('current')
         const data = await QuotationSearch(uid, e.target.value, this.pageSize, this.advisorId, this.clientName);
         localStorage.setItem('lastClickPager', e.target.value);
