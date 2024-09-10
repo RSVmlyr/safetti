@@ -8,6 +8,8 @@ import loadingData from "../../helpers/loading.js"
 import onlyInputNumbers from "../../helpers/onlyInputNumbers.js"
 import getUser from "../../services/user/getUser.js"
 import cloneScenery from "../../helpers/cloneScenery.js"
+import putScenario from "../../services/quotation/putScenario.js";
+
 
 class QuotationCalculation extends HTMLElement {
   constructor(resQueryUser) {
@@ -18,6 +20,7 @@ class QuotationCalculation extends HTMLElement {
     this.selectedSend = false
     this.clonesend = false
     this.clonecot = false
+    this.scenaryId = ''
     this.innerHTML = `
       <div class="quotation-calculation">
         <div class="quotationew--calculation__body">
@@ -47,6 +50,10 @@ class QuotationCalculation extends HTMLElement {
     if(isCloned) {      
       const sliderProductos = document.querySelectorAll(".slider--productos .slider--row")
       const clonedata = await cloneScenery(cotId)
+      console.log("clonedata", clonedata.data[0].scenarioId);
+
+      this.scenaryId = clonedata.data[0].scenarioId
+      
       this.clonecot = true
       if(clonedata) {
         this.moneda = clonedata.moneda
@@ -121,19 +128,7 @@ class QuotationCalculation extends HTMLElement {
     const formattedDate = today.toISOString().split('T')[0]
     const newValue = "Cambios " + formattedDate
     setTimeout(() => {
-      const input = document.querySelector("#quotationewscenary")
-    /*   const quotationIva = document.querySelector(".quotation--iva")
-
-      console.dir("ini", quotationIva.checked)
-      
-      const initialState = quotationIva.checked
-      quotationIva.click()
-      if (initialState === "checked") {
-        quotationIva.checked = true
-      } else {
-        quotationIva.checked = false
-      } */
-      
+      const input = document.querySelector("#quotationewscenary")      
       input.value = newValue
     }, 4000)
   }
@@ -245,10 +240,36 @@ class QuotationCalculation extends HTMLElement {
         "applyTaxIVA": iva,
         "products": scenary,
       }
+      
+      const edit = searchParams.get('edit')
+      console.log("...", this.scenaryId );
+
+      const updateScenario = async  () => {
+        const putBodyScenary = {
+          "id": 668,
+          "name": dataSetScenario.name,
+          "discountPercent": dataSetScenario.discountPercent,
+          "currency": "COP",
+          "rol": "_final_consumer",
+          "applyTaxIVA": dataSetScenario.applyTaxIVA,
+          "products": dataSetScenario.products
+        }
+
+        console.log(cotId);
+        
+        const data = await putScenario(putBodyScenary, cotId)
+        console.log(data);
+      }
       const createScenario = async  () => {
         const data = await setScenario(dataSetScenario, cotId)
+        console.log(data);
       }
-      createScenario(dataSetScenario)
+
+      if(edit) {
+        updateScenario(dataSetScenario)
+      } else {
+        createScenario(dataSetScenario)
+      }
     }
   }
 
