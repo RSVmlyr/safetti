@@ -20,7 +20,7 @@ class QuotationCalculation extends HTMLElement {
     this.selectedSend = false
     this.clonesend = false
     this.clonecot = false
-    this.scenaryId = ''
+    //this.scenaryId = ''
     this.innerHTML = `
       <div class="quotation-calculation">
         <div class="quotationew--calculation__body">
@@ -240,29 +240,44 @@ class QuotationCalculation extends HTMLElement {
         "applyTaxIVA": iva,
         "products": scenary,
       }
-      
       const edit = searchParams.get('edit')
-      console.log("...", this.scenaryId );
+      console.log(this.scenaryId);
 
       const updateScenario = async  () => {
+        const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
+        const client = JSON.parse(c)
+        console.log(client[0]);
+        
+        let currency = ''
+        let rol = ''
+
+        if(client['0'].currency === undefined && client['0'].rol === undefined){
+          currency = 'COP'
+          rol = '_final_consumer'
+        } else {
+          currency = client['0'].currency 
+          rol = client['0'].rol 
+        }
+        const result = dataSetScenario.products.map(item => ({
+          molde: item.selectedMoldeCode,
+          quantity: item.quantity
+        }));
+
+        console.log("debug", currency, rol);
+        
         const putBodyScenary = {
           "id": 668,
           "name": dataSetScenario.name,
           "discountPercent": dataSetScenario.discountPercent,
-          "currency": "COP",
-          "rol": "_final_consumer",
+          "currency": currency,
+          "rol": rol,
           "applyTaxIVA": dataSetScenario.applyTaxIVA,
-          "products": dataSetScenario.products
+          "products": result
         }
-
-        console.log(cotId);
-        
         const data = await putScenario(putBodyScenary, cotId)
-        console.log(data);
       }
       const createScenario = async  () => {
         const data = await setScenario(dataSetScenario, cotId)
-        console.log(data);
       }
 
       if(edit) {
