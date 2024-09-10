@@ -13,11 +13,18 @@ class PaginatorElement extends HTMLElement {
     this.advisorId = '0'
     this.clientName = clientName === undefined ? ' ': clientName
     this.pageSize = '5'
+
+    const selectAdvisorId = document.querySelector('#advisors');
+    if(selectAdvisorId){
+      this.advisorId = selectAdvisorId.value;
+    }
   }
 
   connectedCallback() {
     const lastClickPager = localStorage.getItem('lastClickPager')
+    // console.log('Click', lastClickPager);
     this.pageNumber = lastClickPager != null ? lastClickPager : 1;
+    // console.log(this.pageNumber);
     this.clickPager();
     //this.renderPaginator();
     this.searchClients();
@@ -25,8 +32,14 @@ class PaginatorElement extends HTMLElement {
   }
 
   async renderPaginator() {
+
+    const lastClickPager = localStorage.getItem('lastClickPager')
+    // console.log('Click', lastClickPager);
+    this.pageNumber = lastClickPager != null ? lastClickPager : 1;
+    const pageNumberSet = this.pageNumber;
+
     const uid = localStorage.getItem('current')
-    const data = await QuotationSearch(uid, this.pageNumber, this.pageSize, this.advisorId, this.clientName);
+    const data = await QuotationSearch(uid, pageNumberSet, this.pageSize, this.advisorId, this.clientName);
     const pagerItem = document.querySelectorAll('.pager .item-pager');
     pagerItem.forEach(item =>{
       item.classList.add('disabled');
@@ -122,6 +135,10 @@ class PaginatorElement extends HTMLElement {
       })
       this.loading();
       try {
+        const selectAdvisorId = document.querySelector('#advisors');
+        if(selectAdvisorId){
+          this.advisorId = selectAdvisorId.value;
+        }
         const uid = localStorage.getItem('current')
         const data = await QuotationSearch(uid, e.target.value, this.pageSize, this.advisorId, this.clientName);
         localStorage.setItem('lastClickPager', e.target.value);
