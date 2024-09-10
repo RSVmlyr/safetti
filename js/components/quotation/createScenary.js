@@ -16,6 +16,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
   const scenaryContainerTop = quotation.querySelector('#scenary--container__top')
   const scenaryCreatedBody = quotation.querySelector('#scenary--container__bottom')
   const currentRol = localStorage.getItem('rol')
+  const currentRolisAdminSafetti = localStorage.getItem('isAdminSafetti')
   const currentUser = localStorage.getItem('current')
   let lastClickedIndex = localStorage.getItem('lastClickedIndex');
   const url = new URL(window.location.href);
@@ -246,6 +247,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         });
 
         const subtotalProductsSeleccionado = cot.scenarios.find(x => x.selected).subtotalProducts;
+        const esRolEditable = (currentRol && currentRol === 'advisors') || (currentRol && currentRol === 'administrator') || (currentRolisAdminSafetti && currentRolisAdminSafetti === 'true');
 
         // Scenary selected 
         if ( scen.selected === true ) {
