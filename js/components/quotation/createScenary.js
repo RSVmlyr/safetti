@@ -265,7 +265,8 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                 <td><p class="quotation--info">$ ${formatCurrency(subtotalProductsSeleccionado, cot.currency)}</p></td>
                 <td><p class="quotation--info">$ ${formatCurrency(scen.total, cot.currency)} </p></td>
                 <td><span class="quotation--btn__view"><a  class="quotation--info quotation--detail" href="./Cotizacion.html?id=${cot.id}&uid=${storedHash}&token=${token}">Ver detalle</a></span></td>
-              </tr>
+                <td><span class="quotation--btn__view"><a  class="quotation--info quotation--detail" href="./index-q.html?uid=${storedHash}&clone=true&cotId=${cot.id}&cotName=${cot.name}">Editar</a></span></td>
+                </tr>
             </table>
           </div>
           `
