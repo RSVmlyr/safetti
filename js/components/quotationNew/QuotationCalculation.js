@@ -50,9 +50,11 @@ class QuotationCalculation extends HTMLElement {
     if(isCloned) {      
       const sliderProductos = document.querySelectorAll(".slider--productos .slider--row")
       const clonedata = await cloneScenery(cotId)
-      console.log("clonedata", clonedata.data[0].scenarioId);
 
       this.scenaryId = clonedata.data[0].scenarioId
+
+      console.log("this.scenaryId ", this.scenaryId );
+      
       
       this.clonecot = true
       if(clonedata) {
@@ -241,13 +243,14 @@ class QuotationCalculation extends HTMLElement {
         "products": scenary,
       }
       const edit = searchParams.get('edit')
-      console.log(this.scenaryId);
+      const scenaryId = searchParams.get('scenaryId')
+
+      console.log("this.scenaryId 2", this.scenaryId );
+
 
       const updateScenario = async  () => {
         const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
-        const client = JSON.parse(c)
-        console.log(client[0]);
-        
+        const client = JSON.parse(c)        
         let currency = ''
         let rol = ''
 
@@ -258,21 +261,19 @@ class QuotationCalculation extends HTMLElement {
           currency = client['0'].currency 
           rol = client['0'].rol 
         }
-        const result = dataSetScenario.products.map(item => ({
+        const products = dataSetScenario.products.map(item => ({
           molde: item.selectedMoldeCode,
           quantity: item.quantity
         }));
-
-        console.log("debug", currency, rol);
         
         const putBodyScenary = {
-          "id": 668,
+          "id": scenaryId,
           "name": dataSetScenario.name,
           "discountPercent": dataSetScenario.discountPercent,
           "currency": currency,
           "rol": rol,
           "applyTaxIVA": dataSetScenario.applyTaxIVA,
-          "products": result
+          "products": products
         }
         const data = await putScenario(putBodyScenary, cotId)
       }
