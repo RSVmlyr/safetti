@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cotizaciones</title>
-  <script src="./js/global.js"></script>
+  <!-- <script src="./js/global.js"></script> -->
   <!-- CSS -->
   <link rel="stylesheet" href="./css/main.css">
   <link rel="stylesheet" href="./css/normalize.css">
@@ -16,10 +16,10 @@
   <div class="quotation--container">
     <div class="quotation--container__top">
       <section class="region region__left">
-        <h1 class="quotation--title">Cotizaciones</h1>
+        <h1 class="quotation--title" data-tkey="quotations"></h1>
       </section>
       <section class="region region__right">
-        <a href="./index-q.html?uid=4" class="quotation--btn__add">Nueva cotización</a>
+        <a href="./index-q.html?uid=4" class="quotation--btn__add" data-tkey="new_quotation"></a>
         <img src="../img/icon/logo2-safetti.png" width="44px" alt="Safetti">
       </section>  
     </div>
@@ -27,18 +27,15 @@
       <div class="quotation--left">
         <section class="region region__one quotation--container__action">
           <select id="advisors">
-            <option value="0">Asesor</option>
+            <option value="0" data-tkey="advisor"></option>
           </select>
           <form id="search-clients">
-            <input id="clients" type="text" placeholder="Buscar Cliente">
+            <input id="clients" type="text" data-tkey="search_client" data-tattr="placeholder" placeholder="">
             <button class="search-submit" type="submit"><img src="../img/icon/icon-search-light.svg" alt=""></button>
           </form>
-          <!-- <div id="menu">
-            icon menú
-          </div> -->
         </section>
         <section class="region region__two">
-          <h2 class="quotation--subtitle">Listado de cotizaciones</h2>
+          <h2 class="quotation--subtitle" data-tkey="quotation_list"></h2>
         </section>
         <section class="region region__three">
           <div id="quotation--content--list" class="quotation--content">
@@ -50,7 +47,7 @@
       <div class="quotation--right">
         <div class="scenary--container">
           <div class="quotation--loading">
-            <span class="quotation--title">Selecciona una cotización del listado para ver el detalle.</span>
+            <span class="quotation--title" data-tkey="empty_selection"></span>
           </div>
           <div id="scenary--container__top" class="scenary--container__top"></div>
           <div id="scenary--container__bottom" class="scenary--container__bottom"></div>
@@ -138,6 +135,7 @@
 </main> 
 
 <!-- JS -->
+<script src="./js/lang.js"></script> 
 <script src="./js/lib/currency.min.js"></script> 
 <script async type="module" src="./js/app.js"></script>
 </body>

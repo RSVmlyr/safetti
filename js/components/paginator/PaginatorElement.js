@@ -193,7 +193,7 @@ class PaginatorElement extends HTMLElement {
       }
     }
     quotation.reverse();
-    quotation.forEach(cot => {        
+    quotation.forEach(cot => {
       quotationListRow(cot);
     });
   }
