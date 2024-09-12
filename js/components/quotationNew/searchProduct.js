@@ -1,12 +1,13 @@
 import createProductCards from "./createProductsCards.js";
 import qnaddproduct from "../../helpers/qnaddproduct.js";
+import { loadTranslations } from "../../lang.js";
 
 const searchProduct = (quotationNew, resQueryUser, resQueryProducts) => {
 
     // Nombre / referencia
     const qnSearchProduct = quotationNew.querySelector('#qnsearchproduct');
 
-    qnSearchProduct.addEventListener('input', (e) => {
+    qnSearchProduct.addEventListener('input', async (e) => {
         qnaddproduct();
         const sliderProductsRows = quotationNew.querySelectorAll('.slider--productos .slider--content .slider--row');
         const searchTerm = e.target.value.toLowerCase();
@@ -21,9 +22,10 @@ const searchProduct = (quotationNew, resQueryUser, resQueryProducts) => {
         });
 
         createProductCards(quotationNew, resQueryUser, { products: searchProducts });
+        await loadTranslations();
     });
 
-    const filterSelects = (e) => {
+    const filterSelects = async (e) => {
         const qnCuentos = quotationNew.querySelector('#qncuentos');
         const qnTiposPrenda = quotationNew.querySelector('#qntiposprenda');
         const qnClasificaciones = quotationNew.querySelector('#qnclasificaciones');
@@ -140,6 +142,7 @@ const searchProduct = (quotationNew, resQueryUser, resQueryProducts) => {
         });
 
         createProductCards(quotationNew, resQueryUser, filteredProducts);
+        await loadTranslations();
         localStorage.setItem("productosFiltrados", JSON.stringify(filteredProducts));
     }
 
@@ -155,7 +158,7 @@ const searchProduct = (quotationNew, resQueryUser, resQueryProducts) => {
 
     const viewProducts = quotationNew.querySelector('#viewproducts');
 
-    viewProducts.addEventListener('click', () => {
+    viewProducts.addEventListener('click', async () => {
         qnSearchProduct.value = "";
         let selects = document.querySelectorAll('select');
         selects.forEach(function(select) {
@@ -177,6 +180,7 @@ const searchProduct = (quotationNew, resQueryUser, resQueryProducts) => {
         });
 
         createProductCards(quotationNew, resQueryUser, resQueryProducts);
+        await loadTranslations();
         localStorage.removeItem("productosFiltrados");
     });
 }

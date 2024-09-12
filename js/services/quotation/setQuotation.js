@@ -1,13 +1,14 @@
 import nodeNotification from "../../helpers/nodeNotification.js";
 import ExpiringLocalStorage from '../../components/localStore/ExpiringLocalStorage.js';
 import Fetch from "../Fetch.js"
+import { getTranslation } from "../../lang.js";
 
 const setQuotation = async dataSetQuotation => {
   try {
     const response = await Fetch.post('/api/Quotation', dataSetQuotation)
 
     if(response.status !== "error") {
-      nodeNotification('Guardando cotización...')
+      nodeNotification(getTranslation("saving_quotation"))
       const expiringLocalStorage = new ExpiringLocalStorage()
       expiringLocalStorage.deleteDataWithExpiration('ClientFullName')
       expiringLocalStorage.deleteDataWithExpiration('Comments')
@@ -18,7 +19,7 @@ const setQuotation = async dataSetQuotation => {
         quotationewBack.click()
       }, 1000);
     } else {
-      nodeNotification('Error interno del servidor')
+      nodeNotification(getTranslation("internal_server_error"))
     }
 
     return response

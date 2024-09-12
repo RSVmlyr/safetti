@@ -3,6 +3,7 @@ import nodeNotification from './nodeNotification.js';
 import putScenario from "../services/quotation/putScenario.js";
 import inputDiscount from "./inputDiscount.js";
 import inputQuantity from "./inputQuantity.js";
+import { getTranslation } from "../lang.js";
 
 const viewDetailQuatation = (quotation) => {
   const COP = value => currency(value, { symbol: "$ ", separator: ".", decimal:",", precision: 0 });
@@ -93,9 +94,8 @@ const viewDetailQuatation = (quotation) => {
 
       if (quotationBtnSave) {
         quotationBtnSave.addEventListener('click', () => {
-
             if (nameInput.value === '') {
-                nodeNotification('El campo NOMBRE DEL ESCENARIO es obligatorio.');
+                nodeNotification(getTranslation("scenario_field_mandatory"));
                 return;
             }
 

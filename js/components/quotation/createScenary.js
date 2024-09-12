@@ -9,6 +9,7 @@ import { config } from "../../../config.js"
 import modalApproval from "../../helpers/modalApproval.js"
 import formatCurrency from "../../helpers/formatCurrency.js"
 import downloadPdfHelper from "../../helpers/downloadPdfHelper.js"
+import { loadTranslations } from "../../lang.js"
 
 const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
   const quotationCreatescenary = quotation.querySelector('#quotation--content--list .quotation--list--row')
@@ -61,57 +62,57 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         <section class="scenary--one">
           <div class="region region__one">
             <img class="quotation--origin__shopify quotation-hide" src='../../img/icon/icon-shopify.svg' loading="lazy" alt="Shopify" title="Shopify">
-            <span class="quotation--info quotation--info__bold">Nro. ${cot.id ? cot.id : ''}</span>
+            <span class="quotation--info quotation--info__bold"><span data-tkey="number"></span> ${cot.id ? cot.id : ''}</span>
             <span class="quotation--status">${cotStatus.statusName}</span>
           </div>
           <div class="region region__two">
             <a class="quotation--email" href="/api/Quotation/email/${currentUser}/${cot.id}">
-              <span class="quotation--send--data quotation--info">Enviar correo</span>
+              <span class="quotation--send--data quotation--info" data-tkey="send_email"></span>
               <img class="quotation--email__img" src='../../img/icon/icon-email.svg' loading="lazy" alt="Email" title="Email">
             </a>
             <a class="quotation--download" href="/api/Quotation/pdf/${cot.id}">
-              <span class="quotation--generate--pdf quotation--info">Generar PDF</span>
-              <img class="quotation--download__img" src='../../img/icon/icon-download.svg' loading="lazy" alt="Descargar" title="Descargar">
+              <span class="quotation--generate--pdf quotation--info" data-tkey="generate_pdf"></span>
+              <img class="quotation--download__img" src='../../img/icon/icon-download.svg' loading="lazy" alt="Descargar" data-tkey="download" data-tattr="title" title="">
             </a>
           </div>
         </section>
         <section class="scenary--two">
-          <span class="quotation--info">Creación: ${datecreatedAt}</span>
-          <span class="quotation--info">Última modificación: ${dateupdatedAt}</span>
+          <span class="quotation--info"><span data-tkey="creation"></span>: ${datecreatedAt}</span>
+          <span class="quotation--info"><span data-tkey="last_update"></span>: ${dateupdatedAt}</span>
         </section>
         <section class="scenary--three">
           <h3 class="quotation--title">${cot.name ? cot.name : ''}</h3>
         </section>
         <section class="scenary--four">
-          <span class="quotation--info">Ciente: ${cot.clientName ? cot.clientName : ''}</span>
-          <span class="quotation--info">Asesor: ${cot.advisorName ? cot.advisorName : ''}</span>
-          <span class="quotation--info">Moneda: ${cot.currency ? cot.currency : ''}</span>
+          <span class="quotation--info"><span data-tkey="client"></span>: ${cot.clientName ? cot.clientName : ''}</span>
+          <span class="quotation--info"><span data-tkey="advisor"></span>: ${cot.advisorName ? cot.advisorName : ''}</span>
+          <span class="quotation--info"><span data-tkey="currency"></span>: ${cot.currency ? cot.currency : ''}</span>
         </section>
         <section class="scenary--five">
           <div class="scenary--data">
             <div class="scenary--data__header selected">
-              <h4 class="quotation--title__quo">Escenario seleccionado</h4>
+              <h4 class="quotation--title__quo" data-tkey="selected_scenario"></h4>
             </div>
             <div class="scenary--data__body">
-              <div class="quotation--notification"><span class="quotation--title">No existen escenarios.</span></div>
+              <div class="quotation--notification"><span class="quotation--title" data-tkey="no_scenarios"></span></div>
             </div>
             <div class="scenary--data__actions">
-              <a href="./index-q.html?cotId=${cot.id}&cotName=${encodeURIComponent(cot.name)}&uid=${storedHash}&token=${token}" class="quotation--btn__add quotation--btn__Ne">Nuevo escenario</a>
+              <a href="./index-q.html?cotId=${cot.id}&cotName=${encodeURIComponent(cot.name)}&uid=${storedHash}&token=${token}" class="quotation--btn__add quotation--btn__Ne" data-tkey="new_scenario"></a>
               <a id="quotation--btn__approved-tmp" class="quotation--btn__modal scenary--data__actionsDelete ${cotStatus.statusId==1?'':'d-none'}" href="#" data-cotid="${cot.id}">
-                <span class="quotation--info">Enviar para aprobación</span>
-                <img src='../../img/icon/icon-send.png' loading="lazy" alt="Aprobar" title="Aprobar">
+                <span class="quotation--info" data-tkey="send_for_approval"></span>
+                <img src='../../img/icon/icon-send.png' loading="lazy" alt="Aprobar" data-tkey="approve" data-tattr="title" title="">
               </a>
               <a id="quotation--btn__approved-tmp" class="quotation--btn__file scenary--data__actionsDelete  ${cotStatus.statusId==5?'':'d-none'}" href="#" data-cotid="${cot.id}">
-                <span class="quotation--info">Carga tu soporte de pago</span>
-                <img src='../../img/icon/icon-validate.png' loading="lazy" alt="Aprobar" title="Aprobar">
+                <span class="quotation--info" data-tkey="load_payment_support"></span>
+                <img src='../../img/icon/icon-validate.png' loading="lazy" alt="Aprobar" data-tkey="approve" data-tattr="title" title="">
               </a>
               <a id="quotation--btn__approved-tmp" class="quotation--btn__file-approve scenary--data__actionsDelete ${cotStatus.statusId==5?'':'d-none'}" href="#" data-cotid="${cot.id}" data-url="${cot.paymentSupportFilePath}" data-ispdf="${cot.isPaymentSupportPDF}">
-                <span class="quotation--info">Valida soporte del anticipo</span>
-                <img src='../../img/icon/icon-validate.png' loading="lazy" alt="Aprobar" title="Aprobar">
+                <span class="quotation--info" data-tkey="validate_payment_support"></span>
+                <img src='../../img/icon/icon-validate.png' loading="lazy" alt="Aprobar" data-tkey="approve" data-tattr="title" title="">
               </a>
               <div id="quotation--btn__delete" class="scenary--data__actionsDelete">
-                <span class="quotation--info">Cancelar cotización</span>
-                <img src='../../img/icon/icon-delete.svg' loading="lazy" alt="Eliminar" title="Eliminar">
+                <span class="quotation--info" data-tkey="cancel_quotation"></span>
+                <img src='../../img/icon/icon-delete.svg' loading="lazy" alt="Cancelar" data-tkey="cancel" data-tattr="title" title="">
               </div>
             </div>
           </div>
@@ -119,13 +120,14 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         ${
           (cot.id && cotStatus.statusId === 2) ?  
           `<div class="scenary--data__actions">
-            <a href="${config.API_DEV_IMAGE}/proyecto/${cot.id}" target="_top" class="quotation--btn__add">Ver Proyecto</a>
+            <a href="${config.API_DEV_IMAGE}/proyecto/${cot.id}" target="_top" class="quotation--btn__add" data-tkey="see_project"></a>
           </div>`: ``} 
       </div>
     </div>
     `
 
     scenaryContainerTop.insertAdjacentHTML('afterbegin', `${scenaryTop}`)
+
     // Origin quotation shopify
     const quotationOriginScenary = quotation.querySelector('.scenary--created .quotation--origin__shopify')
     if (cot.fromShopify === true) {
@@ -205,9 +207,9 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     const quotationSendData = quotation.querySelector('.quotation--send--data')
     sendEmailHelper(quotationEmail, quotationSendData)
 
-    const quotationDownload = quotation.querySelector('.quotation--download')
-    const quotationGeneratePdf = quotation.querySelector('.quotation--generate--pdf')
-    downloadPdfHelper(quotationDownload, quotationGeneratePdf)
+    //const quotationDownload = quotation.querySelector('.quotation--download')
+    //const quotationGeneratePdf = quotation.querySelector('.quotation--generate--pdf')
+    //downloadPdfHelper(quotationDownload, quotationGeneratePdf)
 
     // Delete Scenary Top
     const uid = localStorage.getItem('current')
@@ -256,16 +258,16 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             <table>
               <tr>
                 <td><span class="quotation--title__quo">#${count} - ${scen.name ? scen.name : ''}</span></td>
-                <td><span class="quotation--title__quo">Subtotal</span></td>
-                <td><span class="quotation--title__quo">Costo Productos</span></td>
+                <td><span class="quotation--title__quo" data-tkey="subtotal"></span></td>
+                <td><span class="quotation--title__quo" data-tkey="product_costs"></span></td>
                 <td></td>
               </tr>
               <tr>
                 <td></td>
                 <td><p class="quotation--info">$ ${formatCurrency(subtotalProductsSeleccionado, cot.currency)}</p></td>
                 <td><p class="quotation--info">$ ${formatCurrency(scen.total, cot.currency)} </p></td>
-                <td><span class="quotation--btn__view"><a  class="quotation--info quotation--detail" href="./Cotizacion.html?id=${cot.id}&uid=${storedHash}&token=${token}">Ver detalle</a></span></td>
-                <td><span class="quotation--btn__view"><a  class="quotation--info quotation--detail" href="./index-q.html?uid=${storedHash}&clone=true&cotId=${cot.id}&cotName=${cot.name}">Editar</a></span></td>
+                <td><span class="quotation--btn__view"><a  class="quotation--info quotation--detail" href="./Cotizacion.html?id=${cot.id}&uid=${storedHash}&token=${token}" data-tkey="see_detail"></a></span></td>
+                <td><span class="quotation--btn__view"><a  class="quotation--info quotation--detail" href="./index-q.html?uid=${storedHash}&clone=true&cotId=${cot.id}&cotName=${cot.name}" data-tkey="edit"></a></span></td>
                 </tr>
             </table>
           </div>
@@ -280,10 +282,8 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         let productName = []
         let linePrice = []
         let unitPrice = []
-        let scenSelected
 
         scen.products.forEach(product => {
-          scenSelected = scen.selected
           productName.push(product.productName)
           linePrice.push("$ " + formatCurrency(product.linePrice, cot.currency))
           unitPrice.push("$ " + formatCurrency(product.unitPrice, cot.currency))
@@ -297,17 +297,17 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                 <span class="quotation--title__quo">#${count} - ${scen.name ? scen.name : ''}</span>
                 <div class="scenary--row__actions">
                   <a id="email-${i}" class="scenary--quotation--email" href="/api/Quotation/emailscenario/${cot.client}/${scen.id}">
-                    <span class="scenary--quotation--send--data quotation--info">Enviar correo</span>
+                    <span class="scenary--quotation--send--data quotation--info" data-tkey="send_email"></span>
                     <img class="quotation--email__img" src='${scen.selected === true ? '../../img/icon/icon-email.svg' : '../../img/icon/icon-email-white.svg'}' loading="lazy" alt="Email" title="Email">
                   </a>
                   <a class="quotation--download" href="/api/Quotation/scenariopdf/${scen.id}">
-                    <span class="quotation--generate--pdf quotation--info">Generar PDF</span>
-                    <img class="quotation--download__img" src='${scen.selected === true ? '../../img/icon/icon-download.svg' : '../../img/icon/icon-download-white.svg'}' loading="lazy" alt="Descargar" title="Descargar">
+                    <span class="quotation--generate--pdf quotation--info" data-tkey="generate_pdf"></span>
+                    <img class="quotation--download__img" src='${scen.selected === true ? '../../img/icon/icon-download.svg' : '../../img/icon/icon-download-white.svg'}' loading="lazy" alt="Descargar" data-tkey="download" data-tattr="title" title="">
                   </a>
                 </div>  
-                <div class="scenary--row__select ${cotStatus.statusName === 'Por Confirmar' ||  cotStatus.statusName === 'Validar Anticipo' ? 'd-none' : ''}">
-                  <span class="quotation--info">Seleccionar</span>
-                  <img src="../../img/icon/check.svg" loading="lazy" alt="Seleccionar" title="Seleccionar">
+                <div class="scenary--row__select ${cotStatus.statusId === 4 /*Por Confirmar*/ ||  cotStatus.statusId === 5 /*Validar Anticipo*/ ? 'd-none' : ''}">
+                  <span class="quotation--info" data-tkey="select"></span>
+                  <img src="../../img/icon/check.svg" loading="lazy" alt="Seleccionar" data-tkey="select" data-attr="title" title="">
                 </div>
               </div>
 
@@ -315,9 +315,9 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                 <div class="scenary--row__table">
                   <table>
                     <tr>
-                      <td><span class="quotation--title__quo">Producto</span></td>
-                      <td><span class="quotation--title__quo">Precio Base</span></td>
-                      <td><span class="quotation--title__quo">Costo Productos</span></td>
+                      <td><span class="quotation--title__quo" data-tkey="product"></span></td>
+                      <td><span class="quotation--title__quo" data-tkey="base_price"></span></td>
+                      <td><span class="quotation--title__quo" data-tkey="product_costs"></span></td>
                     </tr>
                     <tr>
                       <td><div id="products"></div></td>
@@ -325,7 +325,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                       <td><div id="prices"></div></td>
                     </tr>
                     <tr>
-                      <td><span class="quotation--title__quo">Total</span></td>
+                      <td><span class="quotation--title__quo" data-tkey="total"></span></td>
                       <td></td>
                       <td><p class="quotation--title__quo">$ ${formatCurrency(scen.total, cot.currency)}</p></td>
                     </tr>
@@ -335,8 +335,9 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             </div>
           </div>
         </div>`
-        
+
         scenaryContainerBottom.insertAdjacentHTML('afterbegin', `${scenaryList}`)
+        loadTranslations();
         const scenaryRowSelect = quotation.querySelector('.scenary--row__select')
         if(currentRol !== 'advisors' || scen.selected) {
           scenaryRowSelect.remove()

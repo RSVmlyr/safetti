@@ -1,13 +1,14 @@
 import nodeNotification from "../../helpers/nodeNotification.js";
 import ExpiringLocalStorage from '../../components/localStore/ExpiringLocalStorage.js';
 import Fetch from "../Fetch.js"
+import { getTranslation } from "../../lang.js";
 
 const putScenario = async (dataSetScenario, cotId) => {
   try {
     const response = await Fetch.put('/api/Scenario', dataSetScenario)
 
     if(response.status !== "error") {
-      nodeNotification('Guardando escenario...')
+      nodeNotification(getTranslation("saving_scenario"))
       const expiringLocalStorage = new ExpiringLocalStorage()
       expiringLocalStorage.deleteDataWithExpiration('NameScenary')
       expiringLocalStorage.deleteDataWithExpiration('scenario-' + cotId)
@@ -17,7 +18,7 @@ const putScenario = async (dataSetScenario, cotId) => {
         quotationewBack.click()
       }, 2000);
     } else {
-      nodeNotification('Error interno del servidor')
+      nodeNotification(getTranslation("internal_server_error"))
     }
 
     return response

@@ -1,5 +1,6 @@
 import Fetch from "../Fetch.js"
 import nodeNotification from "../../helpers/nodeNotification.js";
+import { getTranslation } from "../../lang.js";
 
 const statusQuotationS = async (Qid, status, userId, advance) => {
   const a = advance !=null ? advance  : '' 
@@ -16,12 +17,12 @@ const statusQuotationS = async (Qid, status, userId, advance) => {
     const response = await Fetch.put(`/api/Quotation/${Qid}/${userId}/${status}/${a}`);
 
     if(response.status !== "error") {
-      nodeNotification("Estado cambiado de la cotización")
+      nodeNotification(getTranslation("quotation_updated"))
       setTimeout(() => {
         location.reload();
       }, 1000);
     } else {
-      nodeNotification("Hubo un error inesperado, intenta mas tarde.")
+      nodeNotification(getTranslation("unexpected_error"))
     }
   } catch (error) {
     console.error('Hubo un error al cambiar el estado de la cotización', error);

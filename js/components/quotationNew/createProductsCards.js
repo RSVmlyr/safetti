@@ -8,12 +8,12 @@ import qnaddproduct from "../../helpers/qnaddproduct.js";
 import { config } from "../../../config.js";
 import ExpiringLocalStorage from '../localStore/ExpiringLocalStorage.js';
 import onlyInputNumbers from "../../helpers/onlyInputNumbers.js";
+import { getTranslation } from "../../lang.js";
 
 const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
   const url = new URL(window.location.href);
   const searchParams = new URLSearchParams(url.search);
   const cotId = searchParams.get('cotId');
-
 
   if(resQueryUser.rol != "advisors") {
     qnaddproduct()
@@ -53,7 +53,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         <div class="card">
           <div class="card__front">
             <div class="card--image">
-              <img src="${modifiedStringImage}" loading="lazy" alt="Producto" title="Producto" >
+              <img src="${modifiedStringImage}" loading="lazy" alt="Producto">
             </div>
             <div class="card--body">
               <h3 class="card--title quotation--title__quo">${pro.name ? pro.name : ''}</h3>
@@ -62,45 +62,41 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             </div>
             <div class="card--actions">
               <button class="qnviewdetailproducts">Ver detalle</button>
-              <button class="qnaddproducts add">Agregar +</button>
+              <button class="qnaddproducts add" data-tkey="add"></button>
             </div>
           </div>
           <div class="card__back">
-            <label for="">Tipo de molde:</label>
+            <label for="" data-tkey="mold_type"></label>
             <select id="" class="qncountry card__back--country">
-              <option value="" selected>-- Seleccionar --</option>
+              <option value="" selected data-tkey="select_default_option"></option>
             </select>
            <div id="card__back--items" class="card__back--items">
-  
             <div class="inputman card--amount">
-              <span class="card--amount__title">Hombre</span>
+              <span class="card--amount__title" data-tkey="man"></span>
               <div class="card--amount__input">
                 <button class="qnManDecrease">-</button>
                 <input class="qnManInput colombiaMan" type="number" name="qnManInput" value="0" min="0">
                 <button class="qnManIncrease">+</button>
               </div>
-            </div>
-  
+            </div>  
             <div class="inputwoman card--amount">
-              <span class="card--amount__title">Mujer</span>
+              <span class="card--amount__title" data-tkey="woman"></span>
               <div class="card--amount__input">
                 <button class="qnWomanDecrease">-</button>
                 <input class="qnWomanInput colombiaWoman" type="number" name="qnWomanInput" value="0" min="0">
                 <button class="qnWomanIncrease">+</button>
               </div>
-            </div>
-  
+            </div>  
             <div class="inputunisex card--amount">
-              <span class="card--amount__title">Unisex</span>
+              <span class="card--amount__title" data-tkey="unisex"></span>
               <div class="card--amount__input">
                 <button class="qnUnisexDecrease">-</button>
                 <input class="qnUnisexInput colombiaUnisex" type="number" name="qnUnisexInput" value="0" min="0">
                 <button class="qnUnisexIncrease">+</button>
               </div>
-            </div>
-  
+            </div>  
             <div class="inputjunior card--amount">
-              <span class="card--amount__title">Junior</span>
+              <span class="card--amount__title" data-tkey="junior"></span>
               <div class="card--amount__input">
                 <button class="qnJuniorDecrease">-</button>
                 <input class="qnJuniorInput colombiaJunior" type="number" name="qnJuniorInput" value="0" min="0">
@@ -109,10 +105,10 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             </div>
             <div class="card--amount__actions">
              ${resQueryUser.rol === 'partner' ?
-              `<p class="small">La cantidad mínima es de ${pCuantity} ${pCuantity > 1 ? 'unidades': 'unidad'}.</p>` :
-              `<p class="small">La cantidad mínima es de ${pro.minQuantity} ${pro.minQuantity > 1 ? 'unidades': 'unidad'}.</p>`}
-              <button class="qncancelproduct">Cancelar</button>
-              <button class="qnaceptproduct quotation-hide">Agregar +</button>
+              `<p class="small"><span data-tkey="minimun_quantity_label"></span> ${pCuantity} ${pCuantity > 1 ? '<span data-tkey="units"></span>': '<span data-tkey="unit"></span>'}.</p>` :
+              `<p class="small"><span data-tkey="minimun_quantity_label"></span> ${pro.minQuantity} ${pro.minQuantity > 1 ? '<span data-tkey="units"></span>': '<span data-tkey="unit"></span>'}.</p>`}
+              <button class="qncancelproduct" data-tkey="cancel"></button>
+              <button class="qnaceptproduct quotation-hide" data-tkey="add"></button>
             </div>
            </div>
           </div>
@@ -200,7 +196,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         }, 1000);
 
         if(product.length <= 0) {
-          nodeNotification("Ingresa una cantidad para validar");
+          nodeNotification(getTranslation("enter_quantity"));
           return;
         }
 
@@ -231,24 +227,19 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           });
         }
 
-        // console.log(resQueryUser.rol);
-        // console.log(pro.minQuantity);
-
         if (resQueryUser.rol === 'partner') {
-          console.log(resQueryUser.rol);
           if (totalQuantity < pCuantity) {
-            // console.log('Cinco', pCuantity);
-            nodeNotification(`La cantidad debe ser mayor o igual a ${pCuantity}`);
+            nodeNotification(`${ getTranslation("quantity_validation_error")} ${pCuantity}`);
             return;
           }
         } else {
           if (totalQuantity < pro.minQuantity) {
-            nodeNotification(`La cantidad debe ser mayor o igual a ${pro.minQuantity}`);
+            nodeNotification(`${ getTranslation("quantity_validation_error")} ${pro.minQuantity}`);
             return;
           }
         }
 
-        nodeNotification('Agregando producto a la lista...');
+        nodeNotification(getTranslation("adding_product"));
         const quotationCalculation = new QuotationCalculation(resQueryUser);
         quotationCalculation.createArrayProducto(product);
       });
@@ -308,7 +299,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
                         ${pro.featuresEN ? pro.featuresEN : '...'}
                       </div>
                     </div>  
-                    <div class="modal--close">x</div>
+                    <div class="modal--close">&#10005;</div>
                   </div>
                 </div>
               </div>  
@@ -414,8 +405,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
               const sliderElement = document.querySelector('.modal--container__bodyLeft .image-product');
               const images = sliderElement.querySelectorAll("img");
               zoomImagesSlider(images);
-              // console.log(sliderElement);
-            
+
               if (sliderElement && sliderElement.children.length > 1) {
                 try {
                   // Initialize Flickity on the element
@@ -549,7 +539,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
 
   } else {
     const sliderProducts = quotationNew.querySelector('.slider--productos .slider--content')
-    sliderProducts.insertAdjacentHTML('afterbegin', '<div class="quotation--loading"><span>No hay productos con los filtros ingresados</span></div>')  
+    sliderProducts.insertAdjacentHTML('afterbegin', `<div class="quotation--loading"><span>${ getTranslation("no_products_result")}</span></div>`)
   }
 
 }
@@ -568,6 +558,7 @@ function throttle(func, delay) {
       });
   };
 }
+
 function handleMouseMove(e) {
   const rect = e.target.getBoundingClientRect();
   const x = e.clientX - rect.left;
@@ -576,7 +567,8 @@ function handleMouseMove(e) {
   const yPercent = (y / rect.height) * 100;
 
   e.target.style.transformOrigin = `${xPercent}% ${yPercent}%`;
-};
+}
+
 const zoomImagesSlider = (images) => {
   const image = images[0];
   images.forEach(image => {

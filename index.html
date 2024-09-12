@@ -60,24 +60,23 @@
     <div class="modal--container">
       <form class="modal__form">
         <div class="modal__form--header">
-          <h3>Enviar Aprobación</h3>
+          <h3 data-tkey="send_approval"></h3>
           <button id="closeModalBtn" class="modal__button" type="button">&#10005;</button>
         </div>
         <div class="modal__form--content">
-          <label class="modal__label" for="number">Ingresa el porcentaje de anticipo (0-100):</label>
+          <label class="modal__label" for="number" data-tkey="enter_down_percentage"></label>
           <input class="modal__input" type="number" id="number" name="number" required> %
-
         </div>
         <div class="modal__form--action">
           <div class="modal__form--left">
             <label class="modal__label">
               <input class="modal__checkbox" type="checkbox" id="checkboxadvance" name="checkboxadvance">
-              <span>No es necesario un anticipo para iniciar el proyecto</span>
+              <span data-tkey="no_down_payment_needed"></span>
             </label>
           </div>
           <div class="modal__form--right">
             <p class="modal__form--error d-none">Error</p>
-            <button class="modal__button" id="send-modal" type="button">Enviar aprobación</button>
+            <button class="modal__button" id="send-modal" type="button" data-tkey="send_approval"></button>
           </div>
         </div>
       </form>
@@ -88,22 +87,22 @@
     <div class="modal--container">
       <form class="modal__form">
         <div class="modal__form--header">
-          <h3>Validar Anticipo</h3>
+          <h3 data-tkey="validate_down_payment"></h3>
           <button id="closeModalBtn" class="modal__button" type="button">&#10005;</button>
         </div>
         <div class="modal__form--content">
-          <label class="modal__label" for="imagen">Subir archivo: (Imagen ó PDF)</label>
-          <input class="modal__input" type="file" id="imagen" name="imagen"  accept="image/*,application/pdf">
+          <label class="modal__label" for="imagen" data-tkey="upload_file"></label>
+          <input class="modal__input" type="file" id="imagen" name="imagen" accept="image/*,application/pdf">
 
-          <label class="modal__label d-none" for="details">Detalles:</label>
-          <textarea class="modal__textarea d-none" id="details" name="detalle" rows="4" placeholder="Ingrese detalle..."></textarea>
+          <label class="modal__label d-none" for="details" data-tkey="details"></label>
+          <textarea class="modal__textarea d-none" id="details" name="detalle" rows="4" data-tkey="enter_detail" data-tattr="placeholder" placeholder=""></textarea>
         </div>
         <div class="modal__form--action">
           <div class="modal__form--left">
           </div>
           <div class="modal__form--right">
             <p class="modal__form--error d-none">Error</p>
-            <button class="modal__button" id="send-modal" type="button">Enviar aprobación</button>
+            <button class="modal__button" id="send-modal" data-tkey="send_approval" type="button"></button>
           </div>
         </div>
       </form>
@@ -114,11 +113,11 @@
     <div class="modal--container">
       <form class="modal__form">
         <div class="modal__form--header">
-          <h3>Validar Anticipo</h3>
+          <h3 data-tkey="validate_down_payment"></h3>
           <button id="closeModalBtn" class="modal__button" type="button">&#10005;</button>
         </div>
         <div class="modal__form--content">
-          <a class="image-gallery__download" href="" download target="_blank">Descargar</a>
+          <a class="image-gallery__download" href="" download target="_blank" data-tkey="download"></a>
           <div class="icon-pdf">pdf</div>
         </div>
         <div class="modal__form--action">
@@ -126,7 +125,7 @@
           </div>
           <div class="modal__form--right">
             <p class="modal__form--error d-none">Error</p>
-            <button class="modal__button" id="send-modal" type="button">Enviar aprobación</button>
+            <button class="modal__button" id="send-modal" type="button" data-tkey="send_approval"></button>
           </div>
         </div>
       </form>
@@ -135,7 +134,7 @@
 </main> 
 
 <!-- JS -->
-<script src="./js/lang.js"></script> 
+<script async type="module" src="./js/lang.js"></script>
 <script src="./js/lib/currency.min.js"></script> 
 <script async type="module" src="./js/app.js"></script>
 </body>
