@@ -8,6 +8,8 @@ import loadingData from "../../helpers/loading.js"
 import onlyInputNumbers from "../../helpers/onlyInputNumbers.js"
 import getUser from "../../services/user/getUser.js"
 import cloneScenery from "../../helpers/cloneScenery.js"
+import putScenario from "../../services/quotation/putScenario.js";
+
 import { getTranslation } from '../../lang.js'
 
 class QuotationCalculation extends HTMLElement {
@@ -19,6 +21,7 @@ class QuotationCalculation extends HTMLElement {
     this.selectedSend = false
     this.clonesend = false
     this.clonecot = false
+    //this.scenaryId = ''
     this.innerHTML = `
       <div class="quotation-calculation">
         <div class="quotationew--calculation__body">
@@ -48,6 +51,12 @@ class QuotationCalculation extends HTMLElement {
     if(isCloned) {      
       const sliderProductos = document.querySelectorAll(".slider--productos .slider--row")
       const clonedata = await cloneScenery(cotId)
+
+      this.scenaryId = clonedata.data[0].scenarioId
+
+      console.log("this.scenaryId ", this.scenaryId );
+      
+      
       this.clonecot = true
       if(clonedata) {
         this.moneda = clonedata.moneda
@@ -122,19 +131,7 @@ class QuotationCalculation extends HTMLElement {
     const formattedDate = today.toISOString().split('T')[0]
     const newValue = "Cambios " + formattedDate
     setTimeout(() => {
-      const input = document.querySelector("#quotationewscenary")
-    /*   const quotationIva = document.querySelector(".quotation--iva")
-
-      console.dir("ini", quotationIva.checked)
-      
-      const initialState = quotationIva.checked
-      quotationIva.click()
-      if (initialState === "checked") {
-        quotationIva.checked = true
-      } else {
-        quotationIva.checked = false
-      } */
-      
+      const input = document.querySelector("#quotationewscenary")      
       input.value = newValue
     }, 4000)
   }
@@ -149,8 +146,6 @@ class QuotationCalculation extends HTMLElement {
     let dataSetQuotation = ''
     const expiringLocalStorage = new ExpiringLocalStorage()
     const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
-    console.log({c})
-    console.log(data)
 
     if(c) {
       const client = JSON.parse(c)
@@ -253,10 +248,50 @@ class QuotationCalculation extends HTMLElement {
         "applyTaxIVA": iva,
         "products": scenary,
       }
+      const edit = searchParams.get('edit')
+      const scenaryId = searchParams.get('scenaryId')
+
+      console.log("this.scenaryId 2", this.scenaryId );
+
+
+      const updateScenario = async  () => {
+        const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
+        const client = JSON.parse(c)        
+        let currency = ''
+        let rol = ''
+
+        if(client['0'].currency === undefined && client['0'].rol === undefined){
+          currency = 'COP'
+          rol = '_final_consumer'
+        } else {
+          currency = client['0'].currency 
+          rol = client['0'].rol 
+        }
+        const products = dataSetScenario.products.map(item => ({
+          molde: item.selectedMoldeCode,
+          quantity: item.quantity
+        }));
+        
+        const putBodyScenary = {
+          "id": scenaryId,
+          "name": dataSetScenario.name,
+          "discountPercent": dataSetScenario.discountPercent,
+          "currency": currency,
+          "rol": rol,
+          "applyTaxIVA": dataSetScenario.applyTaxIVA,
+          "products": products
+        }
+        const data = await putScenario(putBodyScenary, cotId)
+      }
       const createScenario = async  () => {
         const data = await setScenario(dataSetScenario, cotId)
       }
-      createScenario(dataSetScenario)
+
+      if(edit) {
+        updateScenario(dataSetScenario)
+      } else {
+        createScenario(dataSetScenario)
+      }
     }
   }
 

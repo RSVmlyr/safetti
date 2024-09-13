@@ -34,6 +34,7 @@ class App {
     const login = new Login();
     login.setHash(uid, resQueryUser.rol);
     localStorage.setItem('rol', resQueryUser.rol);
+    localStorage.setItem('isAdminSafetti', resQueryUser.isAdminSafetti);
 
     if (this.quotation) {
       const scenarioPattern = /scenario-\d+/;

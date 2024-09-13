@@ -9,7 +9,7 @@ import { config } from "../../../config.js"
 import modalApproval from "../../helpers/modalApproval.js"
 import formatCurrency from "../../helpers/formatCurrency.js"
 import downloadPdfHelper from "../../helpers/downloadPdfHelper.js"
-import { loadTranslations } from "../../lang.js"
+import { getTranslation, loadTranslations } from "../../lang.js"
 
 const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
   const quotationCreatescenary = quotation.querySelector('#quotation--content--list .quotation--list--row')
@@ -17,6 +17,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
   const scenaryContainerTop = quotation.querySelector('#scenary--container__top')
   const scenaryCreatedBody = quotation.querySelector('#scenary--container__bottom')
   const currentRol = localStorage.getItem('rol')
+  const currentRolisAdminSafetti = localStorage.getItem('isAdminSafetti')
   const currentUser = localStorage.getItem('current')
   let lastClickedIndex = localStorage.getItem('lastClickedIndex');
   const url = new URL(window.location.href);
@@ -248,6 +249,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         });
 
         const subtotalProductsSeleccionado = cot.scenarios.find(x => x.selected).subtotalProducts;
+        const esRolEditable = (currentRol && currentRol === 'advisors') || (currentRol && currentRol === 'administrator') || (currentRolisAdminSafetti && currentRolisAdminSafetti === 'true');
 
         // Scenary selected 
         if ( scen.selected === true ) {
@@ -266,8 +268,14 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                 <td></td>
                 <td><p class="quotation--info">$ ${formatCurrency(subtotalProductsSeleccionado, cot.currency)}</p></td>
                 <td><p class="quotation--info">$ ${formatCurrency(scen.total, cot.currency)} </p></td>
-                <td><span class="quotation--btn__view"><a  class="quotation--info quotation--detail" href="./Cotizacion.html?id=${cot.id}&uid=${storedHash}&token=${token}" data-tkey="see_detail"></a></span></td>
-                <td><span class="quotation--btn__view"><a  class="quotation--info quotation--detail" href="./index-q.html?uid=${storedHash}&clone=true&cotId=${cot.id}&cotName=${cot.name}" data-tkey="edit"></a></span></td>
+                <td>
+                <span class="quotation--btn__view">
+                  <a class="quotation--info quotation--detail" href="${esRolEditable 
+                    ? `./index-q.html?uid=${storedHash}&clone=true&scenaryId=${scen.id}&cotId=${cot.id}&cotName=${cot.name}`
+                    : `./Cotizacion.html?id=${cot.id}&uid=${storedHash}&token=${token}`}">
+                    ${esRolEditable ? getTranslation("edit") : getTranslation("see_detail")}
+                  </a>
+                </span>
                 </tr>
             </table>
           </div>
