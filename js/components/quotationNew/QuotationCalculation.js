@@ -172,7 +172,7 @@ class QuotationCalculation extends HTMLElement {
           advisorName: data.fullName,
           scenarios: [
             {
-              name: 'Escenario inicial',
+              name: getTranslation("default_scenario_name"),
               selected: true,
               discountPercent: p,
               applyTaxIVA: iva,

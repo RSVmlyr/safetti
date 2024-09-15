@@ -1,4 +1,5 @@
 import { config } from "../../../config.js"
+import { langParam } from "../lang.js"
 
 const url = new URL(window.location.href);
 const searchParams = new URLSearchParams(url.search);
@@ -10,6 +11,7 @@ async function request(url, params, method = 'GET', stringifyParams = true, getB
     method,
     headers: {
       'Content-Type': 'application/json',
+      'Accept-Language': langParam === 'es' ? 'es-CO' : 'en-US',
       'auth': token
     }
   };
