@@ -1,6 +1,6 @@
 import createProductCards from "./createProductsCards.js";
 import qnaddproduct from "../../helpers/qnaddproduct.js";
-import { loadTranslations } from "../../lang.js";
+import { getTranslation, loadTranslations } from "../../lang.js";
 
 const searchProduct = (quotationNew, resQueryUser, resQueryProducts) => {
 
@@ -15,6 +15,7 @@ const searchProduct = (quotationNew, resQueryUser, resQueryProducts) => {
 
         let searchProducts = resQueryProducts.products.filter(element =>
             removerTildes(element.name).toLowerCase().includes(removerTildes(searchTerm)) ||
+            (element.nameEN && removerTildes(element.nameEN).toLowerCase().includes(removerTildes(searchTerm))) ||
             element.referencia.toLowerCase().includes(searchTerm));
 
         sliderProductsRows.forEach(row => {
@@ -100,7 +101,7 @@ const searchProduct = (quotationNew, resQueryUser, resQueryProducts) => {
                     }
                     else {
                         option.hidden = false;
-                        option.text = `${option.value} (${count})`;
+                        option.text = `${ getTranslation(option.value) } (${count})`;
                     }
                 }
             });
@@ -115,7 +116,7 @@ const searchProduct = (quotationNew, resQueryUser, resQueryProducts) => {
                     }
                     else {
                         option.hidden = false;
-                        option.text = `${option.value} (${count})`;
+                        option.text = `${ getTranslation(option.value) } (${count})`;
                     }
                 }
             });
@@ -130,7 +131,7 @@ const searchProduct = (quotationNew, resQueryUser, resQueryProducts) => {
                     }
                     else {
                         option.hidden = false;
-                        option.text = `${option.value} (${count})`;
+                        option.text = `${ getTranslation(option.value) } (${count})`;
                     }
                 }
             });

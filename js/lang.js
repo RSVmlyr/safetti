@@ -40,6 +40,9 @@ const setDataLang = async () => {
 
 export const getTranslation = (key) => {
     //await setDataLang();
+    if(!key) return "err";
+    key = key.replaceAll(" ", "_").toLowerCase();
+
     return dataLang[key] ?? defaultDataLang[key];
 }
 

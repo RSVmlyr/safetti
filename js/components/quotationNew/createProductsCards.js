@@ -8,7 +8,7 @@ import qnaddproduct from "../../helpers/qnaddproduct.js";
 import { config } from "../../../config.js";
 import ExpiringLocalStorage from '../localStore/ExpiringLocalStorage.js';
 import onlyInputNumbers from "../../helpers/onlyInputNumbers.js";
-import { getTranslation } from "../../lang.js";
+import { getTranslation, langParam } from "../../lang.js";
 
 const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
   const url = new URL(window.location.href);
@@ -29,20 +29,14 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
     const expiringLocalStorage = new ExpiringLocalStorage();
 
     resQueryProducts.products.forEach((pro, index) => {
-      let description = pro.description ? pro.description.substring(0, 40) : '';
+      let description = langParam === "es" ? pro.description : pro.descriptionEN;
+      description = description ?? "";
+      const spacingPosition = description.indexOf(" ", 40);
+      description = spacingPosition === -1 ? description : description.substring(0, spacingPosition) + "...";
 
       // For Partner
       let pCuantity = pro.minQuantity
       pCuantity = 5
-
-      const validateRol = () => {
-        // `<p class="small">La cantidad mínima es de ${pro.minQuantity} ${pro.minQuantity > 1 ? 'unidades': 'unidad'}.</p>`
-        // console.log('Tesr');
-      }
-
-      if (pro.description && pro.description.length > 40) {
-        description += '...';
-      }
 
       let mainImage = pro.mainImage ? pro.mainImage : '../img/icon/image-product.jpg';
       const originUrlPath = config.API_DEV_IMAGE + '/sites/default/files/';
@@ -56,9 +50,11 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
               <img src="${modifiedStringImage}" loading="lazy" alt="Producto">
             </div>
             <div class="card--body">
-              <h3 class="card--title quotation--title__quo">${pro.name ? pro.name : ''}</h3>
+              <h3 class="card--title quotation--title__quo">
+                ${ langParam === "es" ? pro.name : (pro.nameEN ? pro.nameEN : pro.name) }
+              </h3>
               <span class="card--reference">${pro.referencia ? pro.referencia : ''}</span>
-              ${description}
+              <p>${ description }</p>
             </div>
             <div class="card--actions">
               <button class="qnviewdetailproducts">Ver detalle</button>
@@ -254,58 +250,51 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         }
       })
 
-      const cardViewDetailProductsImage = quotationNew.querySelector('.card .card--image img')
+      const cardViewDetailProductsImage = quotationNew.querySelector('.card .card--image img');
+
       cardViewDetailProductsImage.addEventListener('click', (e) => {
+
         window.scrollTo({
           top: 0,
           behavior: 'smooth' // Agrega un desplazamiento suave
         });
+
         bodyDom.style.overflow = 'hidden'
         if(e.target) {
-          let modalCard =
+          const modalCard =
           `<div class="modal">
             <div class="modal--container">
               <div class="modal--container__body">
                 <div class="modal--container__bodyLeft">
-                  <div class="image-product">
-                  
-                  </div>
+                  <div class="image-product"></div>
                 </div>
                 <div class="modal--container__bodyRight">
                   <div class="modal--header">
-                    <div class="modal--header__languages">
-                      <div class="es quotation--btn__new" style="background-color: black; color: white;">ES</div>
-                      <div class="en quotation--btn__add">EN</div>
-                    </div>
-                    <h3 class="quotation--title__quo">${pro.id ? pro.id : ''} / ${pro.name ? pro.name : ''}</h3>
+                    <h3 class="quotation--title__quo">
+                      ${ langParam === "es" ? pro.name : (pro.nameEN ? pro.nameEN : pro.name) }
+                    </h3>
                   </div>
                   <div class="modal--body">
                     <div class="modal--body__content">
-                      <h4 class="modal--title"><span>Deporte:</span> ${pro.cuento ? pro.cuento : ''}</h4>
-                      <h4 class="modal--title"><span>Referencia:</span> ${pro.referencia ? pro.referencia : ''}</h4>
-                      <h4 class="modal--title"><span>Clasificación:</span> ${pro.classification ? pro.classification : ''}</h4>
-                      <h4 class="modal--title"><span class="des-es">Descripción:</span><span class="des-en quotation-hide">Description:</span></h4>
-                      <div class="modal--des__es">
-                        ${pro.description ? pro.description : '...'}
+                    <h4 class="modal--title">${ getTranslation("reference") } ${ pro.referencia }</h4>
+                      <h4 class="modal--title">${ getTranslation("sport") } ${ getTranslation(pro.cuento) }</h4>
+                      <h4 class="modal--title">${ getTranslation("classification") } ${ getTranslation(pro.classification) }</h4>
+                      <h4 class="modal--title">${ getTranslation("description") }</h4>
+                      <div>
+                        <p>${ langParam === "es" ? pro.description : (pro.descriptionEN ? pro.descriptionEN : pro.description )}</p>
                       </div>
-                      <div class="modal--des__en quotation-hide">
-                        ${pro.descriptionEN ? pro.descriptionEN : '...'}
+                      <h4 class="modal--title">${ getTranslation("features") }</h4>
+                      <div>
+                        <p>${ langParam === "es" ? pro.features : (pro.featuresEN ? pro.featuresEN : pro.features) }</p>
                       </div>
-                      <h4 class="modal--title"><span class="car-es">Características:</span><span class="car-en quotation-hide">Features:</span></h4>
-                      <div class="modal--features__es">
-                        ${pro.features ? pro.features : '...'}
-                      </div>
-                      <div class="modal--features__en quotation-hide">
-                        ${pro.featuresEN ? pro.featuresEN : '...'}
-                      </div>
-                    </div>  
-                    <div class="modal--close">&#10005;</div>
+                    </div>
                   </div>
                 </div>
-              </div>  
+              </div>
+              <div class="modal--close">&#10005;</div>
             </div>
-          </div>
-          `
+          </div>`
+
           quotationNew.style.overflow = 'hidden'
           quotationNew.insertAdjacentHTML('afterend', `${modalCard}`)
           const modal = document.querySelector('.modal')
@@ -313,47 +302,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           modalClose.addEventListener('click', () => {
             bodyDom.style.overflow = 'initial'
             quotationNew.style.overflow = 'auto'
-            modal.remove()  
-          })
-
-          const btnEs = document.querySelector('.es')
-          const btnEn = document.querySelector('.en')
-          const modalDesEs = document.querySelector('.modal--des__es')
-          const modalFeaturesEs = document.querySelector('.modal--features__es')
-          const modalDesEn = document.querySelector('.modal--des__en')
-          const modalFeaturesEn = document.querySelector('.modal--features__en')
-          const desEs = document.querySelector('.des-es')
-          const desEn = document.querySelector('.des-en')
-          const carEs = document.querySelector('.car-es')
-          const carEn = document.querySelector('.car-en')
-          
-          btnEs.addEventListener('click', () => {
-            btnEs.style.backgroundColor = 'black';
-            btnEs.style.color = 'white';
-            btnEn.style.backgroundColor = 'transparent';
-            btnEn.style.color = 'black';
-            desEs.classList.remove('quotation-hide')
-            desEn.classList.add('quotation-hide')
-            carEs.classList.remove('quotation-hide')
-            carEn.classList.add('quotation-hide')
-            modalDesEn.classList.add('quotation-hide')
-            modalFeaturesEn.classList.add('quotation-hide')
-            modalDesEs.classList.remove('quotation-hide')
-            modalFeaturesEs.classList.remove('quotation-hide')
-          })
-          btnEn.addEventListener('click', () => {
-            btnEn.style.backgroundColor = 'black';
-            btnEn.style.color = 'white';
-            btnEs.style.backgroundColor = 'white';
-            btnEs.style.color = 'black';
-            desEs.classList.add('quotation-hide')
-            desEn.classList.remove('quotation-hide')
-            carEs.classList.add('quotation-hide')
-            carEn.classList.remove('quotation-hide')
-            modalDesEs.classList.add('quotation-hide')
-            modalFeaturesEs.classList.add('quotation-hide')
-            modalDesEn.classList.remove('quotation-hide')
-            modalFeaturesEn.classList.remove('quotation-hide')
+            modal.remove()
           })
 
           const imagesData = async () => {
@@ -367,10 +316,10 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             containerLeft.insertAdjacentElement('afterbegin', spinnerImages);
             // Get Images|
             let idProduct = pro.id
-            const resQueryImages = await getImages(idProduct)
-            spinnerImages.remove()
-    
-            if (resQueryImages.length > 1) {
+            let resQueryImages = await getImages(idProduct)
+            resQueryImages.reverse()
+
+            if (resQueryImages.length > 0) {
               resQueryImages.forEach(e => {
                 // Get URL Image
                 let mainImage = e.imageUrl ? e.imageUrl : '../img/icon/image-product.jpg'
@@ -417,11 +366,11 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             };
 
             initializeSlider()
-            
+            spinnerImages.remove()
             // Initialize the slider when the DOM content is fully loaded
             document.addEventListener("DOMContentLoaded", initializeSlider);
-
           }
+
           imagesData()
         }
       })

@@ -1,8 +1,10 @@
+import { getTranslation } from "../lang.js";
+
 const fillSelectProduct = (nodeSelectId, arr, hideItemsByDefault) => {
   arr.forEach((item) => {
     const optionElement = document.createElement('option');
     optionElement.value = item;
-    optionElement.textContent = item;
+    optionElement.textContent = getTranslation(item);
 
     if (hideItemsByDefault === true) {
       optionElement.hidden = true;
