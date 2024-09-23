@@ -47,7 +47,7 @@ class PaginatorElement extends HTMLElement {
     })
     this.totalPages = data.totalPages;
     this.results = data.results 
-    this.pageNumberCallback(this.results);
+    await this.pageNumberCallback(this.results);
     this.paginatorNumber(this.totalPages, this.pageNumber)
   }
 
@@ -144,7 +144,7 @@ class PaginatorElement extends HTMLElement {
         localStorage.setItem('lastClickPager', e.target.value);
         localStorage.setItem('lastClickedIndex', 0);
         this.paginatorNumber(data.totalPages, e.target.value)
-        this.pageNumberCallback(data.results);
+        await this.pageNumberCallback(data.results);
       } catch (error) {
         console.error('QuotationSearch Error:', error);
       }
@@ -178,7 +178,7 @@ class PaginatorElement extends HTMLElement {
     this.addEventListener('click', this.handlePageButtonClick.bind(this));
   }
 
-  pageNumberCallback(quotation) {
+  async pageNumberCallback(quotation) {
     const notResult = document.querySelector('.not-result')
     if (notResult) {
       notResult.remove();
@@ -197,7 +197,7 @@ class PaginatorElement extends HTMLElement {
         const listContainer = document.querySelector('#quotation--content--list');
         const notResult = document.createElement('div');
         notResult.classList.add('not-result')
-        notResult.textContent = getTranslation("no_quotations_result")
+        notResult.textContent = await getTranslation("no_quotations_result")
         listContainer.appendChild(notResult);
       }
     }

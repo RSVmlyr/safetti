@@ -38,8 +38,8 @@ const setDataLang = async () => {
     }
 }
 
-export const getTranslation = (key) => {
-    //await setDataLang();
+export const getTranslation = async (key) => {
+    await setDataLang();
     if(!key) return "err";
     key = key.replaceAll(" ", "_").toLowerCase();
 

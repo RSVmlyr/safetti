@@ -7,7 +7,7 @@ const downloadPdfHelper = (event, nodo) => {
     ev.preventDefault()
 
     if(ev.target === nodo) {
-      nodo.textContent = getTranslation("generating")
+      nodo.textContent = await getTranslation("generating")
       nodo.nextElementSibling.src = '../../img/icon/icon-spinner.gif'
       nodo.classList.add('loading')
       const urlToDownload = event.getAttribute('href')
@@ -20,7 +20,7 @@ const downloadPdfHelper = (event, nodo) => {
       aElement.click();
       URL.revokeObjectURL(href);
 
-      nodo.textContent = getTranslation("generate_pdf")
+      nodo.textContent = await getTranslation("generate_pdf")
       nodo.classList.remove('loading')
       let src = '../../img/icon/icon-download.svg';
       const scenary = event.closest('.scenary--data__scenary');

@@ -10,7 +10,7 @@ import ExpiringLocalStorage from '../localStore/ExpiringLocalStorage.js';
 import onlyInputNumbers from "../../helpers/onlyInputNumbers.js";
 import { getTranslation, langParam } from "../../lang.js";
 
-const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
+const createProductCards = async (quotationNew, resQueryUser, resQueryProducts) => {
   const url = new URL(window.location.href);
   const searchParams = new URLSearchParams(url.search);
   const cotId = searchParams.get('cotId');
@@ -130,7 +130,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
       });
 
       const button = quotationNew.querySelector('.qnaceptproduct');
-      button.addEventListener('click', (e) => {
+      button.addEventListener('click', async (e) => {
         const parentElement = e.target.parentNode.parentNode;
         const countrySelect = parentElement.parentElement.querySelector('.card__back--country');
         const manInput = parentElement.querySelector('.qnManInput');
@@ -192,7 +192,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         }, 1000);
 
         if(product.length <= 0) {
-          nodeNotification(getTranslation("enter_quantity"));
+          nodeNotification(await getTranslation("enter_quantity"));
           return;
         }
 
@@ -225,17 +225,17 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
 
         if (resQueryUser.rol === 'partner') {
           if (totalQuantity < pCuantity) {
-            nodeNotification(`${ getTranslation("quantity_validation_error")} ${pCuantity}`);
+            nodeNotification(`${ await getTranslation("quantity_validation_error")} ${pCuantity}`);
             return;
           }
         } else {
           if (totalQuantity < pro.minQuantity) {
-            nodeNotification(`${ getTranslation("quantity_validation_error")} ${pro.minQuantity}`);
+            nodeNotification(`${ await getTranslation("quantity_validation_error")} ${pro.minQuantity}`);
             return;
           }
         }
 
-        nodeNotification(getTranslation("adding_product"));
+        nodeNotification(await getTranslation("adding_product"));
         const quotationCalculation = new QuotationCalculation(resQueryUser);
         quotationCalculation.createArrayProducto(product);
       });
@@ -252,7 +252,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
 
       const cardViewDetailProductsImage = quotationNew.querySelector('.card .card--image img');
 
-      cardViewDetailProductsImage.addEventListener('click', (e) => {
+      cardViewDetailProductsImage.addEventListener('click', async (e) => {
 
         window.scrollTo({
           top: 0,
@@ -276,14 +276,14 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
                   </div>
                   <div class="modal--body">
                     <div class="modal--body__content">
-                    <h4 class="modal--title">${ getTranslation("reference") } ${ pro.referencia }</h4>
-                      <h4 class="modal--title">${ getTranslation("sport") } ${ getTranslation(pro.cuento) }</h4>
-                      <h4 class="modal--title">${ getTranslation("classification") } ${ getTranslation(pro.classification) }</h4>
-                      <h4 class="modal--title">${ getTranslation("description") }</h4>
+                    <h4 class="modal--title">${ await getTranslation("reference") } ${ pro.referencia }</h4>
+                      <h4 class="modal--title">${ await getTranslation("sport") } ${ await getTranslation(pro.cuento) }</h4>
+                      <h4 class="modal--title">${ await getTranslation("classification") } ${ await getTranslation(pro.classification) }</h4>
+                      <h4 class="modal--title">${ await getTranslation("description") }</h4>
                       <div>
                         <p>${ langParam === "es" ? pro.description : (pro.descriptionEN ? pro.descriptionEN : pro.description )}</p>
                       </div>
-                      <h4 class="modal--title">${ getTranslation("features") }</h4>
+                      <h4 class="modal--title">${ await getTranslation("features") }</h4>
                       <div>
                         <p>${ langParam === "es" ? pro.features : (pro.featuresEN ? pro.featuresEN : pro.features) }</p>
                       </div>
@@ -488,7 +488,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
 
   } else {
     const sliderProducts = quotationNew.querySelector('.slider--productos .slider--content')
-    sliderProducts.insertAdjacentHTML('afterbegin', `<div class="quotation--loading"><span>${ getTranslation("no_products_result")}</span></div>`)
+    sliderProducts.insertAdjacentHTML('afterbegin', `<div class="quotation--loading"><span>${ await getTranslation("no_products_result")}</span></div>`)
   }
 
 }

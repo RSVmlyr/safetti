@@ -9,7 +9,6 @@ import onlyInputNumbers from "../../helpers/onlyInputNumbers.js"
 import getUser from "../../services/user/getUser.js"
 import cloneScenery from "../../helpers/cloneScenery.js"
 import putScenario from "../../services/quotation/putScenario.js";
-
 import { getTranslation } from '../../lang.js'
 
 class QuotationCalculation extends HTMLElement {
@@ -70,7 +69,7 @@ class QuotationCalculation extends HTMLElement {
   updateUnitValue() {
     const quotatioviewQuantity = document.querySelectorAll('.quotatioview--quantity')
     quotatioviewQuantity.forEach(element => {
-      element.addEventListener("change", () => {
+      element.addEventListener("change", async () => {
         let numberValue = element.value
         const dataName = element.closest(".scenary--row__table").querySelector(".name-product").dataset.name;
         const listanumbers = document.querySelectorAll(".scenary--row__data");
@@ -91,7 +90,7 @@ class QuotationCalculation extends HTMLElement {
         });
 
         if( acumm < parseInt(element.dataset.minQuantity) ) {
-          nodeNotification(`${ getTranslation("quantity_validation_error")} ${element.dataset.minQuantity}`);
+          nodeNotification(`${ await getTranslation("quantity_validation_error")} ${element.dataset.minQuantity}`);
           return
         } else {
           const url = new URL(window.location.href)
@@ -136,7 +135,7 @@ class QuotationCalculation extends HTMLElement {
     }, 4000)
   }
 
-  SendNewQuotation(data, iva, name, comments ) {
+  async SendNewQuotation(data, iva, name, comments ) {
     const comment = comments ? comments : ""
     const quo = document.querySelector('.calculation__dis')
     let p = 0
@@ -159,7 +158,7 @@ class QuotationCalculation extends HTMLElement {
         const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
         const products = retrievedData ? JSON.parse(retrievedData) : []
         if(products.length <= 0){
-          nodeNotification(getTranslation("quotation_total_error"))
+          nodeNotification(await getTranslation("quotation_total_error"))
           return null
         }
         dataSetQuotation = {
@@ -172,7 +171,7 @@ class QuotationCalculation extends HTMLElement {
           advisorName: data.fullName,
           scenarios: [
             {
-              name: getTranslation("default_scenario_name"),
+              name: await getTranslation("default_scenario_name"),
               selected: true,
               discountPercent: p,
               applyTaxIVA: iva,
@@ -196,7 +195,7 @@ class QuotationCalculation extends HTMLElement {
           advisorName: data.advisorName,
           scenarios: [
             {
-              name: getTranslation("default_scenario_name"),
+              name: await getTranslation("default_scenario_name"),
               selected: true,
               discountPercent: p,
               applyTaxIVA: iva,
@@ -214,7 +213,7 @@ class QuotationCalculation extends HTMLElement {
     createQuotation(dataSetQuotation)
   }
 
-  SendNewScenary(data, iva, cotId, nameScenary) {
+  async SendNewScenary(data, iva, cotId, nameScenary) {
     let dataSetScenario = ''
     const expiringLocalStorage = new ExpiringLocalStorage()
     const retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
@@ -226,7 +225,7 @@ class QuotationCalculation extends HTMLElement {
     }
 
     if(data.length <= 0){
-      nodeNotification(getTranslation("scenario_total_error"))
+      nodeNotification(await getTranslation("scenario_total_error"))
       return null
     }
     const url = new URL(window.location.href)
@@ -415,7 +414,7 @@ class QuotationCalculation extends HTMLElement {
         const priceInRange = getPriceInRange(price, item.qt)
         if (priceInRange === undefined) {
           console.error('Error en este producto:', item)
-          nodeNotification(getTranslation("product_prices_config_error"))
+          nodeNotification(await getTranslation("product_prices_config_error"))
           continue
         }
 
@@ -423,7 +422,7 @@ class QuotationCalculation extends HTMLElement {
         {
           item.unitPrice = priceInRange.replace(".", "").replace(",",".")
         } else {
-          nodeNotification(getTranslation("no_price_for_quantity") + item.qt)
+          nodeNotification(await getTranslation("no_price_for_quantity") + item.qt)
         }
       } catch (error) {
         console.error('Error al procesar el producto:', error)

@@ -17,12 +17,12 @@ const statusQuotationS = async (Qid, status, userId, advance) => {
     const response = await Fetch.put(`/api/Quotation/${Qid}/${userId}/${status}/${a}`);
 
     if(response.status !== "error") {
-      nodeNotification(getTranslation("quotation_updated"))
+      nodeNotification(await getTranslation("quotation_updated"))
       setTimeout(() => {
         location.reload();
       }, 1000);
     } else {
-      nodeNotification(getTranslation("unexpected_error"))
+      nodeNotification(await getTranslation("unexpected_error"))
     }
   } catch (error) {
     console.error('Hubo un error al cambiar el estado de la cotización', error);

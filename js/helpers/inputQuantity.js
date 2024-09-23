@@ -47,7 +47,7 @@ const inputQuantity = async (section, clienteID) => {
                         quotationBtnSave.disabled = true;
                         quotationBtnSave.classList.add("disabled");
                         event.target.setAttribute("data-valid", "false");
-                        nodeNotification(`${ getTranslation("enter_quantity_product") } ${moldeCode}`);
+                        nodeNotification(`${ await getTranslation("enter_quantity_product") } ${moldeCode}`);
                         return;
                     }
 
@@ -58,7 +58,7 @@ const inputQuantity = async (section, clienteID) => {
                         if(validQuantity == -1){
                             quotationBtnSave.disabled = true;
                             quotationBtnSave.classList.add("disabled");
-                            nodeNotification(`${ getTranslation("quantity_validation_error") } ${minQuantity}`);
+                            nodeNotification(`${ await getTranslation("quantity_validation_error") } ${minQuantity}`);
                             return;
                         }
 

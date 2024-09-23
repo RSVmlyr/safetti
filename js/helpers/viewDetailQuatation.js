@@ -93,9 +93,9 @@ const viewDetailQuatation = (quotation) => {
       }
 
       if (quotationBtnSave) {
-        quotationBtnSave.addEventListener('click', () => {
+        quotationBtnSave.addEventListener('click', async () => {
             if (nameInput.value === '') {
-                nodeNotification(getTranslation("scenario_field_mandatory"));
+                nodeNotification(await getTranslation("scenario_field_mandatory"));
                 return;
             }
 
