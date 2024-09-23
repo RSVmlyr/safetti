@@ -2,7 +2,7 @@ import createProductCards from "./createProductsCards.js";
 import qnaddproduct from "../../helpers/qnaddproduct.js";
 import { getTranslation, loadTranslations } from "../../lang.js";
 
-const searchProduct = (quotationNew, resQueryUser, resQueryProducts) => {
+const searchProduct = async (quotationNew, resQueryUser, resQueryProducts) => {
 
     // Nombre / referencia
     const qnSearchProduct = quotationNew.querySelector('#qnsearchproduct');
@@ -22,7 +22,7 @@ const searchProduct = (quotationNew, resQueryUser, resQueryProducts) => {
             row.remove();
         });
 
-        createProductCards(quotationNew, resQueryUser, { products: searchProducts });
+        await createProductCards(quotationNew, resQueryUser, { products: searchProducts });
         await loadTranslations();
     });
 
@@ -93,7 +93,7 @@ const searchProduct = (quotationNew, resQueryUser, resQueryProducts) => {
         ));
 
         if (e.target == qnCuentos && qnCuentosValue !== "") {
-            Array.from(qnClasificaciones.options).forEach(function (option) {
+            Array.from(qnClasificaciones.options).forEach(async function (option) {
                 if (option.value !== "") {
                     const count = filteredProducts.products.filter(pro => pro.classification === option.value).length;
                     if (count == 0) {
@@ -101,14 +101,14 @@ const searchProduct = (quotationNew, resQueryUser, resQueryProducts) => {
                     }
                     else {
                         option.hidden = false;
-                        option.text = `${ getTranslation(option.value) } (${count})`;
+                        option.text = `${ await getTranslation(option.value) } (${count})`;
                     }
                 }
             });
         }
 
         if (e.target == qnClasificaciones && qnClasificacionesValue !== "") {
-            Array.from(qnTiposPrenda.options).forEach(function (option) {
+            Array.from(qnTiposPrenda.options).forEach(async function (option) {
                 if (option.value !== "") {
                     const count = filteredProducts.products.filter((pro) => pro.garment === option.value).length;
                     if (count == 0) {
@@ -116,14 +116,14 @@ const searchProduct = (quotationNew, resQueryUser, resQueryProducts) => {
                     }
                     else {
                         option.hidden = false;
-                        option.text = `${ getTranslation(option.value) } (${count})`;
+                        option.text = `${ await getTranslation(option.value) } (${count})`;
                     }
                 }
             });
         }
 
         if (e.target == qnTiposPrenda && qnTiposPrendaValue !== "") {
-            Array.from(qnFitprenda.options).forEach(function (option) {
+            Array.from(qnFitprenda.options).forEach(async function (option) {
                 if (option.value !== "") {
                     const count = filteredProducts.products.filter((pro) => pro.garmentFit === option.value).length;
                     if (count == 0) {
@@ -131,7 +131,7 @@ const searchProduct = (quotationNew, resQueryUser, resQueryProducts) => {
                     }
                     else {
                         option.hidden = false;
-                        option.text = `${ getTranslation(option.value) } (${count})`;
+                        option.text = `${ await getTranslation(option.value) } (${count})`;
                     }
                 }
             });
@@ -142,7 +142,7 @@ const searchProduct = (quotationNew, resQueryUser, resQueryProducts) => {
             row.remove();
         });
 
-        createProductCards(quotationNew, resQueryUser, filteredProducts);
+        await createProductCards(quotationNew, resQueryUser, filteredProducts);
         await loadTranslations();
         localStorage.setItem("productosFiltrados", JSON.stringify(filteredProducts));
     }
@@ -180,7 +180,7 @@ const searchProduct = (quotationNew, resQueryUser, resQueryProducts) => {
             row.remove();
         });
 
-        createProductCards(quotationNew, resQueryUser, resQueryProducts);
+        await createProductCards(quotationNew, resQueryUser, resQueryProducts);
         await loadTranslations();
         localStorage.removeItem("productosFiltrados");
     });

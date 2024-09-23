@@ -7,7 +7,7 @@ const sendEmail = async (nodo, url, not) => {
     const response = await Fetch.get(url)
 
     if (response.status !== "error") {
-      not.textContent = getTranslation("sent")
+      not.textContent = await getTranslation("sent")
       let checkemail = document.createElement('img');
       checkemail.classList.add('quotation--email__send');
       checkemail.src = '../../img/icon/icon-check.png';
@@ -15,9 +15,9 @@ const sendEmail = async (nodo, url, not) => {
       const quotationEmailSend = document.querySelector('.quotation--email__send')
       not.nextElementSibling.style.display = "none";
 
-      setTimeout(() => {
+      setTimeout(async () => {
         let src = '../../img/icon/icon-email.svg'
-        not.textContent = getTranslation("send_email")
+        not.textContent = await getTranslation("send_email")
         not.classList.remove('loading')
         quotationEmailSend.remove()
         const scenary = nodo.closest('.scenary--data__scenary');
@@ -29,11 +29,11 @@ const sendEmail = async (nodo, url, not) => {
         not.nextElementSibling.style.display = "block";
 
       }, 4000);
-      nodeNotification(getTranslation("email_sent"))
+      nodeNotification(await getTranslation("email_sent"))
     }
   }
   catch(error) {
-    console.error(getTranslation("sending_email_error"), error);
+    console.error(await getTranslation("sending_email_error"), error);
   }
 }
 

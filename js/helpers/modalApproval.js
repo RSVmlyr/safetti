@@ -5,7 +5,7 @@ import onlyInputNumbers from "../helpers/onlyInputNumbers.js";
 import Fetch from "../services/Fetch.js"
 import { getTranslation } from "../lang.js";
 
-const validarFormulario = (mymodal) => {
+const validarFormulario = async (mymodal) => {
   switch (mymodal.id) {
     case 'modal-file':
       const imagen = mymodal.querySelector('#imagen').value;
@@ -14,7 +14,7 @@ const validarFormulario = (mymodal) => {
       if (imagen === '') {
         return {
           value: false,
-          msg: getTranslation("enter_image")
+          msg: await getTranslation("enter_image")
         };
       } else {
         const file = document.getElementById('imagen');
@@ -24,7 +24,7 @@ const validarFormulario = (mymodal) => {
         if(fileSize> maxSizeInBytes){
           return {
             value: false,
-            msg: getTranslation("file_size_error")
+            msg: await getTranslation("file_size_error")
           };
         }
       }
@@ -36,13 +36,13 @@ const validarFormulario = (mymodal) => {
       if (numberValue === '') {
         return {
           value: false,
-          msg: getTranslation("enter_percentage")
+          msg: await getTranslation("enter_percentage")
         };
       }
       if (isNaN(numberValue) || numberValue < 0 || numberValue > 100) {
         return {
           value: false,
-          msg: getTranslation("enter_valid_percentage"),
+          msg: await getTranslation("enter_valid_percentage"),
         };
       }
       return {
@@ -139,7 +139,7 @@ const modalApproval = async (quotation, modal, open, paymentSupportFilePath, isP
         return
       }
 
-      const validate = validarFormulario(mymodal)
+      const validate = await validarFormulario(mymodal)
       const msgerror = mymodal.querySelector(".modal__form--error")
 
       if(!validate.value) {
@@ -159,7 +159,7 @@ const modalApproval = async (quotation, modal, open, paymentSupportFilePath, isP
         else {
           const advance = validate.numberValue
           if (Qid !== '') {
-            nodeNotification(getTranslation("updating_quotation"))
+            nodeNotification(await getTranslation("updating_quotation"))
             await statusQuotationS( Qid, 4, userId, advance )
           }
         }

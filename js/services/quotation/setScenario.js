@@ -8,7 +8,7 @@ const setScenario = async (dataSetScenario, cotId) => {
     const response = await Fetch.post('/api/Scenario', dataSetScenario)
 
     if(response.status !== "error") {
-      nodeNotification(getTranslation("saving_scenario"))
+      nodeNotification(await getTranslation("saving_scenario"))
       const expiringLocalStorage = new ExpiringLocalStorage()
       expiringLocalStorage.deleteDataWithExpiration('NameScenary')
       expiringLocalStorage.deleteDataWithExpiration('scenario-' + cotId)
@@ -18,7 +18,7 @@ const setScenario = async (dataSetScenario, cotId) => {
         quotationewBack.click()
       }, 1000);
     } else {
-      nodeNotification(getTranslation("internal_server_error"))
+      nodeNotification(await getTranslation("internal_server_error"))
     }
 
     return response

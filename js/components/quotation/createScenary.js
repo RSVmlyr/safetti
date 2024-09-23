@@ -238,7 +238,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         }
       }
       const sortedIndices = Object.keys(cot.scenarios).sort((a, b) => b - a);
-      sortedIndices.forEach(i => {
+      sortedIndices.forEach(async i => {
         const scen = cot.scenarios[i];
 
         let totalProducts = 0;
@@ -273,7 +273,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                   <a class="quotation--info quotation--detail" href="${esRolEditable 
                     ? `./index-q.html?uid=${storedHash}&clone=true&scenaryId=${scen.id}&cotId=${cot.id}&cotName=${cot.name}`
                     : `./Cotizacion.html?id=${cot.id}&uid=${storedHash}&token=${token}`}">
-                    ${esRolEditable ? getTranslation("edit") : getTranslation("see_detail")}
+                    ${esRolEditable ? await getTranslation("edit") : await getTranslation("see_detail")}
                   </a>
                 </span>
                 </tr>

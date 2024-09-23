@@ -41,7 +41,7 @@ const quotationNewPage = async (quotationNew, resQueryUser, resQueryProducts, re
     qnbusinessname.parentElement.classList.add('quotation-hide')
   }
 
-  idQnClient.innerHTML = `${ getTranslation("client") }: ${ resQueryUser.fullName }`;
+  idQnClient.innerHTML = `${ await getTranslation("client") }: ${ resQueryUser.fullName }`;
   qnbusinessname.innerHTML = resQueryUser.razonSocial
   idQnAdvisor.innerHTML = resQueryUserAdvisorName
   idQnCurrency.innerHTML = resQueryUserCurrency
@@ -51,8 +51,8 @@ const quotationNewPage = async (quotationNew, resQueryUser, resQueryProducts, re
   fillSelectProduct(idQnTiposPrenda, resQueryProducts.tiposPrenda, true)
   fillSelectProduct(idQnClasificaciones, resQueryProducts.clasificaciones, true)
   fillSelectProduct(idQnFitPrenda, resQueryProducts.fitPrenda, true)
-  createProductCards(quotationNew, resQueryUser, resQueryProducts, true)
-  searchProduct(quotationNew, resQueryUser, resQueryProducts)
+  await createProductCards(quotationNew, resQueryUser, resQueryProducts, true)
+  await searchProduct(quotationNew, resQueryUser, resQueryProducts)
   localStorage()
 
   if(cotId && resQueryUser.rol === 'advisors'){
@@ -71,7 +71,7 @@ const quotationNewPage = async (quotationNew, resQueryUser, resQueryProducts, re
 
     const getinfouser = async () => {
       const data = await GetIdQuotation(cotId)
-      idQnClient.innerHTML = `${ getTranslation("client") }: ${ data.clientName }`
+      idQnClient.innerHTML = `${ await getTranslation("client") }: ${ data.clientName }`
       idQnCurrency.innerHTML = data.currency
       idQnCurrency.dataset.currency = data.currency;
       getUserCurren(data.client); 
@@ -177,7 +177,7 @@ const quotationNewPage = async (quotationNew, resQueryUser, resQueryProducts, re
           li.textContent = client.fullName ? client.fullName : '';
           li.setAttribute('data-currency', client.currency ? client.currency : '')
           li.setAttribute('data-rol', client.rol ? client.rol : '')
-          li.addEventListener('click', function() {
+          li.addEventListener('click', async function() {
             expiringLocalStorage.deleteDataWithExpiration('products')
 
             const scenaryDeleteAll = quotationNew.querySelector('.scenary-delete__all')
@@ -189,7 +189,7 @@ const quotationNewPage = async (quotationNew, resQueryUser, resQueryProducts, re
             validateNewCleint()
             quotatioNewClient.value = client.fullName ? client.fullName : '';
             idQuotatioNewSearchClient.innerHTML = '';
-            selectedValueSearchLi(client.razonSocial, client.fullName, client.currency, client.rol, client.id, client.specialDiscount)
+            await selectedValueSearchLi(client.razonSocial, client.fullName, client.currency, client.rol, client.id, client.specialDiscount)
           });
           idQuotatioNewSearchClient.appendChild(li);
         });
@@ -199,17 +199,17 @@ const quotationNewPage = async (quotationNew, resQueryUser, resQueryProducts, re
       }
     });
 
-    const selectedValueSearchLi = (razon, client, currency, rol, id, specialDiscount) => {
+    const selectedValueSearchLi = async (razon, client, currency, rol, id, specialDiscount) => {
       const qnClient = quotationNew.querySelector('#qnclient')
       const qnCurrency = quotationNew.querySelector('#qncurrency')
 
       if(razon) {
         qnbusinessname.parentElement.classList.remove('quotation-hide')
         qnbusinessname.innerHTML = razon
-        qnClient.textContent = `${ getTranslation("contact") }: ${client}`
+        qnClient.textContent = `${ await getTranslation("contact") }: ${client}`
       } else {
         qnbusinessname.parentElement.classList.add('quotation-hide')
-        qnClient.textContent = `${ getTranslation("client") }: ${client}`
+        qnClient.textContent = `${ await getTranslation("client") }: ${client}`
       }
 
       qnCurrency.textContent = currency
@@ -259,10 +259,10 @@ const quotationNewPage = async (quotationNew, resQueryUser, resQueryProducts, re
   const quotationBtnSave = quotationNew.querySelector('#quotation--btn__save')
 
   if(cotId && cotName) {
-    quotationBtnSave.textContent = getTranslation("save_scenario")
+    quotationBtnSave.textContent = await getTranslation("save_scenario")
   }
   else {
-    quotationBtnSave.textContent = getTranslation("save_quotation")
+    quotationBtnSave.textContent = await getTranslation("save_quotation")
   }
 
   const quotatioewScenary = quotationNew.querySelector('#quotationewscenary')
@@ -332,16 +332,16 @@ const quotationNewPage = async (quotationNew, resQueryUser, resQueryProducts, re
     }
   }
 
-  quotationBtnSave.addEventListener('click', () => {
+  quotationBtnSave.addEventListener('click', async () => {
     quotationBtnSave.disabled = true
 
-    const btnSave = () => {
+    const btnSave = async () => {
       if (resQueryUser.rol !== 'advisors') {
         if (quotationewname) {
           if (quotationewname.value == '') {
             quotationewname.classList.add('error')
 
-            nodeNotification(getTranslation("fields_marked_mandatory"))
+            nodeNotification(await getTranslation("fields_marked_mandatory"))
             setTimeout(() => {
               quotationBtnSave.disabled = false
             }, 2000);
@@ -366,7 +366,7 @@ const quotationNewPage = async (quotationNew, resQueryUser, resQueryProducts, re
               quotationewSearchClient.classList.add('quotation-hide')
             }
 
-            nodeNotification(getTranslation("fields_marked_mandatory"));
+            nodeNotification(await getTranslation("fields_marked_mandatory"));
             setTimeout(() => {
               quotationBtnSave.disabled = false
             }, 2000);
@@ -387,7 +387,7 @@ const quotationNewPage = async (quotationNew, resQueryUser, resQueryProducts, re
           if (quotatioewScenary.value === '') {
             quotatioewScenary.classList.add('error');
             quotatioewScenaryError.classList.remove('quotation-hide')
-            nodeNotification(getTranslation("fields_marked_mandatory"))
+            nodeNotification(await getTranslation("fields_marked_mandatory"))
             setTimeout(() => {
               quotationBtnSave.disabled = false
             }, 2000);
@@ -396,14 +396,14 @@ const quotationNewPage = async (quotationNew, resQueryUser, resQueryProducts, re
             quotatioewScenaryError.classList.add('quotation-hide')
             expiringLocalStorage.saveDataWithExpiration("NameScenary", JSON.stringify(quotatioewScenaryNode.value))
           }
-          quotationCalculation.SendNewScenary(resQueryUser, quotationIva.checked, cotId, quotatioewScenary.value)
+          await quotationCalculation.SendNewScenary(resQueryUser, quotationIva.checked, cotId, quotatioewScenary.value)
         }
       } else {
-        quotationCalculation.SendNewQuotation(resQueryUser, quotationIva.checked, quotationewname.value, idQuotationComments.value );
+        await quotationCalculation.SendNewQuotation(resQueryUser, quotationIva.checked, quotationewname.value, idQuotationComments.value );
       }
     }
-    btnSave()
-  });  
+    await btnSave()
+  });
 }
 
 export default quotationNewPage

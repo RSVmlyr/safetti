@@ -8,7 +8,7 @@ const setQuotation = async dataSetQuotation => {
     const response = await Fetch.post('/api/Quotation', dataSetQuotation)
 
     if(response.status !== "error") {
-      nodeNotification(getTranslation("saving_quotation"))
+      nodeNotification(await getTranslation("saving_quotation"))
       const expiringLocalStorage = new ExpiringLocalStorage()
       expiringLocalStorage.deleteDataWithExpiration('ClientFullName')
       expiringLocalStorage.deleteDataWithExpiration('Comments')
@@ -19,7 +19,7 @@ const setQuotation = async dataSetQuotation => {
         quotationewBack.click()
       }, 1000);
     } else {
-      nodeNotification(getTranslation("internal_server_error"))
+      nodeNotification(await getTranslation("internal_server_error"))
     }
 
     return response
