@@ -8,12 +8,12 @@ import qnaddproduct from "../../helpers/qnaddproduct.js";
 import { config } from "../../../config.js";
 import ExpiringLocalStorage from '../localStore/ExpiringLocalStorage.js';
 import onlyInputNumbers from "../../helpers/onlyInputNumbers.js";
+import { getTranslation, langParam } from "../../lang.js";
 
 const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
   const url = new URL(window.location.href);
   const searchParams = new URLSearchParams(url.search);
   const cotId = searchParams.get('cotId');
-
 
   if(resQueryUser.rol != "advisors") {
     qnaddproduct()
@@ -29,20 +29,14 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
     const expiringLocalStorage = new ExpiringLocalStorage();
 
     resQueryProducts.products.forEach((pro, index) => {
-      let description = pro.description ? pro.description.substring(0, 40) : '';
+      let description = langParam === "es" ? pro.description : pro.descriptionEN;
+      description = description ?? "";
+      const spacingPosition = description.indexOf(" ", 40);
+      description = spacingPosition === -1 ? description : description.substring(0, spacingPosition) + "...";
 
       // For Partner
       let pCuantity = pro.minQuantity
       pCuantity = 5
-
-      const validateRol = () => {
-        // `<p class="small">La cantidad mínima es de ${pro.minQuantity} ${pro.minQuantity > 1 ? 'unidades': 'unidad'}.</p>`
-        // console.log('Tesr');
-      }
-
-      if (pro.description && pro.description.length > 40) {
-        description += '...';
-      }
 
       let mainImage = pro.mainImage ? pro.mainImage : '../img/icon/image-product.jpg';
       const originUrlPath = config.API_DEV_IMAGE + '/sites/default/files/';
@@ -53,54 +47,52 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         <div class="card">
           <div class="card__front">
             <div class="card--image">
-              <img src="${modifiedStringImage}" loading="lazy" alt="Producto" title="Producto" >
+              <img src="${modifiedStringImage}" loading="lazy" alt="Producto">
             </div>
             <div class="card--body">
-              <h3 class="card--title quotation--title__quo">${pro.name ? pro.name : ''}</h3>
+              <h3 class="card--title quotation--title__quo">
+                ${ langParam === "es" ? pro.name : (pro.nameEN ? pro.nameEN : pro.name) }
+              </h3>
               <span class="card--reference">${pro.referencia ? pro.referencia : ''}</span>
-              ${description}
+              <p>${ description }</p>
             </div>
             <div class="card--actions">
               <button class="qnviewdetailproducts">Ver detalle</button>
-              <button class="qnaddproducts add">Agregar +</button>
+              <button class="qnaddproducts add" data-tkey="add"></button>
             </div>
           </div>
           <div class="card__back">
-            <label for="">Tipo de molde:</label>
+            <label for="" data-tkey="mold_type"></label>
             <select id="" class="qncountry card__back--country">
-              <option value="" selected>-- Seleccionar --</option>
+              <option value="" selected data-tkey="select_default_option"></option>
             </select>
            <div id="card__back--items" class="card__back--items">
-  
             <div class="inputman card--amount">
-              <span class="card--amount__title">Hombre</span>
+              <span class="card--amount__title" data-tkey="man"></span>
               <div class="card--amount__input">
                 <button class="qnManDecrease">-</button>
                 <input class="qnManInput colombiaMan" type="number" name="qnManInput" value="0" min="0">
                 <button class="qnManIncrease">+</button>
               </div>
-            </div>
-  
+            </div>  
             <div class="inputwoman card--amount">
-              <span class="card--amount__title">Mujer</span>
+              <span class="card--amount__title" data-tkey="woman"></span>
               <div class="card--amount__input">
                 <button class="qnWomanDecrease">-</button>
                 <input class="qnWomanInput colombiaWoman" type="number" name="qnWomanInput" value="0" min="0">
                 <button class="qnWomanIncrease">+</button>
               </div>
-            </div>
-  
+            </div>  
             <div class="inputunisex card--amount">
-              <span class="card--amount__title">Unisex</span>
+              <span class="card--amount__title" data-tkey="unisex"></span>
               <div class="card--amount__input">
                 <button class="qnUnisexDecrease">-</button>
                 <input class="qnUnisexInput colombiaUnisex" type="number" name="qnUnisexInput" value="0" min="0">
                 <button class="qnUnisexIncrease">+</button>
               </div>
-            </div>
-  
+            </div>  
             <div class="inputjunior card--amount">
-              <span class="card--amount__title">Junior</span>
+              <span class="card--amount__title" data-tkey="junior"></span>
               <div class="card--amount__input">
                 <button class="qnJuniorDecrease">-</button>
                 <input class="qnJuniorInput colombiaJunior" type="number" name="qnJuniorInput" value="0" min="0">
@@ -109,10 +101,10 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             </div>
             <div class="card--amount__actions">
              ${resQueryUser.rol === 'partner' ?
-              `<p class="small">La cantidad mínima es de ${pCuantity} ${pCuantity > 1 ? 'unidades': 'unidad'}.</p>` :
-              `<p class="small">La cantidad mínima es de ${pro.minQuantity} ${pro.minQuantity > 1 ? 'unidades': 'unidad'}.</p>`}
-              <button class="qncancelproduct">Cancelar</button>
-              <button class="qnaceptproduct quotation-hide">Agregar +</button>
+              `<p class="small"><span data-tkey="minimun_quantity_label"></span> ${pCuantity} ${pCuantity > 1 ? '<span data-tkey="units"></span>': '<span data-tkey="unit"></span>'}.</p>` :
+              `<p class="small"><span data-tkey="minimun_quantity_label"></span> ${pro.minQuantity} ${pro.minQuantity > 1 ? '<span data-tkey="units"></span>': '<span data-tkey="unit"></span>'}.</p>`}
+              <button class="qncancelproduct" data-tkey="cancel"></button>
+              <button class="qnaceptproduct quotation-hide" data-tkey="add"></button>
             </div>
            </div>
           </div>
@@ -200,7 +192,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         }, 1000);
 
         if(product.length <= 0) {
-          nodeNotification("Ingresa una cantidad para validar");
+          nodeNotification(getTranslation("enter_quantity"));
           return;
         }
 
@@ -231,24 +223,19 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           });
         }
 
-        // console.log(resQueryUser.rol);
-        // console.log(pro.minQuantity);
-
         if (resQueryUser.rol === 'partner') {
-          console.log(resQueryUser.rol);
           if (totalQuantity < pCuantity) {
-            // console.log('Cinco', pCuantity);
-            nodeNotification(`La cantidad debe ser mayor o igual a ${pCuantity}`);
+            nodeNotification(`${ getTranslation("quantity_validation_error")} ${pCuantity}`);
             return;
           }
         } else {
           if (totalQuantity < pro.minQuantity) {
-            nodeNotification(`La cantidad debe ser mayor o igual a ${pro.minQuantity}`);
+            nodeNotification(`${ getTranslation("quantity_validation_error")} ${pro.minQuantity}`);
             return;
           }
         }
 
-        nodeNotification('Agregando producto a la lista...');
+        nodeNotification(getTranslation("adding_product"));
         const quotationCalculation = new QuotationCalculation(resQueryUser);
         quotationCalculation.createArrayProducto(product);
       });
@@ -263,58 +250,51 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
         }
       })
 
-      const cardViewDetailProductsImage = quotationNew.querySelector('.card .card--image img')
+      const cardViewDetailProductsImage = quotationNew.querySelector('.card .card--image img');
+
       cardViewDetailProductsImage.addEventListener('click', (e) => {
+
         window.scrollTo({
           top: 0,
           behavior: 'smooth' // Agrega un desplazamiento suave
         });
+
         bodyDom.style.overflow = 'hidden'
         if(e.target) {
-          let modalCard =
+          const modalCard =
           `<div class="modal">
             <div class="modal--container">
               <div class="modal--container__body">
                 <div class="modal--container__bodyLeft">
-                  <div class="image-product">
-                  
-                  </div>
+                  <div class="image-product"></div>
                 </div>
                 <div class="modal--container__bodyRight">
                   <div class="modal--header">
-                    <div class="modal--header__languages">
-                      <div class="es quotation--btn__new" style="background-color: black; color: white;">ES</div>
-                      <div class="en quotation--btn__add">EN</div>
-                    </div>
-                    <h3 class="quotation--title__quo">${pro.id ? pro.id : ''} / ${pro.name ? pro.name : ''}</h3>
+                    <h3 class="quotation--title__quo">
+                      ${ langParam === "es" ? pro.name : (pro.nameEN ? pro.nameEN : pro.name) }
+                    </h3>
                   </div>
                   <div class="modal--body">
                     <div class="modal--body__content">
-                      <h4 class="modal--title"><span>Deporte:</span> ${pro.cuento ? pro.cuento : ''}</h4>
-                      <h4 class="modal--title"><span>Referencia:</span> ${pro.referencia ? pro.referencia : ''}</h4>
-                      <h4 class="modal--title"><span>Clasificación:</span> ${pro.classification ? pro.classification : ''}</h4>
-                      <h4 class="modal--title"><span class="des-es">Descripción:</span><span class="des-en quotation-hide">Description:</span></h4>
-                      <div class="modal--des__es">
-                        ${pro.description ? pro.description : '...'}
+                    <h4 class="modal--title">${ getTranslation("reference") } ${ pro.referencia }</h4>
+                      <h4 class="modal--title">${ getTranslation("sport") } ${ getTranslation(pro.cuento) }</h4>
+                      <h4 class="modal--title">${ getTranslation("classification") } ${ getTranslation(pro.classification) }</h4>
+                      <h4 class="modal--title">${ getTranslation("description") }</h4>
+                      <div>
+                        <p>${ langParam === "es" ? pro.description : (pro.descriptionEN ? pro.descriptionEN : pro.description )}</p>
                       </div>
-                      <div class="modal--des__en quotation-hide">
-                        ${pro.descriptionEN ? pro.descriptionEN : '...'}
+                      <h4 class="modal--title">${ getTranslation("features") }</h4>
+                      <div>
+                        <p>${ langParam === "es" ? pro.features : (pro.featuresEN ? pro.featuresEN : pro.features) }</p>
                       </div>
-                      <h4 class="modal--title"><span class="car-es">Características:</span><span class="car-en quotation-hide">Features:</span></h4>
-                      <div class="modal--features__es">
-                        ${pro.features ? pro.features : '...'}
-                      </div>
-                      <div class="modal--features__en quotation-hide">
-                        ${pro.featuresEN ? pro.featuresEN : '...'}
-                      </div>
-                    </div>  
-                    <div class="modal--close">x</div>
+                    </div>
                   </div>
                 </div>
-              </div>  
+              </div>
+              <div class="modal--close">&#10005;</div>
             </div>
-          </div>
-          `
+          </div>`
+
           quotationNew.style.overflow = 'hidden'
           quotationNew.insertAdjacentHTML('afterend', `${modalCard}`)
           const modal = document.querySelector('.modal')
@@ -322,47 +302,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
           modalClose.addEventListener('click', () => {
             bodyDom.style.overflow = 'initial'
             quotationNew.style.overflow = 'auto'
-            modal.remove()  
-          })
-
-          const btnEs = document.querySelector('.es')
-          const btnEn = document.querySelector('.en')
-          const modalDesEs = document.querySelector('.modal--des__es')
-          const modalFeaturesEs = document.querySelector('.modal--features__es')
-          const modalDesEn = document.querySelector('.modal--des__en')
-          const modalFeaturesEn = document.querySelector('.modal--features__en')
-          const desEs = document.querySelector('.des-es')
-          const desEn = document.querySelector('.des-en')
-          const carEs = document.querySelector('.car-es')
-          const carEn = document.querySelector('.car-en')
-          
-          btnEs.addEventListener('click', () => {
-            btnEs.style.backgroundColor = 'black';
-            btnEs.style.color = 'white';
-            btnEn.style.backgroundColor = 'transparent';
-            btnEn.style.color = 'black';
-            desEs.classList.remove('quotation-hide')
-            desEn.classList.add('quotation-hide')
-            carEs.classList.remove('quotation-hide')
-            carEn.classList.add('quotation-hide')
-            modalDesEn.classList.add('quotation-hide')
-            modalFeaturesEn.classList.add('quotation-hide')
-            modalDesEs.classList.remove('quotation-hide')
-            modalFeaturesEs.classList.remove('quotation-hide')
-          })
-          btnEn.addEventListener('click', () => {
-            btnEn.style.backgroundColor = 'black';
-            btnEn.style.color = 'white';
-            btnEs.style.backgroundColor = 'white';
-            btnEs.style.color = 'black';
-            desEs.classList.add('quotation-hide')
-            desEn.classList.remove('quotation-hide')
-            carEs.classList.add('quotation-hide')
-            carEn.classList.remove('quotation-hide')
-            modalDesEs.classList.add('quotation-hide')
-            modalFeaturesEs.classList.add('quotation-hide')
-            modalDesEn.classList.remove('quotation-hide')
-            modalFeaturesEn.classList.remove('quotation-hide')
+            modal.remove()
           })
 
           const imagesData = async () => {
@@ -376,10 +316,10 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             containerLeft.insertAdjacentElement('afterbegin', spinnerImages);
             // Get Images|
             let idProduct = pro.id
-            const resQueryImages = await getImages(idProduct)
-            spinnerImages.remove()
-    
-            if (resQueryImages.length > 1) {
+            let resQueryImages = await getImages(idProduct)
+            resQueryImages.reverse()
+
+            if (resQueryImages.length > 0) {
               resQueryImages.forEach(e => {
                 // Get URL Image
                 let mainImage = e.imageUrl ? e.imageUrl : '../img/icon/image-product.jpg'
@@ -414,8 +354,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
               const sliderElement = document.querySelector('.modal--container__bodyLeft .image-product');
               const images = sliderElement.querySelectorAll("img");
               zoomImagesSlider(images);
-              // console.log(sliderElement);
-            
+
               if (sliderElement && sliderElement.children.length > 1) {
                 try {
                   // Initialize Flickity on the element
@@ -427,11 +366,11 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
             };
 
             initializeSlider()
-            
+            spinnerImages.remove()
             // Initialize the slider when the DOM content is fully loaded
             document.addEventListener("DOMContentLoaded", initializeSlider);
-
           }
+
           imagesData()
         }
       })
@@ -549,7 +488,7 @@ const createProductCards = (quotationNew, resQueryUser, resQueryProducts) => {
 
   } else {
     const sliderProducts = quotationNew.querySelector('.slider--productos .slider--content')
-    sliderProducts.insertAdjacentHTML('afterbegin', '<div class="quotation--loading"><span>No hay productos con los filtros ingresados</span></div>')  
+    sliderProducts.insertAdjacentHTML('afterbegin', `<div class="quotation--loading"><span>${ getTranslation("no_products_result")}</span></div>`)
   }
 
 }
@@ -568,6 +507,7 @@ function throttle(func, delay) {
       });
   };
 }
+
 function handleMouseMove(e) {
   const rect = e.target.getBoundingClientRect();
   const x = e.clientX - rect.left;
@@ -576,7 +516,8 @@ function handleMouseMove(e) {
   const yPercent = (y / rect.height) * 100;
 
   e.target.style.transformOrigin = `${xPercent}% ${yPercent}%`;
-};
+}
+
 const zoomImagesSlider = (images) => {
   const image = images[0];
   images.forEach(image => {

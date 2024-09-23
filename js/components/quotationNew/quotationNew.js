@@ -1,4 +1,3 @@
-
 import dateFormat from "../../helpers/dateFormat.js";
 import fillSelectProduct from "../../helpers/fillSelectProduct.js";
 import sendEmailHelper from "../../helpers/sendEmailHelper.js";
@@ -11,9 +10,9 @@ import ExpiringLocalStorage from "../localStore/ExpiringLocalStorage.js";
 import getUser from "../../services/user/getUser.js"
 import nodeNotification from "../../helpers/nodeNotification.js";
 import qnaddproduct from "../../helpers/qnaddproduct.js"
-import { config } from "../../../config.js"
+import { getTranslation, loadTranslations } from "../../lang.js";
 
-const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQueryClients) => {
+const quotationNewPage = async (quotationNew, resQueryUser, resQueryProducts, resQueryClients) => {
   const expiringLocalStorage = new ExpiringLocalStorage()
   const url = new URL(window.location.href);
   const searchParams = new URLSearchParams(url.search);
@@ -22,9 +21,7 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   const dateCurrent = new Date()
   const idQnDate = quotationNew.querySelector('#qndate')
   const idQnClient = quotationNew.querySelector('#qnclient')
-  let idQnLabelCliente = resQueryUser.rol === "advisors" ? 'Asesor: ' : 'Cliente: ';
   const idQnAdvisor = quotationNew.querySelector('#qnadvisor')
-  const idQnLabelAdvisors = resQueryUser.rol === "advisors" ? 'Cliente: ' : 'Asesor: ';
   const resQueryUserAdvisorName = resQueryUser.advisorName === null ? '' : resQueryUser.advisorName
   const idQnCurrency = quotationNew.querySelector('#qncurrency')
   const resQueryUserCurrency = resQueryUser.rol === "advisors" ? '' : resQueryUser.currency; 
@@ -34,21 +31,20 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   const idQnFitPrenda = quotationNew.querySelector('#qnfitprenda')
   const qnbusinessname = quotationNew.querySelector('#qnbusinessname')
   const qnrol = quotationNew.querySelector('#qnrol')
-  idQnDate.innerHTML = 'Creación: ' + dateFormat(dateCurrent)
+  idQnDate.innerHTML = dateFormat(dateCurrent)
+
   if(resQueryUser.rol === 'advisors') {
-    qnrol.classList.remove('quotation-hide')
-  } 
-  if(resQueryUser.razonSocial===null) {
-    qnbusinessname.classList.add('quotation-hide')
-  } else {
-    idQnLabelCliente = resQueryUser.rol === "advisors" ? 'Asesor: ' : 'Contacto: ';
+    qnrol.parentElement.classList.remove('quotation-hide')
   }
-  idQnClient.innerHTML = idQnLabelCliente + resQueryUser.fullName;
-  qnbusinessname.innerHTML ='Razon Social: '  + resQueryUser.razonSocial
-  // idQnAdvisor.innerHTML = idQnLabelAdvisors + resQueryUserAdvisorName
-  idQnAdvisor.innerHTML = resQueryUser.rol === "advisors" ? idQnLabelAdvisors : idQnLabelAdvisors + resQueryUserAdvisorName
-  // idQnAdvisor.innerHTML = 'Asesor: ' + resQueryUserAdvisorName
-  idQnCurrency.innerHTML = 'Moneda: ' + resQueryUserCurrency
+
+  if(resQueryUser.razonSocial === null) {
+    qnbusinessname.parentElement.classList.add('quotation-hide')
+  }
+
+  idQnClient.innerHTML = `${ getTranslation("client") }: ${ resQueryUser.fullName }`;
+  qnbusinessname.innerHTML = resQueryUser.razonSocial
+  idQnAdvisor.innerHTML = resQueryUserAdvisorName
+  idQnCurrency.innerHTML = resQueryUserCurrency
   idQnCurrency.dataset.currency = resQueryUserCurrency;
  
   fillSelectProduct(idQnCuentos, resQueryProducts.cuentos, false)
@@ -74,10 +70,9 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
     }
 
     const getinfouser = async () => {
-      const data = await GetIdQuotation(cotId)   
-
-      idQnAdvisor.innerHTML = idQnLabelAdvisors + data.clientName
-      idQnCurrency.innerHTML = 'Moneda: ' + data.currency
+      const data = await GetIdQuotation(cotId)
+      idQnClient.innerHTML = `${ getTranslation("client") }: ${ data.clientName }`
+      idQnCurrency.innerHTML = data.currency
       idQnCurrency.dataset.currency = data.currency;
       getUserCurren(data.client); 
     }
@@ -90,8 +85,15 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   cotId ? false : QnDownload.remove()
   const QnComments = quotationNew.querySelector('.quotationcomments')
   cotId ? false : QnComments.classList.remove('quotation-hide')
-  const QnTitle = quotationNew.querySelector('.quotationew__title .quotation--title')
-  cotId ? QnTitle.textContent = 'Nuevo Escenario' : QnTitle.textContent = 'Nueva Cotización'
+  const QnTitle = quotationNew.querySelector('.quotationew__title .quotation--title [data-tkey=new_quotation]')
+  const QnScenarioTitle = quotationNew.querySelector('.quotationew__title .quotation--title [data-tkey=new_scenario]')
+  if(cotId){
+    QnScenarioTitle.classList.remove('quotation-hide')
+    QnTitle.classList.add('quotation-hide')
+  } else {
+    QnScenarioTitle.classList.add('quotation-hide')
+    QnTitle.classList.remove('quotation-hide')
+  }
   const quotationewname = quotationNew.querySelector('#quotationewname')
 
   if (cotId && quotationewname) {
@@ -100,9 +102,9 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
     const quotationewInfo = quotationNew.querySelector('.quotationew__info')
     let quotatioNewInfoTwo =
     `<div class="quotationew__infoTwo">
-      <label class="quotation--title__quo" for='quotationewscenary'>Nombre del escenario: <span>*</span></label>
-      <input id="quotationewscenary" type="text" placeholder="Escribe el nombre del escenario" required>
-      <span class="error-input quotation-hide">Este campo es obligatorio.</span>
+      <label class="quotation--title__quo" for='quotationewscenary'><span data-tkey="scenario_name"></span>: <span>*</span></label>
+      <input id="quotationewscenary" type="text" data-tkey="scenario_name_placeholder" data-tattr="placeholder" placeholder="" required>
+      <span class="error-input quotation-hide" data-tkey="mandatory_field"></span>
     </div>
     `
     quotationewInfo.insertAdjacentHTML('beforeend', `${quotatioNewInfoTwo}`)
@@ -111,9 +113,9 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   if (resQueryUser.rol === 'advisors' && cotId === null) {
     let quotatioNewSearchClient =
     `<div class='quotationew__searchclient'>
-      <label for='quotationewclient'>Nombre del cliente: <span>*</span></label>
-      <input id="quotationewclient" type="text" placeholder="Busca por el nombre del cliente" required>
-      <span class="error-input quotation-hide">Este campo es obligatorio.</span>
+      <label for='quotationewclient'><span data-tkey="client_name"></span>: <span>*</span></label>
+      <input id="quotationewclient" type="text" data-tkey="client_name_placeholder" data-tattr="placeholder" placeholder="" required>
+      <span class="error-input quotation-hide" data-tkey="mandatory_field"></span>
       <ul id="quotationewsearchclient"></ul>
      </div>
     `
@@ -198,20 +200,21 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
     });
 
     const selectedValueSearchLi = (razon, client, currency, rol, id, specialDiscount) => {
-      const qnClient = quotationNew.querySelector('#qnadvisor')
+      const qnClient = quotationNew.querySelector('#qnclient')
       const qnCurrency = quotationNew.querySelector('#qncurrency')
 
       if(razon) {
-        qnClient.textContent = 'Contacto: ' + client
-        qnbusinessname.classList.remove('quotation-hide')
-        qnbusinessname.innerHTML = 'Razón social: ' + razon
+        qnbusinessname.parentElement.classList.remove('quotation-hide')
+        qnbusinessname.innerHTML = razon
+        qnClient.textContent = `${ getTranslation("contact") }: ${client}`
       } else {
-        qnClient.textContent = 'Cliente: ' + client
-        qnbusinessname.classList.add('quotation-hide')
+        qnbusinessname.parentElement.classList.add('quotation-hide')
+        qnClient.textContent = `${ getTranslation("client") }: ${client}`
       }
-      qnCurrency.textContent = 'Moneda: ' + currency
+
+      qnCurrency.textContent = currency
       qnCurrency.dataset.currency = currency;
-      qnrol.textContent = 'Rol: ' + rol.replace(/_/g, ' ');
+      qnrol.textContent = rol.replace(/_/g, ' ');
       const discount = specialDiscount === null ? 0 : parseInt(specialDiscount, 10)
 
       const dataClientStorage = [
@@ -227,15 +230,9 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
       expiringLocalStorage.saveDataWithExpiration("ClientFullName", JSON.stringify(dataClientStorage))
       qnaddproduct()
     }
+  }
 
-    const quotatioNewSearchClientLi = quotationNew.querySelectorAll('#quotationewsearchclient li')
-      if (quotatioNewSearchClientLi.length > 0) {
-
-        quotatioNewSearchClientLi.addEventListener('click', (e) => {
-    
-        })
-      }    
-  } 
+  await loadTranslations();
 
   const quotationDownload = quotationNew.querySelector('.quotation--download')
   if (quotationDownload) {
@@ -259,14 +256,19 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
   // Special Discount
   const quotationCalculation = new QuotationCalculation(resQueryUser);
 
-  const quotationBtnSave =  quotationNew.querySelector('#quotation--btn__save')
-  cotId && cotName ? quotationBtnSave.textContent = 'Guardar escenario' : quotationBtnSave.textContent = 'Guardar cotización'
+  const quotationBtnSave = quotationNew.querySelector('#quotation--btn__save')
+
+  if(cotId && cotName) {
+    quotationBtnSave.textContent = getTranslation("save_scenario")
+  }
+  else {
+    quotationBtnSave.textContent = getTranslation("save_quotation")
+  }
 
   const quotatioewScenary = quotationNew.querySelector('#quotationewscenary')
   const quotatioewScenaryNode = quotatioewScenary ? quotatioewScenary.value : false
   const idQuotationComments = quotationNew.querySelector('#quotationcomments')
   const quotatioNewClient = quotationNew.querySelector('#quotationewclient')
-  const quotatioNewClientNode = quotatioNewClient ? quotatioNewClient.value : false
 
   const quotationewInfoOne = quotationNew.querySelector('.quotationew__infoOne .error-input-name')
   const quotatioewScenaryError = quotationNew.querySelector('#quotationewscenary + .error-input')
@@ -332,15 +334,19 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
 
   quotationBtnSave.addEventListener('click', () => {
     quotationBtnSave.disabled = true
+
     const btnSave = () => {
       if (resQueryUser.rol !== 'advisors') {
         if (quotationewname) {
           if (quotationewname.value == '') {
             quotationewname.classList.add('error')
-            nodeNotification('Los campos marcados con * son obligatorios')
+
+            nodeNotification(getTranslation("fields_marked_mandatory"))
             setTimeout(() => {
               quotationBtnSave.disabled = false
             }, 2000);
+
+            return;
           }
         }
       } else {
@@ -352,16 +358,20 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
             } else {
               quotationewInfoOne.classList.add('quotation-hide')
             }
+
             if (quotatioNewClient.value === '') {
               quotationewSearchClient.classList.remove('quotation-hide')
               quotatioNewClient.classList.add('error');
             } else {
               quotationewSearchClient.classList.add('quotation-hide')
             }
-            nodeNotification('Los campos marcados con * son obligatorios');
+
+            nodeNotification(getTranslation("fields_marked_mandatory"));
             setTimeout(() => {
               quotationBtnSave.disabled = false
             }, 2000);
+
+            return;
           } else {
             quotationewSearchClient.classList.add('quotation-hide')
             quotationewInfoOne.classList.add('quotation-hide')
@@ -371,17 +381,17 @@ const quotationNewPage = (quotationNew, resQueryUser, resQueryProducts, resQuery
           }
         }
       }
-      
-      if (cotId && cotName) {
 
+      if (cotId && cotName) {
         if (quotatioewScenary) {
           if (quotatioewScenary.value === '') {
             quotatioewScenary.classList.add('error');
             quotatioewScenaryError.classList.remove('quotation-hide')
-            nodeNotification('Los campos marcados con * son obligatorios')
+            nodeNotification(getTranslation("fields_marked_mandatory"))
             setTimeout(() => {
               quotationBtnSave.disabled = false
             }, 2000);
+            return;
           } else {
             quotatioewScenaryError.classList.add('quotation-hide')
             expiringLocalStorage.saveDataWithExpiration("NameScenary", JSON.stringify(quotatioewScenaryNode.value))

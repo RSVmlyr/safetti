@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nueva Cotización</title>
-  <script src="./js/global.js"></script>
+  <!-- <script src="./js/global.js"></script> -->
   <!-- CSS -->
   <link rel="stylesheet" href="./css/main.css">
   <link rel="stylesheet" href="./css/normalize.css">
@@ -17,44 +17,44 @@
    <button class="floating-button" onclick="scrollToTable()">Ir a la Tabla<span class="number">0</span></button>
   <section class="quotationew--header">
     <div class="region region--left">
-      <span id="qndate" class="quotation--info__white">Creación: </span>
-      <span id="qnbusinessname" class="quotation--info__white">Razón Social: </span>
-      <span id="qnadvisor" class="quotation--info__white">Asesor: </span>
-      <span id="qnclient" class="quotation--info__white">Cliente: </span>
-      <span id="qncurrency" class="quotation--info__white">Moneda: </span>
-      <span id="qnrol" class="quotation--info__white quotation-hide">Rol: </span>
+      <span class="quotation--info__white"><span data-tkey="creation"></span>: <span id="qndate"></span></span>
+      <span class="quotation--info__white"><span data-tkey="company_name"></span>: <span id="qnbusinessname"></span></span>
+      <span class="quotation--info__white"><span data-tkey="advisor"></span>: <span id="qnadvisor"></span></span>
+      <span id="qnclient" class="quotation--info__white"></span>
+      <span class="quotation--info__white"><span data-tkey="currency"></span>: <span id="qncurrency"></span></span>
+      <span class="quotation--info__white quotation-hide"><span data-tkey="role"></span>: <span id="qnrol"></span></span>
     </div>
     <div class="region region--right">
       <a class="quotation--email">
-        <span id="qnemail" class="quotation--send--data quotation--info__white">Enviar correo</span>
+        <span id="qnemail" class="quotation--send--data quotation--info__white" data-tkey="send_email"></span>
         <img class="quotation--email__img" src="../../img/icon/icon-email-white.svg" loading="lazy" alt="Email" title="Email">
       </a>
       <a class="quotation--download">
-        <span class="quotation--info__white">Generar PDF</span>
-        <img class="quotation--download__img" src="../../img/icon/icon-download-white.svg" loading="lazy" alt="Descargar" title="Descargar">
+        <span class="quotation--info__white" data-tkey="generate_pdf"></span>
+        <img class="quotation--download__img" src="../../img/icon/icon-download-white.svg" loading="lazy" alt="Descargar" data-tkey="download" data-tattr="title" title="">
       </a>
     </div>
   </section>
   <section class="quotationew--body">
     <div class="region region__one">
       <a id="quotationew--back" class="quotationew--body__actions" href="./index.html">
-        <img src="../../img/icon/icon-arrow-circle.svg" loading="lazy" alt="Atrás" title="Atrás">
-        <span>Atrás</span>
+        <img src="../../img/icon/icon-arrow-circle.svg" loading="lazy" alt="Atrás" data-tkey="back" data-tattr="title" title="">
+        <span data-tkey="back"></span>
       </a>
       <div class="quotationew__title">
-        <h2 class="quotation--title"></h2>
+        <h2 class="quotation--title"><span class="quotation-hide" data-tkey="new_quotation"></span><span class="quotation-hide" data-tkey="new_scenario"></span></h2>
       </div>
     </div>
     <div class="region region__two">
       <div class="quotationew__info">
         <div class="quotationew__infoOne">
-          <label>Cómo quieres llamar tu proyecto: <span>*</span></label>
-          <span class="error-input-name quotation-hide">Este campo es obligatorio.</span>
-          <input id="quotationewname" type="text" placeholder="Escribe el nombre del proyecto (10k,Maratón Medellín)" required>
+          <label><span data-tkey="project_name_label"></span>: <span>*</span></label>
+          <span class="error-input-name quotation-hide" data-tkey="mandatory_field"></span>
+          <input id="quotationewname" type="text" data-tkey="project_name_placeholder" data-tattr="placeholder" placeholder="" required>
         </div>
         <div class="quotationew__infoTwo quotationcomments quotation-hide">
-          <label>Comentarios:</label>
-          <input id="quotationcomments" type="text" placeholder="Escribe algún comentario que permita indentificar mejor tu proyecto (Nombre del evento, fechas, lugar)">
+          <label><span data-tkey="comments"></span>:</label>
+          <input id="quotationcomments" type="text" data-tkey="comments_placeholder" data-tattr="placeholder" placeholder="">
         </div>
       </div>
     </div>
@@ -62,35 +62,33 @@
       <div class="region region--left">
         <div class="quotationew__filter">
           <div class="quotationew__filter--input">
-            <label for="qnsearchproduct">Busca por nombre o molde del producto:</label>
-            <input id="qnsearchproduct" type="text" placeholder="Nombre / Molde" >
-            <p class="text-help" style="margin: 0;">Si no conoces el molde, puedes buscar por deporte</p>
+            <label for="qnsearchproduct" data-tkey="search_product"></label>
+            <input id="qnsearchproduct" type="text" data-tkey="search_product_placeholder" data-tattr="placeholder" placeholder="">
+            <p class="text-help" style="margin: 0;" data-tkey="search_product_help"></p>
           </div>
           <div class="quotationew__filter--selects">
-            <label for="qncuentos">Deporte:</label>
+            <label for="qncuentos" data-tkey="sport"></label>
             <select name="" id="qncuentos">
-              <option value="">-- Seleccionar --</option>
+              <option value="" data-tkey="select_default_option"></option>
             </select>
-            <label for="qnclasificaciones">Clasificación:</label>
+            <label for="qnclasificaciones" data-tkey="classification"></label>
             <select name="" id="qnclasificaciones">
-              <option value="">-- Seleccionar --</option>
+              <option value="" data-tkey="select_default_option"></option>
             </select>
-            <label for="qntiposprenda">Prenda:</label>
+            <label for="qntiposprenda" data-tkey="garment"></label>
             <select name="" id="qntiposprenda">
-              <option value="">-- Seleccionar --</option>
+              <option value="" data-tkey="select_default_option"></option>
             </select>
-            <label for="qnfitprenda">Fit:</label>
+            <label for="qnfitprenda" data-tkey="fit"></label>
             <select name="" id="qnfitprenda">
-              <option value="">-- Seleccionar --</option>
+              <option value="" data-tkey="select_default_option"></option>
             </select>
-            <button id="viewproducts" class="quotation--btn__new">Ver todos los productos</button>
+            <button id="viewproducts" class="quotation--btn__new" data-tkey="see_all_products"></button>
           </div> 
         </div>
       </div>
       <div class="region region--right">
-        <h2 class="products--title">
-            Lista de productos para personalizar
-        </h2>
+        <h2 class="products--title" data-tkey="product_list_title"></h2>
         <div class="slider--productos">
           <div class="slider--content"></div>
         </div>
@@ -100,26 +98,26 @@
       <div class="quotationew--calculation">
         <div class="quotationew--calculation__header">
           <div class="region region--left">
-            <p class="quotationew--calculation__discount">Descuento especial:
+            <p class="quotationew--calculation__discount"><span data-tkey="special_discount"></span>
               <input class="quotation--title__quo calculation__dis" type="number" id="rangeInput" name="rangeInput" min="0" max="10" step="1" value="0"> %
             </p>
-            <span class="quotation--title__quo">IVA (19%)</span>
+            <span class="quotation--title__quo" data-tkey="tax_iva"></span>
             <input type="checkbox" class="quotation--iva" name="" id="" disabled>
           </div>
           <div class="region region--right">
-            <span>$</span><p class="quotation--btn__add">Valor total: 0</p>
-            <button id="quotation--btn__save" class="quotation--btn__new">Guardar</button>
+            <span>$</span><p class="quotation--btn__add">0</p>
+            <button id="quotation--btn__save" class="quotation--btn__new"></button>
           </div>
         </div>
         <div class="quotationew--calculation__titles">
           <table>
             <tr class="scenary--titles">
-              <td class="scenary--row">Producto</td>
-              <td class="scenary--row">Molde</td>
-              <td class="scenary--row">Valor unitario</td>
-              <td class="scenary--row">Cantidad</td>
-              <td class="scenary--row">Subtotal</td>
-              <td class="scenary--row"><span class="scenary-delete__all">Limpiar todo</span> </td>
+              <td class="scenary--row" data-tkey="product"></td>
+              <td class="scenary--row" data-tkey="mold"></td>
+              <td class="scenary--row" data-tkey="unit_value"></td>
+              <td class="scenary--row" data-tkey="quantity"></td>
+              <td class="scenary--row" data-tkey="subtotal"></td>
+              <td class="scenary--row"><span class="scenary-delete__all" data-tkey="clear_all"></span> </td>
             </tr>
           </table>
         </div>
@@ -130,6 +128,7 @@
 </main>
  
 <!-- JS -->
+<script async type="module" src="./js/lang.js"></script>
 <script src="./js/lib/currency.min.js"></script> 
 <script async type="module" src="./vendors/flickity/js/flickity.pkgd.min.js"></script>
 <script async type="module" src="./js/app.js"></script>

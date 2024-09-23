@@ -1,7 +1,7 @@
 import quotationListRow from "../quotation/quotationListRow.js";
 import QuotationSearch from "../../services/quotation/QuotationSearch.js";
 import loadingData from "../../helpers/loading.js";
-
+import { getTranslation, loadTranslations } from "../../lang.js"
 class PaginatorElement extends HTMLElement {
   constructor(clientName) {
     super();
@@ -197,14 +197,16 @@ class PaginatorElement extends HTMLElement {
         const listContainer = document.querySelector('#quotation--content--list');
         const notResult = document.createElement('div');
         notResult.classList.add('not-result')
-        notResult.textContent = 'No hay cotizaciones, puedes crear una en el botón Nueva cotización.'
+        notResult.textContent = getTranslation("no_quotations_result")
         listContainer.appendChild(notResult);
       }
     }
     quotation.reverse();
-    quotation.forEach(cot => {        
+    quotation.forEach(cot => {
       quotationListRow(cot);
     });
+
+    loadTranslations();
   }
   
   loading() {

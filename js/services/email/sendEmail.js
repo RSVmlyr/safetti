@@ -1,4 +1,5 @@
 import nodeNotification from "../../helpers/nodeNotification.js";
+import { getTranslation } from "../../lang.js";
 import Fetch from "../Fetch.js"
 
 const sendEmail = async (nodo, url, not) => {
@@ -6,7 +7,7 @@ const sendEmail = async (nodo, url, not) => {
     const response = await Fetch.get(url)
 
     if (response.status !== "error") {
-      not.textContent = 'Enviado'
+      not.textContent = getTranslation("sent")
       let checkemail = document.createElement('img');
       checkemail.classList.add('quotation--email__send');
       checkemail.src = '../../img/icon/icon-check.png';
@@ -16,7 +17,7 @@ const sendEmail = async (nodo, url, not) => {
 
       setTimeout(() => {
         let src = '../../img/icon/icon-email.svg'
-        not.textContent = 'Enviar correo'
+        not.textContent = getTranslation("send_email")
         not.classList.remove('loading')
         quotationEmailSend.remove()
         const scenary = nodo.closest('.scenary--data__scenary');
@@ -28,11 +29,11 @@ const sendEmail = async (nodo, url, not) => {
         not.nextElementSibling.style.display = "block";
 
       }, 4000);
-      nodeNotification('Correo enviado con éxito')
+      nodeNotification(getTranslation("email_sent"))
     }
   }
   catch(error) {
-    console.error('No se pudo enviar el correo', error);
+    console.error(getTranslation("sending_email_error"), error);
   }
 }
 

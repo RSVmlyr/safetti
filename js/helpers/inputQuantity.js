@@ -5,6 +5,7 @@ import ExpiringLocalStorage from "../components/localStore/ExpiringLocalStorage.
 import nodeNotification from "./nodeNotification.js";
 import formatCurrency from "./formatCurrency.js";
 import onlyInputNumbers from "./onlyInputNumbers.js";
+import { getTranslation } from "../lang.js";
 
 const inputQuantity = async (section, clienteID) => {
     const qnCurrency = document.querySelector('#qncurrency');
@@ -46,7 +47,7 @@ const inputQuantity = async (section, clienteID) => {
                         quotationBtnSave.disabled = true;
                         quotationBtnSave.classList.add("disabled");
                         event.target.setAttribute("data-valid", "false");
-                        nodeNotification(`Ingrese una cantidad para el producto ${moldeCode}`);
+                        nodeNotification(`${ getTranslation("enter_quantity_product") } ${moldeCode}`);
                         return;
                     }
 
@@ -57,7 +58,7 @@ const inputQuantity = async (section, clienteID) => {
                         if(validQuantity == -1){
                             quotationBtnSave.disabled = true;
                             quotationBtnSave.classList.add("disabled");
-                            nodeNotification(`La cantidad total debe ser mayor o igual a ${minQuantity}`);
+                            nodeNotification(`${ getTranslation("quantity_validation_error") } ${minQuantity}`);
                             return;
                         }
 

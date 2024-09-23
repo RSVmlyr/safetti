@@ -1,5 +1,6 @@
 import Fetch from "../Fetch.js"
 import nodeNotification from "../../helpers/nodeNotification.js";
+import { getTranslation } from "../../lang.js";
 
 const validationQuotation = async (Qid, status, userId, valueImage) => {
   try {
@@ -7,15 +8,15 @@ const validationQuotation = async (Qid, status, userId, valueImage) => {
     formData.append("file", valueImage);
     const response = await Fetch.put(`/api/Quotation/${Qid}/${userId}/${status}`, formData, false);
 
-    nodeNotification("Enviando validación...")
+    nodeNotification(getTranslation("sending_validation"))
 
     if(response.status !== "error") {
-      nodeNotification("Validación enviada")
+      nodeNotification(getTranslation("validation_sent"))
       setTimeout(() => {
         location.reload();
       }, 1000);
     } else {
-      nodeNotification("Hubo un error inesperado, intenta mas tarde.")
+      nodeNotification(getTranslation("unexpected_error"))
     }
   } catch (error) {
     console.error('Hubo un error al cambiar el estado de la cotización', error);

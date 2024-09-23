@@ -10,6 +10,7 @@ import getUser from "../../services/user/getUser.js"
 import cloneScenery from "../../helpers/cloneScenery.js"
 import putScenario from "../../services/quotation/putScenario.js";
 
+import { getTranslation } from '../../lang.js'
 
 class QuotationCalculation extends HTMLElement {
   constructor(resQueryUser) {
@@ -90,7 +91,7 @@ class QuotationCalculation extends HTMLElement {
         });
 
         if( acumm < parseInt(element.dataset.minQuantity) ) {
-          nodeNotification(`La cantidad total debe ser mayor o igual a ${element.dataset.minQuantity}`);
+          nodeNotification(`${ getTranslation("quantity_validation_error")} ${element.dataset.minQuantity}`);
           return
         } else {
           const url = new URL(window.location.href)
@@ -145,17 +146,20 @@ class QuotationCalculation extends HTMLElement {
     let dataSetQuotation = ''
     const expiringLocalStorage = new ExpiringLocalStorage()
     const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
+
     if(c) {
       const client = JSON.parse(c)
+
       if(client['0'].currency === undefined && client['0'].rol === undefined){
         client['0'].currency = 'COP'
         client['0'].rol = '_final_consumer'
       }
+
       if(data) {
         const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
         const products = retrievedData ? JSON.parse(retrievedData) : []
         if(products.length <= 0){
-          nodeNotification('La cotización tiene un valor de cero.')
+          nodeNotification(getTranslation("quotation_total_error"))
           return null
         }
         dataSetQuotation = {
@@ -168,7 +172,7 @@ class QuotationCalculation extends HTMLElement {
           advisorName: data.fullName,
           scenarios: [
             {
-              name: 'Escenario inicial',
+              name: getTranslation("default_scenario_name"),
               selected: true,
               discountPercent: p,
               applyTaxIVA: iva,
@@ -192,7 +196,7 @@ class QuotationCalculation extends HTMLElement {
           advisorName: data.advisorName,
           scenarios: [
             {
-              name: 'Primer Escenario',
+              name: getTranslation("default_scenario_name"),
               selected: true,
               discountPercent: p,
               applyTaxIVA: iva,
@@ -202,9 +206,11 @@ class QuotationCalculation extends HTMLElement {
         }
       }
     }
+
     const createQuotation = async () => {
       const data = await setQuotation(dataSetQuotation)
     }
+
     createQuotation(dataSetQuotation)
   }
 
@@ -220,7 +226,7 @@ class QuotationCalculation extends HTMLElement {
     }
 
     if(data.length <= 0){
-      nodeNotification('El escenario tiene un valor de cero.')
+      nodeNotification(getTranslation("scenario_total_error"))
       return null
     }
     const url = new URL(window.location.href)
@@ -409,7 +415,7 @@ class QuotationCalculation extends HTMLElement {
         const priceInRange = getPriceInRange(price, item.qt)
         if (priceInRange === undefined) {
           console.error('Error en este producto:', item)
-          nodeNotification('Error en la configuración de precios del producto')
+          nodeNotification(getTranslation("product_prices_config_error"))
           continue
         }
 
@@ -417,7 +423,7 @@ class QuotationCalculation extends HTMLElement {
         {
           item.unitPrice = priceInRange.replace(".", "").replace(",",".")
         } else {
-          nodeNotification('No existe un precio configurado para la cantidad ' + item.qt)
+          nodeNotification(getTranslation("no_price_for_quantity") + item.qt)
         }
       } catch (error) {
         console.error('Error al procesar el producto:', error)
@@ -591,7 +597,7 @@ class QuotationCalculation extends HTMLElement {
           } else{
             expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(newArray))
           }
-          const products = retrievedData ? JSON.parse(retrievedData) : []
+          //const products = retrievedData ? JSON.parse(retrievedData) : []
 
           this.removeList()
           this.createArrayProducto(newArray)
