@@ -137,6 +137,26 @@ const searchProduct = async (quotationNew, resQueryUser, resQueryProducts) => {
             });
         }
 
+        if(e.target == qnFitprenda) {
+            const tooltip = quotationNew.querySelector('.quotationew__tooltip');
+
+            if(qnFitprendaValue === "") {
+                tooltip.style.display = "none";
+            }
+
+            if(qnFitprendaValue === "slim") {
+                tooltip.style.display = "block";
+                const tooltipText = quotationNew.querySelector('.quotationew__tooltiptext');
+                tooltipText.innerHTML = `<strong>Slim FIT:</strong> ${ await getTranslation("slim_fit_description") }`;
+            }
+
+            if(qnFitprendaValue === "regular") {
+                tooltip.style.display = "block";
+                const tooltipText = quotationNew.querySelector('.quotationew__tooltiptext');
+                tooltipText.innerHTML = `<strong>Regular FIT:</strong> ${ await getTranslation("regular_fit_description") }`;
+            }
+        }
+
         const sliderProductsRows = quotationNew.querySelectorAll('.slider--productos .slider--content .slider--row');
         sliderProductsRows.forEach(row => {
             row.remove();

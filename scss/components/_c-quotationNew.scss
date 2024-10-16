@@ -218,6 +218,43 @@
                   font-size: 14px;
                 }
               }
+              &__fitgroup {
+                display: flex;
+                align-items: center;
+                position: relative;
+              }
+              &__tooltip {
+                display: none;
+                position: absolute;
+                right: -24px;
+                img {
+                  width: 16px;
+                }
+              }
+              &__tooltiptext {
+                position: absolute;
+                visibility: hidden;
+                width: 400px;
+                border-radius: 6px;
+                padding: 10px 10px;
+                background-color: lightgray;
+                z-index: 1;
+                left: 24px;
+                font-size: 14px;
+              }
+              &__tooltiptext:after {
+                content: " ";
+                position: absolute;
+                top: 10px;
+                right: 100%;
+                margin-top: -5px;
+                border-width: 5px;
+                border-style: solid;
+                border-color: transparent lightgray transparent transparent;
+              }
+              &__tooltip:hover .quotationew__tooltiptext {
+                visibility: visible;
+              }
             }
           }
           &--right {
