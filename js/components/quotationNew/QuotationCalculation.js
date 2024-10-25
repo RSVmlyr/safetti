@@ -34,38 +34,51 @@ class QuotationCalculation extends HTMLElement {
 
   COP = value => currency(value, { symbol: "", separator: ".", decimal:",", precision: 0 })
   USD = value => currency(value, { symbol: "", separator: ",", decimal:".", precision: 2 })
-  curr = value => document.querySelector("#qncurrency").dataset.currency === "COP" ? this.COP(value) : this.USD(value)
+  curr = async value => {
+    const until = async (predFn) => {
+      const poll = (done) => (predFn() ? done() : setTimeout(() => poll(done), 500));
+      return new Promise(poll);
+    };
 
-  async clone () {
+    await until(() => {
+      const dataCurrency = document.querySelector("#qncurrency").dataset.currency
+      return dataCurrency !== undefined && dataCurrency !== null && dataCurrency !== ""
+    });
+
+    return document.querySelector("#qncurrency").dataset.currency === "COP" ? this.COP(value) : this.USD(value)
+  } 
+
+  async clone() {
     const url = new URL(window.location.href)
     const searchParams = new URLSearchParams(url.search)
     const clone = searchParams.get('clone')
     const cotId = searchParams.get('cotId')
-    if ( this.resQueryUser  == undefined) {
+
+    if (this.resQueryUser == undefined) {
       const uid = searchParams.get('uid')
       const resQueryUser = await getUser(uid)
       this.resQueryUser = resQueryUser
     }
+
     const isCloned = clone === 'true'
-    if(isCloned) {      
-      const sliderProductos = document.querySelectorAll(".slider--productos .slider--row")
+
+    if(isCloned) {
+      //const sliderProductos = document.querySelectorAll(".slider--productos .slider--row")
       const clonedata = await cloneScenery(cotId)
 
       this.scenaryId = clonedata.data[0].scenarioId
-
-      console.log("this.scenaryId ", this.scenaryId );
-      
-      
       this.clonecot = true
+
       if(clonedata) {
         this.moneda = clonedata.moneda
         const expiringLocalStorage = new ExpiringLocalStorage()
         expiringLocalStorage.deleteDataWithExpiration("scenario-" + cotId)
         this.setNameInputClone(clonedata.data)
-        this.createArrayProducto(clonedata.data)
+        await this.createArrayProducto(clonedata.data)
       }
     }
   }
+
   updateUnitValue() {
     const quotatioviewQuantity = document.querySelectorAll('.quotatioview--quantity')
     quotatioviewQuantity.forEach(element => {
@@ -74,7 +87,6 @@ class QuotationCalculation extends HTMLElement {
         const dataName = element.closest(".scenary--row__table").querySelector(".name-product").dataset.name;
         const listanumbers = document.querySelectorAll(".scenary--row__data");
         let acumm = 0;
-
 
         listanumbers.forEach(function(item) {
           const molde = item.querySelector(".name-product")
@@ -113,14 +125,14 @@ class QuotationCalculation extends HTMLElement {
               product.quantity = parseInt(numberValue)
             }
           })
-          
+
           if(cotId) {
             expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(products))
           } else{
             expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(products))
-          } 
+          }
 
-          this.createArrayProducto(products, true) 
+          await this.createArrayProducto(products, true) 
         }
       })
     })
@@ -250,12 +262,9 @@ class QuotationCalculation extends HTMLElement {
       const edit = searchParams.get('edit')
       const scenaryId = searchParams.get('scenaryId')
 
-      console.log("this.scenaryId 2", this.scenaryId );
-
-
       const updateScenario = async  () => {
         const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
-        const client = JSON.parse(c)        
+        const client = JSON.parse(c)
         let currency = ''
         let rol = ''
 
@@ -315,8 +324,8 @@ class QuotationCalculation extends HTMLElement {
     if(retrievedData) {
       const productsList = retrievedData ? JSON.parse(retrievedData) : []
 
-      productsList.forEach(product => {
-        const unitPrice = this.curr(product.unitPrice)
+      productsList.forEach(async product => {
+        const unitPrice = await this.curr(product.unitPrice)
         const valueSubtotal = unitPrice.multiply(product.quantity).format()
         const row = document.createElement('div')
         row.classList.add('scenary--row__table')
@@ -387,8 +396,8 @@ class QuotationCalculation extends HTMLElement {
     const url = new URL(window.location.href)
     const searchParams = new URLSearchParams(url.search)
     const cotId = searchParams.get('cotId')
-
     const expiringLocalStorage = new ExpiringLocalStorage()
+
     for (const item of result) {
       try {
         let price
@@ -401,16 +410,24 @@ class QuotationCalculation extends HTMLElement {
           currency = document.querySelector("#qncurrency").dataset.currency
         }
         if (rol === 'advisors') {
-          const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
+          let c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
+
+          if(c === null){
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
+          }
+
           const client = JSON.parse(c)
           if(client['0'].currency === undefined && client['0'].rol === undefined){
             client['0'].currency = 'COP'
             client['0'].rol = '_final_consumer'
           }
+
           price = await this.getServicePrices(item.product, currency, client['0'].rol)
         } else {
           price = await this.getServicePrices(item.product, currency, this.resQueryUser.rol)
-        }        
+        }
+
         const priceInRange = getPriceInRange(price, item.qt)
         if (priceInRange === undefined) {
           console.error('Error en este producto:', item)
@@ -438,19 +455,18 @@ class QuotationCalculation extends HTMLElement {
     //this.showData()
     this.removeList()
     this.insertList()
-    this.sumar()
+    await this.sumar()
     this.updateUnitValue()
   }
 
-  createArrayProducto(products, is_update=false) {
+  async createArrayProducto(products, is_update=false) {
     const expiringLocalStorage = new ExpiringLocalStorage()
     const url = new URL(window.location.href)
     const searchParams = new URLSearchParams(url.search)
     const cotId = searchParams.get('cotId')
     let productForSave = []
     let unitPrice = 0
-    let retrievedData = ''   
-    let productQuantities = []
+    let retrievedData = ''
 
     if(cotId) {
       retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
@@ -465,8 +481,8 @@ class QuotationCalculation extends HTMLElement {
       products.forEach(item => {
         item.quantity = Number(item.quantity);
       });
-    
-      products.forEach(product => {        
+
+      products.forEach(product => {
         if(!is_update){
           productForSave.push({
             product: product.id,
@@ -479,7 +495,6 @@ class QuotationCalculation extends HTMLElement {
         }
       })
 
-
       let mergedProducts = {};
 
       productForSave.forEach(item => {
@@ -490,6 +505,7 @@ class QuotationCalculation extends HTMLElement {
           mergedProducts[item.selectedMoldeCode].qt += item.quantity;
         }
       });
+
       let mergedArray = Object.values(mergedProducts);
       //let totalQuantity = mergedArray.reduce((total, item) => total + item.quantity, 0);
       let productQuantities = {};
@@ -510,17 +526,16 @@ class QuotationCalculation extends HTMLElement {
         item.qt = productQuantities[item.product];
       });
 
-      
       if(cotId) {
         expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(mergedArray))
       } else{
         expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(mergedArray))
       }
-      this.procesarResult(mergedArray)
+      await this.procesarResult(mergedArray)
     }
   }
 
-  showData() {
+  async showData() {
     const expiringLocalStorage = new ExpiringLocalStorage()
     const url = new URL(window.location.href)
     const searchParams = new URLSearchParams(url.search)
@@ -541,7 +556,7 @@ class QuotationCalculation extends HTMLElement {
 
     this.removeList()
     this.insertList()
-    this.sumar()
+    await this.sumar()
     this.updateUnitValue()
   }
 
@@ -586,7 +601,7 @@ class QuotationCalculation extends HTMLElement {
           expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(newArray))
         }
 
-        this.procesarResult(newArray).then(() => {
+        this.procesarResult(newArray).then(async () => {
           const loadingDivHtml = document.querySelector('.loading-message')
           if (loadingDivHtml) {
             loadingDivHtml.remove()
@@ -599,27 +614,25 @@ class QuotationCalculation extends HTMLElement {
           //const products = retrievedData ? JSON.parse(retrievedData) : []
 
           this.removeList()
-          this.createArrayProducto(newArray)
+          await this.createArrayProducto(newArray)
           this.insertList()
-          this.sumar()
-
+          await this.sumar()
         })
       })
     })
-  
   }
   
-  sumar(){
+  async sumar(){
     const quotationSave = document.querySelector('.quotation--btn__add')
     const quo = document.querySelector('.calculation__dis')
     const btniva = document.querySelector('.quotation--iva')
-    const total = this.btnivaChecked(quo, btniva)
+    const total = await this.btnivaChecked(quo, btniva)
     quotationSave.textContent = total.format()
 
     if(quo){
       quo.onkeydown = onlyInputNumbers
 
-      quo.addEventListener('input', (event) => {
+      quo.addEventListener('input', async (event) => {
         let maxValue = 10
         const aUser = async() =>{
           const url = new URL(window.location.href)
@@ -632,15 +645,16 @@ class QuotationCalculation extends HTMLElement {
           if (event.target.value > maxValue) {
             event.target.value = maxValue
           }
-          const total = this.btnivaChecked(quo, btniva)
+          const total = await this.btnivaChecked(quo, btniva)
           quotationSave.textContent = total.format()
         }
-        aUser()
+
+        await aUser()
       })
     }
   }
 
-  btnivaChecked (quo, btniva) {
+  async btnivaChecked (quo, btniva) {
     let total = 0
     let porcentaje = 0
     if(quo) {
@@ -648,18 +662,18 @@ class QuotationCalculation extends HTMLElement {
     }
 
     if (btniva.checked) { 
-      const subtotal = this.calcularDescuentoYTotal(porcentaje)
+      const subtotal = await this.calcularDescuentoYTotal(porcentaje)
       const iva = subtotal.multiply(0.19)
       total = subtotal.add(iva)
     } else {
-      total = this.calcularDescuentoYTotal(porcentaje)
+      total = await this.calcularDescuentoYTotal(porcentaje)
     }
     return total
   }
 
-  calcularDescuentoYTotal(porcentaje) {
+  async calcularDescuentoYTotal(porcentaje) {
     const productForSave = this.retrievedData()
-    const res = this.count(productForSave)
+    const res = await this.count(productForSave)
     const count = res.count
     document.querySelector(".floating-button .number").textContent = res.countCart
     const disc = count.multiply(porcentaje / 100)
@@ -686,27 +700,31 @@ class QuotationCalculation extends HTMLElement {
     return productForSave
   }
 
-  count (productForSave){
-    let count = this.curr(0)
+  async count(productForSave){
+    let count = await this.curr(0)
     let countCart = 0
-    productForSave.forEach(e => {
-      const temp = this.curr(e.unitPrice).multiply(e.quantity)
+
+    for(const p of productForSave) {
+      const temp = (await this.curr(p.unitPrice)).multiply(p.quantity)
       count = count.add(temp)
-      countCart += e.quantity
-    })
+      countCart += p.quantity
+    }
+
     return {count, countCart} 
   }
 
-  connectedCallback() {
+  async connectedCallback() {
     const btniva = document.querySelector('.quotation--iva')
     const fieldValor = document.querySelector('.quotation--btn__add')
     const scenaryDeleteAll = document.querySelector('.scenary-delete__all')
     btniva.checked = false
     fieldValor.textContent = 0
-    this.sumar()
-    btniva.addEventListener('click', (e) => {
-      this.sumar()
+    await this.sumar()
+
+    btniva.addEventListener('click', async (e) => {
+      await this.sumar()
     })
+
     scenaryDeleteAll.addEventListener('click', () => {
       const expiringLocalStorage = new ExpiringLocalStorage()
       const url = new URL(window.location.href)
@@ -723,7 +741,7 @@ class QuotationCalculation extends HTMLElement {
     //this.insertList()
     const scenaryRowTable = document.querySelectorAll('.scenary--row__table .cancel')
     this.removeItem(scenaryRowTable)
-    this.clone()
+    await this.clone()
   }
 }
 

@@ -270,10 +270,11 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                 <td><p class="quotation--info">$ ${formatCurrency(scen.total, cot.currency)} </p></td>
                 <td>
                 <span class="quotation--btn__view">
-                  <a class="quotation--info quotation--detail" href="${esRolEditable 
-                    ? `./index-q.html?uid=${storedHash}&clone=true&scenaryId=${scen.id}&cotId=${cot.id}&cotName=${cot.name}`
-                    : `./Cotizacion.html?id=${cot.id}&uid=${storedHash}&token=${token}`}">
-                    ${esRolEditable ? await getTranslation("edit") : await getTranslation("see_detail")}
+                  <a class="quotation--info quotation--detail" href="${
+                    esRolEditable && cot.statusId === 1
+                      ? `./index-q.html?uid=${storedHash}&clone=true&scenaryId=${scen.id}&cotId=${cot.id}&cotName=${cot.name}`
+                      : `./Cotizacion.html?id=${cot.id}&uid=${storedHash}&token=${token}`}">
+                    ${esRolEditable && cot.statusId === 1 ? await getTranslation("edit") : await getTranslation("see_detail")}
                   </a>
                 </span>
                 </tr>

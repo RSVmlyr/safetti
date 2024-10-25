@@ -74,9 +74,9 @@ const quotationNewPage = async (quotationNew, resQueryUser, resQueryProducts, re
       idQnClient.innerHTML = `${ await getTranslation("client") }: ${ data.clientName }`
       idQnCurrency.innerHTML = data.currency
       idQnCurrency.dataset.currency = data.currency;
-      getUserCurren(data.client); 
+      await getUserCurren(data.client); 
     }
-    getinfouser()
+    await getinfouser()
   }
 
   const QnEmail = quotationNew.querySelector('.quotation--email')
@@ -254,7 +254,6 @@ const quotationNewPage = async (quotationNew, resQueryUser, resQueryProducts, re
   //-edwin  
   //-edwin quotationewCalculationDiscount.textContent = resQueryUser.specialDiscount ? resQueryUser.specialDiscount + '%' : '0%'
   // Special Discount
-  const quotationCalculation = new QuotationCalculation(resQueryUser);
 
   const quotationBtnSave = quotationNew.querySelector('#quotation--btn__save')
 
@@ -336,6 +335,8 @@ const quotationNewPage = async (quotationNew, resQueryUser, resQueryProducts, re
     quotationBtnSave.disabled = true
 
     const btnSave = async () => {
+      const quotationCalculation = new QuotationCalculation(resQueryUser);
+
       if (resQueryUser.rol !== 'advisors') {
         if (quotationewname) {
           if (quotationewname.value == '') {

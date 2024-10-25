@@ -143,7 +143,7 @@ const createProductCards = async (quotationNew, resQueryUser, resQueryProducts) 
           product.push({
             country: countrySelect.value,
             id: pro.id,
-            productName: pro.name,
+            productName: langParam === "es" ? pro.name : (pro.nameEN ? pro.nameEN : pro.name),
             selectedMoldeCode: pro[countrySelect.value + 'Man'],
             quantity: manInput.value,
             minQuantity: pro.minQuantity
@@ -154,7 +154,7 @@ const createProductCards = async (quotationNew, resQueryUser, resQueryProducts) 
           product.push({
             country: countrySelect.value,
             id: pro.id,
-            productName: pro.name,
+            productName: langParam === "es" ? pro.name : (pro.nameEN ? pro.nameEN : pro.name),
             selectedMoldeCode: pro[countrySelect.value + 'Woman'],
             quantity: womanInput.value,
             minQuantity: pro.minQuantity
@@ -165,7 +165,7 @@ const createProductCards = async (quotationNew, resQueryUser, resQueryProducts) 
           product.push({
             country: countrySelect.value,
             id: pro.id,
-            productName: pro.name,
+            productName: langParam === "es" ? pro.name : (pro.nameEN ? pro.nameEN : pro.name),
             selectedMoldeCode: pro[countrySelect.value + 'Unisex'],
             quantity: unisexInput.value,
             minQuantity: pro.minQuantity
@@ -176,7 +176,7 @@ const createProductCards = async (quotationNew, resQueryUser, resQueryProducts) 
           product.push({
             country: countrySelect.value,
             id: pro.id,
-            productName: pro.name,
+            productName: langParam === "es" ? pro.name : (pro.nameEN ? pro.nameEN : pro.name),
             selectedMoldeCode: pro[countrySelect.value + 'Junior'],
             quantity: juniorInput.value,
             minQuantity: pro.minQuantity
@@ -237,7 +237,7 @@ const createProductCards = async (quotationNew, resQueryUser, resQueryProducts) 
 
         nodeNotification(await getTranslation("adding_product"));
         const quotationCalculation = new QuotationCalculation(resQueryUser);
-        quotationCalculation.createArrayProducto(product);
+        await quotationCalculation.createArrayProducto(product);
       });
 
       // Card button Cancelar

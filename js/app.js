@@ -80,7 +80,7 @@ class App {
       btnBack_.setAttribute('href', `/index.html?uid=${resQueryUser.id}&token=${token}`);
       const resQueryProducts = await getProduct();
       const resQueryClients = await getClients();
-      quotationNewPage(this.quotationNew, resQueryUser, resQueryProducts, resQueryClients);
+      await quotationNewPage(this.quotationNew, resQueryUser, resQueryProducts, resQueryClients);
       const spinnerP = this.quotationNew.querySelector('.slider--productos .quotation--loading');
       if(spinnerP)
         spinnerP.remove();
@@ -92,4 +92,4 @@ class App {
 }
 
 const app = new App();
-app.initialize();
+await app.initialize();

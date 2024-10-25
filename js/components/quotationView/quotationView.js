@@ -47,8 +47,8 @@ const quotationView = async (node, quotation, infoQuotation) => {
         container.innerHTML += `
             <div class="quotatioview__section">
                 <div class="quotatioview__actions">
-                    <div class="quotatioview__edit quotation--btn__new">${ await getTranslation("edit") }</div>
-                    <button class="quotation--btn__save quotation--btn__new quotation-hide">${ await getTranslation("save") }</button>
+                    <!--<div class="quotatioview__edit quotation--btn__new">${ await getTranslation("edit") }</div>
+                    <button class="quotation--btn__save quotation--btn__new quotation-hide">${ await getTranslation("save") }</button>-->
                 </div>
                 <span>${ await getTranslation("scenario") }</span>
                 <h2 class="quotatioview__title quotatioview__title--scenary">${element.name}</h2>

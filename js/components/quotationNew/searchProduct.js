@@ -31,6 +31,8 @@ const searchProduct = async (quotationNew, resQueryUser, resQueryProducts) => {
         const qnTiposPrenda = quotationNew.querySelector('#qntiposprenda');
         const qnClasificaciones = quotationNew.querySelector('#qnclasificaciones');
         const qnFitprenda = quotationNew.querySelector('#qnfitprenda');
+        const tooltip = quotationNew.querySelector('.quotationew__tooltip');
+        tooltip.style.display = "none";
 
         if (e.target == qnCuentos) {
             qnClasificaciones.selectedIndex = 0;
@@ -138,12 +140,6 @@ const searchProduct = async (quotationNew, resQueryUser, resQueryProducts) => {
         }
 
         if(e.target == qnFitprenda) {
-            const tooltip = quotationNew.querySelector('.quotationew__tooltip');
-
-            if(qnFitprendaValue === "") {
-                tooltip.style.display = "none";
-            }
-
             if(qnFitprendaValue === "slim") {
                 tooltip.style.display = "block";
                 const tooltipText = quotationNew.querySelector('.quotationew__tooltiptext');

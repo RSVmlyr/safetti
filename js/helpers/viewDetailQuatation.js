@@ -11,7 +11,6 @@ const viewDetailQuatation = (quotation) => {
   const curr = value => quotation.currency === "COP" ? COP(value) : USD(value);
 
   const localStRol = localStorage.getItem('rol')
-
   const quotatioviewContainerScenary = document.querySelectorAll('.quotatioview__section')
   const nodeListScenary = Array.from(quotatioviewContainerScenary)
 
@@ -19,8 +18,8 @@ const viewDetailQuatation = (quotation) => {
 
       const quotatioviewEdit = section.querySelector('.quotatioview__edit')
 
-      localStRol === 'advisors' ? quotatioviewEdit : quotatioviewEdit.remove()
-      quotation.status.id === 1 ? quotatioviewEdit : quotatioviewEdit.remove()
+      if(localStRol !== 'advisors' || quotation.status.id !== 1)
+        quotatioviewEdit.remove()
 
       const quotatioviewTitleScenary = section.querySelector('.quotatioview__title--scenary')
       if (quotation.scenarios[i].selected === true) {
