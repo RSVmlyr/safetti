@@ -272,8 +272,8 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                 <span class="quotation--btn__view">
                   <a class="quotation--info quotation--detail" href="${
                     esRolEditable && cot.statusId === 1
-                      ? `./index-q.html?uid=${storedHash}&clone=true&scenaryId=${scen.id}&cotId=${cot.id}&cotName=${cot.name}`
-                      : `./Cotizacion.html?id=${cot.id}&uid=${storedHash}&token=${token}`}">
+                      ? `./index-q.html?uid=${storedHash}&clone=true&scenaryId=${scen.id}&cotId=${cot.id}&cotName=${cot.name}&token=${token}`
+                      : `./cotizacion.html?id=${cot.id}&uid=${storedHash}&token=${token}`}">
                     ${esRolEditable && cot.statusId === 1 ? await getTranslation("edit") : await getTranslation("see_detail")}
                   </a>
                 </span>

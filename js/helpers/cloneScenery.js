@@ -1,12 +1,10 @@
 import getQuotation from "../services/quotation/getIdQuotation.js";
-import ExpiringLocalStorage from '../components/localStore/ExpiringLocalStorage.js'
 
 const cloneScenery = async (cotId) => {
     try {
         const quotation = await getQuotation(cotId);
-        const filterproducts = quotation.scenarios.filter(item => item.selected === true);
-        const products = filterproducts['0'].products
-        
+        const selectedScenario = quotation.scenarios.filter(item => item.selected === true);
+        const products = selectedScenario['0'].products
         const moneda = quotation.currency;
         const filterData = [];
 
@@ -20,8 +18,11 @@ const cloneScenery = async (cotId) => {
         }
 
         return {
+            scenarioId: selectedScenario['0'].id,
             data: filterData,
-            moneda: moneda
+            moneda: moneda,
+            discountPercent: selectedScenario["0"].discountPercent,
+            taxIVA: selectedScenario["0"].taxIVAApplied > 0
         };
     } catch (error) {
         console.error("Error al clonar la cotización:", error);

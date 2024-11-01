@@ -56,27 +56,22 @@ const quotationNewPage = async (quotationNew, resQueryUser, resQueryProducts, re
   localStorage()
 
   if(cotId && resQueryUser.rol === 'advisors'){
-    const getUserCurren = async (id) => {
-      const user = await getUser(id)
-      const dataClientStorage = [
-        {
-          id: user.id,
-          client: user.fullName,
-          currency: user.currency,
-          rol: user.rol,
-        }
-      ]
-      expiringLocalStorage.saveDataWithExpiration("ClientFullName", JSON.stringify(dataClientStorage))
-    }
+    const data = await GetIdQuotation(cotId)
+    idQnClient.innerHTML = `${ await getTranslation("client") }: ${ data.clientName }`
+    idQnCurrency.innerHTML = data.currency
+    idQnCurrency.dataset.currency = data.currency;
 
-    const getinfouser = async () => {
-      const data = await GetIdQuotation(cotId)
-      idQnClient.innerHTML = `${ await getTranslation("client") }: ${ data.clientName }`
-      idQnCurrency.innerHTML = data.currency
-      idQnCurrency.dataset.currency = data.currency;
-      await getUserCurren(data.client); 
-    }
-    await getinfouser()
+    const user = await getUser(data.client)
+    qnrol.innerHTML = user.rol.replace(/_/g, ' ');
+    const dataClientStorage = [
+      {
+        id: user.id,
+        client: user.fullName,
+        currency: user.currency,
+        rol: user.rol,
+      }
+    ]
+    expiringLocalStorage.saveDataWithExpiration("ClientFullName", JSON.stringify(dataClientStorage))
   }
 
   const QnEmail = quotationNew.querySelector('.quotation--email')

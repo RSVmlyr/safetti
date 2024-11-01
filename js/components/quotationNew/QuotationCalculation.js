@@ -63,13 +63,20 @@ class QuotationCalculation extends HTMLElement {
     const isCloned = clone === 'true'
 
     if(isCloned) {
-      //const sliderProductos = document.querySelectorAll(".slider--productos .slider--row")
       const clonedata = await cloneScenery(cotId)
-
-      this.scenaryId = clonedata.data[0].scenarioId
+      this.scenaryId = clonedata.scenarioId
       this.clonecot = true
 
       if(clonedata) {
+        const specialDiscountElement = document.querySelector('.calculation__dis');
+
+        if(specialDiscountElement)
+          specialDiscountElement.value = clonedata.discountPercent;
+
+        const btniva = document.querySelector('.quotation--iva');
+        if(btniva)
+          btniva.checked = clonedata.taxIVA;
+
         this.moneda = clonedata.moneda
         const expiringLocalStorage = new ExpiringLocalStorage()
         expiringLocalStorage.deleteDataWithExpiration("scenario-" + cotId)
@@ -81,70 +88,55 @@ class QuotationCalculation extends HTMLElement {
 
   updateUnitValue() {
     const quotatioviewQuantity = document.querySelectorAll('.quotatioview--quantity')
+
     quotatioviewQuantity.forEach(element => {
       element.addEventListener("change", async () => {
-        let numberValue = element.value
+        let numberValue = parseInt(element.value);
         const dataName = element.closest(".scenary--row__table").querySelector(".name-product").dataset.name;
         const listanumbers = document.querySelectorAll(".scenary--row__data");
         let acumm = 0;
 
         listanumbers.forEach(function(item) {
           const molde = item.querySelector(".name-product")
-          if (molde) {
-            if (dataName === molde.dataset.name) {
-              const numbeQuantity = parseInt(item.querySelector(".quotatioview--quantity").value);
-              acumm += numbeQuantity;
-            } else {
-              //acumm = 0
-              acumm = parseInt(item.querySelector(".quotatioview--quantity").value)
-            }
+          if (molde && dataName === molde.dataset.name) {
+            acumm += parseInt(item.querySelector(".quotatioview--quantity").value);
           }
         });
 
-        if( acumm < parseInt(element.dataset.minQuantity) ) {
+        const minQuantity = parseInt(element.dataset.minQuantity);
+
+        if( acumm < minQuantity ) {
+          element.value = numberValue + minQuantity - acumm;
+          numberValue = parseInt(element.value);
           nodeNotification(`${ await getTranslation("quantity_validation_error")} ${element.dataset.minQuantity}`);
-          return
-        } else {
-          const url = new URL(window.location.href)
-          const searchParams = new URLSearchParams(url.search)
-          const cotId = searchParams.get('cotId')
-          const expiringLocalStorage = new ExpiringLocalStorage()
-          const parentScenaryRow = element.closest('.scenary--row__table')
-          const selectedMoldeElement = parentScenaryRow.querySelector('.selected-molde').textContent
-
-          let retrievedData = ''
-          if(cotId) {
-            retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
-          } else {
-            retrievedData = expiringLocalStorage.getDataWithExpiration("products")
-          }
-          const products = retrievedData ? JSON.parse(retrievedData) : []
-
-          products.forEach(product => {
-            if (product.selectedMoldeCode === selectedMoldeElement) {
-              product.quantity = parseInt(numberValue)
-            }
-          })
-
-          if(cotId) {
-            expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(products))
-          } else{
-            expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(products))
-          }
-
-          await this.createArrayProducto(products, true) 
+          //return
         }
+
+        const parentScenaryRow = element.closest('.scenary--row__table')
+        const selectedMoldeElement = parentScenaryRow.querySelector('.selected-molde').textContent
+        const products = this.retrievedData()
+
+        products.forEach(product => {
+          if (product.selectedMoldeCode === selectedMoldeElement) {
+            product.quantity = numberValue;
+          }
+        })
+
+        this.saveData(products);
+        await this.createArrayProducto(products, true)
       })
     })
   }
+
   setNameInputClone(data) {
     const today = new Date()
     const formattedDate = today.toISOString().split('T')[0]
     const newValue = "Cambios " + formattedDate
+
     setTimeout(() => {
-      const input = document.querySelector("#quotationewscenary")      
+      const input = document.querySelector("#quotationewscenary")
       input.value = newValue
-    }, 4000)
+    }, 1000)
   }
 
   async SendNewQuotation(data, iva, name, comments ) {
@@ -169,10 +161,12 @@ class QuotationCalculation extends HTMLElement {
       if(data) {
         const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
         const products = retrievedData ? JSON.parse(retrievedData) : []
+
         if(products.length <= 0){
           nodeNotification(await getTranslation("quotation_total_error"))
           return null
         }
+
         dataSetQuotation = {
           currency: client['0'].currency,
           name: name,
@@ -218,11 +212,7 @@ class QuotationCalculation extends HTMLElement {
       }
     }
 
-    const createQuotation = async () => {
-      const data = await setQuotation(dataSetQuotation)
-    }
-
-    createQuotation(dataSetQuotation)
+    await setQuotation(dataSetQuotation);
   }
 
   async SendNewScenary(data, iva, cotId, nameScenary) {
@@ -303,46 +293,34 @@ class QuotationCalculation extends HTMLElement {
     }
   }
 
-  insertList () {
-    const url = new URL(window.location.href)
-    const searchParams = new URLSearchParams(url.search)
-    const cotId = searchParams.get('cotId')
-    const expiringLocalStorage = new ExpiringLocalStorage()
-    let retrievedData = ''
+  async insertList () {
     const loadingDivHtml = document.querySelector('.loading-message')
 
     if (loadingDivHtml) {
       loadingDivHtml.remove()
     }
 
-    if(cotId) {
-      retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
+    const productsList = this.retrievedData()
 
-    } else {
-      retrievedData = expiringLocalStorage.getDataWithExpiration("products")
+    for(const product of productsList){
+      const unitPrice = await this.curr(product.unitPrice)
+      const valueSubtotal = unitPrice.multiply(product.quantity).format()
+      const row = document.createElement('div')
+      row.classList.add('scenary--row__table')
+      row.classList.add('scenary--row__data')
+      row.innerHTML = `
+        <div class="scenary--row name-product" data-name="${product.product}">${product.productName}</div>
+        <div class="scenary--row selected-molde">${product.selectedMoldeCode}</div>
+        <div class="scenary--row">$ ${unitPrice.format()}</div>
+        <div class="scenary--row">
+          <input type="number" value="${product.quantity}" data-min-quantity="${product.minQuantity}" class="quotatioview--quantity"/>
+        </div>
+        <div class="scenary--row subtotal">$ ${valueSubtotal}</div>
+        <div class="scenary--row cancel" data-product='${product.selectedMoldeCode}'></div>
+      `
+      document.querySelector('.quotationew--calculation__body').appendChild(row)
     }
-    if(retrievedData) {
-      const productsList = retrievedData ? JSON.parse(retrievedData) : []
 
-      productsList.forEach(async product => {
-        const unitPrice = await this.curr(product.unitPrice)
-        const valueSubtotal = unitPrice.multiply(product.quantity).format()
-        const row = document.createElement('div')
-        row.classList.add('scenary--row__table')
-        row.classList.add('scenary--row__data')
-        row.innerHTML = `
-          <div class="scenary--row name-product" data-name="${product.product}">${product.productName}</div>
-          <div class="scenary--row selected-molde">${product.selectedMoldeCode}</div>
-          <div class="scenary--row">$ ${unitPrice.format()}</div>
-          <div class="scenary--row">
-            <input type="number" value="${product.quantity}" data-min-quantity="${product.minQuantity}" class="quotatioview--quantity"/>
-          </div>
-          <div class="scenary--row subtotal">$ ${valueSubtotal}</div>
-          <div class="scenary--row cancel" data-product='${product.selectedMoldeCode}'></div>
-        `
-        document.querySelector('.quotationew--calculation__body').appendChild(row)
-      })
-    }
     const scenaryRowTable = document.querySelectorAll('.scenary--row__table .cancel')
     this.removeItem(scenaryRowTable)
   }
@@ -390,25 +368,24 @@ class QuotationCalculation extends HTMLElement {
     }));
 };
 
-  procesarResult = async(result) =>  {
+  procesarResult = async(result) => {
     this.removeList()
     this.loading()
-    const url = new URL(window.location.href)
-    const searchParams = new URLSearchParams(url.search)
-    const cotId = searchParams.get('cotId')
+
     const expiringLocalStorage = new ExpiringLocalStorage()
 
     for (const item of result) {
       try {
         let price
         const rol =  localStorage.getItem('rol')
-      
+
         let currency = ''
         if(this.moneda) {
           currency = this.moneda
         } else {
           currency = document.querySelector("#qncurrency").dataset.currency
         }
+
         if (rol === 'advisors') {
           let c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
 
@@ -435,8 +412,7 @@ class QuotationCalculation extends HTMLElement {
           continue
         }
 
-        if(priceInRange)
-        {
+        if(priceInRange) {
           item.unitPrice = priceInRange.replace(".", "").replace(",",".")
         } else {
           nodeNotification(await getTranslation("no_price_for_quantity") + item.qt)
@@ -446,36 +422,16 @@ class QuotationCalculation extends HTMLElement {
       }
     }
 
-    if(cotId) {
-      expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(result))
-    }
-    else{
-      expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(result))
-    }
-    //this.showData()
+    this.saveData(result);
     this.removeList()
-    this.insertList()
+    await this.insertList()
     await this.sumar()
     this.updateUnitValue()
   }
 
   async createArrayProducto(products, is_update=false) {
-    const expiringLocalStorage = new ExpiringLocalStorage()
-    const url = new URL(window.location.href)
-    const searchParams = new URLSearchParams(url.search)
-    const cotId = searchParams.get('cotId')
-    let productForSave = []
+    const productForSave = this.retrievedData()
     let unitPrice = 0
-    let retrievedData = ''
-
-    if(cotId) {
-      retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
-    } else{
-      retrievedData = expiringLocalStorage.getDataWithExpiration("products")
-    }
-    if (retrievedData) {
-      productForSave = JSON.parse(retrievedData)
-    }
 
     if(products) {
       products.forEach(item => {
@@ -507,18 +463,14 @@ class QuotationCalculation extends HTMLElement {
       });
 
       let mergedArray = Object.values(mergedProducts);
-      //let totalQuantity = mergedArray.reduce((total, item) => total + item.quantity, 0);
       let productQuantities = {};
 
       // Primera pasada: acumular las cantidades por producto
       mergedArray.forEach(item => {
-          const productNumber = item.product;
-          const quantity = item.quantity;
-
-          if (productQuantities[productNumber]) {
-              productQuantities[productNumber] += quantity;
+          if (productQuantities[item.product]) {
+              productQuantities[item.product] += item.quantity;
           } else {
-              productQuantities[productNumber] = quantity;
+              productQuantities[item.product] = item.quantity;
           }
       });
 
@@ -526,36 +478,13 @@ class QuotationCalculation extends HTMLElement {
         item.qt = productQuantities[item.product];
       });
 
-      if(cotId) {
-        expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(mergedArray))
-      } else{
-        expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(mergedArray))
-      }
       await this.procesarResult(mergedArray)
     }
   }
 
   async showData() {
-    const expiringLocalStorage = new ExpiringLocalStorage()
-    const url = new URL(window.location.href)
-    const searchParams = new URLSearchParams(url.search)
-    const cotId = searchParams.get('cotId')
-    let retrievedData = ''
-    let productForSave = {}
-
-    if(cotId) {
-      retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
-    }
-    else{
-      retrievedData = expiringLocalStorage.getDataWithExpiration("products")
-    }
-
-    if (retrievedData) {
-      productForSave = JSON.parse(retrievedData)
-    }
-
     this.removeList()
-    this.insertList()
+    await this.insertList()
     await this.sumar()
     this.updateUnitValue()
   }
@@ -570,54 +499,35 @@ class QuotationCalculation extends HTMLElement {
 
   removeItem(scenaryRowTable) {
     scenaryRowTable.forEach(rowT => {
-      rowT.addEventListener('click', () => {
+      rowT.addEventListener('click', async () => {
         const getDataProduct = rowT.getAttribute('data-product')
-        const expiringLocalStorage = new ExpiringLocalStorage()
-        const url = new URL(window.location.href)
-        const searchParams = new URLSearchParams(url.search)
-        const cotId = searchParams.get('cotId')
-
         const retrievedDataParse = this.retrievedData()
         const newArray = retrievedDataParse.filter(item => item.selectedMoldeCode !== getDataProduct)
         let productQuantities = {}
 
         newArray.forEach(item => {
-          const productNumber = item.product
-          const quantity = item.quantity
-          if (productQuantities[productNumber]) {
-            productQuantities[productNumber] += quantity
+          if (productQuantities[item.product]) {
+            productQuantities[item.product] += item.quantity
           } else {
-            productQuantities[productNumber] = quantity
+            productQuantities[item.product] = item.quantity
           }
         })
 
         newArray.forEach(item => {
           item.qt = productQuantities[item.product]
+
+          if(item.qt < item.minQuantity) {
+            item.quantity = item.minQuantity;
+            item.qt = item.minQuantity;
+          }
         })
 
-        if(cotId) {
-          expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(newArray))
-        } else{
-          expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(newArray))
+        await this.procesarResult(newArray)
+
+        const loadingDivHtml = document.querySelector('.loading-message')
+        if (loadingDivHtml) {
+          loadingDivHtml.remove()
         }
-
-        this.procesarResult(newArray).then(async () => {
-          const loadingDivHtml = document.querySelector('.loading-message')
-          if (loadingDivHtml) {
-            loadingDivHtml.remove()
-          }
-          if(cotId) {
-            expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(newArray))
-          } else{
-            expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(newArray))
-          }
-          //const products = retrievedData ? JSON.parse(retrievedData) : []
-
-          this.removeList()
-          await this.createArrayProducto(newArray)
-          this.insertList()
-          await this.sumar()
-        })
       })
     })
   }
@@ -681,22 +591,38 @@ class QuotationCalculation extends HTMLElement {
     return total
   }
 
+  saveData(products) {
+    const url = new URL(window.location.href);
+    const searchParams = new URLSearchParams(url.search);
+    const cotId = searchParams.get('cotId');
+    const expiringLocalStorage = new ExpiringLocalStorage();
+
+    if(cotId) {
+      expiringLocalStorage.saveDataWithExpiration("scenario-" + cotId,  JSON.stringify(products));
+    } else{
+      expiringLocalStorage.saveDataWithExpiration("products",  JSON.stringify(products));
+    }
+  }
+
   retrievedData(){
     const url = new URL(window.location.href)
     const searchParams = new URLSearchParams(url.search)
     const cotId = searchParams.get('cotId')
     const expiringLocalStorage = new ExpiringLocalStorage()
     let retrievedData = ''
+
     if(cotId) {
       retrievedData = expiringLocalStorage.getDataWithExpiration("scenario-" + cotId)
     } else{
       retrievedData = expiringLocalStorage.getDataWithExpiration("products")
     }
+
     let productForSave = []
+
     if (retrievedData) {
-      const productsLocalStores = retrievedData ? JSON.parse(retrievedData) : []
-      productForSave = productsLocalStores
+      productForSave = retrievedData ? JSON.parse(retrievedData) : []
     }
+
     return productForSave
   }
 

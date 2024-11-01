@@ -26,6 +26,7 @@ async function request(url, params, method = 'GET', stringifyParams = true, getB
             options.body = JSON.stringify(params);
         }
         else {
+            delete options.headers['Content-Type'];
             options.body = params;
         }
     }
