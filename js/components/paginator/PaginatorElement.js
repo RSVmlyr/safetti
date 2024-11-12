@@ -32,23 +32,22 @@ class PaginatorElement extends HTMLElement {
   }
 
   async renderPaginator() {
-
-    const lastClickPager = localStorage.getItem('lastClickPager')
-    // console.log('Click', lastClickPager);
+    const lastClickPager = localStorage.getItem('lastClickPager');
     this.pageNumber = lastClickPager != null ? lastClickPager : 1;
     const pageNumberSet = this.pageNumber;
-
-    const uid = localStorage.getItem('current')
+    const uid = localStorage.getItem('current');
     const data = await QuotationSearch(uid, pageNumberSet, this.pageSize, this.advisorId, this.clientName);
     const pagerItem = document.querySelectorAll('.pager .item-pager');
+
     pagerItem.forEach(item =>{
       item.classList.add('disabled');
       item.setAttribute('disabled', true);
-    })
+    });
+
     this.totalPages = data.totalPages;
-    this.results = data.results 
+    this.results = data.results;
     await this.pageNumberCallback(this.results);
-    this.paginatorNumber(this.totalPages, this.pageNumber)
+    this.paginatorNumber(this.totalPages, this.pageNumber);
   }
 
   paginatorNumber(totalPages, pageNumber) {
@@ -125,25 +124,27 @@ class PaginatorElement extends HTMLElement {
     
     document.querySelector('c-paginator').appendChild(paginator);
   }
-  
-  
+
   async handlePageButtonClick(e) {
     if (e && e.target.tagName === 'BUTTON') { 
       const pagerItem = document.querySelectorAll('.pager .item-pager');
       pagerItem.forEach(item =>{
         item.classList.contains('active') ? item.disabled = true : false;
-      })
+      });
       this.loading();
+
       try {
         const selectAdvisorId = document.querySelector('#advisors');
+
         if(selectAdvisorId){
           this.advisorId = selectAdvisorId.value;
         }
-        const uid = localStorage.getItem('current')
+
+        const uid = localStorage.getItem('current');
         const data = await QuotationSearch(uid, e.target.value, this.pageSize, this.advisorId, this.clientName);
         localStorage.setItem('lastClickPager', e.target.value);
         localStorage.setItem('lastClickedIndex', 0);
-        this.paginatorNumber(data.totalPages, e.target.value)
+        this.paginatorNumber(data.totalPages, e.target.value);
         await this.pageNumberCallback(data.results);
       } catch (error) {
         console.error('QuotationSearch Error:', error);
@@ -153,27 +154,30 @@ class PaginatorElement extends HTMLElement {
 
   async handleAdvisorChange(e) {
     const paginatorOld = document.querySelector('.pager');
+
     if (paginatorOld) {
       paginatorOld.remove();
     }
+
     try {
       const inputSearchClient = document.querySelector('.quotation--left .quotation--container__action #clients');
-      this.clientName = inputSearchClient.value
-      this.pageNumber = 1
-      this.advisorId = e.target.value
+      this.clientName = inputSearchClient.value;
+      this.pageNumber = 1;
+      this.advisorId = e.target.value;
       this.loading();
-      this.renderPaginator()
+      this.renderPaginator();
     } catch (error) {
       console.error('QuotationSearch Error:', error);
     }
   }
-  
+
   selectAdvisor() {
     const selectAdvisorId = document.querySelector('#advisors');
     if(selectAdvisorId){
       selectAdvisorId.addEventListener('change', this.handleAdvisorChange.bind(this));
     }
   }
+
   clickPager() {
     this.addEventListener('click', this.handlePageButtonClick.bind(this));
   }
@@ -222,21 +226,20 @@ class PaginatorElement extends HTMLElement {
   searchClients() {
     const inputSearchClient = document.querySelector('.quotation--left .quotation--container__action #clients');
     const formSearch = document.querySelector('.quotation--left .quotation--container__action #search-clients');
+
     formSearch.addEventListener("submit", (e) => {
       e.preventDefault();
       this.clientName = inputSearchClient.value;
-      this.pageNumber = 1;
+      localStorage.setItem('lastClickPager', 1);
       this.loading();
-      this.renderPaginator()
-    })
-
+      this.renderPaginator();
+    });
   }
 
   validateSearch(e) {
-    const value = e.target.value
-    this.clientName = value;
+    this.clientName = e.target.value;
     this.loading();
-    this.renderPaginator()
+    this.renderPaginator();
   }
 }
 
