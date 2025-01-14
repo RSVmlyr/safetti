@@ -6,17 +6,23 @@ class PaginatorElement extends HTMLElement {
   constructor(clientName) {
     super();
     this.totalPages = 0;
-    this.totalPages = 0
+    this.totalPages = 0;
     this.pageNumber = 1;
     this.Quotation = 0;
-    this.results = '0'
-    this.advisorId = '0'
-    this.clientName = clientName === undefined ? ' ': clientName
-    this.pageSize = '5'
+    this.results = '0';
+    this.advisorId = '0';
+    this.quoteStatusId = '0';
+    this.clientName = clientName === undefined ? ' ': clientName;
+    this.pageSize = '5';
 
     const selectAdvisorId = document.querySelector('#advisors');
     if(selectAdvisorId){
       this.advisorId = selectAdvisorId.value;
+    }
+
+    const selectQuoteStatusId = document.querySelector('#quote-status');
+    if(selectQuoteStatusId){
+      this.quoteStatusId = selectQuoteStatusId.value;
     }
   }
 
@@ -29,14 +35,17 @@ class PaginatorElement extends HTMLElement {
     //this.renderPaginator();
     this.searchClients();
     this.selectAdvisor();
+    this.selectQuoteStatus();
   }
 
   async renderPaginator() {
+    const inputSearchClient = document.querySelector('.quotation--left .quotation--container__action #clients');
+    this.clientName = inputSearchClient.value;
     const lastClickPager = localStorage.getItem('lastClickPager');
     this.pageNumber = lastClickPager != null ? lastClickPager : 1;
     const pageNumberSet = this.pageNumber;
     const uid = localStorage.getItem('current');
-    const data = await QuotationSearch(uid, pageNumberSet, this.pageSize, this.advisorId, this.clientName);
+    const data = await QuotationSearch(uid, pageNumberSet, this.pageSize, this.advisorId, this.quoteStatusId, this.clientName);
     const pagerItem = document.querySelectorAll('.pager .item-pager');
 
     pagerItem.forEach(item =>{
@@ -141,7 +150,7 @@ class PaginatorElement extends HTMLElement {
         }
 
         const uid = localStorage.getItem('current');
-        const data = await QuotationSearch(uid, e.target.value, this.pageSize, this.advisorId, this.clientName);
+        const data = await QuotationSearch(uid, e.target.value, this.pageSize, this.advisorId, this.quoteStatusId, this.clientName);
         localStorage.setItem('lastClickPager', e.target.value);
         localStorage.setItem('lastClickedIndex', 0);
         this.paginatorNumber(data.totalPages, e.target.value);
@@ -160,9 +169,7 @@ class PaginatorElement extends HTMLElement {
     }
 
     try {
-      const inputSearchClient = document.querySelector('.quotation--left .quotation--container__action #clients');
-      this.clientName = inputSearchClient.value;
-      this.pageNumber = 1;
+      localStorage.setItem('lastClickPager', 1);
       this.advisorId = e.target.value;
       this.loading();
       this.renderPaginator();
@@ -175,6 +182,30 @@ class PaginatorElement extends HTMLElement {
     const selectAdvisorId = document.querySelector('#advisors');
     if(selectAdvisorId){
       selectAdvisorId.addEventListener('change', this.handleAdvisorChange.bind(this));
+    }
+  }
+
+  async handleQuoteStatusChange(e) {
+    const paginatorOld = document.querySelector('.pager');
+
+    if (paginatorOld) {
+      paginatorOld.remove();
+    }
+
+    try {
+      localStorage.setItem('lastClickPager', 1);
+      this.quoteStatusId = e.target.value;
+      this.loading();
+      this.renderPaginator();
+    } catch (error) {
+      console.error('QuotationSearch Error:', error);
+    }
+  }
+
+  selectQuoteStatus() {
+    const selectQuoteStatusId = document.querySelector('#quote-status');
+    if(selectQuoteStatusId){
+      selectQuoteStatusId.addEventListener('change', this.handleQuoteStatusChange.bind(this));
     }
   }
 
