@@ -133,7 +133,8 @@ select {
   -webkit-appearance: none; /* Para navegadores basados en WebKit (Chrome, Safari, etc.) */
   -moz-appearance: none; /* Para navegadores basados en Gecko (Firefox) */
   appearance: none; /* Estándar */
-  &#advisors {
+  &#advisors,
+  &#quote-status {
     font-size: 14px;
   }
 }
