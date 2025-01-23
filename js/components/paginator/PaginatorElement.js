@@ -193,6 +193,10 @@ class PaginatorElement extends HTMLElement {
     }
 
     try {
+      const selectAdvisorId = document.querySelector('#advisors');
+      if(selectAdvisorId){
+        this.advisorId = selectAdvisorId.value;
+      }
       localStorage.setItem('lastClickPager', 1);
       this.quoteStatusId = e.target.value;
       this.loading();
