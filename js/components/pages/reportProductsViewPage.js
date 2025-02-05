@@ -1,7 +1,7 @@
 import getReportProducts from "../../services/reports/getReportProducts.js";
-import nodeNotification from "../../helpers/nodeNotification.js"
+import nodeNotification from "../../helpers/nodeNotification.js";
 import loadingData from "../../helpers/loading.js";
-import Fetch from "../Fetch.js"
+import Fetch from "../../services/Fetch.js";
 
 const loading = () =>  {
     const quotationContentListContainer = document.querySelector('.card-body.report-container');
