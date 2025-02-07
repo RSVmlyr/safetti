@@ -177,7 +177,7 @@ class QuotationCalculation extends HTMLElement {
           advisorName: data.fullName,
           scenarios: [
             {
-              name: await getTranslation("default_scenario_name"),
+              name: comment ? comment : await getTranslation("default_scenario_name"),
               selected: true,
               discountPercent: p,
               applyTaxIVA: iva,
@@ -201,7 +201,7 @@ class QuotationCalculation extends HTMLElement {
           advisorName: data.advisorName,
           scenarios: [
             {
-              name: await getTranslation("default_scenario_name"),
+              name: comment ? comment : await getTranslation("default_scenario_name"),
               selected: true,
               discountPercent: p,
               applyTaxIVA: iva,
