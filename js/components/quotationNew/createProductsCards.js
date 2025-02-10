@@ -33,15 +33,11 @@ const createProductCards = async (quotationNew, resQueryUser, resQueryProducts) 
       description = description ?? "";
       const spacingPosition = description.indexOf(" ", 40);
       description = spacingPosition === -1 ? description : description.substring(0, spacingPosition) + "...";
-
-      // For Partner
-      let pCuantity = pro.minQuantity
-      pCuantity = 5
-
       let mainImage = pro.mainImage ? pro.mainImage : '../img/icon/image-product.jpg';
       const originUrlPath = config.API_DEV_IMAGE + '/sites/default/files/';
       let modifiedStringImage = mainImage.replace('public://', originUrlPath);
       modifiedStringImage = modifiedStringImage.replace(/ /g, '%20');
+
       let sliderRow =
       `<div class="slider--row">
         <div class="card">
@@ -100,9 +96,10 @@ const createProductCards = async (quotationNew, resQueryUser, resQueryProducts) 
               </div>
             </div>
             <div class="card--amount__actions">
-             ${resQueryUser.rol === 'partner' ?
-              `<p class="small"><span data-tkey="minimun_quantity_label"></span> ${pCuantity} ${pCuantity > 1 ? '<span data-tkey="units"></span>': '<span data-tkey="unit"></span>'}.</p>` :
-              `<p class="small"><span data-tkey="minimun_quantity_label"></span> ${pro.minQuantity} ${pro.minQuantity > 1 ? '<span data-tkey="units"></span>': '<span data-tkey="unit"></span>'}.</p>`}
+              <p class="small"><span data-tkey="minimun_quantity_label"></span> ${pro.minQuantity}
+              ${
+                pro.minQuantity > 1 ? '<span data-tkey="units"></span>': '<span data-tkey="unit"></span>'
+              }.</p>
               <button class="qncancelproduct" data-tkey="cancel"></button>
               <button class="qnaceptproduct quotation-hide" data-tkey="add"></button>
             </div>
@@ -223,16 +220,9 @@ const createProductCards = async (quotationNew, resQueryUser, resQueryProducts) 
           });
         }
 
-        if (resQueryUser.rol === 'partner') {
-          if (totalQuantity < pCuantity) {
-            nodeNotification(`${ await getTranslation("quantity_validation_error")} ${pCuantity}`);
-            return;
-          }
-        } else {
-          if (totalQuantity < pro.minQuantity) {
-            nodeNotification(`${ await getTranslation("quantity_validation_error")} ${pro.minQuantity}`);
-            return;
-          }
+        if (totalQuantity < pro.minQuantity) {
+          nodeNotification(`${ await getTranslation("quantity_validation_error")} ${pro.minQuantity}`);
+          return;
         }
 
         nodeNotification(await getTranslation("adding_product"));
