@@ -143,7 +143,8 @@ const createProductCards = async (quotationNew, resQueryUser, resQueryProducts) 
             productName: langParam === "es" ? pro.name : (pro.nameEN ? pro.nameEN : pro.name),
             selectedMoldeCode: pro[countrySelect.value + 'Man'],
             quantity: manInput.value,
-            minQuantity: pro.minQuantity
+            minQuantity: pro.minQuantity,
+            reprogramming: false
           });
         }
 
@@ -154,7 +155,8 @@ const createProductCards = async (quotationNew, resQueryUser, resQueryProducts) 
             productName: langParam === "es" ? pro.name : (pro.nameEN ? pro.nameEN : pro.name),
             selectedMoldeCode: pro[countrySelect.value + 'Woman'],
             quantity: womanInput.value,
-            minQuantity: pro.minQuantity
+            minQuantity: pro.minQuantity,
+            reprogramming: false
           });
         }
 
@@ -165,7 +167,8 @@ const createProductCards = async (quotationNew, resQueryUser, resQueryProducts) 
             productName: langParam === "es" ? pro.name : (pro.nameEN ? pro.nameEN : pro.name),
             selectedMoldeCode: pro[countrySelect.value + 'Unisex'],
             quantity: unisexInput.value,
-            minQuantity: pro.minQuantity
+            minQuantity: pro.minQuantity,
+            reprogramming: false
           });
         }
 
@@ -176,7 +179,8 @@ const createProductCards = async (quotationNew, resQueryUser, resQueryProducts) 
             productName: langParam === "es" ? pro.name : (pro.nameEN ? pro.nameEN : pro.name),
             selectedMoldeCode: pro[countrySelect.value + 'Junior'],
             quantity: juniorInput.value,
-            minQuantity: pro.minQuantity
+            minQuantity: pro.minQuantity,
+            reprogramming: false
           });
         }
 

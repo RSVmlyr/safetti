@@ -225,6 +225,17 @@ const quotationNewPage = async (quotationNew, resQueryUser, resQueryProducts, re
       expiringLocalStorage.saveDataWithExpiration("ClientFullName", JSON.stringify(dataClientStorage))
       qnaddproduct()
     }
+
+    const reprogrammingWrapper = quotationNew.querySelector('.reprogramming-wrapper');
+    reprogrammingWrapper.classList.remove('d-none');
+
+    const quotationRepro = quotationNew.querySelector('#quotationrepro');
+
+    quotationRepro.addEventListener("click", (e) => {
+      const reproElements = quotationNew.querySelectorAll('.quotationew--calculation .reprogramming');
+      e.target.checked ? reproElements.forEach(el => el.classList.remove('d-none')) 
+        : reproElements.forEach(el => el.classList.add('d-none'));
+    });
   }
 
   await loadTranslations();

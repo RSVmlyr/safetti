@@ -77,6 +77,14 @@ class QuotationCalculation extends HTMLElement {
         if(btniva)
           btniva.checked = clonedata.taxIVA;
 
+        const quotationrepro = document.querySelector('#quotationrepro');
+        if(quotationrepro)
+          quotationrepro.checked = clonedata.reprogramming;
+
+        const tableHeadRepro = document.querySelector('.quotationew--calculation__titles .reprogramming');
+        if(tableHeadRepro)
+          tableHeadRepro.classList.remove('d-none');
+
         this.moneda = clonedata.moneda
         const expiringLocalStorage = new ExpiringLocalStorage()
         expiringLocalStorage.deleteDataWithExpiration("scenario-" + cotId)
@@ -126,6 +134,23 @@ class QuotationCalculation extends HTMLElement {
         await this.createArrayProducto(products, true)
       })
     })
+
+    const reprogrammingChecks = document.querySelectorAll('.quotation-calculation .reprogramming input[type="checkbox"]');
+
+    reprogrammingChecks.forEach(element => {
+      element.addEventListener("click", () => {
+        const parentScenaryRow = element.closest('.scenary--row__table');
+        const selectedMoldeElement = parentScenaryRow.querySelector('.selected-molde').textContent;
+        const products = this.retrievedData();
+        products.forEach(product => {
+          if (product.selectedMoldeCode === selectedMoldeElement) {
+            product.reprogramming = element.checked;
+          }
+        });
+
+        this.saveData(products);
+      });
+    });
   }
 
   setNameInputClone(data) {
@@ -149,6 +174,7 @@ class QuotationCalculation extends HTMLElement {
     let dataSetQuotation = ''
     const expiringLocalStorage = new ExpiringLocalStorage()
     const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
+    const quotationRepro = document.querySelector('#quotationrepro');
 
     if(c) {
       const client = JSON.parse(c)
@@ -175,6 +201,7 @@ class QuotationCalculation extends HTMLElement {
           clientName: client['0'].client,
           advisor: data.id,
           advisorName: data.fullName,
+          reprogramming: quotationRepro.checked,
           scenarios: [
             {
               name: comment ? comment : await getTranslation("default_scenario_name"),
@@ -199,6 +226,7 @@ class QuotationCalculation extends HTMLElement {
           clientName: data.fullName,
           advisor: data.advisorId,
           advisorName: data.advisorName,
+          reprogramming: quotationRepro.checked,
           scenarios: [
             {
               name: comment ? comment : await getTranslation("default_scenario_name"),
@@ -301,6 +329,8 @@ class QuotationCalculation extends HTMLElement {
     }
 
     const productsList = this.retrievedData()
+    const quotationRepro = document.querySelector('#quotationrepro');
+    const isReprogramming = quotationRepro && quotationRepro.checked;
 
     for(const product of productsList){
       const unitPrice = await this.curr(product.unitPrice)
@@ -316,6 +346,9 @@ class QuotationCalculation extends HTMLElement {
           <input type="number" value="${product.quantity}" data-min-quantity="${product.minQuantity}" class="quotatioview--quantity"/>
         </div>
         <div class="scenary--row subtotal">$ ${valueSubtotal}</div>
+        <div class="scenary--row reprogramming ${isReprogramming ? '':'d-none'}">
+          <input type="checkbox" ${product.reprogramming ? 'checked':''} style="margin: auto;">
+        </div>
         <div class="scenary--row cancel" data-product='${product.selectedMoldeCode}'></div>
       `
       document.querySelector('.quotationew--calculation__body').appendChild(row)
@@ -438,18 +471,19 @@ class QuotationCalculation extends HTMLElement {
         item.quantity = Number(item.quantity);
       });
 
-      products.forEach(product => {
-        if(!is_update){
+      if(!is_update){
+        products.forEach(product => {
           productForSave.push({
             product: product.id,
             productName: product.productName,
             selectedMoldeCode: product.selectedMoldeCode,
             quantity: parseInt(product.quantity),
             unitPrice: unitPrice,
-            minQuantity: product.minQuantity
-          })
-        }
-      })
+            minQuantity: product.minQuantity,
+            reprogramming: product.reprogramming
+          });
+        });
+      }
 
       let mergedProducts = {};
 

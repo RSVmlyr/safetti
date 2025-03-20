@@ -65,6 +65,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             <img class="quotation--origin__shopify quotation-hide" src='../../img/icon/icon-shopify.svg' loading="lazy" alt="Shopify" title="Shopify">
             <span class="quotation--info quotation--info__bold"><span data-tkey="number"></span> ${cot.id ? cot.id : ''}</span>
             <span class="quotation--status">${cotStatus.statusName}</span>
+            ${cot.reprogramming ? `<span class="quotation--status quotation--status--reprogramming" data-tkey="reprogramming"></span>`:'' }
           </div>
           <div class="region region__two">
             <a class="quotation--email" href="/api/Quotation/email/${currentUser}/${cot.id}">

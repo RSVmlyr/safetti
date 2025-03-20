@@ -27,7 +27,7 @@ const quotationView = async (node, quotation, infoQuotation) => {
                 <tbody>
                     <tr class="info-name" data-product-id="${producto.product}">
                         <td>${producto.productName}</td>
-                        <td id="product-molde" class="product-molde" data-molde="${producto.selectedMoldeCode}">${producto.selectedMoldeCode}</td>
+                        <td id="product-molde" class="product-molde" data-molde="${producto.selectedMoldeCode}">${producto.selectedMoldeCode} ${producto.reprogramming ? '(R)':''}</td>
                         <td>
                             <input type="text" value="$ ${formatCurrency(producto.unitPrice, quotation.currency)}" class="unit-value none" readonly />
                         </td>

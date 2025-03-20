@@ -22,7 +22,8 @@ const cloneScenery = async (cotId) => {
             data: filterData,
             moneda: moneda,
             discountPercent: selectedScenario["0"].discountPercent,
-            taxIVA: selectedScenario["0"].taxIVAApplied > 0
+            taxIVA: selectedScenario["0"].taxIVAApplied > 0,
+            reprogramming: quotation.reprogramming
         };
     } catch (error) {
         console.error("Error al clonar la cotización:", error);

@@ -117,7 +117,7 @@ body {
   &--toconfirm {
     background-color: $c4;
   }
-  &--validateadvance{
+  &--validateadvance, &--reprogramming {
     background-color: $c12;
   }
 }
