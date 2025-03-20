@@ -9,7 +9,7 @@ import { config } from "../../../config.js"
 import modalApproval from "../../helpers/modalApproval.js"
 import formatCurrency from "../../helpers/formatCurrency.js"
 import downloadPdfHelper from "../../helpers/downloadPdfHelper.js"
-import { getTranslation, loadTranslations } from "../../lang.js"
+import { getTranslation, loadTranslations, langParam } from "../../lang.js"
 
 const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
   const quotationCreatescenary = quotation.querySelector('#quotation--content--list .quotation--list--row')
@@ -99,6 +99,10 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             </div>
             <div class="scenary--data__actions">
               <a href="./index-q.html?cotId=${cot.id}&cotName=${encodeURIComponent(cot.name)}&uid=${storedHash}&token=${token}" class="quotation--btn__add quotation--btn__Ne" data-tkey="new_scenario"></a>
+              <a class="scenary--data__actionsDelete ${cotStatus.statusId==4?'':'d-none'}" href="${config.API_DEV_IMAGE}/${langParam}/project-activation/${cot.projectId}" target="_parent">
+                <span class="quotation--info" data-tkey="approve"></span>
+                <img src='../../img/icon/icon-send.png' loading="lazy" alt="Aprobar" data-tkey="approve" data-tattr="title" title="">
+              </a>
               <a id="quotation--btn__approved-tmp" class="quotation--btn__modal scenary--data__actionsDelete ${cotStatus.statusId==1?'':'d-none'}" href="#" data-cotid="${cot.id}">
                 <span class="quotation--info" data-tkey="send_for_approval"></span>
                 <img src='../../img/icon/icon-send.png' loading="lazy" alt="Aprobar" data-tkey="approve" data-tattr="title" title="">
