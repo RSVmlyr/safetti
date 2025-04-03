@@ -3,7 +3,6 @@ import formatCurrency from "../../helpers/formatCurrency.js";
 import { getTranslation } from "../../lang.js";
 
 const quotationView = async (node, quotation, infoQuotation) => {
-
     const container = document.createElement("div");
     container.classList.add("quotatioview--container");
 
@@ -12,6 +11,7 @@ const quotationView = async (node, quotation, infoQuotation) => {
             <tr>
                 <th>${ await getTranslation("product") }</th>
                 <th>${ await getTranslation("mold") }</th>
+                ${ quotation.reprogramming ? '<th>' + await getTranslation("reference") + '</th>':'' }
                 <th>${ await getTranslation("unit_value") }</th>
                 <th>${ await getTranslation("quantity") }</th>
                 <th>${ await getTranslation("subtotal") }</th>
@@ -20,27 +20,26 @@ const quotationView = async (node, quotation, infoQuotation) => {
         `;
 
     infoQuotation.forEach(async (element) => {
-        let productos = "";
+        let productos = "<tbody>";
         element.products.forEach((producto) => {
-
             productos += `
-                <tbody>
-                    <tr class="info-name" data-product-id="${producto.product}">
-                        <td>${producto.productName}</td>
-                        <td id="product-molde" class="product-molde" data-molde="${producto.selectedMoldeCode}">${producto.selectedMoldeCode} ${producto.reprogramming ? '(R)':''}</td>
-                        <td>
-                            <input type="text" value="$ ${formatCurrency(producto.unitPrice, quotation.currency)}" class="unit-value none" readonly />
-                        </td>
-                        <td>
-                            <input type="number" value="${producto.quantity}" data-min-quantity="${producto.minQuantity}" class="quotatioview--quantity none" readonly />
-                        </td>
-                        <td class="sub-total">
-                            <input type="text" value="$ ${formatCurrency(producto.linePrice, quotation.currency)}" data-value='${producto.linePrice}' class="none" readonly />
-                        </td>
-                    </tr>
-                </tbody>
+                <tr class="info-name" data-product-id="${producto.product}">
+                    <td>${producto.productName}</td>
+                    <td id="product-molde" class="product-molde" data-molde="${producto.selectedMoldeCode}">${producto.selectedMoldeCode} ${producto.reprogramming ? '(R)':''}</td>
+                    ${quotation.reprogramming ? '<td>'+(producto.reference ? producto.reference:'')+'</td>':''}
+                    <td>
+                        <input type="text" value="$ ${formatCurrency(producto.unitPrice, quotation.currency)}" class="unit-value none" readonly />
+                    </td>
+                    <td>
+                        <input type="number" value="${producto.quantity}" data-min-quantity="${producto.minQuantity}" class="quotatioview--quantity none" readonly />
+                    </td>
+                    <td class="sub-total">
+                        <input type="text" value="$ ${formatCurrency(producto.linePrice, quotation.currency)}" data-value='${producto.linePrice}' class="none" readonly />
+                    </td>
+                </tr>
             `;
         });
+        productos+='</tbody>';
 
         const discount = element.subtotalProducts - element.subtotalWithDiscount;
 

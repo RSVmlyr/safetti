@@ -151,6 +151,23 @@ class QuotationCalculation extends HTMLElement {
         this.saveData(products);
       });
     });
+
+    const productReference = document.querySelectorAll('.quotation-calculation .reprogramming .quotatioview--reference');
+
+    productReference.forEach(element => {
+      element.addEventListener("change", async () => {
+        const parentScenaryRow = element.closest('.scenary--row__table');
+        const selectedMoldeElement = parentScenaryRow.querySelector('.selected-molde').textContent;
+        const products = this.retrievedData();
+        products.forEach(product => {
+          if (product.selectedMoldeCode === selectedMoldeElement) {
+            product.reference = element.value;
+          }
+        });
+
+        this.saveData(products);
+      });
+    });
   }
 
   setNameInputClone(data) {
@@ -349,6 +366,9 @@ class QuotationCalculation extends HTMLElement {
         <div class="scenary--row reprogramming ${isReprogramming ? '':'d-none'}">
           <input type="checkbox" ${product.reprogramming ? 'checked':''} style="margin: auto;">
         </div>
+        <div class="scenary--row reprogramming ${isReprogramming ? '':'d-none'}">
+          <input type="text" value="${product.reference}" class="quotatioview--reference"/>
+        </div>
         <div class="scenary--row cancel" data-product='${product.selectedMoldeCode}'></div>
       `
       document.querySelector('.quotationew--calculation__body').appendChild(row)
@@ -480,7 +500,8 @@ class QuotationCalculation extends HTMLElement {
             quantity: parseInt(product.quantity),
             unitPrice: unitPrice,
             minQuantity: product.minQuantity,
-            reprogramming: product.reprogramming
+            reprogramming: product.reprogramming,
+            reference: product.reference
           });
         });
       }

@@ -144,7 +144,8 @@ const createProductCards = async (quotationNew, resQueryUser, resQueryProducts) 
             selectedMoldeCode: pro[countrySelect.value + 'Man'],
             quantity: manInput.value,
             minQuantity: pro.minQuantity,
-            reprogramming: false
+            reprogramming: false,
+            reference: ''
           });
         }
 
@@ -156,7 +157,8 @@ const createProductCards = async (quotationNew, resQueryUser, resQueryProducts) 
             selectedMoldeCode: pro[countrySelect.value + 'Woman'],
             quantity: womanInput.value,
             minQuantity: pro.minQuantity,
-            reprogramming: false
+            reprogramming: false,
+            reference: ''
           });
         }
 
@@ -168,7 +170,8 @@ const createProductCards = async (quotationNew, resQueryUser, resQueryProducts) 
             selectedMoldeCode: pro[countrySelect.value + 'Unisex'],
             quantity: unisexInput.value,
             minQuantity: pro.minQuantity,
-            reprogramming: false
+            reprogramming: false,
+            reference: ''
           });
         }
 
@@ -180,7 +183,8 @@ const createProductCards = async (quotationNew, resQueryUser, resQueryProducts) 
             selectedMoldeCode: pro[countrySelect.value + 'Junior'],
             quantity: juniorInput.value,
             minQuantity: pro.minQuantity,
-            reprogramming: false
+            reprogramming: false,
+            reference: ''
           });
         }
 
@@ -270,7 +274,7 @@ const createProductCards = async (quotationNew, resQueryUser, resQueryProducts) 
                   </div>
                   <div class="modal--body">
                     <div class="modal--body__content">
-                    <h4 class="modal--title">${ await getTranslation("reference") } ${ pro.referencia }</h4>
+                    <h4 class="modal--title">${ await getTranslation("reference") }: ${ pro.referencia }</h4>
                       <h4 class="modal--title">${ await getTranslation("sport") } ${ await getTranslation(pro.cuento) }</h4>
                       <h4 class="modal--title">${ await getTranslation("classification") } ${ await getTranslation(pro.classification) }</h4>
                       <h4 class="modal--title">${ await getTranslation("description") }</h4>
