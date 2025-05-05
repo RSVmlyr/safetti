@@ -143,8 +143,8 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     // Origin quotation shopify
 
     // Status quotation
-      const quotationStatusScenary = quotation.querySelector('.scenary--created .quotation--status')
-      statusQuotation(cotStatus.statusId, quotationStatusScenary)
+    const quotationStatusScenary = quotation.querySelector('.scenary--created .quotation--status')
+    statusQuotation(cotStatus.statusId, quotationStatusScenary)
     // Status quotation
 
     const scenaryCreated = quotation.querySelector('.scenary--created')
@@ -170,7 +170,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     if(cot.status.id === 5 && cot.paymentSupportFilePath && currentRol != "advisors") {
       const quotationBtnApproved = quotation.querySelector('.scenary--data__actions');
       if(quotationBtnApproved) {
-        const messageHtml = '<p class="text-help">Tu soporte está en revisión</p>';
+        const messageHtml = '<p class="text-help" data-tkey="support_in_revision"></p>';
         quotationBtnApproved.insertAdjacentHTML('beforeend', messageHtml);
       }
     }

@@ -318,11 +318,15 @@
                       color: $c5;
                       display: block;
                       font-size: 14px;
-                      padding: 8px;        
+                      padding: 8px;
+                      max-width: 370px;
                     }
                     .quotation--info {
                       font-size: 13px;
                       padding: 0 8px;
+                    }
+                    span.quotation--btn__view {
+                      min-width: 103px;
                     }
                     .quotation--detail {
                       color: $black;
