@@ -81,9 +81,13 @@ class QuotationCalculation extends HTMLElement {
         if(quotationrepro)
           quotationrepro.checked = clonedata.reprogramming;
 
-        const tableHeadRepro = document.querySelector('.quotationew--calculation__titles .reprogramming');
-        if(tableHeadRepro)
-          tableHeadRepro.classList.remove('d-none');
+        const tableHeadRepro = document.querySelectorAll('.quotationew--calculation__titles .reprogramming');
+        if(tableHeadRepro && clonedata.reprogramming)
+        {
+          tableHeadRepro.forEach(element => {
+            element.classList.remove('d-none');
+          });
+        }
 
         this.moneda = clonedata.moneda
         const expiringLocalStorage = new ExpiringLocalStorage()
