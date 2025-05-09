@@ -46,7 +46,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     });
   });
 
-  quotationCreatescenary.addEventListener('click', (e) => {
+  quotationCreatescenary.addEventListener('click', async (e) => {
     const quotationLoading = quotation.querySelector('.quotation--container__bottom  .quotation--right .quotation--loading')
     if (quotationLoading) {
       quotationLoading.remove()
@@ -239,7 +239,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         }
       }
       const sortedIndices = Object.keys(cot.scenarios).sort((a, b) => b - a);
-      sortedIndices.forEach(async i => {
+      sortedIndices.forEach(i => {
         const scen = cot.scenarios[i];
 
         let totalProducts = 0;
@@ -275,7 +275,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                     esRolEditable && cot.statusId === 1
                       ? `./index-q.html?uid=${storedHash}&clone=true&scenaryId=${scen.id}&cotId=${cot.id}&cotName=${cot.name}&token=${token}`
                       : `./cotizacion.html?id=${cot.id}&uid=${storedHash}&token=${token}`}">
-                    ${esRolEditable && cot.statusId === 1 ? await getTranslation("edit") : await getTranslation("see_detail")}
+                    ${esRolEditable && cot.statusId === 1 ? '<span data-tkey="edit"></span>' : '<span data-tkey="see_detail"></span>'}
                   </a>
                 </span>
                 </tr>
@@ -302,8 +302,8 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         let scenaryList = 
         `<div class="scenary--created__body">
           <div class="scenary--data__body">
-            ${scen.selected === true ? '<div class="scenary--data__scenary selected">' : '<div class="scenary--data__scenary">'}
-              ${scen.selected === true ? '<div class="scenary--row__header selected">' : '<div class="scenary--row__header">'}
+            <div class="scenary--data__scenary ${scen.selected === true ? "selected":""}">
+              <div class="scenary--row__header ${scen.selected === true ? "selected":""}">
                 <span class="quotation--title__quo">#${count} - ${scen.name ? scen.name : ''}</span>
                 <div class="scenary--row__actions">
                   <a id="email-${i}" class="scenary--quotation--email" href="/api/Quotation/emailscenario/${cot.client}/${scen.id}">
@@ -347,14 +347,15 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
         </div>`
 
         scenaryContainerBottom.insertAdjacentHTML('afterbegin', `${scenaryList}`)
-        loadTranslations();
         const scenaryRowSelect = quotation.querySelector('.scenary--row__select')
+
         if(currentRol !== 'advisors' || scen.selected) {
           scenaryRowSelect.remove()
         }
+
         if (scenaryRowSelect) {
-          scenaryRowSelect.addEventListener('click', (e) => {
-            putQuotationScenario(scen.id)
+          scenaryRowSelect.addEventListener('click', async () => {
+            await putQuotationScenario(scen.id)
           })
         }
 
@@ -396,6 +397,8 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
     }
 
     generatePdfNodes()
+
+    await loadTranslations();
   })
 }
 
