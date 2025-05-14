@@ -1,5 +1,5 @@
-scss/
-
+// Para compilar los estilos:
+cd scss
 sass --watch --style=compressed main.scss ../css/main.css
 
 /// nueva cotizacion

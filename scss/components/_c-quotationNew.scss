@@ -168,6 +168,15 @@
               position: absolute;
               bottom: 5px;
             }
+            .reprogramming-wrapper {
+              padding-top: 32px;
+              input[type=checkbox] {
+                height: auto;
+              }
+              span {
+                margin-left: 5px;
+              }
+            }
           }
         }
       }

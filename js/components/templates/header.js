@@ -57,6 +57,7 @@ const header = async (node, infoQuotation) => {
     status.innerHTML = `
       <h3 class="region__status--code"><span data-tkey="number"></span> ${id}</h3>
       <h3 class="quotation--status ${liteStatusQuotation(statusid)}">${name}</h3>
+      ${infoQuotation.reprogramming ? `<h3 class="quotation--status quotation--status--reprogramming" data-tkey="reprogramming"></h3>`:''}
     `
   }
   const firstChild = node.firstChild;

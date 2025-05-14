@@ -65,6 +65,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
             <img class="quotation--origin__shopify quotation-hide" src='../../img/icon/icon-shopify.svg' loading="lazy" alt="Shopify" title="Shopify">
             <span class="quotation--info quotation--info__bold"><span data-tkey="number"></span> ${cot.id ? cot.id : ''}</span>
             <span class="quotation--status">${cotStatus.statusName}</span>
+            ${cot.reprogramming ? `<span class="quotation--status quotation--status--reprogramming" data-tkey="reprogramming"></span>`:'' }
           </div>
           <div class="region region__two">
             <a class="quotation--email" href="/api/Quotation/email/${currentUser}/${cot.id}">
@@ -278,7 +279,7 @@ const createScenary = (cot, datecreatedAt, dateupdatedAt, cotStatus) => {
                     esRolEditable && cot.statusId === 1
                       ? `./index-q.html?uid=${storedHash}&clone=true&scenaryId=${scen.id}&cotId=${cot.id}&cotName=${cot.name}&token=${token}`
                       : `./cotizacion.html?id=${cot.id}&uid=${storedHash}&token=${token}`}">
-                      ${esRolEditable && cot.statusId === 1 ? '<span data-tkey="edit"></span>' : '<span data-tkey="see_detail"></span>'}
+                    ${esRolEditable && cot.statusId === 1 ? '<span data-tkey="edit"></span>' : '<span data-tkey="see_detail"></span>'}
                   </a>
                 </span>
                 </tr>
