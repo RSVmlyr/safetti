@@ -65,10 +65,8 @@
           }
 
           &.quotation--container__action {
-            @media screen and (max-width: 1370px) {
-              flex-wrap: wrap;
-              gap: 20px;
-            }
+            flex-wrap: wrap;
+            gap: 20px;
             
             #advisors {
               @media screen and (max-width: 1370px) {

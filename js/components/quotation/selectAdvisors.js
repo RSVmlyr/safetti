@@ -1,11 +1,11 @@
 import fillSelect from "../../helpers/fillSelect.js";
 
 const selectAdvisors = (resQueryAdvisors) => {
-  const idSelectAdvisors = quotation.querySelector('#advisors')
+  let parentElement = document.querySelector('#quotation') || document.querySelector("#quotationew");
+  const idSelectAdvisors = parentElement.querySelector('#advisors');
   if (idSelectAdvisors) {
-    fillSelect(idSelectAdvisors, resQueryAdvisors)
+    fillSelect(idSelectAdvisors, resQueryAdvisors);
   }
-  
 }
 
 export default selectAdvisors;

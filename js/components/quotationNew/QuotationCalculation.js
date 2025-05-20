@@ -94,6 +94,46 @@ class QuotationCalculation extends HTMLElement {
         expiringLocalStorage.deleteDataWithExpiration("scenario-" + cotId)
         this.setNameInputClone(clonedata.data)
         await this.createArrayProducto(clonedata.data)
+
+        if(this.resQueryUser.isAdminSafetti){
+          const productsInTable = document.querySelectorAll('.scenary--row__data');
+          const products = this.retrievedData();
+
+          // Crear un array de promesas que se resolverán cuando se procese cada item
+          const processPromises = Array.from(productsInTable).map(async (item) => {
+            const molde = item.querySelector(".selected-molde");
+            if (!molde) return;
+
+            const selectedMoldeCode = molde.textContent;
+            const clonedProduct = clonedata.data.find(item => item.selectedMoldeCode === selectedMoldeCode);
+
+            if (!clonedProduct) return;
+
+            const unitPriceInput = item.querySelector(".quotatioview--unitprice");
+            if (unitPriceInput) {
+              unitPriceInput.value = clonedProduct.unitPrice;
+            }
+
+            // Actualiza productos
+            products.forEach(product => {
+              if (product.selectedMoldeCode === selectedMoldeCode) {
+                product.unitPrice = clonedProduct.unitPrice;
+              }
+            });
+
+            const unitPrice = await this.curr(clonedProduct.unitPrice);
+            const valueSubtotal = unitPrice.multiply(clonedProduct.quantity).format();
+            const subtotalElement = item.querySelector('.subtotal');
+            if (subtotalElement) {
+              subtotalElement.textContent = "$ " + valueSubtotal;
+            }
+          });
+
+          await Promise.all(processPromises);
+
+          this.saveData(products);
+          await this.sumar();
+        }
       }
     }
   }
@@ -172,6 +212,30 @@ class QuotationCalculation extends HTMLElement {
         this.saveData(products);
       });
     });
+
+    const unitPrice = document.querySelectorAll('.quotationew--calculation__body .quotatioview--unitprice');
+    unitPrice.forEach(element => {
+      element.addEventListener("change", async () => {
+        const parentScenaryRow = element.closest('.scenary--row__table');
+        const selectedMoldeElement = parentScenaryRow.querySelector('.selected-molde').textContent;
+        const products = this.retrievedData();
+        let currentQuantity = 0;
+        products.forEach(product => {
+          if (product.selectedMoldeCode === selectedMoldeElement) {
+            product.unitPrice = element.value;
+            currentQuantity = product.quantity;
+          }
+        });
+
+        this.saveData(products);
+
+        const unitPrice = await this.curr(element.value);
+        const valueSubtotal = unitPrice.multiply(currentQuantity).format();
+        parentScenaryRow.querySelector('.subtotal').textContent = "$ " + valueSubtotal;
+
+        await this.sumar();
+      });
+    });
   }
 
   setNameInputClone(data) {
@@ -186,32 +250,50 @@ class QuotationCalculation extends HTMLElement {
   }
 
   async SendNewQuotation(data, iva, name, comments ) {
-    const comment = comments ? comments : ""
-    const quo = document.querySelector('.calculation__dis')
-    let p = 0
+    const comment = comments ? comments : "";
+    const quo = document.querySelector('.calculation__dis');
+    let p = 0;
     if(quo && quo.value != "") {
-      p = quo.value
+      p = quo.value;
     }
-    let dataSetQuotation = ''
-    const expiringLocalStorage = new ExpiringLocalStorage()
-    const c = expiringLocalStorage.getDataWithExpiration('ClientFullName')
+    let dataSetQuotation = '';
+    const expiringLocalStorage = new ExpiringLocalStorage();
+    const c = expiringLocalStorage.getDataWithExpiration('ClientFullName');
     const quotationRepro = document.querySelector('#quotationrepro');
 
+    const retrievedData = expiringLocalStorage.getDataWithExpiration("products");
+    const products = retrievedData ? JSON.parse(retrievedData) : [];
+
+    if(products.length <= 0){
+      nodeNotification(await getTranslation("quotation_total_error"));
+      return null;
+    }
+
+    // si el cliente a sido escogido por un asesor
     if(c) {
-      const client = JSON.parse(c)
+      const client = JSON.parse(c);
 
       if(client['0'].currency === undefined && client['0'].rol === undefined){
-        client['0'].currency = 'COP'
-        client['0'].rol = '_final_consumer'
+        client['0'].currency = 'COP';
+        client['0'].rol = '_final_consumer';
       }
 
       if(data) {
-        const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
-        const products = retrievedData ? JSON.parse(retrievedData) : []
+        let advisorId = data.id;
+        let advisorName = data.fullName;
 
-        if(products.length <= 0){
-          nodeNotification(await getTranslation("quotation_total_error"))
-          return null
+        if(data.isAdminSafetti) {
+          const advisor = document.querySelector("#advisors");
+          console.log(advisor.value)
+          if(!advisor || advisor.value === "" || advisor.value === "0") {
+            nodeNotification(await getTranslation("advisor_required"));
+            return null;
+          }
+
+          if(advisor) {
+            advisorId = advisor.value;
+            advisorName = advisor.options[advisor.selectedIndex].text;
+          }
         }
 
         dataSetQuotation = {
@@ -220,8 +302,8 @@ class QuotationCalculation extends HTMLElement {
           comments: comment,
           client: client['0'].id,
           clientName: client['0'].client,
-          advisor: data.id,
-          advisorName: data.fullName,
+          advisor: advisorId,
+          advisorName: advisorName,
           reprogramming: quotationRepro.checked,
           scenarios: [
             {
@@ -236,9 +318,6 @@ class QuotationCalculation extends HTMLElement {
       }
     } else {
       if(data) {
-        const retrievedData = expiringLocalStorage.getDataWithExpiration("products")
-        const products = retrievedData ? JSON.parse(retrievedData) : []
-
         dataSetQuotation = {
           currency: data.currency,
           name: name,
@@ -343,26 +422,34 @@ class QuotationCalculation extends HTMLElement {
   }
 
   async insertList () {
-    const loadingDivHtml = document.querySelector('.loading-message')
+    const loadingDivHtml = document.querySelector('.loading-message');
 
     if (loadingDivHtml) {
-      loadingDivHtml.remove()
+      loadingDivHtml.remove();
     }
 
-    const productsList = this.retrievedData()
+    const productsList = this.retrievedData();
     const quotationRepro = document.querySelector('#quotationrepro');
     const isReprogramming = quotationRepro && quotationRepro.checked;
 
     for(const product of productsList){
-      const unitPrice = await this.curr(product.unitPrice)
-      const valueSubtotal = unitPrice.multiply(product.quantity).format()
-      const row = document.createElement('div')
-      row.classList.add('scenary--row__table')
-      row.classList.add('scenary--row__data')
+      const unitPrice = await this.curr(product.unitPrice);
+      const valueSubtotal = unitPrice.multiply(product.quantity).format();
+      const row = document.createElement('div');
+      row.classList.add('scenary--row__table');
+      row.classList.add('scenary--row__data');
       row.innerHTML = `
         <div class="scenary--row name-product" data-name="${product.product}">${product.productName}</div>
         <div class="scenary--row selected-molde">${product.selectedMoldeCode}</div>
-        <div class="scenary--row">$ ${unitPrice.format()}</div>
+        <div class="scenary--row">
+          ${ this.resQueryUser.isAdminSafetti ? 
+              `<div class="box-price">
+                <span class="prefix">$</span>
+                <input type="number" value="${unitPrice}" class="quotatioview--unitprice"/>
+              </div>`
+              : '$ ' + unitPrice.format()
+          }
+        </div>
         <div class="scenary--row">
           <input type="number" value="${product.quantity}" data-min-quantity="${product.minQuantity}" class="quotatioview--quantity"/>
         </div>
@@ -374,12 +461,12 @@ class QuotationCalculation extends HTMLElement {
           <input type="text" value="${product.reference}" class="quotatioview--reference"/>
         </div>
         <div class="scenary--row cancel" data-product='${product.selectedMoldeCode}'></div>
-      `
-      document.querySelector('.quotationew--calculation__body').appendChild(row)
+      `;
+      document.querySelector('.quotationew--calculation__body').appendChild(row);
     }
 
-    const scenaryRowTable = document.querySelectorAll('.scenary--row__table .cancel')
-    this.removeItem(scenaryRowTable)
+    const scenaryRowTable = document.querySelectorAll('.scenary--row__table .cancel');
+    this.removeItem(scenaryRowTable);
   }
 
   loading() {
@@ -423,7 +510,7 @@ class QuotationCalculation extends HTMLElement {
       ...item,
       cantTotal: totalQuantities[item.id]
     }));
-};
+  }
 
   procesarResult = async(result) => {
     this.removeList()
@@ -434,7 +521,7 @@ class QuotationCalculation extends HTMLElement {
     for (const item of result) {
       try {
         let price
-        const rol =  localStorage.getItem('rol')
+        const rol = localStorage.getItem('rol')
 
         let currency = ''
         if(this.moneda) {
@@ -592,35 +679,11 @@ class QuotationCalculation extends HTMLElement {
   }
   
   async sumar(){
-    const quotationSave = document.querySelector('.quotation--btn__add')
-    const quo = document.querySelector('.calculation__dis')
-    const btniva = document.querySelector('.quotation--iva')
-    const total = await this.btnivaChecked(quo, btniva)
-    quotationSave.textContent = total.format()
-
-    if(quo){
-      quo.onkeydown = onlyInputNumbers
-
-      quo.addEventListener('input', async (event) => {
-        let maxValue = 10
-        const aUser = async() =>{
-          const url = new URL(window.location.href)
-          const searchParams = new URLSearchParams(url.search)
-          const uid = searchParams.get('uid') || '94' //27      
-          const resQueryUser = await getUser(uid)
-          if(resQueryUser.rol == "advisors" && resQueryUser.allowCustomDiscounts === true) {
-            maxValue = 100
-          } 
-          if (event.target.value > maxValue) {
-            event.target.value = maxValue
-          }
-          const total = await this.btnivaChecked(quo, btniva)
-          quotationSave.textContent = total.format()
-        }
-
-        await aUser()
-      })
-    }
+    const quotationSave = document.querySelector('.quotation--btn__add');
+    const btniva = document.querySelector('.quotation--iva');
+    const quo = document.querySelector('.calculation__dis');
+    const total = await this.btnivaChecked(quo, btniva);
+    quotationSave.textContent = total.format();
   }
 
   async btnivaChecked (quo, btniva) {
@@ -724,9 +787,35 @@ class QuotationCalculation extends HTMLElement {
       this.removeList()
     })
     //this.insertList()
-    const scenaryRowTable = document.querySelectorAll('.scenary--row__table .cancel')
-    this.removeItem(scenaryRowTable)
-    await this.clone()
+    const scenaryRowTable = document.querySelectorAll('.scenary--row__table .cancel');
+    this.removeItem(scenaryRowTable);
+    await this.clone();
+
+    const quo = document.querySelector('.calculation__dis');
+    if(quo){
+      const quotationSave = document.querySelector('.quotation--btn__add');
+      quo.onkeydown = onlyInputNumbers;
+
+      quo.addEventListener('input', async (event) => {
+        let maxValue = 10;
+        const aUser = async() =>{
+          const url = new URL(window.location.href);
+          const searchParams = new URLSearchParams(url.search);
+          const uid = searchParams.get('uid') || '94'; //27
+          const resQueryUser = await getUser(uid);
+          if(resQueryUser.rol == "advisors" && resQueryUser.allowCustomDiscounts === true) {
+            maxValue = 100;
+          } 
+          if (event.target.value > maxValue) {
+            event.target.value = maxValue;
+          }
+          const total = await this.btnivaChecked(quo, btniva);
+          quotationSave.textContent = total.format();
+        }
+
+        await aUser();
+      });
+    }
   }
 }
 

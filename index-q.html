@@ -55,11 +55,20 @@
         <div class="quotationew__infoTwo quotationcomments quotation-hide">
           <label><span data-tkey="comments"></span>:</label>
           <input id="quotationcomments" type="text" data-tkey="comments_placeholder" data-tattr="placeholder" placeholder="">
-          <div class="reprogramming-wrapper d-none">
-            <label for="quotationrepro">
-              <input type="checkbox" id="quotationrepro">
-              <span data-tkey="reprogramming"></span>
-            </label>
+          <div style="display: flex;gap: 20px;">
+            <div class="d-none" style="display: flex;flex-direction: column;">
+              <label><span data-tkey="advisor"></span>: <span>*</span></label>
+              <select id="advisors" style="margin: 10px 0 4px;">
+                <option value="0" data-tkey="select_default_option"></option>
+              </select>
+              <span class="error-input-name error-advisor-select quotation-hide" data-tkey="mandatory_field"></span>
+            </div>
+            <div class="reprogramming-wrapper d-none">
+              <label for="quotationrepro">
+                <input type="checkbox" id="quotationrepro" style="margin-bottom: 0;">
+                <span data-tkey="reprogramming"></span>
+              </label>
+            </div>
           </div>
         </div>
       </div>

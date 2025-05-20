@@ -111,6 +111,11 @@
                 border: 1px solid $c12;
               }
             }
+            select {
+              &.error {
+                border: 1px solid $c12;
+              }
+            }
           }
           &__infoOne,
           &__infoTwo {

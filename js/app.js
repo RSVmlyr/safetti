@@ -84,6 +84,16 @@ class App {
       const spinnerP = this.quotationNew.querySelector('.slider--productos .quotation--loading');
       if(spinnerP)
         spinnerP.remove();
+
+      if(resQueryUser.isAdminSafetti) {
+        const resQueryAdvisors = await getAdvisors();
+        if (resQueryAdvisors) {
+          const advisorsOnly = resQueryAdvisors.filter(item => item.isAdminSafetti === false);
+          selectAdvisors(advisorsOnly);
+        }
+
+        document.querySelector("#advisors").parentElement.classList.remove("d-none");
+      }
     }
 
     await quotationView();

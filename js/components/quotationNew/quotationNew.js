@@ -7,61 +7,61 @@ import searchProduct from "./searchProduct.js";
 import QuotationCalculation from './QuotationCalculation.js';
 import GetIdQuotation from "../../services/quotation/getIdQuotation.js";
 import ExpiringLocalStorage from "../localStore/ExpiringLocalStorage.js";
-import getUser from "../../services/user/getUser.js"
+import getUser from "../../services/user/getUser.js";
 import nodeNotification from "../../helpers/nodeNotification.js";
-import qnaddproduct from "../../helpers/qnaddproduct.js"
+import qnaddproduct from "../../helpers/qnaddproduct.js";
 import { getTranslation, loadTranslations } from "../../lang.js";
 
 const quotationNewPage = async (quotationNew, resQueryUser, resQueryProducts, resQueryClients) => {
-  const expiringLocalStorage = new ExpiringLocalStorage()
+  const expiringLocalStorage = new ExpiringLocalStorage();
   const url = new URL(window.location.href);
   const searchParams = new URLSearchParams(url.search);
   const cotId = searchParams.get('cotId');
   const cotName = searchParams.get('cotName');
-  const dateCurrent = new Date()
-  const idQnDate = quotationNew.querySelector('#qndate')
-  const idQnClient = quotationNew.querySelector('#qnclient')
-  const idQnAdvisor = quotationNew.querySelector('#qnadvisor')
-  const resQueryUserAdvisorName = resQueryUser.advisorName === null ? '' : resQueryUser.advisorName
-  const idQnCurrency = quotationNew.querySelector('#qncurrency')
-  const resQueryUserCurrency = resQueryUser.rol === "advisors" ? '' : resQueryUser.currency; 
-  const idQnCuentos = quotationNew.querySelector('#qncuentos')
-  const idQnTiposPrenda = quotationNew.querySelector('#qntiposprenda')
-  const idQnClasificaciones = quotationNew.querySelector('#qnclasificaciones')
-  const idQnFitPrenda = quotationNew.querySelector('#qnfitprenda')
-  const qnbusinessname = quotationNew.querySelector('#qnbusinessname')
-  const qnrol = quotationNew.querySelector('#qnrol')
-  idQnDate.innerHTML = dateFormat(dateCurrent)
+  const dateCurrent = new Date();
+  const idQnDate = quotationNew.querySelector('#qndate');
+  const idQnClient = quotationNew.querySelector('#qnclient');
+  const idQnAdvisor = quotationNew.querySelector('#qnadvisor');
+  const resQueryUserAdvisorName = resQueryUser.advisorName === null ? '' : resQueryUser.advisorName;
+  const idQnCurrency = quotationNew.querySelector('#qncurrency');
+  const resQueryUserCurrency = resQueryUser.rol === "advisors" ? '' : resQueryUser.currency;
+  const idQnCuentos = quotationNew.querySelector('#qncuentos');
+  const idQnTiposPrenda = quotationNew.querySelector('#qntiposprenda');
+  const idQnClasificaciones = quotationNew.querySelector('#qnclasificaciones');
+  const idQnFitPrenda = quotationNew.querySelector('#qnfitprenda');
+  const qnbusinessname = quotationNew.querySelector('#qnbusinessname');
+  const qnrol = quotationNew.querySelector('#qnrol');
+  idQnDate.innerHTML = dateFormat(dateCurrent);
 
   if(resQueryUser.rol === 'advisors') {
-    qnrol.parentElement.classList.remove('quotation-hide')
+    qnrol.parentElement.classList.remove('quotation-hide');
   }
 
   if(resQueryUser.razonSocial === null) {
-    qnbusinessname.parentElement.classList.add('quotation-hide')
+    qnbusinessname.parentElement.classList.add('quotation-hide');
   }
 
   idQnClient.innerHTML = `${ await getTranslation("client") }: ${ resQueryUser.fullName }`;
-  qnbusinessname.innerHTML = resQueryUser.razonSocial
-  idQnAdvisor.innerHTML = resQueryUserAdvisorName
-  idQnCurrency.innerHTML = resQueryUserCurrency
+  qnbusinessname.innerHTML = resQueryUser.razonSocial;
+  idQnAdvisor.innerHTML = resQueryUserAdvisorName;
+  idQnCurrency.innerHTML = resQueryUserCurrency;
   idQnCurrency.dataset.currency = resQueryUserCurrency;
  
-  fillSelectProduct(idQnCuentos, resQueryProducts.cuentos, false)
-  fillSelectProduct(idQnTiposPrenda, resQueryProducts.tiposPrenda, true)
-  fillSelectProduct(idQnClasificaciones, resQueryProducts.clasificaciones, true)
-  fillSelectProduct(idQnFitPrenda, resQueryProducts.fitPrenda, true)
-  await createProductCards(quotationNew, resQueryUser, resQueryProducts, true)
-  await searchProduct(quotationNew, resQueryUser, resQueryProducts)
-  localStorage()
+  fillSelectProduct(idQnCuentos, resQueryProducts.cuentos, false);
+  fillSelectProduct(idQnTiposPrenda, resQueryProducts.tiposPrenda, true);
+  fillSelectProduct(idQnClasificaciones, resQueryProducts.clasificaciones, true);
+  fillSelectProduct(idQnFitPrenda, resQueryProducts.fitPrenda, true);
+  await createProductCards(quotationNew, resQueryUser, resQueryProducts, true);
+  await searchProduct(quotationNew, resQueryUser, resQueryProducts);
+  localStorage();
 
   if(cotId && resQueryUser.rol === 'advisors'){
-    const data = await GetIdQuotation(cotId)
-    idQnClient.innerHTML = `${ await getTranslation("client") }: ${ data.clientName }`
-    idQnCurrency.innerHTML = data.currency
+    const data = await GetIdQuotation(cotId);
+    idQnClient.innerHTML = `${ await getTranslation("client") }: ${ data.clientName }`;
+    idQnCurrency.innerHTML = data.currency;
     idQnCurrency.dataset.currency = data.currency;
-
-    const user = await getUser(data.client)
+    idQnAdvisor.innerHTML = data.advisorName;
+    const user = await getUser(data.client);
     qnrol.innerHTML = user.rol.replace(/_/g, ' ');
     const dataClientStorage = [
       {
@@ -70,8 +70,16 @@ const quotationNewPage = async (quotationNew, resQueryUser, resQueryProducts, re
         currency: user.currency,
         rol: user.rol,
       }
-    ]
-    expiringLocalStorage.saveDataWithExpiration("ClientFullName", JSON.stringify(dataClientStorage))
+    ];
+
+    if(user.razonSocial === null) {
+      qnbusinessname.parentElement.classList.add('quotation-hide')
+    }
+    else{
+      qnbusinessname.innerHTML = user.razonSocial;
+    }
+
+    expiringLocalStorage.saveDataWithExpiration("ClientFullName", JSON.stringify(dataClientStorage));
   }
 
   const QnEmail = quotationNew.querySelector('.quotation--email')
@@ -358,34 +366,52 @@ const quotationNewPage = async (quotationNew, resQueryUser, resQueryProducts, re
         }
       } else {
         if (quotationewname && quotatioNewClient) {
-          if (quotationewname.value === '' || quotatioNewClient.value === '') {
-            if (quotationewname.value === '') {
-              quotationewInfoOne.classList.remove('quotation-hide')
-              quotationewname.classList.add('error');
-            } else {
-              quotationewInfoOne.classList.add('quotation-hide')
-            }
+          let anyErrors = false;
 
-            if (quotatioNewClient.value === '') {
-              quotationewSearchClient.classList.remove('quotation-hide')
-              quotatioNewClient.classList.add('error');
-            } else {
-              quotationewSearchClient.classList.add('quotation-hide')
-            }
+          if (quotationewname.value === '') {
+            quotationewInfoOne.classList.remove('quotation-hide')
+            quotationewname.classList.add('error');
+            anyErrors = true;
+          } else {
+            quotationewInfoOne.classList.add('quotation-hide')
+          }
 
+          if (quotatioNewClient.value === '') {
+            quotationewSearchClient.classList.remove('quotation-hide')
+            quotatioNewClient.classList.add('error');
+            anyErrors = true;
+          } else {
+            quotationewSearchClient.classList.add('quotation-hide')
+          }
+
+          if(resQueryUser.isAdminSafetti) {
+            const advisorSelect = document.querySelector("#advisors");
+            const errorAdvisor = document.querySelector(".error-advisor-select");
+
+            if(advisorSelect.value === '0') {
+              errorAdvisor.classList.remove('quotation-hide');
+              advisorSelect.classList.add('error');
+              anyErrors = true;
+            } else {
+              errorAdvisor.classList.add('quotation-hide');
+            }
+          }
+
+          if (anyErrors) {
             nodeNotification(await getTranslation("fields_marked_mandatory"));
             setTimeout(() => {
-              quotationBtnSave.disabled = false
+              quotationBtnSave.disabled = false;
             }, 2000);
 
             return;
-          } else {
-            quotationewSearchClient.classList.add('quotation-hide')
-            quotationewInfoOne.classList.add('quotation-hide')
-            quotationewname.classList.remove('error');
-            quotatioNewClient.classList.remove('error');
-            expiringLocalStorage.saveDataWithExpiration("NameQuotation", JSON.stringify(quotationewname.value));
           }
+
+          quotationewSearchClient.classList.add('quotation-hide')
+          quotationewInfoOne.classList.add('quotation-hide')
+          quotationewname.classList.remove('error');
+          quotatioNewClient.classList.remove('error');
+          expiringLocalStorage.saveDataWithExpiration("NameQuotation", JSON.stringify(quotationewname.value));
+          
         }
       }
 
